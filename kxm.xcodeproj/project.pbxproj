@@ -1,0 +1,311 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
+		2A3C13DF14F6ECC70091BD84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DE14F6ECC70091BD84 /* Foundation.framework */; };
+		2A3C13E114F6ECC70091BD84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */; };
+		2A3C13E314F6ECC70091BD84 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E214F6ECC70091BD84 /* GLKit.framework */; };
+		2A3C13E514F6ECC70091BD84 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E414F6ECC70091BD84 /* OpenGLES.framework */; };
+		2A3C13EB14F6ECC70091BD84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13E914F6ECC70091BD84 /* InfoPlist.strings */; };
+		2A3C13ED14F6ECC70091BD84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13EC14F6ECC70091BD84 /* main.m */; };
+		2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */; };
+		2A3C13F314F6ECC70091BD84 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F214F6ECC70091BD84 /* Shader.fsh */; };
+		2A3C13F514F6ECC70091BD84 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F414F6ECC70091BD84 /* Shader.vsh */; };
+		2A3C13F814F6ECC70091BD84 /* KXMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F714F6ECC70091BD84 /* KXMViewController.m */; };
+		2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */; };
+		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2A3C13D814F6ECC70091BD84 /* kxm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kxm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A3C13DC14F6ECC70091BD84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2A3C13DE14F6ECC70091BD84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2A3C13E214F6ECC70091BD84 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		2A3C13E414F6ECC70091BD84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		2A3C13E814F6ECC70091BD84 /* kxm-Info.plist */ = {isa = PBXFileReference; path = "kxm-Info.plist"; sourceTree = "<group>"; };
+		2A3C13EA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2A3C13EC14F6ECC70091BD84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2A3C13EE14F6ECC70091BD84 /* kxm-Prefix.pch */ = {isa = PBXFileReference; path = "kxm-Prefix.pch"; sourceTree = "<group>"; };
+		2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */ = {isa = PBXFileReference; path = KXMAppDelegate.h; sourceTree = "<group>"; };
+		2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KXMAppDelegate.m; sourceTree = "<group>"; };
+		2A3C13F214F6ECC70091BD84 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
+		2A3C13F414F6ECC70091BD84 /* Shader.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
+		2A3C13F614F6ECC70091BD84 /* KXMViewController.h */ = {isa = PBXFileReference; path = KXMViewController.h; sourceTree = "<group>"; };
+		2A3C13F714F6ECC70091BD84 /* KXMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KXMViewController.m; sourceTree = "<group>"; };
+		2A3C13FA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPhone.xib; sourceTree = "<group>"; };
+		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2A3C13D514F6ECC70091BD84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */,
+				2A3C13DF14F6ECC70091BD84 /* Foundation.framework in Frameworks */,
+				2A3C13E114F6ECC70091BD84 /* CoreGraphics.framework in Frameworks */,
+				2A3C13E314F6ECC70091BD84 /* GLKit.framework in Frameworks */,
+				2A3C13E514F6ECC70091BD84 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A3C13CD14F6ECC60091BD84 = {
+			isa = PBXGroup;
+			children = (
+				2A3C13E614F6ECC70091BD84 /* kxm */,
+				2A3C13DB14F6ECC70091BD84 /* Frameworks */,
+				2A3C13D914F6ECC70091BD84 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2A3C13D914F6ECC70091BD84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3C13D814F6ECC70091BD84 /* kxm.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A3C13DB14F6ECC70091BD84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A3C13DC14F6ECC70091BD84 /* UIKit.framework */,
+				2A3C13DE14F6ECC70091BD84 /* Foundation.framework */,
+				2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */,
+				2A3C13E214F6ECC70091BD84 /* GLKit.framework */,
+				2A3C13E414F6ECC70091BD84 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2A3C13E614F6ECC70091BD84 /* kxm */ = {
+			isa = PBXGroup;
+			children = (
+				2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */,
+				2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */,
+				2A3C13F214F6ECC70091BD84 /* Shader.fsh */,
+				2A3C13F414F6ECC70091BD84 /* Shader.vsh */,
+				2A3C13F614F6ECC70091BD84 /* KXMViewController.h */,
+				2A3C13F714F6ECC70091BD84 /* KXMViewController.m */,
+				2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */,
+				2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */,
+				2A3C13E714F6ECC70091BD84 /* Supporting Files */,
+			);
+			path = kxm;
+			sourceTree = "<group>";
+		};
+		2A3C13E714F6ECC70091BD84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2A3C13E814F6ECC70091BD84 /* kxm-Info.plist */,
+				2A3C13E914F6ECC70091BD84 /* InfoPlist.strings */,
+				2A3C13EC14F6ECC70091BD84 /* main.m */,
+				2A3C13EE14F6ECC70091BD84 /* kxm-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2A3C13D714F6ECC70091BD84 /* kxm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A3C140114F6ECC70091BD84 /* Build configuration list for PBXNativeTarget "kxm" */;
+			buildPhases = (
+				2A3C13D414F6ECC70091BD84 /* Sources */,
+				2A3C13D514F6ECC70091BD84 /* Frameworks */,
+				2A3C13D614F6ECC70091BD84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = kxm;
+			productName = kxm;
+			productReference = 2A3C13D814F6ECC70091BD84 /* kxm.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A3C13CF14F6ECC60091BD84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 2A3C13D214F6ECC60091BD84 /* Build configuration list for PBXProject "kxm" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2A3C13CD14F6ECC60091BD84;
+			productRefGroup = 2A3C13D914F6ECC70091BD84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2A3C13D714F6ECC70091BD84 /* kxm */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2A3C13D614F6ECC70091BD84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A3C13EB14F6ECC70091BD84 /* InfoPlist.strings in Resources */,
+				2A3C13F314F6ECC70091BD84 /* Shader.fsh in Resources */,
+				2A3C13F514F6ECC70091BD84 /* Shader.vsh in Resources */,
+				2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */,
+				2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2A3C13D414F6ECC70091BD84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A3C13ED14F6ECC70091BD84 /* main.m in Sources */,
+				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
+				2A3C13F814F6ECC70091BD84 /* KXMViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2A3C13E914F6ECC70091BD84 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A3C13EA14F6ECC70091BD84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A3C13FA14F6ECC70091BD84 /* en */,
+			);
+			name = KXMViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A3C13FD14F6ECC70091BD84 /* en */,
+			);
+			name = KXMViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2A3C13FF14F6ECC70091BD84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A3C140014F6ECC70091BD84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2A3C140214F6ECC70091BD84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "kxm/kxm-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "kxm/kxm-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		2A3C140314F6ECC70091BD84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "kxm/kxm-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "kxm/kxm-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A3C13D214F6ECC60091BD84 /* Build configuration list for PBXProject "kxm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A3C13FF14F6ECC70091BD84 /* Debug */,
+				2A3C140014F6ECC70091BD84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2A3C140114F6ECC70091BD84 /* Build configuration list for PBXNativeTarget "kxm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A3C140214F6ECC70091BD84 /* Debug */,
+				2A3C140314F6ECC70091BD84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A3C13CF14F6ECC60091BD84 /* Project object */;
+}
