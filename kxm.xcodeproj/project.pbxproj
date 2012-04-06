@@ -13,13 +13,12 @@
 		2A3C13E314F6ECC70091BD84 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E214F6ECC70091BD84 /* GLKit.framework */; };
 		2A3C13E514F6ECC70091BD84 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E414F6ECC70091BD84 /* OpenGLES.framework */; };
 		2A3C13EB14F6ECC70091BD84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13E914F6ECC70091BD84 /* InfoPlist.strings */; };
-		2A3C13ED14F6ECC70091BD84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13EC14F6ECC70091BD84 /* main.m */; };
+		2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13EC14F6ECC70091BD84 /* main.mm */; };
 		2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */; };
-		2A3C13F314F6ECC70091BD84 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F214F6ECC70091BD84 /* Shader.fsh */; };
-		2A3C13F514F6ECC70091BD84 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F414F6ECC70091BD84 /* Shader.vsh */; };
 		2A3C13F814F6ECC70091BD84 /* KXMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F714F6ECC70091BD84 /* KXMViewController.m */; };
 		2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */; };
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
+		2AA78C7F152D013800B3631A /* SceneGraphNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,18 +28,20 @@
 		2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2A3C13E214F6ECC70091BD84 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		2A3C13E414F6ECC70091BD84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		2A3C13E814F6ECC70091BD84 /* kxm-Info.plist */ = {isa = PBXFileReference; path = "kxm-Info.plist"; sourceTree = "<group>"; };
+		2A3C13E814F6ECC70091BD84 /* kxm-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "kxm-Info.plist"; sourceTree = "<group>"; };
 		2A3C13EA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2A3C13EC14F6ECC70091BD84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2A3C13EE14F6ECC70091BD84 /* kxm-Prefix.pch */ = {isa = PBXFileReference; path = "kxm-Prefix.pch"; sourceTree = "<group>"; };
-		2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */ = {isa = PBXFileReference; path = KXMAppDelegate.h; sourceTree = "<group>"; };
+		2A3C13EC14F6ECC70091BD84 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		2A3C13EE14F6ECC70091BD84 /* kxm-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "kxm-Prefix.pch"; sourceTree = "<group>"; };
+		2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KXMAppDelegate.h; sourceTree = "<group>"; };
 		2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KXMAppDelegate.m; sourceTree = "<group>"; };
-		2A3C13F214F6ECC70091BD84 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
-		2A3C13F414F6ECC70091BD84 /* Shader.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
-		2A3C13F614F6ECC70091BD84 /* KXMViewController.h */ = {isa = PBXFileReference; path = KXMViewController.h; sourceTree = "<group>"; };
+		2A3C13F614F6ECC70091BD84 /* KXMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KXMViewController.h; sourceTree = "<group>"; };
 		2A3C13F714F6ECC70091BD84 /* KXMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KXMViewController.m; sourceTree = "<group>"; };
 		2A3C13FA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPhone.xib; sourceTree = "<group>"; };
 		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
+		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
+		2A63D014150CF5A50068E054 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
+		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
+		2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneGraphNode.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,10 +92,9 @@
 		2A3C13E614F6ECC70091BD84 /* kxm */ = {
 			isa = PBXGroup;
 			children = (
+				2A3C140414F6F2950091BD84 /* Vectoid */,
 				2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */,
 				2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */,
-				2A3C13F214F6ECC70091BD84 /* Shader.fsh */,
-				2A3C13F414F6ECC70091BD84 /* Shader.vsh */,
 				2A3C13F614F6ECC70091BD84 /* KXMViewController.h */,
 				2A3C13F714F6ECC70091BD84 /* KXMViewController.m */,
 				2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */,
@@ -109,10 +109,46 @@
 			children = (
 				2A3C13E814F6ECC70091BD84 /* kxm-Info.plist */,
 				2A3C13E914F6ECC70091BD84 /* InfoPlist.strings */,
-				2A3C13EC14F6ECC70091BD84 /* main.m */,
+				2A3C13EC14F6ECC70091BD84 /* main.mm */,
 				2A3C13EE14F6ECC70091BD84 /* kxm-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2A3C140414F6F2950091BD84 /* Vectoid */ = {
+			isa = PBXGroup;
+			children = (
+				2A3C140514F6F2A90091BD84 /* include */,
+				2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */,
+			);
+			name = Vectoid;
+			sourceTree = "<group>";
+		};
+		2A3C140514F6F2A90091BD84 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2A63D011150CF5A50068E054 /* kxm */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A63D011150CF5A50068E054 /* kxm */ = {
+			isa = PBXGroup;
+			children = (
+				2A63D012150CF5A50068E054 /* Vectoid */,
+			);
+			name = kxm;
+			path = Vectoid/include/kxm;
+			sourceTree = "<group>";
+		};
+		2A63D012150CF5A50068E054 /* Vectoid */ = {
+			isa = PBXGroup;
+			children = (
+				2A63D013150CF5A50068E054 /* Transform.h */,
+				2A63D014150CF5A50068E054 /* Vector.h */,
+				2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */,
+			);
+			path = Vectoid;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,8 +202,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3C13EB14F6ECC70091BD84 /* InfoPlist.strings in Resources */,
-				2A3C13F314F6ECC70091BD84 /* Shader.fsh in Resources */,
-				2A3C13F514F6ECC70091BD84 /* Shader.vsh in Resources */,
 				2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */,
 				2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */,
 			);
@@ -180,9 +214,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A3C13ED14F6ECC70091BD84 /* main.m in Sources */,
+				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.m in Sources */,
+				2AA78C7F152D013800B3631A /* SceneGraphNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,7 +254,7 @@
 		2A3C13FF14F6ECC70091BD84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -244,7 +279,7 @@
 		2A3C140014F6ECC70091BD84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -269,6 +304,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "kxm/Vectoid/include ../boost_1_46_1";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -304,6 +340,7 @@
 				2A3C140314F6ECC70091BD84 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
