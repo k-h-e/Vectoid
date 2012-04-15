@@ -18,13 +18,15 @@
 		2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F714F6ECC70091BD84 /* KXMViewController.mm */; };
 		2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */; };
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
-		2AA78C7F152D013800B3631A /* SceneGraphNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */; };
-		2AA78C82152F485400B3631A /* PerspectiveProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C81152F485400B3631A /* PerspectiveProjection.cpp */; };
-		2AA78C87152F5C8400B3631A /* CoordSysCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C86152F5C8400B3631A /* CoordSysCore.cpp */; };
-		2AA78C8A152F626800B3631A /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C89152F626800B3631A /* Camera.cpp */; };
-		2AA78C8D152F680900B3631A /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C8C152F680800B3631A /* CoordSys.cpp */; };
-		2AA78C92152F69BA00B3631A /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C91152F69BA00B3631A /* Geode.cpp */; };
-		2AA78C96152F6ED100B3631A /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA78C95152F6ED000B3631A /* TestTriangle.cpp */; };
+		2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4B15361E700054F8E9 /* Camera.cpp */; };
+		2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4C15361E700054F8E9 /* CoordSys.cpp */; };
+		2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */; };
+		2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4E15361E700054F8E9 /* Geode.cpp */; };
+		2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */; };
+		2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */; };
+		2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF5115361E710054F8E9 /* TestTriangle.cpp */; };
+		2A65AF66153622FE0054F8E9 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF65153622FE0054F8E9 /* Interface.cpp */; };
+		2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6815362EF40054F8E9 /* IntModN.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,23 +48,28 @@
 		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
 		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
 		2A63D014150CF5A50068E054 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
+		2A65AF4B15361E700054F8E9 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = Vectoid/Camera.cpp; sourceTree = "<group>"; };
+		2A65AF4C15361E700054F8E9 /* CoordSys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSys.cpp; path = Vectoid/CoordSys.cpp; sourceTree = "<group>"; };
+		2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSysCore.cpp; path = Vectoid/CoordSysCore.cpp; sourceTree = "<group>"; };
+		2A65AF4E15361E700054F8E9 /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geode.cpp; path = Vectoid/Geode.cpp; sourceTree = "<group>"; };
+		2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerspectiveProjection.cpp; path = Vectoid/PerspectiveProjection.cpp; sourceTree = "<group>"; };
+		2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SceneGraphNode.cpp; path = Vectoid/SceneGraphNode.cpp; sourceTree = "<group>"; };
+		2A65AF5115361E710054F8E9 /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTriangle.cpp; path = Vectoid/TestTriangle.cpp; sourceTree = "<group>"; };
+		2A65AF64153622DB0054F8E9 /* Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Interface.h; path = Core/include/kxm/Core/Interface.h; sourceTree = "<group>"; };
+		2A65AF65153622FE0054F8E9 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interface.cpp; sourceTree = "<group>"; };
+		2A65AF671536281D0054F8E9 /* IntModN.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntModN.h; path = Core/include/kxm/Core/IntModN.h; sourceTree = "<group>"; };
+		2A65AF6815362EF40054F8E9 /* IntModN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IntModN.cpp; path = Core/IntModN.cpp; sourceTree = "<group>"; };
+		2A65AF6A153631DC0054F8E9 /* Tools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tools.h; path = Core/include/kxm/Core/Tools.h; sourceTree = "<group>"; };
 		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
-		2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneGraphNode.cpp; sourceTree = "<group>"; };
 		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerspectiveProjection.h; sourceTree = "<group>"; };
-		2AA78C81152F485400B3631A /* PerspectiveProjection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PerspectiveProjection.cpp; sourceTree = "<group>"; };
 		2AA78C83152F538900B3631A /* OpenGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
 		2AA78C84152F573100B3631A /* CoordSysInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoordSysInterface.h; sourceTree = "<group>"; };
 		2AA78C85152F5AEF00B3631A /* CoordSysCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoordSysCore.h; sourceTree = "<group>"; };
-		2AA78C86152F5C8400B3631A /* CoordSysCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoordSysCore.cpp; sourceTree = "<group>"; };
 		2AA78C88152F61AD00B3631A /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
-		2AA78C89152F626800B3631A /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		2AA78C8B152F677F00B3631A /* CoordSys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoordSys.h; sourceTree = "<group>"; };
-		2AA78C8C152F680800B3631A /* CoordSys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoordSys.cpp; sourceTree = "<group>"; };
 		2AA78C90152F690700B3631A /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Geode.h; sourceTree = "<group>"; };
-		2AA78C91152F69BA00B3631A /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geode.cpp; sourceTree = "<group>"; };
 		2AA78C93152F6A7000B3631A /* GeometryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeometryInterface.h; sourceTree = "<group>"; };
 		2AA78C94152F6E1700B3631A /* TestTriangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTriangle.h; sourceTree = "<group>"; };
-		2AA78C95152F6ED000B3631A /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestTriangle.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +120,7 @@
 		2A3C13E614F6ECC70091BD84 /* kxm */ = {
 			isa = PBXGroup;
 			children = (
+				2A65AF5915361EC60054F8E9 /* Core */,
 				2A3C140414F6F2950091BD84 /* Vectoid */,
 				2A3C13EF14F6ECC70091BD84 /* KXMAppDelegate.h */,
 				2A3C13F014F6ECC70091BD84 /* KXMAppDelegate.m */,
@@ -139,14 +147,14 @@
 		2A3C140414F6F2950091BD84 /* Vectoid */ = {
 			isa = PBXGroup;
 			children = (
+				2A65AF4B15361E700054F8E9 /* Camera.cpp */,
+				2A65AF4C15361E700054F8E9 /* CoordSys.cpp */,
+				2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */,
+				2A65AF4E15361E700054F8E9 /* Geode.cpp */,
+				2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */,
+				2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */,
+				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
 				2A3C140514F6F2A90091BD84 /* include */,
-				2AA78C7E152D013800B3631A /* SceneGraphNode.cpp */,
-				2AA78C81152F485400B3631A /* PerspectiveProjection.cpp */,
-				2AA78C86152F5C8400B3631A /* CoordSysCore.cpp */,
-				2AA78C89152F626800B3631A /* Camera.cpp */,
-				2AA78C8C152F680800B3631A /* CoordSys.cpp */,
-				2AA78C91152F69BA00B3631A /* Geode.cpp */,
-				2AA78C95152F6ED000B3631A /* TestTriangle.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -185,6 +193,42 @@
 				2AA78C94152F6E1700B3631A /* TestTriangle.h */,
 			);
 			path = Vectoid;
+			sourceTree = "<group>";
+		};
+		2A65AF5915361EC60054F8E9 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AF5A15361ECE0054F8E9 /* include */,
+				2A65AF65153622FE0054F8E9 /* Interface.cpp */,
+				2A65AF6815362EF40054F8E9 /* IntModN.cpp */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		2A65AF5A15361ECE0054F8E9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AF5D153621B70054F8E9 /* kxm */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A65AF5B15361EE00054F8E9 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AF64153622DB0054F8E9 /* Interface.h */,
+				2A65AF671536281D0054F8E9 /* IntModN.h */,
+				2A65AF6A153631DC0054F8E9 /* Tools.h */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		2A65AF5D153621B70054F8E9 /* kxm */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AF5B15361EE00054F8E9 /* Core */,
+			);
+			name = kxm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,13 +297,15 @@
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */,
-				2AA78C7F152D013800B3631A /* SceneGraphNode.cpp in Sources */,
-				2AA78C82152F485400B3631A /* PerspectiveProjection.cpp in Sources */,
-				2AA78C87152F5C8400B3631A /* CoordSysCore.cpp in Sources */,
-				2AA78C8A152F626800B3631A /* Camera.cpp in Sources */,
-				2AA78C8D152F680900B3631A /* CoordSys.cpp in Sources */,
-				2AA78C92152F69BA00B3631A /* Geode.cpp in Sources */,
-				2AA78C96152F6ED100B3631A /* TestTriangle.cpp in Sources */,
+				2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */,
+				2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */,
+				2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */,
+				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
+				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
+				2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */,
+				2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */,
+				2A65AF66153622FE0054F8E9 /* Interface.cpp in Sources */,
+				2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,7 +392,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "kxm/Vectoid/include ../boost_1_46_1";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_46_1 kxm/Core/include kxm/Vectoid/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

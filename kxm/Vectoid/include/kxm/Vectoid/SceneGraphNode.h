@@ -15,6 +15,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <kxm/Core/Interface.h>
+
 
 namespace kxm {
 namespace Vectoid {
@@ -25,10 +27,11 @@ class RenderContext;
 /*! 
  *  \ingroup Vectoid
  */ 
-class SceneGraphNode {
+class SceneGraphNode : public virtual Core::Interface {
   public:
     SceneGraphNode();
-    //! Adds the specified node as child of the receiver node.
+    //! Adds the specified node as child of the receiver node. The child node must not already be
+    //! child to another parent node.
     void AddChild(const boost::shared_ptr<SceneGraphNode> &child);
     //! Removes all child nodes from the scene graph node.
     /*!

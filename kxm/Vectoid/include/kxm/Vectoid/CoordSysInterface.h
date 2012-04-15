@@ -10,6 +10,9 @@
 #define KXM_VECTOID_COORDSYSINTERFACE_H_
 
 
+#include <kxm/Core/Interface.h>
+
+
 namespace kxm {
 namespace Vectoid {
 
@@ -21,7 +24,7 @@ class Transform;
 /*! 
  *  \ingroup Vectoid
  */ 
-class CoordSysInterface {
+class CoordSysInterface : public virtual Core::Interface {
   public:
     //! Maps to \ref Transform::Prepend() of the local transform.
     virtual void PrependTransform(const Transform &other) = 0;

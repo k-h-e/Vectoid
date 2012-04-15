@@ -10,6 +10,9 @@
 #define KXM_VECTOID_GEOMETRYINTERFACE_H_
 
 
+#include <kxm/Core/Interface.h>
+
+
 namespace kxm {
 namespace Vectoid {
 
@@ -19,7 +22,7 @@ class RenderContext;
 /*! 
  *  \ingroup Vectoid
  */ 
-class GeometryInterface {
+class GeometryInterface : public virtual Core::Interface {
   public:
     //! Renders the geometry.
     virtual void Render(RenderContext *context) = 0;
