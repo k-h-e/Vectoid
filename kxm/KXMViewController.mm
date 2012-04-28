@@ -14,6 +14,7 @@
 #include <kxm/Vectoid/CoordSys.h>
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/TestTriangle.h>
+#include <kxm/Vectoid/ZarchTerrain.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -25,8 +26,10 @@ using boost::shared_ptr;
     EAGLContext                       *glContext;
     shared_ptr<PerspectiveProjection> projection;
     shared_ptr<Camera>                camera;
-    shared_ptr<CoordSys>              coordSys;   
+    shared_ptr<CoordSys>              coordSys;
+    shared_ptr<ZarchTerrain>          terrain;
     CGFloat                           width, height;
+    float                             animationAngle;
 }
 
 - (void)setupGL;
@@ -95,17 +98,17 @@ using boost::shared_ptr;
     glEnable(GL_DEPTH_TEST);
     
     projection = shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
-    projection->SetWindowSize(4.0f);
-    projection->SetViewingDepth(4.0f);
-    projection->SetEyepointDistance(4.0f);
+    projection->SetWindowSize(11.0f);
+    projection->SetViewingDepth(11.0f);
+    projection->SetEyepointDistance(11.0f);
     camera = shared_ptr<Camera>(new Camera());
     projection->AddChild(camera);
     coordSys = shared_ptr<CoordSys>(new CoordSys());
     camera->AddChild(coordSys);
-    coordSys->SetPosition(Vector(0.0f, 0.0f, -2.0f));
     shared_ptr<TestTriangle> testTriangle(new TestTriangle());
-    shared_ptr<Geode> geode(new Geode(testTriangle));
-    coordSys->AddChild(geode);
+    coordSys->AddChild(shared_ptr<Geode>(new Geode(testTriangle)));
+    terrain = shared_ptr<ZarchTerrain>(new ZarchTerrain(24, 24, 1.0f, 12, 12));
+    camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
 }
 
 - (void)tearDownGL
@@ -122,13 +125,14 @@ using boost::shared_ptr;
 - (void)update
 {
     coordSys->PrependTransform(Transform(YAxis, 3.0f));
-    Vector position = coordSys->Position();
-    position.x += .02f;
-    if (position.x > 2.0f)
-        position.x = -2.0f;
+    animationAngle += 1.0f;
+    if (animationAngle >= 360.0f)
+        animationAngle = 0.0f;
+    float rad = animationAngle * 3.141592654f / 180.0f;
+    Vector position(cos(rad) * 8.0f, 2.5f, sin(rad) * 8.0f); 
     coordSys->SetPosition(position);
-    
-    camera->PrependTransform(Transform(ZAxis, 1.0f));
+    terrain->SetObserverPosition(position.x, position.z);
+    camera->SetPosition(Vector(position.x, 3.5f, position.z + 5.0f));
 }
 
 - (void)glkView: (GLKView *)view drawInRect: (CGRect)rect

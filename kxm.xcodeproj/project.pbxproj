@@ -27,6 +27,7 @@
 		2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF5115361E710054F8E9 /* TestTriangle.cpp */; };
 		2A65AF66153622FE0054F8E9 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF65153622FE0054F8E9 /* Interface.cpp */; };
 		2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6815362EF40054F8E9 /* IntModN.cpp */; };
+		2A65AF6D153AF2380054F8E9 /* ZarchTerrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6C153AF2380054F8E9 /* ZarchTerrain.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,8 @@
 		2A65AF671536281D0054F8E9 /* IntModN.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntModN.h; path = Core/include/kxm/Core/IntModN.h; sourceTree = "<group>"; };
 		2A65AF6815362EF40054F8E9 /* IntModN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IntModN.cpp; path = Core/IntModN.cpp; sourceTree = "<group>"; };
 		2A65AF6A153631DC0054F8E9 /* Tools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tools.h; path = Core/include/kxm/Core/Tools.h; sourceTree = "<group>"; };
+		2A65AF6B153AF1E70054F8E9 /* ZarchTerrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZarchTerrain.h; sourceTree = "<group>"; };
+		2A65AF6C153AF2380054F8E9 /* ZarchTerrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZarchTerrain.cpp; path = Vectoid/ZarchTerrain.cpp; sourceTree = "<group>"; };
 		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
 		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerspectiveProjection.h; sourceTree = "<group>"; };
 		2AA78C83152F538900B3631A /* OpenGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
@@ -147,6 +150,7 @@
 		2A3C140414F6F2950091BD84 /* Vectoid */ = {
 			isa = PBXGroup;
 			children = (
+				2A3C140514F6F2A90091BD84 /* include */,
 				2A65AF4B15361E700054F8E9 /* Camera.cpp */,
 				2A65AF4C15361E700054F8E9 /* CoordSys.cpp */,
 				2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */,
@@ -154,7 +158,7 @@
 				2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */,
 				2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */,
 				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
-				2A3C140514F6F2A90091BD84 /* include */,
+				2A65AF6C153AF2380054F8E9 /* ZarchTerrain.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -191,6 +195,7 @@
 				2AA78C90152F690700B3631A /* Geode.h */,
 				2AA78C93152F6A7000B3631A /* GeometryInterface.h */,
 				2AA78C94152F6E1700B3631A /* TestTriangle.h */,
+				2A65AF6B153AF1E70054F8E9 /* ZarchTerrain.h */,
 			);
 			path = Vectoid;
 			sourceTree = "<group>";
@@ -306,6 +311,7 @@
 				2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */,
 				2A65AF66153622FE0054F8E9 /* Interface.cpp in Sources */,
 				2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */,
+				2A65AF6D153AF2380054F8E9 /* ZarchTerrain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,7 +398,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_46_1 kxm/Core/include kxm/Vectoid/include";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_49_0 kxm/Core/include kxm/Vectoid/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

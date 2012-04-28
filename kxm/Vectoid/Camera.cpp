@@ -19,7 +19,7 @@ Camera::Camera() {
 }
 
 void Camera::Render(RenderContext *context) {
-    Transform inverse(Transform::InitAsInverseRotation, transform_);
+    Transform inverse(Transform::InitAsInverse, transform_);
     glLoadIdentity();
     glMultMatrixf(inverse.MatrixElements());
     CoordSysCore::Render(context);
