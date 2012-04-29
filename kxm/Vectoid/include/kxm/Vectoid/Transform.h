@@ -55,7 +55,7 @@ class Transform {
     //! Only updates the transform's translation part as specified.
     inline void SetTranslationPart(const Vector &translation);
     //! Returns the transform's translation part.
-    inline Vector TranslationPart();
+    inline Vector TranslationPart() const;
     //! Only updates the transform's rotation part as given by the (normalized) images of the
     /// coordinate axes under that rotation.
     inline void SetRotationPart(const Vector &axisImage0, const Vector &axisImage1,
@@ -280,7 +280,7 @@ void Transform::SetTranslationPart(const Vector &translation) {
     matrix_[3][0] = translation.x;  matrix_[3][1] = translation.y;  matrix_[3][2] = translation.z;
 }
 
-Vector Transform::TranslationPart() {
+Vector Transform::TranslationPart() const {
     return Vector(matrix_[3][0], matrix_[3][1], matrix_[3][2]);
 } 
 

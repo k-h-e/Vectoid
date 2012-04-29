@@ -30,6 +30,7 @@ class RenderContext;
 class SceneGraphNode : public virtual Core::Interface {
   public:
     SceneGraphNode();
+    ~SceneGraphNode();
     //! Adds the specified node as child of the receiver node. The child node must not already be
     //! child to another parent node.
     void AddChild(const boost::shared_ptr<SceneGraphNode> &child);

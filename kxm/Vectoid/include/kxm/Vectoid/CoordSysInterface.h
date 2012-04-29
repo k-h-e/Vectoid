@@ -11,6 +11,7 @@
 
 
 #include <kxm/Core/Interface.h>
+#include <kxm/Vectoid/Vector.h>
 
 
 namespace kxm {

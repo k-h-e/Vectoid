@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Vectoid/ZarchTerrain.h>
+#include <kxm/Zarch/ZarchTerrain.h>
 
 #include <kxm/Core/Tools.h>
 #include <kxm/Core/IntModN.h>
@@ -15,10 +15,11 @@
 using std::vector;
 using boost::random::uniform_int_distribution;
 using kxm::Core::IntModN;
+using kxm::Vectoid::RenderContext;
 
 
 namespace kxm {
-namespace Vectoid {
+namespace Zarch {
 
 ZarchTerrain::ZarchTerrain(int numCellsX, int numCellsZ, float cellSize,
                            int numVisibleCellsX, int numVisibleCellsZ) {
@@ -80,8 +81,6 @@ void ZarchTerrain::Render(RenderContext *context) {
         --baseCellZ;
         remainderZ += cellSize_;
     }
-    
-    
     float   lowX, lowZ, highX, highZ,
             heightLowXLowZ, heightLowXHighZ, heightHighXLowZ, heightHighXHighZ;
     bool    interpolateLowX, interpolateHighX, interpolateLowZ, interpolateHighZ;
@@ -231,5 +230,5 @@ float &ZarchTerrain::Height(int cellX, int cellZ) {
 }
 
 
-}    // Namespace Vectoid.
+}    // Namespace Zarch.
 }    // Namespace kxm.

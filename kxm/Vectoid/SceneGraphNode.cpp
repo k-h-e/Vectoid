@@ -21,6 +21,10 @@ SceneGraphNode::SceneGraphNode()
         : parent_(0) {
 }
 
+SceneGraphNode::~SceneGraphNode() {
+    RemoveAllChildren();
+}
+
 void SceneGraphNode::AddChild(const shared_ptr<SceneGraphNode> &child) {
     assert(child->parent_ == 0);
     children_.push_back(child);

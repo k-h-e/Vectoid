@@ -22,11 +22,11 @@
 
 
 namespace kxm {
-namespace Vectoid {
+namespace Zarch {
 
 //! Terrain as known from the Acorn Archimedes game "Zarch".
 /*! 
- *  \ingroup Vectoid
+ *  \ingroup Zarch
  *
  *  The terrain extents in the <c>x</c> and <c>z</c> directions, with the <c>y</c> direction
  *  corresponding to the concept of height. The terrain is composed of "cells", the projection into
@@ -34,7 +34,7 @@ namespace Vectoid {
  *  are given by the corresponding datapoints of a rectilinear grid, the dimensions of which match
  *  the numbers of cells in <c>x</c> and <c>z</c> directions respectively.
  */ 
-class ZarchTerrain : public virtual GeometryInterface {
+class ZarchTerrain : public virtual Vectoid::GeometryInterface {
   public:
     //! Well, constructor.
     /*!
@@ -64,7 +64,7 @@ class ZarchTerrain : public virtual GeometryInterface {
     
     //! Sets the observer's position in the <c>xz</c>-plane.
     void SetObserverPosition(float x, float z); 
-    void Render(RenderContext *context);
+    void Render(Vectoid::RenderContext *context);
     
   private:
     enum FormationType { MountainFormation = 0,
@@ -92,7 +92,7 @@ class ZarchTerrain : public virtual GeometryInterface {
                                               randomCellX_, randomCellZ_;
 };
 
-}    // Namespace Vectoid.
+}    // Namespace Zarch.
 }    // Namespace kxm.
 
 
