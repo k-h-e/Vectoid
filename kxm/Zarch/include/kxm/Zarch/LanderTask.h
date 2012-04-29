@@ -23,6 +23,7 @@
 namespace kxm {
 
 namespace Vectoid {
+    class Vector;
     class Transform;
     class CoordSysInterface;
 }
@@ -35,7 +36,8 @@ namespace Zarch {
  */
 class LanderTask : public virtual Game::TaskInterface {
   public:
-    LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys);
+    LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,
+               boost::shared_ptr<const Vectoid::Vector> acceleration);
     
     //! Grants read-only access to the transform where the task maintains the lander's position and
     //! orientation.
@@ -47,6 +49,7 @@ class LanderTask : public virtual Game::TaskInterface {
     LanderTask &operator=(const LanderTask &other);
     
     boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys_;
+    boost::shared_ptr<const Vectoid::Vector>      acceleration_;
     boost::shared_ptr<Vectoid::Transform>         landerTransform_;
     float                                         animationAngle_;
 };

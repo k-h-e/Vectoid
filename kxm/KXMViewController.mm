@@ -15,6 +15,7 @@
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/TestTriangle.h>
 #include <kxm/Game/TaskList.h>
+#include <kxm/Game/AccelerometerTask.h>
 #include <kxm/Zarch/ZarchTerrain.h>
 #include <kxm/Zarch/LanderTask.h>
 #include <kxm/Zarch/CameraTask.h>
@@ -115,7 +116,9 @@ using boost::shared_ptr;
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     
     taskList = shared_ptr<TaskList>(new TaskList());
-    shared_ptr<LanderTask> landerTask(new LanderTask(coordSys));
+    shared_ptr<AccelerometerTask> accelerometerTask(new AccelerometerTask());
+    taskList->Add(shared_ptr<AccelerometerTask>(accelerometerTask));
+    shared_ptr<LanderTask> landerTask(new LanderTask(coordSys, accelerometerTask->Acceleration()));
     taskList->Add(shared_ptr<LanderTask>(landerTask));
     taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderTransform())));
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderTransform())));
