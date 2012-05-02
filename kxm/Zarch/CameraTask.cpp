@@ -27,7 +27,7 @@ CameraTask::CameraTask(shared_ptr<CoordSysInterface> cameraCoordSys,
     
 void CameraTask::Execute() {
     Vector position = landerTransform_->TranslationPart();
-    cameraCoordSys_->SetPosition(Vector(position.x, position.y + 1.0f, position.z + 5.0f));
+    cameraCoordSys_->SetPosition(Vector(position.x, position.y, position.z + 5.0f));
 }
 
 

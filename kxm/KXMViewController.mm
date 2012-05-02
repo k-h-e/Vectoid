@@ -13,9 +13,9 @@
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
 #include <kxm/Vectoid/Geode.h>
-#include <kxm/Vectoid/TestTriangle.h>
 #include <kxm/Game/TaskList.h>
 #include <kxm/Game/AccelerometerTask.h>
+#include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/ZarchTerrain.h>
 #include <kxm/Zarch/LanderTask.h>
 #include <kxm/Zarch/CameraTask.h>
@@ -110,8 +110,8 @@ using boost::shared_ptr;
     projection->AddChild(camera);
     shared_ptr<CoordSys> coordSys(new CoordSys());
     camera->AddChild(coordSys);
-    shared_ptr<TestTriangle> testTriangle(new TestTriangle());
-    coordSys->AddChild(shared_ptr<Geode>(new Geode(testTriangle)));
+    shared_ptr<LanderGeometry> landerGeometry(new LanderGeometry());
+    coordSys->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
     shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(24, 24, 1.0f, 12, 12));
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     

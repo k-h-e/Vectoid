@@ -12,6 +12,7 @@
 
 
 #include <cmath>
+#include <string>
 
 /*!
  *  \defgroup Vectoid Vectoid 3D Graphics
@@ -50,6 +51,8 @@ class Vector {
     //! Normalizes the vector to unit length if possible, and returns <c>false</c> without
     //! changing state otherwise.
     inline bool TryNormalize();
+    //! Produces a verbose representation of the current vector state.
+    inline std::string ToString();
     
     float x, y, z;
 };
@@ -121,6 +124,12 @@ bool Vector::TryNormalize() {
     y /= len;
     z /= len;
     return true;
+}
+
+std::string Vector::ToString() {
+    char text[200];
+    std::sprintf(text, "(%f,%f,%f)", x, y, z);
+    return std::string(text);
 }
 
 inline Vector operator*(float s, const Vector &v) {

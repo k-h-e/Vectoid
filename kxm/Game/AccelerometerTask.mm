@@ -24,15 +24,15 @@ AccelerometerTask::AccelerometerTask()
     : acceleration_(new Vector()) {
     CMMotionManager *manager = [[CMMotionManager alloc] init];
     [manager retain];
-    [manager startAccelerometerUpdates];
-    //[manager startDeviceMotionUpdates];
+    //[manager startAccelerometerUpdates];
+    [manager startDeviceMotionUpdates];
     motionManager_ = manager;
 }
 
 AccelerometerTask::~AccelerometerTask() {
     CMMotionManager *manager = (CMMotionManager *)motionManager_;
-    [manager stopAccelerometerUpdates];
-    //[manager stopDeviceMotionUpdates];
+    //[manager stopAccelerometerUpdates];
+    [manager stopDeviceMotionUpdates];
     [manager release];
 }
 
@@ -41,8 +41,7 @@ shared_ptr<const Vector> AccelerometerTask::Acceleration() const {
 }
 
 void AccelerometerTask::Execute() {
-    CMAcceleration acceleration = ((CMMotionManager *)motionManager_).accelerometerData
-                                                                     .acceleration;
+    CMAcceleration acceleration = ((CMMotionManager *)motionManager_).deviceMotion.gravity;
     acceleration_->x = acceleration.x;
     acceleration_->y = acceleration.y;
     acceleration_->z = acceleration.z;

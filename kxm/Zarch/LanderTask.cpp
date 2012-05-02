@@ -26,7 +26,7 @@ LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
         : landerCoordSys_(landerCoordSys),
           acceleration_(acceleration),
           landerTransform_(new Transform()),
-          animationAngle_(0.0f) {
+          direction_(0.0f, 0.0f, -1.0f) {
 }
 
 shared_ptr<const Vectoid::Transform> LanderTask::LanderTransform() {
@@ -34,16 +34,38 @@ shared_ptr<const Vectoid::Transform> LanderTask::LanderTransform() {
 }
 
 void LanderTask::Execute() {
-    landerTransform_->Prepend(Transform(YAxis, 3.0f));
-    
     Vector position = landerTransform_->TranslationPart();
-    position.y = 3.0f;
-    float yAccel = acceleration_->y;
-    Tools::Clamp(&yAccel, -1.0f, 1.0f);
-    float angle = (float)acos(yAccel) * 180.0f / 3.141592654f;
-    position.x += acceleration_->x;
-    position.z += (angle - 135.0f) / 30.0f;
+    
+    Transform transform(XAxis, 40.0f);
+    Vector gravity = *acceleration_;
+    transform.ApplyTo(&gravity);
+    float projection = gravity.x;
+    Tools::Clamp(&projection, -1.0f, 1.0f);
+    float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
+    projection = gravity.y;
+    Tools::Clamp(&projection, -1.0f, 1.0f);
+    float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
+    float maxAngle    = 30.0f,
+          speedFactor =   .5f;
+    Tools::Clamp(&xAngle, -maxAngle, maxAngle);
+    Tools::Clamp(&yAngle, -maxAngle, maxAngle);
+    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle),
+           speedDirection = speed;
+    float  speedLength    = speed.Length();
+    Tools::Clamp(&speedLength, 0.0f, 1.0f);
+    if (speedLength > 0.0f)
+        direction_ = (1.0f/speedLength) * speedDirection;
+    
+    Vector up(0.0f, 1.0f, 0.0f);
+    landerTransform_->SetRotationPart(CrossProduct(up, -direction_), up, -direction_);
+    landerTransform_->Prepend(Transform(XAxis, -speedLength * 40.0f));
+    landerTransform_->Prepend(Transform(YAxis, 180.0));
+    
+    position.x += speedFactor * speed.x;
+    position.y  = 4.5f;
+    position.z += speedFactor * speed.z;
     landerTransform_->SetTranslationPart(position);
+    
     landerCoordSys_->SetTransform(*landerTransform_);
 }
 

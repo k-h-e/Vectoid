@@ -13,6 +13,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <kxm/Vectoid/Vector.h>
 #include <kxm/Game/TaskInterface.h>
 
 /*!
@@ -23,7 +24,6 @@
 namespace kxm {
 
 namespace Vectoid {
-    class Vector;
     class Transform;
     class CoordSysInterface;
 }
@@ -51,7 +51,7 @@ class LanderTask : public virtual Game::TaskInterface {
     boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys_;
     boost::shared_ptr<const Vectoid::Vector>      acceleration_;
     boost::shared_ptr<Vectoid::Transform>         landerTransform_;
-    float                                         animationAngle_;
+    Vectoid::Vector                               direction_;
 };
 
 

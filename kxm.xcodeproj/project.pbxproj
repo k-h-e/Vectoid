@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
 		2A3C13DF14F6ECC70091BD84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DE14F6ECC70091BD84 /* Foundation.framework */; };
 		2A3C13E114F6ECC70091BD84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */; };
@@ -37,6 +38,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
+		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
 		2A3C13D814F6ECC70091BD84 /* kxm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kxm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A3C13DC14F6ECC70091BD84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2A3C13DE14F6ECC70091BD84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -300,6 +303,7 @@
 				2AECEF5F154D694100033D14 /* LanderTask.cpp */,
 				2AECEF65154D81A000033D14 /* CameraTask.cpp */,
 				2AECEF68154D850000033D14 /* TerrainTask.cpp */,
+				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -327,6 +331,7 @@
 				2AECEF5E154D691600033D14 /* LanderTask.h */,
 				2AECEF64154D802800033D14 /* CameraTask.h */,
 				2AECEF67154D84D200033D14 /* TerrainTask.h */,
+				2A137B921550814F000EDEA7 /* LanderGeometry.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -412,6 +417,7 @@
 				2AECEF66154D81A000033D14 /* CameraTask.cpp in Sources */,
 				2AECEF69154D850000033D14 /* TerrainTask.cpp in Sources */,
 				2A9D7C1C154D929D00D7DE2F /* AccelerometerTask.mm in Sources */,
+				2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
