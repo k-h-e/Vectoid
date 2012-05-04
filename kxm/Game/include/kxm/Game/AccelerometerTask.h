@@ -35,6 +35,10 @@ class AccelerometerTask : public virtual TaskInterface {
     //! Grants read-only access to the vector where the task maintains the current reading from the
     //! device accelerometer.
     boost::shared_ptr<const Vectoid::Vector> Acceleration() const;
+    void BeginPanningOverride();
+    void UpdatePanningOverride(float x, float y);
+    void EndPanningOverride();
+    
     void Execute();
     
   private:
@@ -43,6 +47,10 @@ class AccelerometerTask : public virtual TaskInterface {
     
     boost::shared_ptr<Vectoid::Vector> acceleration_;
     void                               *motionManager_;
+    float                              calibrationAngle_;
+    float                              panningOverrideX_,    // Only valid if override enabled.
+                                       panningOverrideY_;    // Only valid if override enabled.
+    bool                               panningOverrideEnabled_;
 };
 
 

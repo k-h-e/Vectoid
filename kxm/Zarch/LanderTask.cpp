@@ -36,25 +36,21 @@ shared_ptr<const Vectoid::Transform> LanderTask::LanderTransform() {
 void LanderTask::Execute() {
     Vector position = landerTransform_->TranslationPart();
     
-    Transform transform(XAxis, 40.0f);
-    Vector gravity = *acceleration_;
-    transform.ApplyTo(&gravity);
-    float projection = gravity.x;
+    float projection = acceleration_->x;
     Tools::Clamp(&projection, -1.0f, 1.0f);
     float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
-    projection = gravity.y;
+    projection = acceleration_->y;
     Tools::Clamp(&projection, -1.0f, 1.0f);
     float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
     float maxAngle    = 30.0f,
           speedFactor =   .5f;
     Tools::Clamp(&xAngle, -maxAngle, maxAngle);
     Tools::Clamp(&yAngle, -maxAngle, maxAngle);
-    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle),
-           speedDirection = speed;
-    float  speedLength    = speed.Length();
-    Tools::Clamp(&speedLength, 0.0f, 1.0f);
+    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
+    float  speedLength = speed.Length();
     if (speedLength > 0.0f)
-        direction_ = (1.0f/speedLength) * speedDirection;
+        direction_ = (1.0f/speedLength) * speed;
+    Tools::Clamp(&speedLength, 0.0f, 1.0f);
     
     Vector up(0.0f, 1.0f, 0.0f);
     landerTransform_->SetRotationPart(CrossProduct(up, -direction_), up, -direction_);

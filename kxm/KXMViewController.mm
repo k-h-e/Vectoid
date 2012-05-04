@@ -33,12 +33,15 @@ using boost::shared_ptr;
     EAGLContext                       *glContext;
     shared_ptr<PerspectiveProjection> projection;
     shared_ptr<TaskList>              taskList;
+    shared_ptr<AccelerometerTask>     accelerometerTask;
     CGFloat                           width, height;
     float                             animationAngle;
 }
 
 - (void)setupGL;
 - (void)tearDownGL;
+
+- (void)handlePanning: (UIGestureRecognizer *)gestureRecognizer;
 
 @end
 
@@ -60,12 +63,18 @@ using boost::shared_ptr;
     }
     
     GLKView *view = (GLKView *)self.view;
-    view.context = glContext;
+    view.context  = glContext;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
     [self setupGL];
     
     //self.preferredFramesPerSecond = 10;
+    
+    // Install gesture recognizer in order to simulate accelerometer input via panning...
+    UIPanGestureRecognizer *gestureRecognizer
+        = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(handlePanning:)];
+    [view addGestureRecognizer: gestureRecognizer];
+    [gestureRecognizer release];
 }
 
 - (void)viewDidUnload
@@ -116,10 +125,10 @@ using boost::shared_ptr;
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     
     taskList = shared_ptr<TaskList>(new TaskList());
-    shared_ptr<AccelerometerTask> accelerometerTask(new AccelerometerTask());
-    taskList->Add(shared_ptr<AccelerometerTask>(accelerometerTask));
+    accelerometerTask = shared_ptr<AccelerometerTask>(new AccelerometerTask());
+    taskList->Add(accelerometerTask);
     shared_ptr<LanderTask> landerTask(new LanderTask(coordSys, accelerometerTask->Acceleration()));
-    taskList->Add(shared_ptr<LanderTask>(landerTask));
+    taskList->Add(landerTask);
     taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderTransform())));
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderTransform())));
 }
@@ -152,6 +161,27 @@ using boost::shared_ptr;
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     projection->Render(0);
+}
+
+- (void)handlePanning: (UIGestureRecognizer *)gestureRecognizer {
+    UIPanGestureRecognizer *panRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
+    UIGestureRecognizerState state = panRecognizer.state;
+    switch (state) {
+        case UIGestureRecognizerStateBegan:
+            accelerometerTask->BeginPanningOverride();
+            break;
+        case UIGestureRecognizerStateChanged:
+            {
+                CGPoint translation = [panRecognizer translationInView: self.view];
+                accelerometerTask->UpdatePanningOverride((float)translation.x,
+                                                         (float)translation.y);
+            }
+            break;
+        case UIGestureRecognizerStateEnded:
+        default:
+            accelerometerTask->EndPanningOverride();
+            break;
+    }
 }
 
 @end
