@@ -20,13 +20,13 @@ namespace kxm {
 namespace Zarch {
 
 TerrainTask::TerrainTask(shared_ptr<ZarchTerrain> terrain,
-                         shared_ptr<const Transform> landerTransform)
+                         shared_ptr<const LanderTask::LanderStateInfo> landerState)
     : terrain_(terrain),
-      landerTransform_(landerTransform) {
+      landerState_(landerState) {
 }
 
 void TerrainTask::Execute() {
-    Vector position = landerTransform_->TranslationPart();
+    Vector position = landerState_->transform.TranslationPart();
     terrain_->SetObserverPosition(position.x, position.z);
 }
 

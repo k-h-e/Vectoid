@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+
 #ifndef KXM_GAME_ACCELEROMETERTASK_H_
 #define KXM_GAME_ACCELEROMETERTASK_H_
 
@@ -32,12 +33,13 @@ class AccelerometerTask : public virtual TaskInterface {
     AccelerometerTask();
     ~AccelerometerTask();
     
-    //! Grants read-only access to the vector where the task maintains the current reading from the
-    //! device accelerometer.
-    boost::shared_ptr<const Vectoid::Vector> Acceleration() const;
-    void BeginPanningOverride();
+    //! Grants read-only access to the vector where the task maintains the current gravity reading
+    //! from the device accelerometer.
+    boost::shared_ptr<const Vectoid::Vector> Gravity() const;
+    //! Toogles panning override mode.
+    void EnablePanningOverride(bool enabled);
+    //! In panning override mode, this method is used to inform the task about panning updates. 
     void UpdatePanningOverride(float x, float y);
-    void EndPanningOverride();
     
     void Execute();
     

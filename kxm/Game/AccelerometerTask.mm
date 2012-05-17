@@ -37,25 +37,19 @@ AccelerometerTask::~AccelerometerTask() {
     [manager release];
 }
 
-shared_ptr<const Vector> AccelerometerTask::Acceleration() const {
+shared_ptr<const Vector> AccelerometerTask::Gravity() const {
     return acceleration_;
 }
 
-void AccelerometerTask::BeginPanningOverride() {
+void AccelerometerTask::EnablePanningOverride(bool enabled) {
     panningOverrideX_       = 0.0f;
     panningOverrideY_       = 0.0f;
-    panningOverrideEnabled_ = true;
-    std::puts("panning override on");
+    panningOverrideEnabled_ = enabled;
 }
 
 void AccelerometerTask::UpdatePanningOverride(float x, float y) {
     panningOverrideX_ = x;
     panningOverrideY_ = y;
-}
-
-void AccelerometerTask::EndPanningOverride() {
-    panningOverrideEnabled_ = false;
-    std::puts("panning override off");
 }
 
 void AccelerometerTask::Execute() {

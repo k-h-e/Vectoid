@@ -9,7 +9,7 @@
 
 #include <kxm/Core/IntModN.h>
 
-#include <kxm/Core/Tools.h>
+#include <kxm/Core/NumberTools.h>
 
 
 namespace kxm {
@@ -87,7 +87,7 @@ IntModN IntModN::operator+(int number) const {
 
 void IntModN::SetValue(int number) {
     number -= offset_;
-    Tools::Clamp(&number, 0, modulus_ - 1);
+    NumberTools::Clamp(&number, 0, modulus_ - 1);
     number_ = number;
 }
 

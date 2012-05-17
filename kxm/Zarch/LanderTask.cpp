@@ -9,62 +9,82 @@
 
 #include <kxm/Zarch/LanderTask.h>
 
-#include <kxm/Core/Tools.h>
+#include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/CoordSysInterface.h>
+#include <kxm/Zarch/MapParameters.h>
 
 using boost::shared_ptr;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
+using namespace kxm::Game;
+using namespace kxm::Zarch;
 
 
 namespace kxm {
 namespace Zarch {
 
 LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
-                       shared_ptr<const Vector> acceleration)
+                       shared_ptr<const FrameTimeTask::FrameTimeInfo> timeInfo,
+                       shared_ptr<const Vector> accelerometerGravity,
+                       shared_ptr<MapParameters> mapParameters)
         : landerCoordSys_(landerCoordSys),
-          acceleration_(acceleration),
-          landerTransform_(new Transform()),
-          direction_(0.0f, 0.0f, -1.0f) {
+          timeInfo_(timeInfo),
+          accelerometerGravity_(accelerometerGravity),
+          mapParameters_(mapParameters),
+          landerState_(new LanderStateInfo()),
+          heading_(0.0f, 0.0f, -1.0f) {
 }
 
-shared_ptr<const Vectoid::Transform> LanderTask::LanderTransform() {
-    return landerTransform_;
+void LanderTask::FireThruster(bool thrusterEnabled) {
+    landerState_->thrusterEnabled = thrusterEnabled;
+}
+
+shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
+    return landerState_;
 }
 
 void LanderTask::Execute() {
-    Vector position = landerTransform_->TranslationPart();
+    landerState_->lastFramePosition = landerState_->transform.TranslationPart();
+    landerState_->lastFrameVelocity = landerState_->velocity;
     
-    float projection = acceleration_->x;
-    Tools::Clamp(&projection, -1.0f, 1.0f);
+    float projection = accelerometerGravity_->x;
+    NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
-    projection = acceleration_->y;
-    Tools::Clamp(&projection, -1.0f, 1.0f);
+    projection = accelerometerGravity_->y;
+    NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
-    float maxAngle    = 30.0f,
-          speedFactor =   .5f;
-    Tools::Clamp(&xAngle, -maxAngle, maxAngle);
-    Tools::Clamp(&yAngle, -maxAngle, maxAngle);
+    float maxAngle = 30.0f;
+    NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
+    NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
     Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
     float  speedLength = speed.Length();
     if (speedLength > 0.0f)
-        direction_ = (1.0f/speedLength) * speed;
-    Tools::Clamp(&speedLength, 0.0f, 1.0f);
+        heading_ = (1.0f/speedLength) * speed;
+    NumberTools::Clamp(&speedLength, 0.0f, 1.0f);
     
     Vector up(0.0f, 1.0f, 0.0f);
-    landerTransform_->SetRotationPart(CrossProduct(up, -direction_), up, -direction_);
-    landerTransform_->Prepend(Transform(XAxis, -speedLength * 40.0f));
-    landerTransform_->Prepend(Transform(YAxis, 180.0));
+    Transform newLanderTransform(CrossProduct(up, -heading_), up, -heading_);
+    newLanderTransform.Prepend(Transform(XAxis, -speedLength * 120.0f));
+    newLanderTransform.Prepend(Transform(YAxis, 180.0));
     
-    position.x += speedFactor * speed.x;
-    position.y  = 4.5f;
-    position.z += speedFactor * speed.z;
-    landerTransform_->SetTranslationPart(position);
+    // Apply gravity...
+    landerState_->velocity.y += timeInfo_->timeSinceLastFrame * -mapParameters_->gravity;
+    // Apply thrust...?
+    if (landerState_->thrusterEnabled) {
+        Vector thrustDirection(0.0f, 1.0f, 0.0f);
+        newLanderTransform.ApplyTo(&thrustDirection);
+        landerState_->velocity += (  timeInfo_->timeSinceLastFrame
+                                   * mapParameters_->landerThrust ) * thrustDirection;
+    }
+    Vector position = landerState_->transform.TranslationPart();
+    position += timeInfo_->timeSinceLastFrame * landerState_->velocity;
+    newLanderTransform.SetTranslationPart(position);
     
-    landerCoordSys_->SetTransform(*landerTransform_);
+    landerCoordSys_->SetTransform(newLanderTransform);
+    landerState_->transform = newLanderTransform;
 }
 
-}
-}
+}    // Namespace Zarch.
+}    // Namespace kxm.
 

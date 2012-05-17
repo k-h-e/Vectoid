@@ -20,13 +20,13 @@ namespace kxm {
 namespace Zarch {
 
 CameraTask::CameraTask(shared_ptr<CoordSysInterface> cameraCoordSys,
-                       shared_ptr<const Transform> landerTransform)
+                       shared_ptr<const LanderTask::LanderStateInfo> landerState)
     : cameraCoordSys_(cameraCoordSys),
-      landerTransform_(landerTransform) {
+      landerState_(landerState) {
 }
     
 void CameraTask::Execute() {
-    Vector position = landerTransform_->TranslationPart();
+    Vector position = landerState_->transform.TranslationPart();
     cameraCoordSys_->SetPosition(Vector(position.x, position.y, position.z + 5.0f));
 }
 

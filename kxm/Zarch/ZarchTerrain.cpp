@@ -9,7 +9,7 @@
 
 #include <kxm/Zarch/ZarchTerrain.h>
 
-#include <kxm/Core/Tools.h>
+#include <kxm/Core/NumberTools.h>
 #include <kxm/Core/IntModN.h>
 
 using std::vector;
@@ -186,6 +186,15 @@ void ZarchTerrain::GenerateTerrain() {
                 GenerateMountainFormation();
                 break;
         }
+    }
+    
+    for (int i = 0; i < numCellsX_; i++) {
+        heights_[i]                               = 1.0f;
+        heights_[(numCellsZ_ - 1)*numCellsX_ + i] = 1.0f;
+    }
+    for (int i = 0; i < numCellsZ_; i++) {
+        heights_[i*numCellsX_]                   = 1.0f;
+        heights_[i*numCellsX_ + (numCellsX_ -1)] = 1.0f;
     }
 }
 

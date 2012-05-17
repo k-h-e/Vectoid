@@ -37,13 +37,12 @@ class Vector {
     inline bool operator!=(const Vector &other) const;
     inline Vector operator-() const;
     inline Vector operator+(const Vector &other) const;
+    inline Vector &operator+=(const Vector &other);
     inline Vector operator-(const Vector &other) const;
-    //! Dot product.
-    inline float operator*(const Vector &other) const;
-    //! Allows to access the vector <c>x</c>-, <c>y</c>- and <c>z</c>-components via the
+    
+    //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the
     //! indices <c>0</c>-, <c>1</c>- and <c>2</c> respectively.
     inline float &operator[](int i);
-            
     //! Computes the vector's length.
     inline float Length() const;
     //! Normalizes the vector to unit length (without checking for a division by <c>0</c>!).
@@ -58,15 +57,15 @@ class Vector {
 };
     
 Vector::Vector() {
-    x = 0.0f;    y = 0.0f;    z = 0.0f;
+    x = 0.0f;  y = 0.0f;  z = 0.0f;
 }
 
 Vector::Vector(float xCoord, float yCoord, float zCoord) {
-    x = xCoord;    y = yCoord;    z = zCoord;
+    x = xCoord;  y = yCoord;  z = zCoord;
 }
 
 Vector::Vector(const Vector &other) {
-    x = other.x;    y = other.y;    z = other.z;
+    x = other.x;  y = other.y;  z = other.z;
 }
 
 bool Vector::operator==(const Vector &other) const {
@@ -85,12 +84,13 @@ Vector Vector::operator+(const Vector &other) const {
     return Vector(x + other.x, y + other.y, z + other.z);
 }
 
-Vector Vector::operator-(const Vector &other) const {
-    return Vector(x - other.x, y - other.y, z - other.z);
+Vector &Vector::operator+=(const Vector &other) {
+    x += other.x;  y += other.y;  z += other.z;
+    return *this;
 }
 
-float Vector::operator*(const Vector &other) const {
-    return x*other.x + y*other.y + z*other.z;
+Vector Vector::operator-(const Vector &other) const {
+    return Vector(x - other.x, y - other.y, z - other.z);
 }
 
 float &Vector::operator[](int i) {
@@ -111,18 +111,14 @@ float Vector::Length() const {
 
 void Vector::Normalize() {
     float len = Length();
-    x /= len;
-    y /= len;
-    z /= len;
+    x /= len;  y /= len;  z /= len;
 }
 
 bool Vector::TryNormalize() {
     float len = Length();
     if (len == 0.0f)
         return false;
-    x /= len;
-    y /= len;
-    z /= len;
+    x /= len;  y /= len;  z /= len;
     return true;
 }
 
@@ -132,10 +128,17 @@ std::string Vector::ToString() {
     return std::string(text);
 }
 
+//! Scaling.
 inline Vector operator*(float s, const Vector &v) {
     return Vector(s * v.x, s * v.y, s * v.z);
 }
 
+//! Computes the dot product of the two specified vectors.
+inline float DotProduct(const Vector &u, const Vector &v) {
+    return u.x*v.x + u.y*v.y + u.z*v.z;
+}
+
+//! Computes the cross product of the two specified vectors.
 inline Vector CrossProduct(const Vector &u, const Vector &v) {
     return Vector(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
 }

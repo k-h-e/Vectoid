@@ -14,6 +14,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <kxm/Game/TaskInterface.h>
+#include <kxm/Zarch/LanderTask.h>
 
 
 namespace kxm {
@@ -32,7 +33,7 @@ namespace Zarch {
 class CameraTask : public virtual Game::TaskInterface {
   public:
     CameraTask(boost::shared_ptr<Vectoid::CoordSysInterface> cameraCoordSys,
-               boost::shared_ptr<const Vectoid::Transform> landerTransform);
+               boost::shared_ptr<const LanderTask::LanderStateInfo> landerState);
     
     void Execute();
     
@@ -40,8 +41,8 @@ class CameraTask : public virtual Game::TaskInterface {
     CameraTask(const CameraTask &other);
     CameraTask &operator=(const CameraTask &other);
     
-    boost::shared_ptr<Vectoid::CoordSysInterface> cameraCoordSys_;
-    boost::shared_ptr<const Vectoid::Transform>   landerTransform_;
+    boost::shared_ptr<Vectoid::CoordSysInterface>        cameraCoordSys_;
+    boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
 };
 
 

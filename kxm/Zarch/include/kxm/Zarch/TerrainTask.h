@@ -14,6 +14,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <kxm/Game/TaskInterface.h>
+#include <kxm/Zarch/LanderTask.h>
 
 
 namespace kxm {
@@ -33,7 +34,7 @@ class ZarchTerrain;
 class TerrainTask : public virtual Game::TaskInterface {
   public:
     TerrainTask(boost::shared_ptr<ZarchTerrain> terrain,
-                boost::shared_ptr<const Vectoid::Transform> landerTransform);
+                boost::shared_ptr<const LanderTask::LanderStateInfo> landerState);
     
     void Execute();
     
@@ -41,8 +42,8 @@ class TerrainTask : public virtual Game::TaskInterface {
     TerrainTask(const TerrainTask &other);
     TerrainTask &operator=(const TerrainTask &other);
     
-    boost::shared_ptr<ZarchTerrain>             terrain_;
-    boost::shared_ptr<const Vectoid::Transform> landerTransform_;
+    boost::shared_ptr<ZarchTerrain>                      terrain_;
+    boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
 };
 
 

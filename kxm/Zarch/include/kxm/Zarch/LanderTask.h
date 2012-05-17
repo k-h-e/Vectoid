@@ -14,7 +14,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <kxm/Vectoid/Vector.h>
-#include <kxm/Game/TaskInterface.h>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Game/FrameTimeTask.h>
 
 /*!
  *  \defgroup Zarch Game inspired by Zarch
@@ -24,11 +25,12 @@
 namespace kxm {
 
 namespace Vectoid {
-    class Transform;
     class CoordSysInterface;
 }
 
 namespace Zarch {
+
+class MapParameters;
 
 //! Controls the lander (the vehicle controlled by the player).
 /*!
@@ -36,22 +38,37 @@ namespace Zarch {
  */
 class LanderTask : public virtual Game::TaskInterface {
   public:
+    struct LanderStateInfo {
+        Vectoid::Transform transform;
+        Vectoid::Vector    velocity;
+        bool               thrusterEnabled;
+        Vectoid::Vector    lastFramePosition,
+                           lastFrameVelocity;
+        
+        LanderStateInfo() : thrusterEnabled(false) {}
+    };
+  
     LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,
-               boost::shared_ptr<const Vectoid::Vector> acceleration);
+               boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo,
+               boost::shared_ptr<const Vectoid::Vector> accelerometerGravity,
+               boost::shared_ptr<MapParameters> mapParameters);
     
-    //! Grants read-only access to the transform where the task maintains the lander's position and
-    //! orientation.
-    boost::shared_ptr<const Vectoid::Transform> LanderTransform();
+    //! Informs the task whether or not the player is firing the lander's thruster.
+    void FireThruster(bool thrusterEnabled);
+    //! Grants read-only access to the object where the task maintains the lander's state.
+    boost::shared_ptr<const LanderStateInfo> LanderState();
     void Execute();
     
   private:
     LanderTask(const LanderTask &other);
     LanderTask &operator=(const LanderTask &other);
     
-    boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys_;
-    boost::shared_ptr<const Vectoid::Vector>      acceleration_;
-    boost::shared_ptr<Vectoid::Transform>         landerTransform_;
-    Vectoid::Vector                               direction_;
+    boost::shared_ptr<Vectoid::CoordSysInterface>               landerCoordSys_;
+    boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo_;
+    boost::shared_ptr<const Vectoid::Vector>                    accelerometerGravity_;
+    boost::shared_ptr<MapParameters>                            mapParameters_;
+    boost::shared_ptr<LanderStateInfo>                          landerState_;
+    Vectoid::Vector                                             heading_;
 };
 
 
