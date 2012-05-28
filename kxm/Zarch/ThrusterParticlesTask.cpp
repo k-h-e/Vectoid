@@ -25,7 +25,7 @@ namespace Zarch {
 ThrusterParticlesTask::ThrusterParticlesTask(
     shared_ptr<Particles> particles, shared_ptr<const LanderTask::LanderStateInfo> landerState,
     shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo,
-    shared_ptr<MapParameters> mapParameters)
+    shared_ptr<const MapParameters> mapParameters)
         : particles_(particles),
           landerState_(landerState),
           timeInfo_(timeInfo),
@@ -35,13 +35,19 @@ ThrusterParticlesTask::ThrusterParticlesTask(
 
 void ThrusterParticlesTask::Execute() {
     // Move and age particles...
-    float time = timeInfo_->timeSinceLastFrame;
+    float  time               = timeInfo_->timeSinceLastFrame;
+    Vector landerPosition     = landerState_->transform.TranslationPart(),
+           lastLanderPosition = landerPosition - time*landerState_->velocity; 
     Particles::Iterator iter = particles_->BeginIteration();
     Particles::ParticleInfo *particle;
     particlesToDiscard_.clear();
     while ((particle = iter.Next())) {
         particle->velocity.y += time * -mapParameters_->gravity;
         particle->position   += time * particle->velocity;
+        mapParameters_->xRange.ClampModulo(&particle->position.x);
+        mapParameters_->xRange.ExpandModuloForObserver(landerPosition.x, &particle->position.x); 
+        mapParameters_->zRange.ClampModulo(&particle->position.z);
+        mapParameters_->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
         particle->age        += timeInfo_->timeSinceLastFrame;
         if (particle->age >= mapParameters_->maxThrusterParticleAge)
             particlesToDiscard_.push_back(iter.CurrentId());
@@ -67,8 +73,7 @@ void ThrusterParticlesTask::Execute() {
                                  + mapParameters_->thrusterExhaustVelocity*ejectDirection;
             
             float t = 1.0f - timeLeft/time;
-            particle->position =   (1.0f - t)*landerState_->lastFramePosition
-                                 +         t *landerState_->transform.TranslationPart()
+            particle->position =   (1.0f - t)*lastLanderPosition + t*landerPosition
                                  + mapParameters_->thrusterJetSize*ejectDisplacement
                                  + timeLeft*particle->velocity;
             timeLeft -= mapParameters_->thrusterExhaustInterval;

@@ -26,6 +26,8 @@ namespace Vectoid {
 
 namespace Zarch {
 
+class MapParameters;
+
 //! Keeps the camera position in sync with the lander position.
 /*!
  *  \ingroup Zarch
@@ -33,7 +35,8 @@ namespace Zarch {
 class CameraTask : public virtual Game::TaskInterface {
   public:
     CameraTask(boost::shared_ptr<Vectoid::CoordSysInterface> cameraCoordSys,
-               boost::shared_ptr<const LanderTask::LanderStateInfo> landerState);
+               boost::shared_ptr<const LanderTask::LanderStateInfo> landerState,
+               boost::shared_ptr<const MapParameters> mapParameters);
     
     void Execute();
     
@@ -43,6 +46,7 @@ class CameraTask : public virtual Game::TaskInterface {
     
     boost::shared_ptr<Vectoid::CoordSysInterface>        cameraCoordSys_;
     boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
+    boost::shared_ptr<const MapParameters>               mapParameters_;
 };
 
 

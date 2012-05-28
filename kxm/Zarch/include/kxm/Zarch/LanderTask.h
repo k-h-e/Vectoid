@@ -30,6 +30,7 @@ namespace Vectoid {
 
 namespace Zarch {
 
+class ZarchTerrain;
 class MapParameters;
 
 //! Controls the lander (the vehicle controlled by the player).
@@ -42,8 +43,6 @@ class LanderTask : public virtual Game::TaskInterface {
         Vectoid::Transform transform;
         Vectoid::Vector    velocity;
         bool               thrusterEnabled;
-        Vectoid::Vector    lastFramePosition,
-                           lastFrameVelocity;
         
         LanderStateInfo() : thrusterEnabled(false) {}
     };
@@ -51,7 +50,8 @@ class LanderTask : public virtual Game::TaskInterface {
     LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,
                boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo,
                boost::shared_ptr<const Vectoid::Vector> accelerometerGravity,
-               boost::shared_ptr<MapParameters> mapParameters);
+               boost::shared_ptr<ZarchTerrain> terrain,
+               boost::shared_ptr<const MapParameters> mapParameters);
     
     //! Informs the task whether or not the player is firing the lander's thruster.
     void FireThruster(bool thrusterEnabled);
@@ -66,7 +66,8 @@ class LanderTask : public virtual Game::TaskInterface {
     boost::shared_ptr<Vectoid::CoordSysInterface>               landerCoordSys_;
     boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo_;
     boost::shared_ptr<const Vectoid::Vector>                    accelerometerGravity_;
-    boost::shared_ptr<MapParameters>                            mapParameters_;
+    boost::shared_ptr<ZarchTerrain>                             terrain_;
+    boost::shared_ptr<const MapParameters>                      mapParameters_;
     boost::shared_ptr<LanderStateInfo>                          landerState_;
     Vectoid::Vector                                             heading_;
 };

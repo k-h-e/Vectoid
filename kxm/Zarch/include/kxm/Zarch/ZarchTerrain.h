@@ -13,6 +13,7 @@
 
 #include <vector>
 
+#include <boost/shared_ptr.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
@@ -24,6 +25,8 @@
 namespace kxm {
 namespace Zarch {
 
+class MapParameters;
+
 //! Terrain as known from the Acorn Archimedes game "Zarch".
 /*! 
  *  \ingroup Zarch
@@ -33,37 +36,19 @@ namespace Zarch {
  *  the <c>xz</c>-plane of which are squares of a fixed size. The heights of a cell's four vertices
  *  are given by the corresponding datapoints of a rectilinear grid, the dimensions of which match
  *  the numbers of cells in <c>x</c> and <c>z</c> directions respectively.
+ *
+ *  The terrain has "modulo-characteristics" in <c>x</c>- and <c>z</c>-directions (it repeats
+ *  itself). 
  */ 
 class ZarchTerrain : public virtual Vectoid::GeometryInterface {
   public:
     //! Well, constructor.
-    /*!
-     *  \param numCellsX
-     *  \param numCellsZ
-     *  Each must be even and at least <c>2</c>.
-     *  
-     *  \param cellSize
-     *  A cell's projection into the <c>xz</c>-plane is a square (see above). This parameter
-     *  controls the square's edge length.
-     *
-     *  Depending on the aforementioned parameters, the resulting terrain will cover in the
-     *  <c>xz</c>-plane the axis-parallel, rectangular area given by <c>(x = -numCellsX/2 *
-     *  cellSize, z = -numCellsZ/2 * cellSize)</c> and <c>(x = numCellsX/2 * cellSize,
-     *  z = numCellsZ/2 * cellSize)</c>.
-     *
-     *  \param numVisibleCellsX
-     *  \param numVisibleCellsZ
-     *  Number of cells in <c>x</c> and <c>z</c> directions, respectively, that are visible at a
-     *  given point in time. Must both be even and at least <c>2</c>, and less or equal to their 
-     *  respective <c>numCells</c> parameter. Which subset of the terrain's cells is actually
-     *  visible is controlled via the observer position set via SetObserverPosition().
-     *  
-     */
-    ZarchTerrain(int numCellsX, int numCellsZ, float cellSize,
-                 int numVisibleCellsX, int numVisibleCellsZ);
+    ZarchTerrain(boost::shared_ptr<const MapParameters> mapParameters);
     
     //! Sets the observer's position in the <c>xz</c>-plane.
-    void SetObserverPosition(float x, float z); 
+    void SetObserverPosition(float x, float z);
+    //! Returns the height at the specified position in the <c>xz</c>-plane. 
+    float ComputeHeight(float x, float z);
     void Render(Vectoid::RenderContext *context);
     
   private:
@@ -81,10 +66,8 @@ class ZarchTerrain : public virtual Vectoid::GeometryInterface {
     void GenerateValleyFormation();
     float &Height(int cellX, int cellZ);
     
-    int                                       numCellsX_, numCellsZ_,
-                                              numVisibleCellsX_, numVisibleCellsZ_;
-    float                                     cellSize_,
-                                              observerX_, observerZ_;
+    boost::shared_ptr<const MapParameters>    mapParameters_;
+    float                                     observerX_, observerZ_;
     std::vector<float>                        heights_;
     std::vector<GLfloat>                      vertices_;
     boost::random::mt19937                    randomGenerator_;

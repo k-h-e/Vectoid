@@ -73,7 +73,7 @@ using boost::shared_ptr;
     
     //self.preferredFramesPerSecond = 10;
     
-    accelerometerOverride = true;
+    //accelerometerOverride = true;
     
     UILongPressGestureRecognizer *pressRecognizer
         = [[UILongPressGestureRecognizer alloc] initWithTarget: self
@@ -127,7 +127,7 @@ using boost::shared_ptr;
     camera->AddChild(landerCoordSys);
     shared_ptr<LanderGeometry> landerGeometry(new LanderGeometry());
     landerCoordSys->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
-    shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(24, 24, 1.0f, 12, 12));
+    shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(mapParameters));
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     shared_ptr<Particles> thrusterParticles(new Particles());
     camera->AddChild(
@@ -140,9 +140,11 @@ using boost::shared_ptr;
     accelerometerTask = shared_ptr<AccelerometerTask>(new AccelerometerTask());
     taskList->Add(accelerometerTask);
     landerTask = shared_ptr<LanderTask>(new LanderTask(
-        landerCoordSys, timeTask->TimeInfo(), accelerometerTask->Gravity(), mapParameters));
+        landerCoordSys, timeTask->TimeInfo(), accelerometerTask->Gravity(), terrain,
+        mapParameters));
     taskList->Add(landerTask);
-    taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderState())));
+    taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderState(),
+                                         mapParameters)));
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderState())));
     taskList->Add(
         shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(

@@ -12,6 +12,7 @@
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/CoordSysInterface.h>
+#include <kxm/Zarch/ZarchTerrain.h>
 #include <kxm/Zarch/MapParameters.h>
 
 using boost::shared_ptr;
@@ -27,10 +28,12 @@ namespace Zarch {
 LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
                        shared_ptr<const FrameTimeTask::FrameTimeInfo> timeInfo,
                        shared_ptr<const Vector> accelerometerGravity,
-                       shared_ptr<MapParameters> mapParameters)
+                       shared_ptr<ZarchTerrain> terrain,
+                       shared_ptr<const MapParameters> mapParameters)
         : landerCoordSys_(landerCoordSys),
           timeInfo_(timeInfo),
           accelerometerGravity_(accelerometerGravity),
+          terrain_(terrain),
           mapParameters_(mapParameters),
           landerState_(new LanderStateInfo()),
           heading_(0.0f, 0.0f, -1.0f) {
@@ -45,9 +48,6 @@ shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
 }
 
 void LanderTask::Execute() {
-    landerState_->lastFramePosition = landerState_->transform.TranslationPart();
-    landerState_->lastFrameVelocity = landerState_->velocity;
-    
     float projection = accelerometerGravity_->x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
@@ -79,11 +79,19 @@ void LanderTask::Execute() {
     }
     Vector position = landerState_->transform.TranslationPart();
     position += timeInfo_->timeSinceLastFrame * landerState_->velocity;
+    mapParameters_->xRange.ClampModulo(&position.x);
+    mapParameters_->zRange.ClampModulo(&position.z);
+    float terrainHeight = terrain_->ComputeHeight(position.x, position.z);
+    if (position.y < terrainHeight) {
+        position.y               = terrainHeight;
+        landerState_->velocity.y = 0.0f;
+    }
     newLanderTransform.SetTranslationPart(position);
     
     landerCoordSys_->SetTransform(newLanderTransform);
     landerState_->transform = newLanderTransform;
 }
+
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
