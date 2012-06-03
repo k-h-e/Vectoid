@@ -54,6 +54,8 @@ struct MapParameters {
                    thrusterParticleSpread,
                    thrusterJetSize;
     Vectoid::Range xRange, zRange;
+    int            numStars;
+    Vectoid::Range starFieldCoordRange;
     
     MapParameters();
 };

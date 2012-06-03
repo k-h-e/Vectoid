@@ -28,7 +28,9 @@ MapParameters::MapParameters()
           thrusterParticleSpread(.25f),
           thrusterJetSize(.1f * .65f),
           xRange(0.0f),
-          zRange(0.0f) {
+          zRange(0.0f),
+          numStars(100),
+          starFieldCoordRange(0.0f) {
     if (numCellsX < 2)
         numCellsX = 2;
     if (numCellsZ < 2)
@@ -52,7 +54,12 @@ MapParameters::MapParameters()
     xRange.Grow( (float)(numCellsX / 2) * cellSize);
     zRange.Grow(-(float)(numCellsZ / 2) * cellSize);
     zRange.Grow( (float)(numCellsZ / 2) * cellSize);
+    
+    // x- and z-range should both be an integral multiple of the starfield coord range. 
+    starFieldCoordRange.Grow(-(float)(numCellsX / 4) * cellSize);
+    starFieldCoordRange.Grow( (float)(numCellsX / 4) * cellSize);
 }
+
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */; };
+		2A1303F6157BC52700A89134 /* StarFieldTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F5157BC52700A89134 /* StarFieldTask.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2BF0D51560556000F6A771 /* MapParameters.cpp */; };
 		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
@@ -46,6 +47,8 @@
 /* Begin PBXFileReference section */
 		2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesGeometry.cpp; path = Vectoid/ParticlesGeometry.cpp; sourceTree = "<group>"; };
 		2A1303F3157BC07900A89134 /* ParticlesGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesGeometry.h; sourceTree = "<group>"; };
+		2A1303F4157BC50800A89134 /* StarFieldTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StarFieldTask.h; path = Zarch/include/kxm/Zarch/StarFieldTask.h; sourceTree = "<group>"; };
+		2A1303F5157BC52700A89134 /* StarFieldTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarFieldTask.cpp; path = Zarch/StarFieldTask.cpp; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
 		2A2BF0D31560554700F6A771 /* MapParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MapParameters.h; path = Zarch/include/kxm/Zarch/MapParameters.h; sourceTree = "<group>"; };
@@ -332,6 +335,7 @@
 				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
 				2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */,
 				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
+				2A1303F5157BC52700A89134 /* StarFieldTask.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -362,6 +366,7 @@
 				2A137B921550814F000EDEA7 /* LanderGeometry.h */,
 				2A67326915600FEC0095481F /* ThrusterParticlesTask.h */,
 				2A2BF0D31560554700F6A771 /* MapParameters.h */,
+				2A1303F4157BC50800A89134 /* StarFieldTask.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 				2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */,
 				2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */,
 				2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */,
+				2A1303F6157BC52700A89134 /* StarFieldTask.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

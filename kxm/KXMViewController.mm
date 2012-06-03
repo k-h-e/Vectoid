@@ -24,6 +24,7 @@
 #include <kxm/Zarch/CameraTask.h>
 #include <kxm/Zarch/TerrainTask.h>
 #include <kxm/Zarch/ThrusterParticlesTask.h>
+#include <kxm/Zarch/StarFieldTask.h>
 #include <kxm/Zarch/MapParameters.h>
 
 #include <boost/shared_ptr.hpp>
@@ -129,9 +130,12 @@ using boost::shared_ptr;
     landerCoordSys->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
     shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(mapParameters));
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
-    shared_ptr<Particles> thrusterParticles(new Particles());
+    shared_ptr<Particles> thrusterParticles(new Particles()),
+                          starFieldParticles(new Particles());
     camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
         new ParticlesGeometry(thrusterParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
+        new ParticlesGeometry(starFieldParticles)))));
     
     taskList = shared_ptr<TaskList>(new TaskList());
     shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());
@@ -145,9 +149,10 @@ using boost::shared_ptr;
     taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderState(),
                                          mapParameters)));
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderState())));
-    taskList->Add(
-        shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
-            thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
+    taskList->Add(shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
+        thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
+    taskList->Add(shared_ptr<StarFieldTask>(new StarFieldTask(
+        starFieldParticles, landerTask->LanderState(), mapParameters)));
 }
 
 - (void)tearDownGL {
