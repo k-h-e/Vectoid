@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Zarch/ThrusterParticlesGeometry.h>
+#include <kxm/Vectoid/ParticlesGeometry.h>
 
 #include <kxm/Vectoid/Particles.h>
 
@@ -19,11 +19,11 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Zarch {
 
-ThrusterParticlesGeometry::ThrusterParticlesGeometry(shared_ptr<Particles> particles)
+ParticlesGeometry::ParticlesGeometry(shared_ptr<Particles> particles)
         : particles_(particles) {
 }
 
-void ThrusterParticlesGeometry::Render(RenderContext *context) {
+void ParticlesGeometry::Render(RenderContext *context) {
     int num = particles_->Count();
     if (num == 0)
         return;

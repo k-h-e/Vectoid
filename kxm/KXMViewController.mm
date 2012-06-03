@@ -14,12 +14,12 @@
 #include <kxm/Vectoid/CoordSys.h>
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
+#include <kxm/Vectoid/ParticlesGeometry.h>
 #include <kxm/Game/TaskList.h>
 #include <kxm/Game/FrameTimeTask.h>
 #include <kxm/Game/AccelerometerTask.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/ZarchTerrain.h>
-#include <kxm/Zarch/ThrusterParticlesGeometry.h>
 #include <kxm/Zarch/LanderTask.h>
 #include <kxm/Zarch/CameraTask.h>
 #include <kxm/Zarch/TerrainTask.h>
@@ -73,7 +73,7 @@ using boost::shared_ptr;
     
     //self.preferredFramesPerSecond = 10;
     
-    //accelerometerOverride = true;
+    accelerometerOverride = true;
     
     UILongPressGestureRecognizer *pressRecognizer
         = [[UILongPressGestureRecognizer alloc] initWithTarget: self
@@ -130,9 +130,8 @@ using boost::shared_ptr;
     shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(mapParameters));
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     shared_ptr<Particles> thrusterParticles(new Particles());
-    camera->AddChild(
-        shared_ptr<Geode>(new Geode(shared_ptr<ThrusterParticlesGeometry>(
-            new ThrusterParticlesGeometry(thrusterParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
+        new ParticlesGeometry(thrusterParticles)))));
     
     taskList = shared_ptr<TaskList>(new TaskList());
     shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());

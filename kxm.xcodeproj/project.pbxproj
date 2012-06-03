@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2BF0D51560556000F6A771 /* MapParameters.cpp */; };
 		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
@@ -30,7 +31,6 @@
 		2A65AF66153622FE0054F8E9 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF65153622FE0054F8E9 /* Interface.cpp */; };
 		2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6815362EF40054F8E9 /* IntModN.cpp */; };
 		2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */; };
-		2A67326F156010580095481F /* ThrusterParticlesGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67326E156010580095481F /* ThrusterParticlesGeometry.cpp */; };
 		2A9D7C1C154D929D00D7DE2F /* AccelerometerTask.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D7C1B154D929D00D7DE2F /* AccelerometerTask.mm */; };
 		2A9D7C1E154D9DF700D7DE2F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */; };
 		2AC40A1F15567B1400026789 /* FrameTimeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */; };
@@ -44,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesGeometry.cpp; path = Vectoid/ParticlesGeometry.cpp; sourceTree = "<group>"; };
+		2A1303F3157BC07900A89134 /* ParticlesGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesGeometry.h; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
 		2A2BF0D31560554700F6A771 /* MapParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MapParameters.h; path = Zarch/include/kxm/Zarch/MapParameters.h; sourceTree = "<group>"; };
@@ -79,9 +81,7 @@
 		2A65AF6815362EF40054F8E9 /* IntModN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IntModN.cpp; path = Core/IntModN.cpp; sourceTree = "<group>"; };
 		2A65AF6A153631DC0054F8E9 /* NumberTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NumberTools.h; path = Core/include/kxm/Core/NumberTools.h; sourceTree = "<group>"; };
 		2A67326915600FEC0095481F /* ThrusterParticlesTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesTask.h; path = Zarch/include/kxm/Zarch/ThrusterParticlesTask.h; sourceTree = "<group>"; };
-		2A67326B1560101E0095481F /* ThrusterParticlesGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesGeometry.h; path = Zarch/include/kxm/Zarch/ThrusterParticlesGeometry.h; sourceTree = "<group>"; };
 		2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesTask.cpp; path = Zarch/ThrusterParticlesTask.cpp; sourceTree = "<group>"; };
-		2A67326E156010580095481F /* ThrusterParticlesGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesGeometry.cpp; path = Zarch/ThrusterParticlesGeometry.cpp; sourceTree = "<group>"; };
 		2A9D7C1A154D927100D7DE2F /* AccelerometerTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AccelerometerTask.h; path = Game/include/kxm/Game/AccelerometerTask.h; sourceTree = "<group>"; };
 		2A9D7C1B154D929D00D7DE2F /* AccelerometerTask.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AccelerometerTask.mm; path = Game/AccelerometerTask.mm; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -203,6 +203,7 @@
 				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
 				2AC40A211556CEC700026789 /* Range.cpp */,
 				2AEECB36155EB90800AC21A2 /* Particles.cpp */,
+				2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -241,6 +242,7 @@
 				2AA78C94152F6E1700B3631A /* TestTriangle.h */,
 				2AC40A201556CEA900026789 /* Range.h */,
 				2AEECB34155EB8DF00AC21A2 /* Particles.h */,
+				2A1303F3157BC07900A89134 /* ParticlesGeometry.h */,
 			);
 			path = Vectoid;
 			sourceTree = "<group>";
@@ -329,7 +331,6 @@
 				2AECEF68154D850000033D14 /* TerrainTask.cpp */,
 				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
 				2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */,
-				2A67326E156010580095481F /* ThrusterParticlesGeometry.cpp */,
 				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
 			);
 			name = Zarch;
@@ -360,7 +361,6 @@
 				2AECEF67154D84D200033D14 /* TerrainTask.h */,
 				2A137B921550814F000EDEA7 /* LanderGeometry.h */,
 				2A67326915600FEC0095481F /* ThrusterParticlesTask.h */,
-				2A67326B1560101E0095481F /* ThrusterParticlesGeometry.h */,
 				2A2BF0D31560554700F6A771 /* MapParameters.h */,
 			);
 			name = Zarch;
@@ -452,8 +452,8 @@
 				2AC40A221556CEC700026789 /* Range.cpp in Sources */,
 				2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */,
 				2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */,
-				2A67326F156010580095481F /* ThrusterParticlesGeometry.cpp in Sources */,
 				2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */,
+				2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

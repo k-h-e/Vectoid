@@ -28,19 +28,19 @@ namespace Vectoid {
 
 namespace Zarch {
 
-//! Renders the lander's thruster particles.
+//! Renders particles.
 /*!
- *  \ingroup Zarch
+ *  \ingroup Vectoid
  */
-class ThrusterParticlesGeometry : public virtual Vectoid::GeometryInterface {
+class ParticlesGeometry : public virtual Vectoid::GeometryInterface {
   public:
-    ThrusterParticlesGeometry(boost::shared_ptr<Vectoid::Particles> particles);
+    ParticlesGeometry(boost::shared_ptr<Vectoid::Particles> particles);
     
     void Render(Vectoid::RenderContext *context);
     
   private:
-    ThrusterParticlesGeometry(const ThrusterParticlesGeometry &other);
-    ThrusterParticlesGeometry &operator=(const ThrusterParticlesGeometry &other);
+    ParticlesGeometry(const ParticlesGeometry &other);
+    ParticlesGeometry &operator=(const ParticlesGeometry &other);
     
     boost::shared_ptr<Vectoid::Particles> particles_;
     std::vector<GLfloat>                  vertexBuffer_;
