@@ -25,14 +25,20 @@ CameraTask::CameraTask(shared_ptr<CoordSysInterface> cameraCoordSys,
                        shared_ptr<const MapParameters> mapParameters)
     : cameraCoordSys_(cameraCoordSys),
       landerState_(landerState),
-      mapParameters_(mapParameters) {
+      mapParameters_(mapParameters),
+      cameraState_(new CameraStateInfo()) {
 }
-    
+
+shared_ptr<const CameraTask::CameraStateInfo> CameraTask::CameraState() {
+    return cameraState_;
+}
+
 void CameraTask::Execute() {
     Vector position = landerState_->transform.TranslationPart();
     if (position.y < mapParameters_->cameraMinHeight)
         position.y = mapParameters_->cameraMinHeight;
-    cameraCoordSys_->SetPosition(Vector(position.x, position.y, position.z + 5.0f));
+    cameraState_->position = Vector(position.x, position.y, position.z + 5.0f);
+    cameraCoordSys_->SetPosition(cameraState_->position);
 }
 
 

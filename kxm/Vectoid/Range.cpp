@@ -29,6 +29,11 @@ Range::Range(float number, float anotherNumber) {
     }
 }    
 
+Range::Range(const Range &other, float offset) {
+    min_ = other.min_ + offset;
+    max_ = other.max_ + offset;
+}
+
 void Range::Grow(float number) {
     if (number < min_)
         min_ = number;

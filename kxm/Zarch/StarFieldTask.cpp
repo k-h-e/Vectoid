@@ -24,19 +24,41 @@ namespace kxm {
 namespace Zarch {
 
 StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
-                             shared_ptr<const LanderTask::LanderStateInfo> landerState,
+                             shared_ptr<const CameraTask::CameraStateInfo> cameraState,
                              shared_ptr<const MapParameters> mapParameters)
         : particles_(particles),
-          landerState_(landerState),
+          cameraState_(cameraState),
           mapParameters_(mapParameters) {
     const int                  randomMax = 10000;
     mt19937                    randomGenerator;
     uniform_int_distribution<> randomDistribution(0, randomMax);
     for (int i = 0; i < mapParameters_->numStars; i++) {
+        float t = (float)randomDistribution(randomGenerator) / (float)randomMax;
+        float x = mapParameters->starFieldCoordRange.AffineCombination(t);
+        mapParameters->starFieldCoordRange.Clamp(&x);
+        t = (float)randomDistribution(randomGenerator) / (float)randomMax;
+        float y = mapParameters->starFieldCoordRange.AffineCombination(t);
+        mapParameters->starFieldCoordRange.Clamp(&y);
+        t = (float)randomDistribution(randomGenerator) / (float)randomMax;
+        float z = mapParameters->starFieldCoordRange.AffineCombination(t);
+        mapParameters->starFieldCoordRange.Clamp(&z);
+        particles->AddParticle(Vector(x, y, z), Vector());
     }
 }
 
 void StarFieldTask::Execute() {
+    Vector cameraPosition = cameraState_->position;
+    Particles::Iterator iter = particles_->BeginIteration();
+    while (Particles::ParticleInfo *particle = iter.Next()) {
+        Vector position = particle->position;
+        Range xRange(mapParameters_->starFieldCoordRange, cameraPosition.x);
+        xRange.ClampModulo(&position.x);
+        Range yRange(mapParameters_->starFieldCoordRange, cameraPosition.y);
+        yRange.ClampModulo(&position.y);
+        Range zRange(mapParameters_->starFieldCoordRange, cameraPosition.z);
+        zRange.ClampModulo(&position.z);
+        particle->position = position;
+    }
 }
 
 

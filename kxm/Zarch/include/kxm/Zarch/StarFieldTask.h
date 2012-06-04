@@ -14,7 +14,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <kxm/Game/TaskInterface.h>
-#include <kxm/Zarch/LanderTask.h>
+#include <kxm/Zarch/CameraTask.h>
 
 
 namespace kxm {
@@ -34,7 +34,7 @@ class MapParameters;
 class StarFieldTask : public virtual Game::TaskInterface {
   public:
     StarFieldTask(boost::shared_ptr<Vectoid::Particles> particles,
-                  boost::shared_ptr<const LanderTask::LanderStateInfo> landerState,
+                  boost::shared_ptr<const CameraTask::CameraStateInfo> cameraState,
                   boost::shared_ptr<const MapParameters> mapParameters);
     
     void Execute();
@@ -44,7 +44,7 @@ class StarFieldTask : public virtual Game::TaskInterface {
     StarFieldTask &operator=(const StarFieldTask &other);
     
     boost::shared_ptr<Vectoid::Particles>                particles_;
-    boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
+    boost::shared_ptr<const CameraTask::CameraStateInfo> cameraState_;
     boost::shared_ptr<const MapParameters>               mapParameters_;
 };
 

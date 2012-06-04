@@ -146,13 +146,14 @@ using boost::shared_ptr;
         landerCoordSys, timeTask->TimeInfo(), accelerometerTask->Gravity(), terrain,
         mapParameters));
     taskList->Add(landerTask);
-    taskList->Add(shared_ptr<CameraTask>(new CameraTask(camera, landerTask->LanderState(),
-                                         mapParameters)));
+    shared_ptr<CameraTask> cameraTask(new CameraTask(camera, landerTask->LanderState(),
+                                                     mapParameters));
+    taskList->Add(cameraTask);
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderState())));
     taskList->Add(shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
         thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
     taskList->Add(shared_ptr<StarFieldTask>(new StarFieldTask(
-        starFieldParticles, landerTask->LanderState(), mapParameters)));
+        starFieldParticles, cameraTask->CameraState(), mapParameters)));
 }
 
 - (void)tearDownGL {

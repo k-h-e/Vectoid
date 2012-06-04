@@ -22,6 +22,9 @@ class Range {
   public:
     Range(float first);
     Range(float number, float anotherNumber);
+    //! Creates a range of the same interval as the specified other range, but offsets it as
+    //! specified.
+    Range(const Range &other, float offset);
     // Instances may get copied.
     
     //! Grows the range (if necessary) so that it includes the specified number.
@@ -47,6 +50,9 @@ class Range {
     //! bounds checking whatsoever.
     inline void ComputeSlotUnchecked(float number, float slotSize,
                                      int *outSlot, float *outRemainder) const;
+    //! Computes the affine combination of the two range delimiters using the given coefficient
+    //! <c>t</c> (and <c>(1 - t)</c>).
+    inline float AffineCombination(float t) const;
     
   private:
     float min_,
@@ -105,6 +111,10 @@ void Range::ComputeSlotUnchecked(float number, float slotSize,
                                  int *outSlot, float *outRemainder) const {
     *outSlot      = (number - min_) / slotSize;
     *outRemainder = number - (min_ + (float)*outSlot * slotSize);
+}
+
+float Range::AffineCombination(float t) const {
+    return (1.0f - t)*min_ + t*max_;
 }
 
 
