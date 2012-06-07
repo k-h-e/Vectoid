@@ -49,10 +49,13 @@ struct MapParameters {
                    landerThrust,
                    cameraMinHeight,
                    maxThrusterParticleAge,
+                   maxShotParticleAge,
                    thrusterExhaustVelocity,
                    thrusterExhaustInterval,
                    thrusterParticleSpread,
-                   thrusterJetSize;
+                   thrusterJetSize,
+                   shotVelocity,
+                   shotFiringInterval;
     Vectoid::Range xRange, zRange;
     int            numStars;
     Vectoid::Range starFieldCoordRange;

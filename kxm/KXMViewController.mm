@@ -9,6 +9,10 @@
 
 #import "KXMViewController.h"
 
+#include <boost/shared_ptr.hpp>
+
+#import <CoreMotion/CMMotionManager.h>
+
 #include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -17,17 +21,18 @@
 #include <kxm/Vectoid/ParticlesGeometry.h>
 #include <kxm/Game/TaskList.h>
 #include <kxm/Game/FrameTimeTask.h>
-#include <kxm/Game/AccelerometerTask.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/ZarchTerrain.h>
 #include <kxm/Zarch/LanderTask.h>
 #include <kxm/Zarch/CameraTask.h>
 #include <kxm/Zarch/TerrainTask.h>
 #include <kxm/Zarch/ThrusterParticlesTask.h>
+#include <kxm/Zarch/ShotsTask.h>
 #include <kxm/Zarch/StarFieldTask.h>
 #include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/ControlsState.h>
 
-#include <boost/shared_ptr.hpp>
+#import "KXMGLView.h"
 
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
@@ -39,9 +44,10 @@ using boost::shared_ptr;
     EAGLContext                       *glContext;
     shared_ptr<PerspectiveProjection> projection;
     shared_ptr<TaskList>              taskList;
-    shared_ptr<AccelerometerTask>     accelerometerTask;
-    shared_ptr<LanderTask>            landerTask;
+    shared_ptr<ControlsState>         controlsState;
     CGFloat                           width, height;
+    CMMotionManager                   *motionManager;
+    Transform                         calibrationTransform;
     bool                              accelerometerOverride;
     float                             accelerometerOverrideStartX, accelerometerOverrideStartY;
 }
@@ -55,6 +61,7 @@ using boost::shared_ptr;
 @implementation KXMViewController
 
 - (void)dealloc {
+    [motionManager release];
     [super dealloc];
 }
 
@@ -65,23 +72,21 @@ using boost::shared_ptr;
     if (!glContext) {
         NSLog(@"Failed to create ES context");
     }
-    
     GLKView *view = (GLKView *)self.view;
     view.context  = glContext;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
+    motionManager        = [[CMMotionManager alloc] init];
+    calibrationTransform = Transform(XAxis, 40.0f);
+    
+    controlsState = shared_ptr<ControlsState>(new ControlsState());
+    [(KXMGLView *)view setControlsState: controlsState.get()];
+    view.multipleTouchEnabled = YES;
+    
     [self setupGL];
     
     //self.preferredFramesPerSecond = 10;
-    
-    accelerometerOverride = true;
-    
-    UILongPressGestureRecognizer *pressRecognizer
-        = [[UILongPressGestureRecognizer alloc] initWithTarget: self
-                                                        action: @selector(handlePress:)];
-    pressRecognizer.minimumPressDuration = .001f;
-    [view addGestureRecognizer: pressRecognizer];
-    [pressRecognizer release];
+    //accelerometerOverride = true;
 }
 
 - (void)viewDidUnload
@@ -116,7 +121,7 @@ using boost::shared_ptr;
     
     glEnable(GL_DEPTH_TEST);
     
-    shared_ptr<MapParameters> mapParameters(new MapParameters());
+    shared_ptr<MapParameters> mapParameters(new MapParameters());    
     
     projection = shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
     projection->SetWindowSize(11.0f);
@@ -131,20 +136,20 @@ using boost::shared_ptr;
     shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(mapParameters));
     camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
     shared_ptr<Particles> thrusterParticles(new Particles()),
+                          shotsParticles(new Particles()),
                           starFieldParticles(new Particles());
     camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
         new ParticlesGeometry(thrusterParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
+        new ParticlesGeometry(shotsParticles)))));
     camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
         new ParticlesGeometry(starFieldParticles)))));
     
     taskList = shared_ptr<TaskList>(new TaskList());
     shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());
     taskList->Add(timeTask);
-    accelerometerTask = shared_ptr<AccelerometerTask>(new AccelerometerTask());
-    taskList->Add(accelerometerTask);
-    landerTask = shared_ptr<LanderTask>(new LanderTask(
-        landerCoordSys, timeTask->TimeInfo(), accelerometerTask->Gravity(), terrain,
-        mapParameters));
+    shared_ptr<LanderTask> landerTask(new LanderTask(
+        landerCoordSys, timeTask->TimeInfo(), controlsState, terrain, mapParameters));
     taskList->Add(landerTask);
     shared_ptr<CameraTask> cameraTask(new CameraTask(camera, landerTask->LanderState(),
                                                      mapParameters));
@@ -152,8 +157,12 @@ using boost::shared_ptr;
     taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderState())));
     taskList->Add(shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
         thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
+    taskList->Add(shared_ptr<ShotsTask>(new ShotsTask(
+        shotsParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
     taskList->Add(shared_ptr<StarFieldTask>(new StarFieldTask(
         starFieldParticles, cameraTask->CameraState(), mapParameters)));
+    
+    [motionManager startDeviceMotionUpdates];
 }
 
 - (void)tearDownGL {
@@ -161,11 +170,18 @@ using boost::shared_ptr;
     
     taskList.reset();
     projection.reset();
+    
+    [motionManager stopDeviceMotionUpdates];
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update {
+    CMAcceleration gravity = motionManager.deviceMotion.gravity;
+    Vector orientationInput(gravity.x, gravity.y, gravity.z);
+    calibrationTransform.ApplyTo(&orientationInput);
+    controlsState->orientationInput = orientationInput;
+    
     taskList->Execute();
 }
 
@@ -188,28 +204,27 @@ using boost::shared_ptr;
     UIGestureRecognizerState state = pressRecognizer.state;
     switch (state) {
         case UIGestureRecognizerStateBegan:
-            landerTask->FireThruster(true);
+            controlsState->thrusterRequested = true;
             if (accelerometerOverride) {
                 CGPoint position = [pressRecognizer locationInView: self.view];
                 accelerometerOverrideStartX = (float)position.x;
                 accelerometerOverrideStartY = (float)position.y;
-                accelerometerTask->EnablePanningOverride(true);
+                controlsState->orientationInput = Vector(0.0f, 0.0f, -1.0f);
             }
             break;
         case UIGestureRecognizerStateChanged:
             if (accelerometerOverride) {
                 CGPoint position = [pressRecognizer locationInView: self.view];
-                accelerometerTask->UpdatePanningOverride(
+                controlsState->orientationInput = Vector(
                     (float)position.x - accelerometerOverrideStartX,
-                    (float)position.y - accelerometerOverrideStartY);
+                    -((float)position.y - accelerometerOverrideStartY),
+                    -200.0f);
+                controlsState->orientationInput.TryNormalize();
             }
             break;
         case UIGestureRecognizerStateEnded:
         default:
-            landerTask->FireThruster(false);
-            if (accelerometerOverride) {
-                accelerometerTask->EnablePanningOverride(false);
-            }
+            controlsState->thrusterRequested = false;
             break;
     }
 }

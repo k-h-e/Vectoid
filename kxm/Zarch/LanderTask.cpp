@@ -14,6 +14,7 @@
 #include <kxm/Vectoid/CoordSysInterface.h>
 #include <kxm/Zarch/ZarchTerrain.h>
 #include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/ControlsState.h>
 
 using boost::shared_ptr;
 using namespace kxm::Core;
@@ -27,20 +28,16 @@ namespace Zarch {
 
 LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
                        shared_ptr<const FrameTimeTask::FrameTimeInfo> timeInfo,
-                       shared_ptr<const Vector> accelerometerGravity,
+                       shared_ptr<const ControlsState> controlsState,
                        shared_ptr<ZarchTerrain> terrain,
                        shared_ptr<const MapParameters> mapParameters)
         : landerCoordSys_(landerCoordSys),
           timeInfo_(timeInfo),
-          accelerometerGravity_(accelerometerGravity),
+          controlsState_(controlsState),
           terrain_(terrain),
           mapParameters_(mapParameters),
           landerState_(new LanderStateInfo()),
           heading_(0.0f, 0.0f, -1.0f) {
-}
-
-void LanderTask::FireThruster(bool thrusterEnabled) {
-    landerState_->thrusterEnabled = thrusterEnabled;
 }
 
 shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
@@ -48,10 +45,12 @@ shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
 }
 
 void LanderTask::Execute() {
-    float projection = accelerometerGravity_->x;
+    landerState_->thrusterEnabled = controlsState_->thrusterRequested;
+    
+    float projection = controlsState_->orientationInput.x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
-    projection = accelerometerGravity_->y;
+    projection = controlsState_->orientationInput.y;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
     float maxAngle = 30.0f;

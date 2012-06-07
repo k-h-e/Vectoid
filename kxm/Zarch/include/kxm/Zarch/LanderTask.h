@@ -32,6 +32,7 @@ namespace Zarch {
 
 class ZarchTerrain;
 class MapParameters;
+class ControlsState;
 
 //! Controls the lander (the vehicle controlled by the player).
 /*!
@@ -49,12 +50,10 @@ class LanderTask : public virtual Game::TaskInterface {
   
     LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,
                boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo,
-               boost::shared_ptr<const Vectoid::Vector> accelerometerGravity,
+               boost::shared_ptr<const Zarch::ControlsState> controlsState,
                boost::shared_ptr<ZarchTerrain> terrain,
                boost::shared_ptr<const MapParameters> mapParameters);
     
-    //! Informs the task whether or not the player is firing the lander's thruster.
-    void FireThruster(bool thrusterEnabled);
     //! Grants read-only access to the object where the task maintains the lander's state.
     boost::shared_ptr<const LanderStateInfo> LanderState();
     void Execute();
@@ -65,7 +64,7 @@ class LanderTask : public virtual Game::TaskInterface {
     
     boost::shared_ptr<Vectoid::CoordSysInterface>               landerCoordSys_;
     boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo_;
-    boost::shared_ptr<const Vectoid::Vector>                    accelerometerGravity_;
+    boost::shared_ptr<const Zarch::ControlsState>               controlsState_;
     boost::shared_ptr<ZarchTerrain>                             terrain_;
     boost::shared_ptr<const MapParameters>                      mapParameters_;
     boost::shared_ptr<LanderStateInfo>                          landerState_;
