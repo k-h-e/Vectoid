@@ -18,6 +18,7 @@ using namespace kxm::Zarch;
 
 @interface KXMGLView () {
     ControlsState *controlsState;
+    UITouch       *leftTouch, *rightTouch;
 }
 @end
 
@@ -29,20 +30,42 @@ using namespace kxm::Zarch;
 }
 
 - (void)touchesBegan: (NSSet *)touches withEvent: (UIEvent *)event {
-
-    puts("touches began");
+    for (UITouch *touch in touches) {
+        CGPoint position = [touch locationInView: self];
+        if (position.x < self.frame.size.width / 2.0f) {
+            if (!leftTouch) {
+                leftTouch = touch;
+                controlsState->firingRequested = true;
+            }
+        }
+        else {
+            if (!rightTouch) {
+                rightTouch = touch;
+                controlsState->thrusterRequested = true;
+            }
+        }
+    } 
 }
 
 - (void)touchesMoved: (NSSet *)touches withEvent: (UIEvent *)event {
-    puts("touches moved");
+    // nop
 }
 
 - (void)touchesEnded: (NSSet *)touches withEvent: (UIEvent *)event {
-    puts("touches ended");
+    for (UITouch *touch in touches) {
+        if (touch == leftTouch) {
+            leftTouch = nil;
+            controlsState->firingRequested = false;
+        }
+        else if (touch == rightTouch) {
+            rightTouch = nil;
+            controlsState->thrusterRequested = false;
+        }
+    }
 }
 
 - (void)touchesCancelled: (NSSet *)touches withEvent: (UIEvent *)event {
-    puts("touches cancelled");
+    [self touchesEnded: touches withEvent: event];
 }
 
 

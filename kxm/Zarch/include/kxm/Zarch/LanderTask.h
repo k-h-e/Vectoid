@@ -43,9 +43,9 @@ class LanderTask : public virtual Game::TaskInterface {
     struct LanderStateInfo {
         Vectoid::Transform transform;
         Vectoid::Vector    velocity;
-        bool               thrusterEnabled;
+        bool               thrusterEnabled, firingEnabled;
         
-        LanderStateInfo() : thrusterEnabled(false) {}
+        LanderStateInfo() : thrusterEnabled(false), firingEnabled(false) {}
     };
   
     LanderTask(boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,

@@ -46,6 +46,7 @@ shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
 
 void LanderTask::Execute() {
     landerState_->thrusterEnabled = controlsState_->thrusterRequested;
+    landerState_->firingEnabled   = controlsState_->firingRequested;
     
     float projection = controlsState_->orientationInput.x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);

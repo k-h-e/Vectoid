@@ -29,7 +29,7 @@ MapParameters::MapParameters()
           thrusterParticleSpread(.25f),
           thrusterJetSize(.1f * .65f),
           shotVelocity(3.0f),
-          shotFiringInterval(.2f),
+          shotFiringInterval(.1f),
           xRange(0.0f),
           zRange(0.0f),
           numStars(100),

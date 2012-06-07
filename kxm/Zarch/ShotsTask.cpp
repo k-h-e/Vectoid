@@ -57,18 +57,21 @@ void ShotsTask::Execute() {
         particles_->RemoveParticles(particlesToDiscard_); 
     
     // Add new particles...?
-    if (!landerState_->thrusterEnabled && (time > 0.0f)) {
+    if (landerState_->firingEnabled && (time > 0.0f)) {
         Transform transform(landerState_->transform);
         transform.SetTranslationPart(Vector());
         float timeLeft = time - particleTimeCarryOver_;
         while (timeLeft > 0.0f) {
             Particles::ParticleInfo *particle = particles_->AddParticle(Vector(), Vector());
-            Vector firingDirection(0.0f, 0.0f, 1.0f);
+            Vector firingDirection(0.0f, 0.0f, 1.0f),
+                   startPoint(0.0f, 0.0f, .55f);
             transform.ApplyTo(&firingDirection);
+            transform.ApplyTo(&startPoint);
             particle->velocity =   landerState_->velocity
                                  + mapParameters_->shotVelocity*firingDirection;
             float t = 1.0f - timeLeft/time;
             particle->position =   (1.0f - t)*lastLanderPosition + t*landerPosition
+                                 + startPoint
                                  + timeLeft*particle->velocity;
             timeLeft -= mapParameters_->shotFiringInterval;
         }
