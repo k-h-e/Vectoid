@@ -58,6 +58,7 @@ void StarFieldTask::Execute() {
         Range zRange(mapParameters_->starFieldCoordRange, cameraPosition.z);
         zRange.ClampModulo(&position.z);
         particle->position = position;
+        particle->hidden   = (position.y < mapParameters_->starFieldMinHeight);
     }
 }
 

@@ -30,7 +30,8 @@ MapParameters::MapParameters()
           xRange(0.0f),
           zRange(0.0f),
           numStars(100),
-          starFieldCoordRange(0.0f) {
+          starFieldCoordRange(0.0f),
+          starFieldMinHeight(6.0f) {
     if (numCellsX < 2)
         numCellsX = 2;
     if (numCellsZ < 2)
@@ -55,7 +56,6 @@ MapParameters::MapParameters()
     zRange.Grow(-(float)(numCellsZ / 2) * cellSize);
     zRange.Grow( (float)(numCellsZ / 2) * cellSize);
     
-    // x- and z-range should both be an integral multiple of the starfield coord range. 
     starFieldCoordRange.Grow(-(float)(numCellsX / 4) * cellSize);
     starFieldCoordRange.Grow( (float)(numCellsX / 4) * cellSize);
 }

@@ -56,6 +56,7 @@ struct MapParameters {
     Vectoid::Range xRange, zRange;
     int            numStars;
     Vectoid::Range starFieldCoordRange;
+    float          starFieldMinHeight;
     
     MapParameters();
 };

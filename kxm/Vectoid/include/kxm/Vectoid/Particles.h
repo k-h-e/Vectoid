@@ -45,6 +45,7 @@ class Particles : public virtual Core::Interface {
         Vector position,
                velocity;
         float  age;
+        bool   hidden;
         float  random0, random1;    // Random numbers in [0, 1].
       private:
         friend class Particles;
