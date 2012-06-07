@@ -29,20 +29,30 @@ void ParticlesGeometry::Render(RenderContext *context) {
         return;
     if (num > (int)vertexBuffer_.size() / 3)
         vertexBuffer_.resize(num * 3);
-    GLfloat *ptr = &vertexBuffer_[0];
+        // See to it we have enough buffer space for all particles. The whole space might not be
+        // needed, though, as particles can be hidden.
+    
+    GLfloat *ptr        = &vertexBuffer_[0];
+    int     numToRender = 0;
     Particles::Iterator iter = particles_->BeginIteration();
     Particles::ParticleInfo *particle;
     while ((particle = iter.Next())) {
+        if (particle->hidden)
+            continue;
         *ptr++ = particle->position.x;
         *ptr++ = particle->position.y;
         *ptr++ = particle->position.z;
+        numToRender++;
     }
-    glPointSize(3.0f);
-    glVertexPointer(3, GL_FLOAT, 0, &vertexBuffer_[0]);
-   	glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_POINTS, 0, num);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glPointSize(1.0f);
+    
+    if (numToRender) {
+        glPointSize(3.0f);
+        glVertexPointer(3, GL_FLOAT, 0, &vertexBuffer_[0]);
+   	    glEnableClientState(GL_VERTEX_ARRAY);
+        glDrawArrays(GL_POINTS, 0, numToRender);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glPointSize(1.0f);
+    }
 }
 
 

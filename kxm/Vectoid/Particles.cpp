@@ -32,6 +32,7 @@ Particles::ParticleInfo *Particles::AddParticle(const Vector &position, const Ve
     particle->position = position;
     particle->velocity = velocity;
     particle->age      = 0.0f;
+    particle->hidden   = false;
     return particle;
 }
 
