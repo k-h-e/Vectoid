@@ -14,7 +14,7 @@
 namespace kxm {
 namespace Vectoid {
 
-//! Range (closed interval) of real numbers represented by <c>float</c>s.
+//! Range (closed interval) of real numbers (represented by <c>float</c>s).
 /*!
  *  \ingroup Vectoid
  */
