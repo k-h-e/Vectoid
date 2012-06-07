@@ -1,1 +1,4 @@
 /doc/
+
+xcuserdata/
+*.xcodeproj/project.xcworkspace/contents.xcworkspacedata
