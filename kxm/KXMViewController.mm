@@ -86,7 +86,7 @@ using boost::shared_ptr;
     [self setupGL];
     
     //self.preferredFramesPerSecond = 10;
-    //accelerometerOverride = true;
+    accelerometerOverride = true;
 }
 
 - (void)viewDidUnload
@@ -177,10 +177,12 @@ using boost::shared_ptr;
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update {
-    CMAcceleration gravity = motionManager.deviceMotion.gravity;
-    Vector orientationInput(gravity.x, gravity.y, gravity.z);
-    calibrationTransform.ApplyTo(&orientationInput);
-    controlsState->orientationInput = orientationInput;
+    if (!accelerometerOverride) {
+        CMAcceleration gravity = motionManager.deviceMotion.gravity;
+        Vector orientationInput(gravity.x, gravity.y, gravity.z);
+        calibrationTransform.ApplyTo(&orientationInput);
+        controlsState->orientationInput = orientationInput;
+    }
     
     taskList->Execute();
 }
