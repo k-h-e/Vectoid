@@ -7,23 +7,24 @@
 //
 
 
-#include <kxm/Vectoid/ParticlesGeometry.h>
+#include <kxm/Vectoid/ParticlesRenderer.h>
 
 #include <kxm/Vectoid/Particles.h>
 
 using std::vector;
 using boost::shared_ptr;
+using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
 
 namespace kxm {
 namespace Zarch {
 
-ParticlesGeometry::ParticlesGeometry(shared_ptr<Particles> particles)
+ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
         : particles_(particles) {
 }
 
-void ParticlesGeometry::Render(RenderContext *context) {
+void ParticlesRenderer::Render(RenderContext *context) {
     int num = particles_->Count();
     if (num == 0)
         return;
@@ -34,9 +35,9 @@ void ParticlesGeometry::Render(RenderContext *context) {
     
     GLfloat *ptr        = &vertexBuffer_[0];
     int     numToRender = 0;
-    Particles::Iterator iter = particles_->BeginIteration();
+    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
-    while ((particle = iter.Next())) {
+    while ((particle = iter.GetNext())) {
         if (particle->hidden)
             continue;
         *ptr++ = particle->position.x;

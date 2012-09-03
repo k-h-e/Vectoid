@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */; };
+		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A1303F6157BC52700A89134 /* StarFieldTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F5157BC52700A89134 /* StarFieldTask.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2BF0D51560556000F6A771 /* MapParameters.cpp */; };
@@ -34,20 +34,22 @@
 		2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */; };
 		2A9D7C1E154D9DF700D7DE2F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */; };
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
+		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
+		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
 		2AC40A1F15567B1400026789 /* FrameTimeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
 		2AE5BEE51580F057000B62D6 /* ShotsTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5BEE41580F057000B62D6 /* ShotsTask.cpp */; };
 		2AECEF59154D627200033D14 /* TaskList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF58154D627200033D14 /* TaskList.cpp */; };
 		2AECEF60154D694100033D14 /* LanderTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF5F154D694100033D14 /* LanderTask.cpp */; };
-		2AECEF63154D6CC900033D14 /* ZarchTerrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF62154D6CC900033D14 /* ZarchTerrain.cpp */; };
+		2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF62154D6CC900033D14 /* Terrain.cpp */; };
 		2AECEF66154D81A000033D14 /* CameraTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF65154D81A000033D14 /* CameraTask.cpp */; };
 		2AECEF69154D850000033D14 /* TerrainTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF68154D850000033D14 /* TerrainTask.cpp */; };
 		2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEECB36155EB90800AC21A2 /* Particles.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesGeometry.cpp; path = Vectoid/ParticlesGeometry.cpp; sourceTree = "<group>"; };
-		2A1303F3157BC07900A89134 /* ParticlesGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesGeometry.h; sourceTree = "<group>"; };
+		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
+		2A1303F3157BC07900A89134 /* ParticlesRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesRenderer.h; sourceTree = "<group>"; };
 		2A1303F4157BC50800A89134 /* StarFieldTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StarFieldTask.h; path = Zarch/include/kxm/Zarch/StarFieldTask.h; sourceTree = "<group>"; };
 		2A1303F5157BC52700A89134 /* StarFieldTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarFieldTask.cpp; path = Zarch/StarFieldTask.cpp; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
@@ -100,6 +102,10 @@
 		2AAC255E15810118004A37C6 /* ControlsState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsState.h; path = Zarch/include/kxm/Zarch/ControlsState.h; sourceTree = "<group>"; };
 		2AAC256015811661004A37C6 /* KXMGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KXMGLView.h; sourceTree = "<group>"; };
 		2AAC256115811661004A37C6 /* KXMGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KXMGLView.mm; sourceTree = "<group>"; };
+		2AAC25631584F3C4004A37C6 /* AgeColoredParticles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgeColoredParticles.h; sourceTree = "<group>"; };
+		2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
+		2AAC2566158D223D004A37C6 /* TerrainRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = Zarch/include/kxm/Zarch/TerrainRenderer.h; sourceTree = "<group>"; };
+		2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainRenderer.cpp; path = Zarch/TerrainRenderer.cpp; sourceTree = "<group>"; };
 		2AC40A1C15567AFF00026789 /* FrameTimeTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameTimeTask.h; path = Game/include/kxm/Game/FrameTimeTask.h; sourceTree = "<group>"; };
 		2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTimeTask.cpp; path = Game/FrameTimeTask.cpp; sourceTree = "<group>"; };
 		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Range.h; sourceTree = "<group>"; };
@@ -111,14 +117,15 @@
 		2AECEF58154D627200033D14 /* TaskList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TaskList.cpp; path = Game/TaskList.cpp; sourceTree = "<group>"; };
 		2AECEF5E154D691600033D14 /* LanderTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderTask.h; path = Zarch/include/kxm/Zarch/LanderTask.h; sourceTree = "<group>"; };
 		2AECEF5F154D694100033D14 /* LanderTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderTask.cpp; path = Zarch/LanderTask.cpp; sourceTree = "<group>"; };
-		2AECEF61154D6CAF00033D14 /* ZarchTerrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZarchTerrain.h; path = Zarch/include/kxm/Zarch/ZarchTerrain.h; sourceTree = "<group>"; };
-		2AECEF62154D6CC900033D14 /* ZarchTerrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZarchTerrain.cpp; path = Zarch/ZarchTerrain.cpp; sourceTree = "<group>"; };
+		2AECEF61154D6CAF00033D14 /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = Zarch/include/kxm/Zarch/Terrain.h; sourceTree = "<group>"; };
+		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = Zarch/Terrain.cpp; sourceTree = "<group>"; };
 		2AECEF64154D802800033D14 /* CameraTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraTask.h; path = Zarch/include/kxm/Zarch/CameraTask.h; sourceTree = "<group>"; };
 		2AECEF65154D81A000033D14 /* CameraTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraTask.cpp; path = Zarch/CameraTask.cpp; sourceTree = "<group>"; };
 		2AECEF67154D84D200033D14 /* TerrainTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainTask.h; path = Zarch/include/kxm/Zarch/TerrainTask.h; sourceTree = "<group>"; };
 		2AECEF68154D850000033D14 /* TerrainTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainTask.cpp; path = Zarch/TerrainTask.cpp; sourceTree = "<group>"; };
 		2AEECB34155EB8DF00AC21A2 /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Particles.h; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = Vectoid/Particles.cpp; sourceTree = "<group>"; };
+		2AFFAABC15D986C7006C9092 /* ItemGroups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ItemGroups.h; path = Core/include/kxm/Core/ItemGroups.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +148,6 @@
 		2A3C13CD14F6ECC60091BD84 = {
 			isa = PBXGroup;
 			children = (
-				2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */,
 				2A3C13E614F6ECC70091BD84 /* kxm */,
 				2A3C13DB14F6ECC70091BD84 /* Frameworks */,
 				2A3C13D914F6ECC70091BD84 /* Products */,
@@ -159,6 +165,7 @@
 		2A3C13DB14F6ECC70091BD84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */,
 				2A3C13DC14F6ECC70091BD84 /* UIKit.framework */,
 				2A3C13DE14F6ECC70091BD84 /* Foundation.framework */,
 				2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */,
@@ -212,7 +219,8 @@
 				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
 				2AC40A211556CEC700026789 /* Range.cpp */,
 				2AEECB36155EB90800AC21A2 /* Particles.cpp */,
-				2A1303F1157BBFD900A89134 /* ParticlesGeometry.cpp */,
+				2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */,
+				2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -251,7 +259,8 @@
 				2AA78C94152F6E1700B3631A /* TestTriangle.h */,
 				2AC40A201556CEA900026789 /* Range.h */,
 				2AEECB34155EB8DF00AC21A2 /* Particles.h */,
-				2A1303F3157BC07900A89134 /* ParticlesGeometry.h */,
+				2A1303F3157BC07900A89134 /* ParticlesRenderer.h */,
+				2AAC25631584F3C4004A37C6 /* AgeColoredParticles.h */,
 			);
 			path = Vectoid;
 			sourceTree = "<group>";
@@ -280,6 +289,7 @@
 				2A65AF64153622DB0054F8E9 /* Interface.h */,
 				2A65AF671536281D0054F8E9 /* IntModN.h */,
 				2A65AF6A153631DC0054F8E9 /* NumberTools.h */,
+				2AFFAABC15D986C7006C9092 /* ItemGroups.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -332,7 +342,6 @@
 			isa = PBXGroup;
 			children = (
 				2AECEF5B154D68D300033D14 /* include */,
-				2AECEF62154D6CC900033D14 /* ZarchTerrain.cpp */,
 				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
 				2AECEF5F154D694100033D14 /* LanderTask.cpp */,
 				2AECEF65154D81A000033D14 /* CameraTask.cpp */,
@@ -341,6 +350,8 @@
 				2AE5BEE41580F057000B62D6 /* ShotsTask.cpp */,
 				2A1303F5157BC52700A89134 /* StarFieldTask.cpp */,
 				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
+				2AECEF62154D6CC900033D14 /* Terrain.cpp */,
+				2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -364,7 +375,6 @@
 		2AECEF5D154D68E700033D14 /* Zarch */ = {
 			isa = PBXGroup;
 			children = (
-				2AECEF61154D6CAF00033D14 /* ZarchTerrain.h */,
 				2AECEF5E154D691600033D14 /* LanderTask.h */,
 				2AECEF64154D802800033D14 /* CameraTask.h */,
 				2AECEF67154D84D200033D14 /* TerrainTask.h */,
@@ -374,6 +384,8 @@
 				2A1303F4157BC50800A89134 /* StarFieldTask.h */,
 				2A2BF0D31560554700F6A771 /* MapParameters.h */,
 				2AAC255E15810118004A37C6 /* ControlsState.h */,
+				2AECEF61154D6CAF00033D14 /* Terrain.h */,
+				2AAC2566158D223D004A37C6 /* TerrainRenderer.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -404,7 +416,7 @@
 		2A3C13CF14F6ECC60091BD84 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 2A3C13D214F6ECC60091BD84 /* Build configuration list for PBXProject "kxm" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -455,7 +467,7 @@
 				2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */,
 				2AECEF59154D627200033D14 /* TaskList.cpp in Sources */,
 				2AECEF60154D694100033D14 /* LanderTask.cpp in Sources */,
-				2AECEF63154D6CC900033D14 /* ZarchTerrain.cpp in Sources */,
+				2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */,
 				2AECEF66154D81A000033D14 /* CameraTask.cpp in Sources */,
 				2AECEF69154D850000033D14 /* TerrainTask.cpp in Sources */,
 				2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */,
@@ -464,10 +476,12 @@
 				2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */,
 				2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */,
 				2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */,
-				2A1303F2157BBFD900A89134 /* ParticlesGeometry.cpp in Sources */,
+				2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */,
 				2A1303F6157BC52700A89134 /* StarFieldTask.cpp in Sources */,
 				2AE5BEE51580F057000B62D6 /* ShotsTask.cpp in Sources */,
 				2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */,
+				2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */,
+				2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

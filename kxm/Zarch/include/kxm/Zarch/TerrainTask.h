@@ -25,7 +25,7 @@ namespace Vectoid {
 
 namespace Zarch {
 
-class ZarchTerrain;
+class TerrainRenderer;
 
 //! Keeps the terrain in sync with the lander position.
 /*!
@@ -33,7 +33,7 @@ class ZarchTerrain;
  */
 class TerrainTask : public virtual Game::TaskInterface {
   public:
-    TerrainTask(boost::shared_ptr<ZarchTerrain> terrain,
+    TerrainTask(boost::shared_ptr<TerrainRenderer> terrainRenderer,
                 boost::shared_ptr<const LanderTask::LanderStateInfo> landerState);
     
     void Execute();
@@ -42,7 +42,7 @@ class TerrainTask : public virtual Game::TaskInterface {
     TerrainTask(const TerrainTask &other);
     TerrainTask &operator=(const TerrainTask &other);
     
-    boost::shared_ptr<ZarchTerrain>                      terrain_;
+    boost::shared_ptr<TerrainRenderer>                   terrainRenderer_;
     boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
 };
 

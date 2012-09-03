@@ -16,6 +16,7 @@
 
 
 using boost::shared_ptr;
+using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
 
@@ -38,10 +39,9 @@ void ShotsTask::Execute() {
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
            lastLanderPosition = landerPosition - time*landerState_->velocity; 
-    Particles::Iterator iter = particles_->BeginIteration();
+    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
-    particlesToDiscard_.clear();
-    while ((particle = iter.Next())) {
+    while ((particle = iter.GetNext())) {
         particle->velocity.y += time * -mapParameters_->gravity;
         particle->position   += time * particle->velocity;
         mapParameters_->xRange.ClampModulo(&particle->position.x);
@@ -50,11 +50,8 @@ void ShotsTask::Execute() {
         mapParameters_->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
         particle->age += timeInfo_->timeSinceLastFrame;
         if (particle->age >= mapParameters_->maxShotParticleAge)
-            particlesToDiscard_.push_back(iter.CurrentId());
+            iter.MoveToIdle();
     }
-    // Discard those particles that are too old...
-    if ((int)particlesToDiscard_.size() != 0)
-        particles_->RemoveParticles(particlesToDiscard_); 
     
     // Add new particles...?
     if (landerState_->firingEnabled && (time > 0.0f)) {

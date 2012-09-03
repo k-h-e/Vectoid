@@ -17,6 +17,7 @@
 
 using boost::shared_ptr;
 using namespace boost::random;
+using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
 
@@ -48,8 +49,8 @@ StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
 
 void StarFieldTask::Execute() {
     Vector cameraPosition = cameraState_->position;
-    Particles::Iterator iter = particles_->BeginIteration();
-    while (Particles::ParticleInfo *particle = iter.Next()) {
+    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
+    while (Particles::ParticleInfo *particle = iter.GetNext()) {
         Vector position = particle->position;
         Range xRange(mapParameters_->starFieldCoordRange, cameraPosition.x);
         xRange.ClampModulo(&position.x);

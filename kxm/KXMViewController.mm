@@ -18,11 +18,13 @@
 #include <kxm/Vectoid/CoordSys.h>
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
-#include <kxm/Vectoid/ParticlesGeometry.h>
+#include <kxm/Vectoid/ParticlesRenderer.h>
+#include <kxm/Vectoid/AgeColoredParticles.h>
 #include <kxm/Game/TaskList.h>
 #include <kxm/Game/FrameTimeTask.h>
 #include <kxm/Zarch/LanderGeometry.h>
-#include <kxm/Zarch/ZarchTerrain.h>
+#include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/TerrainRenderer.h>
 #include <kxm/Zarch/LanderTask.h>
 #include <kxm/Zarch/CameraTask.h>
 #include <kxm/Zarch/TerrainTask.h>
@@ -86,7 +88,7 @@ using boost::shared_ptr;
     [self setupGL];
     
     //self.preferredFramesPerSecond = 10;
-    accelerometerOverride = true;
+    //accelerometerOverride = true;
 }
 
 - (void)viewDidUnload
@@ -133,17 +135,18 @@ using boost::shared_ptr;
     camera->AddChild(landerCoordSys);
     shared_ptr<LanderGeometry> landerGeometry(new LanderGeometry());
     landerCoordSys->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
-    shared_ptr<ZarchTerrain> terrain(new ZarchTerrain(mapParameters));
-    camera->AddChild(shared_ptr<Geode>(new Geode(terrain)));
+    shared_ptr<Terrain> terrain(new Terrain(mapParameters));
+    shared_ptr<TerrainRenderer> terrainRenderer(new TerrainRenderer(terrain, mapParameters));
+    camera->AddChild(shared_ptr<Geode>(new Geode(terrainRenderer)));
     shared_ptr<Particles> thrusterParticles(new Particles()),
                           shotsParticles(new Particles()),
                           starFieldParticles(new Particles());
-    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
-        new ParticlesGeometry(thrusterParticles)))));
-    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
-        new ParticlesGeometry(shotsParticles)))));
-    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesGeometry>(
-        new ParticlesGeometry(starFieldParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<AgeColoredParticles>(
+        new AgeColoredParticles(thrusterParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
+        new ParticlesRenderer(shotsParticles)))));
+    camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
+        new ParticlesRenderer(starFieldParticles)))));
     
     taskList = shared_ptr<TaskList>(new TaskList());
     shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());
@@ -154,7 +157,8 @@ using boost::shared_ptr;
     shared_ptr<CameraTask> cameraTask(new CameraTask(camera, landerTask->LanderState(),
                                                      mapParameters));
     taskList->Add(cameraTask);
-    taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrain, landerTask->LanderState())));
+    taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrainRenderer,
+                                                          landerTask->LanderState())));
     taskList->Add(shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
         thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
     taskList->Add(shared_ptr<ShotsTask>(new ShotsTask(

@@ -7,8 +7,8 @@
 //
 
 
-#ifndef KXM_ZARCH_THRUSTERPARTICLESGEOMETRY_H_
-#define KXM_ZARCH_THRUSTERPARTICLESGEOMETRY_H_
+#ifndef KXM_VECTOID_PARTICLESRENDERER_H_
+#define KXM_VECTOID_PARTICLESRENDERER_H_
 
 
 #include <vector>
@@ -32,15 +32,15 @@ namespace Zarch {
 /*!
  *  \ingroup Vectoid
  */
-class ParticlesGeometry : public virtual Vectoid::GeometryInterface {
+class ParticlesRenderer : public virtual Vectoid::GeometryInterface {
   public:
-    ParticlesGeometry(boost::shared_ptr<Vectoid::Particles> particles);
+    ParticlesRenderer(boost::shared_ptr<Vectoid::Particles> particles);
     
     void Render(Vectoid::RenderContext *context);
     
   private:
-    ParticlesGeometry(const ParticlesGeometry &other);
-    ParticlesGeometry &operator=(const ParticlesGeometry &other);
+    ParticlesRenderer(const ParticlesRenderer &other);
+    ParticlesRenderer &operator=(const ParticlesRenderer &other);
     
     boost::shared_ptr<Vectoid::Particles> particles_;
     std::vector<GLfloat>                  vertexBuffer_;
@@ -51,4 +51,4 @@ class ParticlesGeometry : public virtual Vectoid::GeometryInterface {
 }    // Namespace kxm.
 
 
-#endif    // KXM_ZARCH_THRUSTERPARTICLESGEOMETRY_H_
+#endif    // KXM_VECTOID_PARTICLESRENDERER_H_

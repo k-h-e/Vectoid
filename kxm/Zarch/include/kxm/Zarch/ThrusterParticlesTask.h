@@ -51,7 +51,6 @@ class ThrusterParticlesTask : public virtual Game::TaskInterface {
     boost::shared_ptr<const LanderTask::LanderStateInfo>        landerState_;
     boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo_;
     boost::shared_ptr<const MapParameters>                      mapParameters_;
-    std::vector<int>                                            particlesToDiscard_;
     float                                                       particleTimeCarryOver_;
 };
 

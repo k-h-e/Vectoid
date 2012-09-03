@@ -12,7 +12,7 @@
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/CoordSysInterface.h>
-#include <kxm/Zarch/ZarchTerrain.h>
+#include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/ControlsState.h>
 
@@ -29,7 +29,7 @@ namespace Zarch {
 LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
                        shared_ptr<const FrameTimeTask::FrameTimeInfo> timeInfo,
                        shared_ptr<const ControlsState> controlsState,
-                       shared_ptr<ZarchTerrain> terrain,
+                       shared_ptr<Terrain> terrain,
                        shared_ptr<const MapParameters> mapParameters)
         : landerCoordSys_(landerCoordSys),
           timeInfo_(timeInfo),
@@ -81,7 +81,7 @@ void LanderTask::Execute() {
     position += timeInfo_->timeSinceLastFrame * landerState_->velocity;
     mapParameters_->xRange.ClampModulo(&position.x);
     mapParameters_->zRange.ClampModulo(&position.z);
-    float terrainHeight = terrain_->ComputeHeight(position.x, position.z);
+    float terrainHeight = terrain_->Height(position.x, position.z);
     if (position.y < terrainHeight) {
         position.y               = terrainHeight;
         landerState_->velocity.y = 0.0f;
