@@ -31,13 +31,12 @@ class MapParameters;
 /*!
  *  \ingroup Zarch
  */
-class StarFieldTask : public virtual Game::TaskInterface {
+class StarFieldTask : public virtual Game::Task {
   public:
     StarFieldTask(boost::shared_ptr<Vectoid::Particles> particles,
                   boost::shared_ptr<const CameraTask::CameraStateInfo> cameraState,
                   boost::shared_ptr<const MapParameters> mapParameters);
-    
-    void Execute();
+    bool Execute();
     
   private:
     StarFieldTask(const StarFieldTask &other);

@@ -23,13 +23,13 @@ void TaskList::Add(shared_ptr<TaskInterface> task) {
     children_.push_back(task);
 }
 
-void TaskList::Execute() {
+bool TaskList::Execute() {
     for (vector<shared_ptr<TaskInterface> >::iterator iter  = children_.begin();
          iter                                              != children_.end();
          ++iter)
         (*iter)->Execute();
+    return true;
 }
-
 
 }    // Namespace Game.
 }    // Namespace kxm.

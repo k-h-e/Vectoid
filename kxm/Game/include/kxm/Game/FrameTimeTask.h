@@ -14,7 +14,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-#include <kxm/Game/TaskInterface.h>
+#include <kxm/Game/Task.h>
 
 
 namespace kxm {
@@ -24,7 +24,7 @@ namespace Game {
 /*!
  *  \ingroup Game
  */
-class FrameTimeTask : public virtual TaskInterface {
+class FrameTimeTask : public virtual Task {
   public:
     //! Holds time information for a given frame.
     struct FrameTimeInfo {
@@ -36,7 +36,7 @@ class FrameTimeTask : public virtual TaskInterface {
     
     //! Grants read-only access to the frame time info maintained by the task.
     boost::shared_ptr<const FrameTimeInfo> TimeInfo();
-    void Execute();
+    bool Execute();
     
   private:
     FrameTimeTask(const FrameTimeTask &other);

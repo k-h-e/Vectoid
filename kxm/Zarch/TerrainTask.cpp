@@ -25,11 +25,11 @@ TerrainTask::TerrainTask(shared_ptr<TerrainRenderer> terrainRenderer,
       landerState_(landerState) {
 }
 
-void TerrainTask::Execute() {
+bool TerrainTask::Execute() {
     Vector position = landerState_->transform.TranslationPart();
     terrainRenderer_->SetObserverPosition(position.x, position.z);
+    return true;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

@@ -21,14 +21,27 @@
 namespace kxm {
 namespace Game {
 
-//! Interface to entities that get called once per frame so they can perform a specific task.
+//! Ongoing activity that periodically gets called to perform a specific task. Takes part in a
+//! co-operative scheduling scheme managed by a \ref Tasks collection.
 /*!
  *  \ingroup Game
  */
 class TaskInterface : public virtual Core::Interface {
   public:
-    //! Executes the task for the current frame.
-    virtual void Execute() = 0;
+    //! Indicates that no re-use is desired.
+    static const int NoReuseGroup = -1;
+    
+    //! Executes the task until it co-operatively yields (by returning).
+    /*!
+     *  \return <c>false</c> in case the task has finished and wishes to be deregistered.
+     */
+    virtual bool Execute() = 0;
+    //! Returns the \ref Tasks group used for re-using tasks of this type, or \ref NoReuseGroup in
+    //! case the task does not wish to be re-used.
+    virtual int ReuseGroup() = 0;
+    //! If you wish the task object to be re-used after it has finished, specify the appropriate
+    //! re-use group. By saying \ref NoReuseGroup you can disable re-using (default).
+    virtual void SetReuseGroup(int reuseGroup) = 0;
 };
 
 

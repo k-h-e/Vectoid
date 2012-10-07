@@ -33,14 +33,14 @@ shared_ptr<const CameraTask::CameraStateInfo> CameraTask::CameraState() {
     return cameraState_;
 }
 
-void CameraTask::Execute() {
+bool CameraTask::Execute() {
     Vector position = landerState_->transform.TranslationPart();
     if (position.y < mapParameters_->cameraMinHeight)
         position.y = mapParameters_->cameraMinHeight;
     cameraState_->position = Vector(position.x, position.y, position.z + 5.0f);
     cameraCoordSys_->SetPosition(cameraState_->position);
+    return true;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

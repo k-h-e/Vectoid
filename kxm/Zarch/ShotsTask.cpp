@@ -34,7 +34,7 @@ ShotsTask::ShotsTask(shared_ptr<Particles> particles,
           particleTimeCarryOver_(0.0f) {
 }
 
-void ShotsTask::Execute() {
+bool ShotsTask::Execute() {
     // Move and age particles...
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
@@ -74,8 +74,9 @@ void ShotsTask::Execute() {
         }
         particleTimeCarryOver_ = -timeLeft;
     }
+    
+    return true;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

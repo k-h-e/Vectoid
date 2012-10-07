@@ -9,10 +9,14 @@
 
 #import "KXMViewController.h"
 
+#include <string>
+#include <sstream>
+
 #include <boost/shared_ptr.hpp>
 
 #import <CoreMotion/CMMotionManager.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -20,7 +24,7 @@
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
-#include <kxm/Game/TaskList.h>
+#include <kxm/Game/Tasks.h>
 #include <kxm/Game/FrameTimeTask.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/Terrain.h>
@@ -36,16 +40,18 @@
 
 #import "KXMGLView.h"
 
+using namespace std;
+using boost::shared_ptr;
+using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
 using namespace kxm::Zarch;
-using boost::shared_ptr;
 
 
 @interface KXMViewController () {
     EAGLContext                       *glContext;
     shared_ptr<PerspectiveProjection> projection;
-    shared_ptr<TaskList>              taskList;
+    shared_ptr<Tasks>                 tasks;
     shared_ptr<ControlsState>         controlsState;
     CGFloat                           width, height;
     CMMotionManager                   *motionManager;
@@ -148,23 +154,30 @@ using boost::shared_ptr;
     camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    taskList = shared_ptr<TaskList>(new TaskList());
+    tasks = shared_ptr<Tasks>(new Tasks());
     shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());
-    taskList->Add(timeTask);
+    tasks->AddTask(timeTask, TaskInterface::NoReuseGroup);
     shared_ptr<LanderTask> landerTask(new LanderTask(
         landerCoordSys, timeTask->TimeInfo(), controlsState, terrain, mapParameters));
-    taskList->Add(landerTask);
+    tasks->AddTask(landerTask, TaskInterface::NoReuseGroup);
     shared_ptr<CameraTask> cameraTask(new CameraTask(camera, landerTask->LanderState(),
                                                      mapParameters));
-    taskList->Add(cameraTask);
-    taskList->Add(shared_ptr<TerrainTask>(new TerrainTask(terrainRenderer,
-                                                          landerTask->LanderState())));
-    taskList->Add(shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
-        thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
-    taskList->Add(shared_ptr<ShotsTask>(new ShotsTask(
-        shotsParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)));
-    taskList->Add(shared_ptr<StarFieldTask>(new StarFieldTask(
-        starFieldParticles, cameraTask->CameraState(), mapParameters)));
+    tasks->AddTask(cameraTask, TaskInterface::NoReuseGroup);
+    tasks->AddTask(
+        shared_ptr<TerrainTask>(new TerrainTask(terrainRenderer, landerTask->LanderState())),
+        TaskInterface::NoReuseGroup);
+    tasks->AddTask(
+        shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
+            thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)),
+        TaskInterface::NoReuseGroup);
+    tasks->AddTask(
+        shared_ptr<ShotsTask>(new ShotsTask(
+            shotsParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)),
+        TaskInterface::NoReuseGroup);
+    tasks->AddTask(
+        shared_ptr<StarFieldTask>(new StarFieldTask(
+            starFieldParticles, cameraTask->CameraState(), mapParameters)),
+        TaskInterface::NoReuseGroup);
     
     [motionManager startDeviceMotionUpdates];
 }
@@ -172,7 +185,7 @@ using boost::shared_ptr;
 - (void)tearDownGL {
     [EAGLContext setCurrentContext: glContext];
     
-    taskList.reset();
+    tasks.reset();
     projection.reset();
     
     [motionManager stopDeviceMotionUpdates];
@@ -188,7 +201,7 @@ using boost::shared_ptr;
         controlsState->orientationInput = orientationInput;
     }
     
-    taskList->Execute();
+    tasks->Execute();
 }
 
 - (void)glkView: (GLKView *)view drawInRect: (CGRect)rect {
@@ -197,7 +210,8 @@ using boost::shared_ptr;
         width  = size.width;
         height = size.height;
         projection->SetViewPort((float)width, (float)height);
-        std::printf("view port set, size=(%d,%d)\n", (int)width, (int)height);
+        Log().Stream() << "viewport set" << ", size=(" << (int)width << "," << (int)height << ")"
+                       << endl;
     }
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

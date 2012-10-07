@@ -34,14 +34,13 @@ class MapParameters;
 /*!
  *  \ingroup Zarch
  */
-class ShotsTask : public virtual Game::TaskInterface {
+class ShotsTask : public virtual Game::Task {
   public:
     ShotsTask(boost::shared_ptr<Vectoid::Particles> particles,
               boost::shared_ptr<const LanderTask::LanderStateInfo> landerState,
               boost::shared_ptr<const Game::FrameTimeTask::FrameTimeInfo> timeInfo,
               boost::shared_ptr<const MapParameters> mapParameters);
-    
-    void Execute();
+    bool Execute();
     
   private:
     ShotsTask(const ShotsTask &other);

@@ -47,7 +47,7 @@ StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
     }
 }
 
-void StarFieldTask::Execute() {
+bool StarFieldTask::Execute() {
     Vector cameraPosition = cameraState_->position;
     ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     while (Particles::ParticleInfo *particle = iter.GetNext()) {
@@ -61,8 +61,8 @@ void StarFieldTask::Execute() {
         particle->position = position;
         particle->hidden   = (position.y < mapParameters_->starFieldMinHeight);
     }
+    return true;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

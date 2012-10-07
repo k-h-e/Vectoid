@@ -38,7 +38,7 @@ class ControlsState;
 /*!
  *  \ingroup Zarch
  */
-class LanderTask : public virtual Game::TaskInterface {
+class LanderTask : public virtual Game::Task {
   public:
     struct LanderStateInfo {
         Vectoid::Transform transform;
@@ -56,7 +56,7 @@ class LanderTask : public virtual Game::TaskInterface {
     
     //! Grants read-only access to the object where the task maintains the lander's state.
     boost::shared_ptr<const LanderStateInfo> LanderState();
-    void Execute();
+    bool Execute();
     
   private:
     LanderTask(const LanderTask &other);

@@ -37,6 +37,10 @@ namespace Vectoid {
  */
 class Particles {
   public:
+    //! Holds information about a particle.
+    /*!
+     *  \ingroup Vectoid
+     */
     struct ParticleInfo {
         Vector position,
                velocity;

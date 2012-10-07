@@ -32,12 +32,15 @@
 		2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF5115361E710054F8E9 /* TestTriangle.cpp */; };
 		2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6815362EF40054F8E9 /* IntModN.cpp */; };
 		2A67326D1560103A0095481F /* ThrusterParticlesTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */; };
+		2A8F4DBF1621F49200AEA809 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8F4DBD1621F49200AEA809 /* Task.cpp */; };
 		2A9D7C1E154D9DF700D7DE2F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */; };
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
 		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
 		2AC40A1F15567B1400026789 /* FrameTimeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
+		2AE1DCFE162199AB00306D89 /* Tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1DCFC162199AB00306D89 /* Tasks.cpp */; };
+		2AE1DD031621B69600306D89 /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1DD011621B69600306D89 /* logging.cpp */; };
 		2AE5BEE51580F057000B62D6 /* ShotsTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5BEE41580F057000B62D6 /* ShotsTask.cpp */; };
 		2AECEF59154D627200033D14 /* TaskList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF58154D627200033D14 /* TaskList.cpp */; };
 		2AECEF60154D694100033D14 /* LanderTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF5F154D694100033D14 /* LanderTask.cpp */; };
@@ -88,6 +91,8 @@
 		2A65AF6A153631DC0054F8E9 /* NumberTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NumberTools.h; path = Core/include/kxm/Core/NumberTools.h; sourceTree = "<group>"; };
 		2A67326915600FEC0095481F /* ThrusterParticlesTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesTask.h; path = Zarch/include/kxm/Zarch/ThrusterParticlesTask.h; sourceTree = "<group>"; };
 		2A67326C1560103A0095481F /* ThrusterParticlesTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesTask.cpp; path = Zarch/ThrusterParticlesTask.cpp; sourceTree = "<group>"; };
+		2A8F4DBB1621F42B00AEA809 /* Task.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Task.h; path = Game/include/kxm/Game/Task.h; sourceTree = "<group>"; };
+		2A8F4DBD1621F49200AEA809 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Game/Task.cpp; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
 		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerspectiveProjection.h; sourceTree = "<group>"; };
@@ -110,6 +115,10 @@
 		2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTimeTask.cpp; path = Game/FrameTimeTask.cpp; sourceTree = "<group>"; };
 		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Range.h; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = Vectoid/Range.cpp; sourceTree = "<group>"; };
+		2AE1DCFA1621999600306D89 /* Tasks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tasks.h; path = Game/include/kxm/Game/Tasks.h; sourceTree = "<group>"; };
+		2AE1DCFC162199AB00306D89 /* Tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tasks.cpp; path = Game/Tasks.cpp; sourceTree = "<group>"; };
+		2AE1DD001621B5FA00306D89 /* logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = logging.h; path = Core/include/kxm/Core/logging.h; sourceTree = "<group>"; };
+		2AE1DD011621B69600306D89 /* logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logging.cpp; path = Core/logging.cpp; sourceTree = "<group>"; };
 		2AE5BEE41580F057000B62D6 /* ShotsTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShotsTask.cpp; path = Zarch/ShotsTask.cpp; sourceTree = "<group>"; };
 		2AE5BEE71580F091000B62D6 /* ShotsTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShotsTask.h; path = Zarch/include/kxm/Zarch/ShotsTask.h; sourceTree = "<group>"; };
 		2AECEF56154D61E800033D14 /* TaskInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TaskInterface.h; path = Game/include/kxm/Game/TaskInterface.h; sourceTree = "<group>"; };
@@ -271,6 +280,7 @@
 				2A65AF5A15361ECE0054F8E9 /* include */,
 				2A4A952015F4DEEA00E64389 /* Interface.cpp */,
 				2A65AF6815362EF40054F8E9 /* IntModN.cpp */,
+				2AE1DD011621B69600306D89 /* logging.cpp */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -290,6 +300,7 @@
 				2A65AF671536281D0054F8E9 /* IntModN.h */,
 				2A65AF6A153631DC0054F8E9 /* NumberTools.h */,
 				2AFFAABC15D986C7006C9092 /* ItemGroups.h */,
+				2AE1DD001621B5FA00306D89 /* logging.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -308,6 +319,8 @@
 				2AECEF51154D613000033D14 /* include */,
 				2AECEF58154D627200033D14 /* TaskList.cpp */,
 				2AC40A1E15567B1400026789 /* FrameTimeTask.cpp */,
+				2AE1DCFC162199AB00306D89 /* Tasks.cpp */,
+				2A8F4DBD1621F49200AEA809 /* Task.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -334,6 +347,8 @@
 				2AECEF56154D61E800033D14 /* TaskInterface.h */,
 				2AECEF57154D625900033D14 /* TaskList.h */,
 				2AC40A1C15567AFF00026789 /* FrameTimeTask.h */,
+				2AE1DCFA1621999600306D89 /* Tasks.h */,
+				2A8F4DBB1621F42B00AEA809 /* Task.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -482,6 +497,9 @@
 				2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */,
 				2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */,
 				2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */,
+				2AE1DCFE162199AB00306D89 /* Tasks.cpp in Sources */,
+				2AE1DD031621B69600306D89 /* logging.cpp in Sources */,
+				2A8F4DBF1621F49200AEA809 /* Task.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

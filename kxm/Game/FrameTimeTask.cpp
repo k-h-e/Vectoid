@@ -25,13 +25,13 @@ shared_ptr<const FrameTimeTask::FrameTimeInfo> FrameTimeTask::TimeInfo() {
     return timeInfo_;
 }
 
-void FrameTimeTask::Execute() {
+bool FrameTimeTask::Execute() {
     ptime now = microsec_clock::local_time();
     int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
     timeInfo_->timeSinceLastFrame = (float)milliSeconds / 1000.0f;
     lastFrameTime_ = now;
+    return true;
 }
-
 
 }    // Namespace Game.
 }    // Namespace kxm.

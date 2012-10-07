@@ -15,7 +15,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <kxm/Game/TaskInterface.h>
+#include <kxm/Game/Task.h>
 
 
 namespace kxm {
@@ -25,13 +25,13 @@ namespace Game {
 /*!
  *  \ingroup Game
  */
-class TaskList : public virtual TaskInterface {
+class TaskList : public virtual Task {
   public:
     TaskList();
     
     void Add(boost::shared_ptr<TaskInterface> task);
-    void Execute();
-    
+    bool Execute();
+        
   private:
     TaskList(const TaskList &other);
     TaskList &operator=(const TaskList &other);

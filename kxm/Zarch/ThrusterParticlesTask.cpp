@@ -34,7 +34,7 @@ ThrusterParticlesTask::ThrusterParticlesTask(
           particleTimeCarryOver_(0.0f) {
 }
 
-void ThrusterParticlesTask::Execute() {
+bool ThrusterParticlesTask::Execute() {
     // Move and age particles...
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
@@ -77,6 +77,8 @@ void ThrusterParticlesTask::Execute() {
         }
         particleTimeCarryOver_ = -timeLeft;
     }
+    
+    return true;
 }
 
 }    // Namespace Zarch.

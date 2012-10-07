@@ -32,7 +32,7 @@ class MapParameters;
 /*!
  *  \ingroup Zarch
  */
-class CameraTask : public virtual Game::TaskInterface {
+class CameraTask : public virtual Game::Task {
   public:
     struct CameraStateInfo {
         Vectoid::Vector position;
@@ -44,7 +44,7 @@ class CameraTask : public virtual Game::TaskInterface {
     
     //! Grants read-only access to the object where the task maintains the camera's state.
     boost::shared_ptr<const CameraStateInfo> CameraState();
-    void Execute();
+    bool Execute();
     
   private:
     CameraTask(const CameraTask &other);

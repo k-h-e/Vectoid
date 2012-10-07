@@ -44,7 +44,7 @@ shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
     return landerState_;
 }
 
-void LanderTask::Execute() {
+bool LanderTask::Execute() {
     landerState_->thrusterEnabled = controlsState_->thrusterRequested;
     landerState_->firingEnabled   = controlsState_->firingRequested;
     
@@ -90,8 +90,9 @@ void LanderTask::Execute() {
     
     landerCoordSys_->SetTransform(newLanderTransform);
     landerState_->transform = newLanderTransform;
+    
+    return true;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

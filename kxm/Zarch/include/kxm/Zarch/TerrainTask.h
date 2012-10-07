@@ -31,12 +31,12 @@ class TerrainRenderer;
 /*!
  *  \ingroup Zarch
  */
-class TerrainTask : public virtual Game::TaskInterface {
+class TerrainTask : public virtual Game::Task {
   public:
     TerrainTask(boost::shared_ptr<TerrainRenderer> terrainRenderer,
                 boost::shared_ptr<const LanderTask::LanderStateInfo> landerState);
     
-    void Execute();
+    bool Execute();
     
   private:
     TerrainTask(const TerrainTask &other);
@@ -45,7 +45,6 @@ class TerrainTask : public virtual Game::TaskInterface {
     boost::shared_ptr<TerrainRenderer>                   terrainRenderer_;
     boost::shared_ptr<const LanderTask::LanderStateInfo> landerState_;
 };
-
 
 }    // Namespace Zarch
 }    // Namespace kxm.

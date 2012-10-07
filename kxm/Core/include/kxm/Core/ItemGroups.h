@@ -24,13 +24,20 @@ namespace Core {
 template<class T> class ItemGroups {
     struct GroupInfo;
   public:
+    //! Allows for iterating over the items of a given group. Can also be used to move items
+    //! between groups.
+    /*!
+     *  \ingroup Core
+     */
     class Iterator {
       public:
         //! Moves the iterator one item forward and returns the new current item if such is present,
         //! otherwise <c>0</c>.
         T *GetNext();
-        //! If the iterator is currently pointing to an item, that item gets moved to the idle
-        //! group without invalidating the iterator. Otherwise, nothing happens.
+        //! If the iterator is currently pointing to an item, that item gets moved to the specified
+        //! target group without invalidating the iterator. Otherwise, nothing happens.
+        void MoveTo(int targetGroup);
+        //! Same as MoveTo(), but with the idle group set as the target for convenience.
         void MoveToIdle();
       private:
         friend class ItemGroups;
@@ -50,8 +57,12 @@ template<class T> class ItemGroups {
     T *AddItem(int group);
     //! Tells the number of items in the specified group.
     int Count(int group);
-    //! Gets an iterator for the specified group. The ItemGroups container object must be kept alive
-    //! by the client context for as long as the iterator is used.
+    //! Gets an iterator for the specified group. The iterator also allows for moving items between
+    //! groups.
+    /*! 
+     *  The ItemGroups container object must be kept alive by the client context for as long as the
+     *  iterator is used.
+     */
     Iterator GetIterator(int group);
     
   private:
@@ -83,7 +94,7 @@ template<class T> class ItemGroups {
     //! Creates an all new idle item and returns its id.
     int CreateIdleItem();
     //! Efficiently moves the specified item from its current group to the group implicitly given by
-    //! the spevified target group anchor. Both group's item counts are <b>not</b> updated - this
+    //! the specified target group anchor. Both group's item counts are <b>not</b> updated - this
     //! must be done by the calling context.
     void MoveItem(int item, int targetGroupAnchor);
     
@@ -185,15 +196,20 @@ T *ItemGroups<T>::Iterator::GetNext() {
 }
 
 template<class T>
-void ItemGroups<T>::Iterator::MoveToIdle() {
+void ItemGroups<T>::Iterator::MoveTo(int targetGroup) {
     if (current_ != -1) {
-        itemGroups_->MoveItem(current_, itemGroups_->idleGroupAnchor_);
+        GroupInfo &targetGroupInfo = itemGroups_->groups_[targetGroup];
+        itemGroups_->MoveItem(current_, targetGroupInfo.anchor);
         --itemGroups_->groups_[group_].count;
-        ++itemGroups_->groups_[itemGroups_->idleGroup_].count;
+        ++targetGroupInfo.count;
         current_ = -1;
     }
 }
 
+template<class T>
+void ItemGroups<T>::Iterator::MoveToIdle() {
+    MoveTo(itemGroups_->idleGroup_);
+}
 
 }    // Namespace Core.
 }    // Namespace kxm.
