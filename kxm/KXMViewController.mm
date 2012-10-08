@@ -26,6 +26,7 @@
 #include <kxm/Vectoid/AgeColoredParticles.h>
 #include <kxm/Game/Tasks.h>
 #include <kxm/Game/FrameTimeTask.h>
+#include <kxm/Game/EventQueue.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/TerrainRenderer.h>
@@ -178,6 +179,12 @@ using namespace kxm::Zarch;
         shared_ptr<StarFieldTask>(new StarFieldTask(
             starFieldParticles, cameraTask->CameraState(), mapParameters)),
         TaskInterface::NoReuseGroup);
+    
+    enum EventType { ActorMovedEvent = 0,
+                     ActorDestroyedEvent,
+                     OnePastLastEvent };
+    EventQueue<EventType> eventQueue(OnePastLastEvent);
+    eventQueue.SetEventDataType(ActorMovedEvent, EventQueueCore::VectorEvent);
     
     [motionManager startDeviceMotionUpdates];
 }
