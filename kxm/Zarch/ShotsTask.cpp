@@ -39,9 +39,9 @@ bool ShotsTask::Execute() {
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
            lastLanderPosition = landerPosition - time*landerState_->velocity; 
-    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
+    Particles::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
-    while ((particle = iter.GetNext())) {
+    while ((particle = iter.Next())) {
         particle->velocity.y += time * -mapParameters_->gravity;
         particle->position   += time * particle->velocity;
         mapParameters_->xRange.ClampModulo(&particle->position.x);
@@ -50,7 +50,7 @@ bool ShotsTask::Execute() {
         mapParameters_->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
         particle->age += timeInfo_->timeSinceLastFrame;
         if (particle->age >= mapParameters_->maxShotParticleAge)
-            iter.MoveToIdle();
+            iter.Remove();
     }
     
     // Add new particles...?

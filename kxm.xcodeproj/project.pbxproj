@@ -51,6 +51,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A1094EB16666790001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = Core/include/kxm/Core/Pool.h; sourceTree = "<group>"; };
+		2A1094F016667842001F298C /* CompactPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CompactPool.h; path = Core/include/kxm/Core/CompactPool.h; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
 		2A1303F3157BC07900A89134 /* ParticlesRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesRenderer.h; sourceTree = "<group>"; };
 		2A1303F4157BC50800A89134 /* StarFieldTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StarFieldTask.h; path = Zarch/include/kxm/Zarch/StarFieldTask.h; sourceTree = "<group>"; };
@@ -305,6 +307,8 @@
 				2AFFAABC15D986C7006C9092 /* ItemGroups.h */,
 				2AE1DD001621B5FA00306D89 /* logging.h */,
 				2A8F4DCF1623501300AEA809 /* exceptions.h */,
+				2A1094EB16666790001F298C /* Pool.h */,
+				2A1094F016667842001F298C /* CompactPool.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";

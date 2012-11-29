@@ -9,9 +9,11 @@
 
 #include <kxm/Vectoid/AgeColoredParticles.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Particles.h>
 
+using namespace std;
 using namespace kxm::Core;
 
 
@@ -26,7 +28,7 @@ AgeColoredParticles::AgeColoredParticles(boost::shared_ptr<Vectoid::Particles> p
     colors_.push_back(Vector(1.0f, 0.0f, 0.0f));
     colors_.push_back(Vector( .3f, 0.0f, 0.0f));
     
-    // There must be at least two colors!.
+    // There must be at least two colors!
 }
     
 void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
@@ -45,10 +47,10 @@ void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
     int     numToRender   = 0,
             numColorSlots = (int)colors_.size() -1;
     float   colorSlotSize = highAge_ / (float)numColorSlots;
-    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
+    Particles::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
     Vector                  particleColor;
-    while ((particle = iter.GetNext())) {
+    while ((particle = iter.Next())) {
         if (particle->hidden)
             continue;
         int color = (int)(particle->age / highAge_ * (float)numColorSlots);

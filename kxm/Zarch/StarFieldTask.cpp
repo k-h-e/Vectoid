@@ -49,8 +49,8 @@ StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
 
 bool StarFieldTask::Execute() {
     Vector cameraPosition = cameraState_->position;
-    ItemGroups<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
-    while (Particles::ParticleInfo *particle = iter.GetNext()) {
+    Particles::Iterator iter = particles_->GetIterator();
+    while (Particles::ParticleInfo *particle = iter.Next()) {
         Vector position = particle->position;
         Range xRange(mapParameters_->starFieldCoordRange, cameraPosition.x);
         xRange.ClampModulo(&position.x);
