@@ -18,6 +18,9 @@ namespace kxm {
 namespace Game {
 
 //! Provides functionality common to TaskInterface implementations.
+/*!
+ *  \ingroup Game
+ */
 class Task : public TaskInterface {
   public:
     Task();
