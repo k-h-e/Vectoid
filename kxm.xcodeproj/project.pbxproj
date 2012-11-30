@@ -59,6 +59,9 @@
 		2A1094F81667F903001F298C /* EventQueueCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueCore.h; path = Game/include/kxm/Game/EventQueueCore.h; sourceTree = "<group>"; };
 		2A1094F91667FB29001F298C /* EventQueueCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueCore.cpp; path = Game/EventQueueCore.cpp; sourceTree = "<group>"; };
 		2A1094FC1667FC9F001F298C /* EventPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventPool.h; path = Game/include/kxm/Game/EventPool.h; sourceTree = "<group>"; };
+		2A1094FD1668C38F001F298C /* EventPoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventPoolInterface.h; path = Game/include/kxm/Game/EventPoolInterface.h; sourceTree = "<group>"; };
+		2A1094FE1668CC5D001F298C /* EventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueue.h; path = Game/include/kxm/Game/EventQueue.h; sourceTree = "<group>"; };
+		2A1094FF1668CF30001F298C /* events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = events.h; path = Zarch/include/kxm/Zarch/events.h; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
 		2A1303F3157BC07900A89134 /* ParticlesRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesRenderer.h; sourceTree = "<group>"; };
 		2A1303F4157BC50800A89134 /* StarFieldTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StarFieldTask.h; path = Zarch/include/kxm/Zarch/StarFieldTask.h; sourceTree = "<group>"; };
@@ -362,6 +365,8 @@
 				2A1094F41667F757001F298C /* Event.h */,
 				2A1094F81667F903001F298C /* EventQueueCore.h */,
 				2A1094FC1667FC9F001F298C /* EventPool.h */,
+				2A1094FD1668C38F001F298C /* EventPoolInterface.h */,
+				2A1094FE1668CC5D001F298C /* EventQueue.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -414,6 +419,7 @@
 				2AAC255E15810118004A37C6 /* ControlsState.h */,
 				2AECEF61154D6CAF00033D14 /* Terrain.h */,
 				2AAC2566158D223D004A37C6 /* TerrainRenderer.h */,
+				2A1094FF1668CF30001F298C /* events.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";

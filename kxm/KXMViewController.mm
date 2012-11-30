@@ -24,6 +24,8 @@
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
+#include <kxm/Game/EventQueue.h>
+#include <kxm/Game/EventPool.h>
 #include <kxm/Game/Tasks.h>
 #include <kxm/Game/FrameTimeTask.h>
 #include <kxm/Zarch/LanderGeometry.h>
@@ -37,6 +39,7 @@
 #include <kxm/Zarch/StarFieldTask.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/ControlsState.h>
+#include <kxm/Zarch/events.h>
 
 #import "KXMGLView.h"
 
@@ -49,15 +52,17 @@ using namespace kxm::Zarch;
 
 
 @interface KXMViewController () {
-    EAGLContext                       *glContext;
-    shared_ptr<PerspectiveProjection> projection;
-    shared_ptr<Tasks>                 tasks;
-    shared_ptr<ControlsState>         controlsState;
-    CGFloat                           width, height;
-    CMMotionManager                   *motionManager;
-    Transform                         calibrationTransform;
-    bool                              accelerometerOverride;
-    float                             accelerometerOverrideStartX, accelerometerOverrideStartY;
+    EAGLContext                               *glContext;
+    shared_ptr<PerspectiveProjection>         projection;
+    shared_ptr<EventQueue<ZarchEvent::Type> > eventQueue;
+    shared_ptr<Tasks>                         tasks;
+    shared_ptr<ControlsState>                 controlsState;
+    CGFloat                                   width, height;
+    CMMotionManager                           *motionManager;
+    Transform                                 calibrationTransform;
+    bool                                      accelerometerOverride;
+    float                                     accelerometerOverrideStartX,
+                                              accelerometerOverrideStartY;
 }
 
 - (void)setupGL;
@@ -179,6 +184,12 @@ using namespace kxm::Zarch;
             starFieldParticles, cameraTask->CameraState(), mapParameters)),
         TaskInterface::NoReuseGroup);
     
+    eventQueue = shared_ptr<EventQueue<ZarchEvent::Type> >(new EventQueue<ZarchEvent::Type>());
+    eventQueue->RegisterEventType(ZarchEvent::ActorEvent,
+                                  shared_ptr<EventPoolInterface>(new EventPool<ActorEvent>()));
+    eventQueue->RegisterEventType(ZarchEvent::PositionEvent,
+                                  shared_ptr<EventPoolInterface>(new EventPool<PositionEvent>()));
+    
     [motionManager startDeviceMotionUpdates];
 }
 
@@ -202,6 +213,8 @@ using namespace kxm::Zarch;
     }
     
     tasks->Execute();
+    
+    eventQueue->ProcessEvents();
 }
 
 - (void)glkView: (GLKView *)view drawInRect: (CGRect)rect {

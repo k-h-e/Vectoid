@@ -76,11 +76,17 @@ T *Pool<T>::Get() {
     if (free_.size()) {
         T *result = free_.front();
         free_.pop_front();
+        
+        //Log(this).Stream() << "Get() : " << Count() << " items in pool, active="
+        //                   << Count() - FreeCount() << std::endl;
         return result;
     }
     else {
         T *newObject = new T();
         objects_.push_back(newObject);
+        
+        //Log(this).Stream() << "Get() : " << Count() << " items in pool, active="
+        //                   << Count() - FreeCount() << std::endl;
         return newObject;
     }
 }
@@ -88,6 +94,9 @@ T *Pool<T>::Get() {
 template<class T>
 void Pool<T>::Put(T *object) {
      free_.push_back(object);
+     //Log(this).Stream() << "Put() : " << Count() << " items in pool, active="
+     //                   << Count() - FreeCount() << std::endl;
+
 }
 
 template<class T>

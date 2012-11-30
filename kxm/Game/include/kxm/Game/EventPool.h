@@ -11,6 +11,10 @@
 #define KXM_GAME_EVENTPOOL_H_
 
 
+#include <kxm/Core/Pool.h>
+#include <kxm/Game/EventPoolInterface.h>
+
+
 namespace kxm {
 namespace Game {
 
@@ -20,20 +24,30 @@ namespace Game {
  *  \ingroup Game
  */
 template<class T>
-class EventPool {
+class EventPool : public virtual EventPoolInterface {
   public:
+    EventPool();
     Event *Get();
     void Put(Event *event);
     
   private:
-    Pool<T> pool_;
+    EventPool(const EventPool &other);
+    EventPool &operator=(const EventPool &other);
+  
+    Core::Pool<T> pool_;
 };
 
-Event *EventPool::Get() {
+template<class T>
+EventPool<T>::EventPool() {
+}
+
+template<class T>
+Event *EventPool<T>::Get() {
     return pool_.Get();
 }
 
-void EventPool::Put(Event *event) {
+template<class T>
+void EventPool<T>::Put(Event *event) {
     pool_.Put(static_cast<T *>(event));
 }
 

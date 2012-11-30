@@ -19,7 +19,14 @@ namespace Game {
  */
 class Event {
   public:
-    virtual ~Event() = 0;
+    Event();
+    virtual ~Event();
+    int Type();
+    
+  private:
+    friend class EventQueueCore;
+    void SetType (int type);
+    int type_;
 };
 
 }    // Namespace Game.
