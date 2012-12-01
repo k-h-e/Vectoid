@@ -24,27 +24,28 @@
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
-#include <kxm/Game/EventQueue.h>
 #include <kxm/Game/EventPool.h>
-#include <kxm/Game/Tasks.h>
-#include <kxm/Game/FrameTimeTask.h>
+#include <kxm/Game/EventQueue.h>
+#include <kxm/Game/Processes.h>
+#include <kxm/Game/FrameTimeProcess.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/TerrainRenderer.h>
-#include <kxm/Zarch/LanderTask.h>
-#include <kxm/Zarch/CameraTask.h>
-#include <kxm/Zarch/TerrainTask.h>
-#include <kxm/Zarch/ThrusterParticlesTask.h>
-#include <kxm/Zarch/ShotsTask.h>
-#include <kxm/Zarch/StarFieldTask.h>
+#include <kxm/Zarch/LanderProcess.h>
+#include <kxm/Zarch/CameraProcess.h>
+#include <kxm/Zarch/TerrainProcess.h>
+#include <kxm/Zarch/ThrusterParticlesProcess.h>
+#include <kxm/Zarch/ShotsProcess.h>
+#include <kxm/Zarch/StarFieldProcess.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/events.h>
+#include <kxm/Zarch/processes.h>
 
 #import "KXMGLView.h"
 
 using namespace std;
-using boost::shared_ptr;
+using namespace boost;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
@@ -52,17 +53,17 @@ using namespace kxm::Zarch;
 
 
 @interface KXMViewController () {
-    EAGLContext                               *glContext;
-    shared_ptr<PerspectiveProjection>         projection;
-    shared_ptr<EventQueue<ZarchEvent::Type> > eventQueue;
-    shared_ptr<Tasks>                         tasks;
-    shared_ptr<ControlsState>                 controlsState;
-    CGFloat                                   width, height;
-    CMMotionManager                           *motionManager;
-    Transform                                 calibrationTransform;
-    bool                                      accelerometerOverride;
-    float                                     accelerometerOverrideStartX,
-                                              accelerometerOverrideStartY;
+    EAGLContext                                *glContext;
+    shared_ptr<PerspectiveProjection>          projection;
+    shared_ptr<EventQueue<ZarchEvent::Type> >  eventQueue;
+    shared_ptr<Processes<ZarchProcess::Type> > processes;
+    shared_ptr<ControlsState>                  controlsState;
+    CGFloat                                    width, height;
+    CMMotionManager                            *motionManager;
+    Transform                                  calibrationTransform;
+    bool                                       accelerometerOverride;
+    float                                      accelerometerOverrideStartX,
+                                               accelerometerOverrideStartY;
 }
 
 - (void)setupGL;
@@ -159,30 +160,24 @@ using namespace kxm::Zarch;
     camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    tasks = shared_ptr<Tasks>(new Tasks());
-    shared_ptr<FrameTimeTask> timeTask(new FrameTimeTask());
-    tasks->AddTask(timeTask, TaskInterface::NoReuseGroup);
-    shared_ptr<LanderTask> landerTask(new LanderTask(
-        landerCoordSys, timeTask->TimeInfo(), controlsState, terrain, mapParameters));
-    tasks->AddTask(landerTask, TaskInterface::NoReuseGroup);
-    shared_ptr<CameraTask> cameraTask(new CameraTask(camera, landerTask->LanderState(),
-                                                     mapParameters));
-    tasks->AddTask(cameraTask, TaskInterface::NoReuseGroup);
-    tasks->AddTask(
-        shared_ptr<TerrainTask>(new TerrainTask(terrainRenderer, landerTask->LanderState())),
-        TaskInterface::NoReuseGroup);
-    tasks->AddTask(
-        shared_ptr<ThrusterParticlesTask>(new ThrusterParticlesTask(
-            thrusterParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)),
-        TaskInterface::NoReuseGroup);
-    tasks->AddTask(
-        shared_ptr<ShotsTask>(new ShotsTask(
-            shotsParticles, landerTask->LanderState(), timeTask->TimeInfo(), mapParameters)),
-        TaskInterface::NoReuseGroup);
-    tasks->AddTask(
-        shared_ptr<StarFieldTask>(new StarFieldTask(
-            starFieldParticles, cameraTask->CameraState(), mapParameters)),
-        TaskInterface::NoReuseGroup);
+    processes = shared_ptr<Processes<ZarchProcess::Type> >(new Processes<ZarchProcess::Type>());
+    FrameTimeProcess *timeProcess = new FrameTimeProcess();
+    processes->AddProcess(timeProcess);
+    LanderProcess *landerProcess = new LanderProcess(
+        landerCoordSys, timeProcess->TimeInfo(), controlsState, terrain, mapParameters);
+    processes->AddProcess(landerProcess);
+    CameraProcess *cameraProcess = new CameraProcess(camera, landerProcess->LanderState(),
+                                                     mapParameters);
+    processes->AddProcess(cameraProcess);
+    processes->AddProcess(new TerrainProcess(terrainRenderer, landerProcess->LanderState()));
+    processes->AddProcess(
+        new ThrusterParticlesProcess(thrusterParticles, landerProcess->LanderState(),
+                                     timeProcess->TimeInfo(), mapParameters));
+    processes->AddProcess(
+        new ShotsProcess(shotsParticles, landerProcess->LanderState(), timeProcess->TimeInfo(),
+                         mapParameters));
+    processes->AddProcess(new StarFieldProcess(starFieldParticles, cameraProcess->CameraState(),
+                          mapParameters));
     
     eventQueue = shared_ptr<EventQueue<ZarchEvent::Type> >(new EventQueue<ZarchEvent::Type>());
     eventQueue->RegisterEventType(ZarchEvent::ActorEvent,
@@ -196,7 +191,7 @@ using namespace kxm::Zarch;
 - (void)tearDownGL {
     [EAGLContext setCurrentContext: glContext];
     
-    tasks.reset();
+    processes.reset();
     projection.reset();
     
     [motionManager stopDeviceMotionUpdates];
@@ -212,7 +207,7 @@ using namespace kxm::Zarch;
         controlsState->orientationInput = orientationInput;
     }
     
-    tasks->Execute();
+    processes->ExecuteProcesses();
     
     eventQueue->ProcessEvents();
 }

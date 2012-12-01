@@ -18,7 +18,7 @@
 namespace kxm {
 namespace Game {
 
-//! Adapter for \ref Pool<T>, so Pool instances for different event types can be used with the
+//! Adapter for \ref Pool<T>, so pool instances for different event types can be used with the
 //! \ref EventQueueCore mechanism.
 /*!
  *  \ingroup Game
@@ -26,9 +26,9 @@ namespace Game {
 template<class T>
 class EventPool : public virtual EventPoolInterface {
   public:
-    EventPool();
-    Event *Get();
-    void Put(Event *event);
+    EventPool() {}
+    Event *Get() { return pool_.Get(); }
+    void Put(Event *event) { pool_.Put(static_cast<T *>(event)); }
     
   private:
     EventPool(const EventPool &other);
@@ -36,20 +36,6 @@ class EventPool : public virtual EventPoolInterface {
   
     Core::Pool<T> pool_;
 };
-
-template<class T>
-EventPool<T>::EventPool() {
-}
-
-template<class T>
-Event *EventPool<T>::Get() {
-    return pool_.Get();
-}
-
-template<class T>
-void EventPool<T>::Put(Event *event) {
-    pool_.Put(static_cast<T *>(event));
-}
 
 }    // Namespace Game.
 }    // Namespace kxm.

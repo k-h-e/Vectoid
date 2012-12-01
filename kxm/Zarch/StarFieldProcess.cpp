@@ -1,5 +1,5 @@
 //
-//  StarFieldTask.cpp
+//  StarFieldProcess.cpp
 //  kxm
 //
 //  Created by Kai Hergenroether on 6/3/12.
@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Zarch/StarFieldTask.h>
+#include <kxm/Zarch/StarFieldProcess.h>
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
@@ -24,12 +24,13 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Zarch {
 
-StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
-                             shared_ptr<const CameraTask::CameraStateInfo> cameraState,
-                             shared_ptr<const MapParameters> mapParameters)
+StarFieldProcess::StarFieldProcess(shared_ptr<Particles> particles,
+                                   shared_ptr<const CameraProcess::CameraStateInfo> cameraState,
+                                   shared_ptr<const MapParameters> mapParameters)
         : particles_(particles),
           cameraState_(cameraState),
-          mapParameters_(mapParameters) {
+          mapParameters_(mapParameters),
+          count_(0) {
     const int                  randomMax = 10000;
     mt19937                    randomGenerator;
     uniform_int_distribution<> randomDistribution(0, randomMax);
@@ -47,7 +48,7 @@ StarFieldTask::StarFieldTask(shared_ptr<Particles> particles,
     }
 }
 
-bool StarFieldTask::Execute() {
+bool StarFieldProcess::Execute() {
     Vector cameraPosition = cameraState_->position;
     Particles::Iterator iter = particles_->GetIterator();
     while (Particles::ParticleInfo *particle = iter.Next()) {
@@ -61,7 +62,14 @@ bool StarFieldTask::Execute() {
         particle->position = position;
         particle->hidden   = (position.y < mapParameters_->starFieldMinHeight);
     }
-    return true;
+    
+    // TESTING...
+    if (count_ < 500) {
+        ++count_;
+        return true;
+    }
+    else
+        return false;
 }
 
 }    // Namespace Zarch.

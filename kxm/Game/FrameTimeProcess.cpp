@@ -1,5 +1,5 @@
 //
-//  FrameTimeTask.cpp
+//  FrameTimeProcess.cpp
 //  kxm
 //
 //  Created by Kai Hergenroether on 5/6/12.
@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Game/FrameTimeTask.h>
+#include <kxm/Game/FrameTimeProcess.h>
 
 using namespace boost;
 using namespace boost::posix_time;
@@ -16,16 +16,16 @@ using namespace boost::posix_time;
 namespace kxm {
 namespace Game {
  
-FrameTimeTask::FrameTimeTask()
+FrameTimeProcess::FrameTimeProcess()
         : lastFrameTime_(microsec_clock::local_time()),
           timeInfo_(new FrameTimeInfo()) {
 }
 
-shared_ptr<const FrameTimeTask::FrameTimeInfo> FrameTimeTask::TimeInfo() {
+shared_ptr<const FrameTimeProcess::FrameTimeInfo> FrameTimeProcess::TimeInfo() {
     return timeInfo_;
 }
 
-bool FrameTimeTask::Execute() {
+bool FrameTimeProcess::Execute() {
     ptime now = microsec_clock::local_time();
     int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
     timeInfo_->timeSinceLastFrame = (float)milliSeconds / 1000.0f;

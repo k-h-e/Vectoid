@@ -1,5 +1,5 @@
 //
-//  File.cpp
+//  LanderProcess.cpp
 //  kxm
 //
 //  Created by Kai Hergenroether on 4/29/12.
@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Zarch/LanderTask.h>
+#include <kxm/Zarch/LanderProcess.h>
 
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Transform.h>
@@ -26,11 +26,11 @@ using namespace kxm::Zarch;
 namespace kxm {
 namespace Zarch {
 
-LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
-                       shared_ptr<const FrameTimeTask::FrameTimeInfo> timeInfo,
-                       shared_ptr<const ControlsState> controlsState,
-                       shared_ptr<Terrain> terrain,
-                       shared_ptr<const MapParameters> mapParameters)
+LanderProcess::LanderProcess(shared_ptr<CoordSysInterface> landerCoordSys,
+                             shared_ptr<const FrameTimeProcess::FrameTimeInfo> timeInfo,
+                             shared_ptr<const ControlsState> controlsState,
+                             shared_ptr<Terrain> terrain,
+                             shared_ptr<const MapParameters> mapParameters)
         : landerCoordSys_(landerCoordSys),
           timeInfo_(timeInfo),
           controlsState_(controlsState),
@@ -40,11 +40,11 @@ LanderTask::LanderTask(shared_ptr<CoordSysInterface> landerCoordSys,
           heading_(0.0f, 0.0f, -1.0f) {
 }
 
-shared_ptr<const LanderTask::LanderStateInfo> LanderTask::LanderState() {
+shared_ptr<const LanderProcess::LanderStateInfo> LanderProcess::LanderState() {
     return landerState_;
 }
 
-bool LanderTask::Execute() {
+bool LanderProcess::Execute() {
     landerState_->thrusterEnabled = controlsState_->thrusterRequested;
     landerState_->firingEnabled   = controlsState_->firingRequested;
     

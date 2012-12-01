@@ -1,5 +1,5 @@
 //
-//  FrameTimeTask.h
+//  FrameTimeProcess.h
 //  kxm
 //
 //  Created by Kai Hergenroether on 5/6/12.
@@ -7,14 +7,14 @@
 //
 
 
-#ifndef KXM_GAME_FRAMETIMETASK_H_
-#define KXM_GAME_FRAMETIMETASK_H_
+#ifndef KXM_GAME_FRAMETIMEPROCESS_H_
+#define KXM_GAME_FRAMETIMEPROCESS_H_
 
 
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-#include <kxm/Game/Task.h>
+#include <kxm/Game/Process.h>
 
 
 namespace kxm {
@@ -24,7 +24,7 @@ namespace Game {
 /*!
  *  \ingroup Game
  */
-class FrameTimeTask : public virtual Task {
+class FrameTimeProcess : public Process {
   public:
     //! Holds time information for a given frame.
     struct FrameTimeInfo {
@@ -32,15 +32,15 @@ class FrameTimeTask : public virtual Task {
         float timeSinceLastFrame;
     };
     
-    FrameTimeTask();
+    FrameTimeProcess();
     
     //! Grants read-only access to the frame time info maintained by the task.
     boost::shared_ptr<const FrameTimeInfo> TimeInfo();
     bool Execute();
     
   private:
-    FrameTimeTask(const FrameTimeTask &other);
-    FrameTimeTask &operator=(const FrameTimeTask &other);
+    FrameTimeProcess(const FrameTimeProcess &other);
+    FrameTimeProcess &operator=(const FrameTimeProcess &other);
     
     boost::posix_time::ptime         lastFrameTime_;
     boost::shared_ptr<FrameTimeInfo> timeInfo_;
@@ -51,4 +51,4 @@ class FrameTimeTask : public virtual Task {
 }    // Namespace kxm.
 
 
-#endif    // KXM_GAME_FRAMETIMETASK_H_
+#endif    // KXM_GAME_FRAMETIMEPROCESS_H_

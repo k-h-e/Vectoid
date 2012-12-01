@@ -23,25 +23,26 @@ namespace Game {
  *  \ingroup Game
  */
 template<class T>
-class EventQueue : public EventQueueCore {
+class EventQueue : private EventQueueCore {
   public:
     //! Registers another event type with the event queue, together with an event pool that will
     //! be managing the event objects for that event type.
-    void RegisterEventType(T eventType, boost::shared_ptr<EventPoolInterface> pool);
+    void RegisterEventType(T eventType, boost::shared_ptr<EventPoolInterface> pool) {
+        EventQueueCore::RegisterEventType((int)eventType, pool);
+    }
+    
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
-    Event *ScheduleEvent(T eventType);
+    Event *ScheduleEvent(T eventType) {
+        return EventQueueCore::ScheduleEvent((int)eventType);
+    }
+    
+    //! Flips scheduling and processing queues and processes the events in the (new) processing
+    //! queue.
+    void ProcessEvents() {
+        EventQueueCore::ProcessEvents();
+    }
 };
-
-template<class T>
-void EventQueue<T>::RegisterEventType(T eventType, boost::shared_ptr<EventPoolInterface> pool) {
-    EventQueueCore::RegisterEventType((int)eventType, pool);
-}
-
-template<class T>
-Event *EventQueue<T>::ScheduleEvent(T eventType) {
-    return EventQueueCore::ScheduleEvent((int)eventType);
-}
 
 }    // Namespace Game.
 }    // Namespace kxm.

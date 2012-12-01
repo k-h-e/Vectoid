@@ -10,6 +10,9 @@
 #define KXM_GAME_EVENT_H_
 
 
+#include <kxm/Core/Interface.h>
+
+
 namespace kxm {
 namespace Game {
 
@@ -17,15 +20,12 @@ namespace Game {
 /*!
  *  \ingroup Game
  */
-class Event {
+class Event : public virtual Core::Interface {
   public:
-    Event();
-    virtual ~Event();
-    int Type();
+    Event() : type_(-1) {}
     
   private:
     friend class EventQueueCore;
-    void SetType (int type);
     int type_;
 };
 

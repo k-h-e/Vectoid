@@ -17,6 +17,8 @@
 namespace kxm {
 namespace Game {
 
+class Event;
+
 //! Allows that event pool instances for different event types can be used with the
 //! \ref EventQueueCore mechanism.
 /*!

@@ -29,7 +29,7 @@ EventQueueCore::~EventQueueCore() {
     for (int i = 0; i < 2; ++i) {
         while (queues_[i].size()) {
             Event *event = queues_[i].front();
-            pools_[event->Type()]->Put(event);
+            pools_[event->type_]->Put(event);
             queues_[i].pop_front();
         }
     }
@@ -45,7 +45,7 @@ void EventQueueCore::RegisterEventType(int eventType, shared_ptr<EventPoolInterf
 Event *EventQueueCore::ScheduleEvent(int eventType) {
     assert((eventType >= 0) && (eventType < (int)pools_.size()) && pools_[eventType].get());
     Event *event = pools_[eventType]->Get();
-    event->SetType(eventType);
+    event->type_ = eventType;
     queues_[schedulingQueue_].push_back(event);
     return event;
 }
@@ -59,7 +59,7 @@ void EventQueueCore::ProcessEvents() {
         Event *event = processingQueue->front();
         //Log(this).Stream() << "processing event, type=" << event->Type()
         //                   << ", rtti_type=" << typeid(*event).name() << endl;
-        pools_[event->Type()]->Put(event);
+        pools_[event->type_]->Put(event);
         processingQueue->pop_front();
     }
 }

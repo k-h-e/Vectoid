@@ -1,5 +1,5 @@
 //
-//  TerrainTask.cpp
+//  TerrainProcess.cpp
 //  kxm
 //
 //  Created by Kai Hergenroether on 4/29/12.
@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Zarch/TerrainTask.h>
+#include <kxm/Zarch/TerrainProcess.h>
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/TerrainRenderer.h>
@@ -19,13 +19,13 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Zarch {
 
-TerrainTask::TerrainTask(shared_ptr<TerrainRenderer> terrainRenderer,
-                         shared_ptr<const LanderTask::LanderStateInfo> landerState)
+TerrainProcess::TerrainProcess(shared_ptr<TerrainRenderer> terrainRenderer,
+                               shared_ptr<const LanderProcess::LanderStateInfo> landerState)
     : terrainRenderer_(terrainRenderer),
       landerState_(landerState) {
 }
 
-bool TerrainTask::Execute() {
+bool TerrainProcess::Execute() {
     Vector position = landerState_->transform.TranslationPart();
     terrainRenderer_->SetObserverPosition(position.x, position.z);
     return true;

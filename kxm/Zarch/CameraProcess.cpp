@@ -1,5 +1,5 @@
 //
-//  CameraTask.cpp
+//  CameraProcess.cpp
 //  kxm
 //
 //  Created by Kai Hergenroether on 4/29/12.
@@ -7,33 +7,33 @@
 //
 
 
-#include <kxm/Zarch/CameraTask.h>
+#include <kxm/Zarch/CameraProcess.h>
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/CoordSysInterface.h>
 #include <kxm/Zarch/MapParameters.h>
 
-using boost::shared_ptr;
+using namespace boost;
 using namespace kxm::Vectoid;
 
 
 namespace kxm {
 namespace Zarch {
 
-CameraTask::CameraTask(shared_ptr<CoordSysInterface> cameraCoordSys,
-                       shared_ptr<const LanderTask::LanderStateInfo> landerState,
-                       shared_ptr<const MapParameters> mapParameters)
+CameraProcess::CameraProcess(shared_ptr<CoordSysInterface> cameraCoordSys,
+                             shared_ptr<const LanderProcess::LanderStateInfo> landerState,
+                             shared_ptr<const MapParameters> mapParameters)
     : cameraCoordSys_(cameraCoordSys),
       landerState_(landerState),
       mapParameters_(mapParameters),
       cameraState_(new CameraStateInfo()) {
 }
 
-shared_ptr<const CameraTask::CameraStateInfo> CameraTask::CameraState() {
+shared_ptr<const CameraProcess::CameraStateInfo> CameraProcess::CameraState() {
     return cameraState_;
 }
 
-bool CameraTask::Execute() {
+bool CameraProcess::Execute() {
     Vector position = landerState_->transform.TranslationPart();
     if (position.y < mapParameters_->cameraMinHeight)
         position.y = mapParameters_->cameraMinHeight;
