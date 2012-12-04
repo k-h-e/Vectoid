@@ -25,9 +25,23 @@ namespace Game {
 template<class T>
 class Processes : private ProcessesCore {
   public:
+    //! Adds the specified process, transferring ownership to the \ref Processes object.
+    /*!
+     *  The process object must have been <c>new</c>ed by the client.  When it has finished
+     *  executing, as it can indicate via the return value of \ref ProcessInterface::Execute(), it
+     *  will get <c>deleted</c>.
+     *
+     *  May be called from processes managed by this process group.
+     */
     void AddProcess(Process *process) { ProcessesCore::AddProcess(process); }
-    void ExecuteProcesses() { ProcessesCore::ExecuteProcesses(); }
-
+    //! Executes all processes and deregisters all processes that indicate that they have finished.
+    /*!
+     *  Pooled processes that have finished are returned to their respective pool, the others (i.e.
+     *  not pooled) get <c>deleted</c>.
+     */
+    void ExecuteProcesses(const Process::Context &context) {
+        ProcessesCore::ExecuteProcesses(context);
+    }
 };
 
 }    // Namespace Game.

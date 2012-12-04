@@ -12,14 +12,24 @@
 
 
 #include <kxm/Game/Process.h>
-
+#include <kxm/Zarch/events.h>
 
 namespace kxm {
+
+namespace Game {
+    template<class T> class EventQueue;
+    template<class T> class Processes;
+}
+
 namespace Zarch {
 
 class ZarchProcess : public Game::Process {
   public:
-    enum Type { SeederProcess };
+    enum ProcessType { SeederProcess };
+    struct Context : public Process::Context {
+        Game::Processes<ProcessType>            *processes;     // Weak reference.
+        Game::EventQueue<ZarchEvent::EventType> *eventQueue;    // Weak reference.
+    };
 };
 
 class SeederProcess : public ZarchProcess {

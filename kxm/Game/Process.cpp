@@ -19,7 +19,7 @@ Process::Process()
           prev_(0) {
 }
 
-bool Process::Execute() {
+bool Process::Execute(const Context &context) {
     return true;
 }
 

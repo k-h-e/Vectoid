@@ -24,12 +24,15 @@ namespace Game {
  */
 class Process : public virtual Core::Interface {
   public:
+    struct Context {
+    };
+
     Process();
     //! Executes the process until it co-operatively yields (by returning).
     /*!
      *  \return <c>false</c> in case the process has finished and wishes to be deregistered.
      */
-    virtual bool Execute();
+    virtual bool Execute(const Context &context);
     
   private:
     friend class ProcessesCore;

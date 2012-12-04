@@ -25,7 +25,7 @@ shared_ptr<const FrameTimeProcess::FrameTimeInfo> FrameTimeProcess::TimeInfo() {
     return timeInfo_;
 }
 
-bool FrameTimeProcess::Execute() {
+bool FrameTimeProcess::Execute(const Process::Context &context) {
     ptime now = microsec_clock::local_time();
     int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
     timeInfo_->timeSinceLastFrame = (float)milliSeconds / 1000.0f;

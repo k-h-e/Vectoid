@@ -28,6 +28,7 @@ class FrameTimeProcess : public Process {
   public:
     //! Holds time information for a given frame.
     struct FrameTimeInfo {
+        FrameTimeInfo() : timeSinceLastFrame(0.0f) {}
         //! In seconds.
         float timeSinceLastFrame;
     };
@@ -36,7 +37,7 @@ class FrameTimeProcess : public Process {
     
     //! Grants read-only access to the frame time info maintained by the task.
     boost::shared_ptr<const FrameTimeInfo> TimeInfo();
-    bool Execute();
+    bool Execute(const Process::Context &context);
     
   private:
     FrameTimeProcess(const FrameTimeProcess &other);

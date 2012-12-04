@@ -48,6 +48,8 @@ class ProcessesCore {
      *  has finished executing, as it can indicate via the return value of
      *  \ref ProcessInterface::Execute(), the \ref Processes mechanism automatically puts it back
      *  into the respective pool.
+     *
+     *  May be called from processes managed by this process group.
      */
     Process *AddProcess(int processType);
     //! Adds the specified process, transferring ownership to the \ref Processes object.
@@ -55,6 +57,8 @@ class ProcessesCore {
      *  The process object must have been <c>new</c>ed by the client.  When it has finished
      *  executing, as it can indicate via the return value of \ref ProcessInterface::Execute(), it
      *  will get <c>deleted</c>.
+     *
+     *  May be called from processes managed by this process group.
      */
     void AddProcess(Process *process);
     //! Executes all processes and deregisters all processes that indicate that they have finished.
@@ -62,7 +66,7 @@ class ProcessesCore {
      *  Pooled processes that have finished are returned to their respective pool, the others (i.e.
      *  not pooled) get <c>deleted</c>.
      */
-    void ExecuteProcesses();
+    void ExecuteProcesses(const Process::Context &context);
     //! Tells the current number of processes in the group.
     int Count();
 
@@ -70,10 +74,12 @@ class ProcessesCore {
     ProcessesCore(const ProcessesCore &other);
     ProcessesCore &operator=(const ProcessesCore &other);
     void Add(Process *process);
+    void ActivateNewProcesses();
     void Remove(Process *process);
     
     std::vector<boost::shared_ptr<ProcessPoolInterface> > pools_;    // Even faster than a hash map.
-    Process                                               anchorProcess_;
+    Process                                               processesAnchor_,
+                                                          newProcessesAnchor_;
     int                                                   numProcesses_;
 };
 

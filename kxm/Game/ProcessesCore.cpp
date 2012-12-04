@@ -22,13 +22,16 @@ namespace Game {
 
 ProcessesCore::ProcessesCore()
         : numProcesses_(0) {
-    anchorProcess_.next_ = &anchorProcess_;
-    anchorProcess_.prev_ = &anchorProcess_;
+    processesAnchor_.next_    = &processesAnchor_;
+    processesAnchor_.prev_    = &processesAnchor_;
+    newProcessesAnchor_.next_ = &newProcessesAnchor_;
+    newProcessesAnchor_.prev_ = &newProcessesAnchor_;
 }
 
 ProcessesCore::~ProcessesCore() {
+    ActivateNewProcesses();
     while (numProcesses_)
-        Remove(anchorProcess_.next_);
+        Remove(processesAnchor_.next_);
 }
 
 void ProcessesCore::RegisterProcessType(int processType, shared_ptr<ProcessPoolInterface> pool) {
@@ -51,11 +54,12 @@ void ProcessesCore::AddProcess(Process *process) {
     Add(process);
 }
 
-void ProcessesCore::ExecuteProcesses() {
-    Process *last = &anchorProcess_,
+void ProcessesCore::ExecuteProcesses(const Process::Context &context) {
+    ActivateNewProcesses();
+    Process *last = &processesAnchor_,
             *current;
-    while ((current = last->next_) != &anchorProcess_) {
-        if (current->Execute())
+    while ((current = last->next_) != &processesAnchor_) {
+        if (current->Execute(context))
             last = current;
         else
             Remove(current);
@@ -67,13 +71,30 @@ int ProcessesCore::Count() {
 }
 
 void ProcessesCore::Add(Process *process) {
-    Process *prev = anchorProcess_.prev_;
-    prev->next_          = process;
-    process->prev_       = prev;
-    process->next_       = &anchorProcess_;
-    anchorProcess_.prev_ = process;
+    Process *prev = newProcessesAnchor_.prev_;
+    prev->next_               = process;
+    process->prev_            = prev;
+    process->next_            = &newProcessesAnchor_;
+    newProcessesAnchor_.prev_ = process;
     ++numProcesses_;
     Log(this).Stream() << "process added, num=" << numProcesses_ << endl;
+}
+
+void ProcessesCore::ActivateNewProcesses() {
+    if (newProcessesAnchor_.next_ == &newProcessesAnchor_)
+        return;    // There are no new processs to activate.
+    Process *last     = processesAnchor_.prev_,
+            *firstNew = newProcessesAnchor_.next_,
+            *lastNew  = newProcessesAnchor_.prev_;
+    last->next_            = firstNew;
+    firstNew->prev_        = last;
+    lastNew->next_         = &processesAnchor_;
+    processesAnchor_.prev_ = lastNew;
+    
+    newProcessesAnchor_.next_ = &newProcessesAnchor_;
+    newProcessesAnchor_.prev_ = &newProcessesAnchor_;
+    
+    Log(this).Stream() << "activated new processes" << endl;
 }
 
 void ProcessesCore::Remove(Process *process) {

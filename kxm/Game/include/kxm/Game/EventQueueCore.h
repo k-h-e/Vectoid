@@ -22,6 +22,7 @@ namespace Game {
 
 class Event;
 class EventPoolInterface;
+class EventHandlerInterface;
 
 //! Event queue mechanism.
 /*!
@@ -43,8 +44,17 @@ class EventQueueCore {
     //! Registers another event type with the event queue, together with an event pool that will
     //! be managing the event objects for that event type.
     void RegisterEventType(int eventType, boost::shared_ptr<EventPoolInterface> pool);
+    //! Registers another handler for the specified event type.
+    /*!
+     *  The handler will be registered as a weak reference. Handlers will exclusively get accessed
+     *  from \ref ProcessEvents().
+     */
+    void RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler);
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
+    /*!
+     *  May get called by event handlers registered with this event queue.
+     */
     Event *ScheduleEvent(int eventType);
     //! Flips scheduling and processing queues and processes the events in the (new) processing
     //! queue.
@@ -55,6 +65,7 @@ class EventQueueCore {
     EventQueueCore &operator=(const EventQueueCore &other);
     
     std::vector<boost::shared_ptr<EventPoolInterface> > pools_;    // Even faster than a hash map.
+    std::vector<std::vector<EventHandlerInterface *> >  handlers_; // Weak references.
     std::deque<Event *>                                 queues_[2];
     int                                                 schedulingQueue_;
 };

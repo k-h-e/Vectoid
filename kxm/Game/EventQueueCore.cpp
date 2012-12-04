@@ -12,6 +12,7 @@
 #include <kxm/Core/logging.h>
 #include <kxm/Game/Event.h>
 #include <kxm/Game/EventPoolInterface.h>
+#include <kxm/Game/EventHandlerInterface.h>
 
 using namespace std;
 using namespace boost;
@@ -42,6 +43,13 @@ void EventQueueCore::RegisterEventType(int eventType, shared_ptr<EventPoolInterf
     pools_[eventType] = pool;
 }
 
+void EventQueueCore::RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler) {
+    assert((eventType >= 0) && (eventType < (int)pools_.size()) && pools_[eventType].get());
+    while ((int)handlers_.size() <= eventType)
+        handlers_.push_back(vector<EventHandlerInterface *>());
+    handlers_[eventType].push_back(eventHandler);
+}
+
 Event *EventQueueCore::ScheduleEvent(int eventType) {
     assert((eventType >= 0) && (eventType < (int)pools_.size()) && pools_[eventType].get());
     Event *event = pools_[eventType]->Get();
@@ -55,13 +63,20 @@ void EventQueueCore::ProcessEvents() {
     //                   << (int)queues_[1].size() << endl;
     deque<Event *> *processingQueue = &queues_[schedulingQueue_];
     schedulingQueue_ = 1 - schedulingQueue_;
+    int num = 0;
     while (processingQueue->size()) {
+        ++num;
         Event *event = processingQueue->front();
+        processingQueue->pop_front();
         //Log(this).Stream() << "processing event, type=" << event->Type()
         //                   << ", rtti_type=" << typeid(*event).name() << endl;
+        vector<EventHandlerInterface *>::iterator endIter = handlers_[event->type_].end();
+        for (vector<EventHandlerInterface *>::iterator iter = handlers_[event->type_].begin();
+             iter != endIter; ++iter)
+            (*iter)->HandleEvent(event);
         pools_[event->type_]->Put(event);
-        processingQueue->pop_front();
     }
+    //Log().Stream() << "handled " << num << " events" << endl;
 }
 
 }    // Namespace Game.

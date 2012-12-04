@@ -31,8 +31,20 @@ class EventQueue : private EventQueueCore {
         EventQueueCore::RegisterEventType((int)eventType, pool);
     }
     
+    //! Registers another handler for the specified event type.
+    /*!
+     *  The handler will be registered as a weak reference. Handlers will exclusively get accessed
+     *  from \ref ProcessEvents().
+     */
+    void RegisterEventHandler(T eventType, EventHandlerInterface *eventHandler) {
+        EventQueueCore::RegisterEventHandler((int)eventType, eventHandler);
+    }
+    
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
+    /*!
+     *  May get called by event handlers registered with this event queue.
+     */
     Event *ScheduleEvent(T eventType) {
         return EventQueueCore::ScheduleEvent((int)eventType);
     }
