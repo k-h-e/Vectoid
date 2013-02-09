@@ -41,7 +41,7 @@ bool ThrusterParticlesProcess::Execute(const Process::Context &context) {
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
            lastLanderPosition = landerPosition - time*landerState_->velocity; 
-    Particles::Iterator iter = particles_->GetIterator();
+    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
     while ((particle = iter.Next())) {
         particle->velocity.y += time * -mapParameters_->gravity;
@@ -52,7 +52,7 @@ bool ThrusterParticlesProcess::Execute(const Process::Context &context) {
         mapParameters_->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
         particle->age        += timeInfo_->timeSinceLastFrame;
         if (particle->age >= mapParameters_->maxThrusterParticleAge)
-            iter.Remove();
+            particles_->Remove(iter.ItemId());
     }
     
     // Add new particles...?
@@ -61,20 +61,20 @@ bool ThrusterParticlesProcess::Execute(const Process::Context &context) {
         transform.SetTranslationPart(Vector());
         float timeLeft = time - particleTimeCarryOver_;
         while (timeLeft > 0.0f) {
-            Particles::ParticleInfo *particle = particles_->AddParticle(Vector(), Vector());
-            Vector ejectDirection(mapParameters_->thrusterParticleSpread * particle->random0,
+            Particles::ParticleInfo &particle = particles_->Add(Vector(), Vector());
+            Vector ejectDirection(mapParameters_->thrusterParticleSpread * particle.random0,
                                   -1.0f,
-                                  mapParameters_->thrusterParticleSpread * particle->random1),
-                   ejectDisplacement(particle->random0, 0.0f, particle->random1);
+                                  mapParameters_->thrusterParticleSpread * particle.random1),
+                   ejectDisplacement(particle.random0, 0.0f, particle.random1);
             transform.ApplyTo(&ejectDirection);
             transform.ApplyTo(&ejectDisplacement);
-            particle->velocity =   landerState_->velocity
-                                 + mapParameters_->thrusterExhaustVelocity*ejectDirection;
+            particle.velocity =   landerState_->velocity
+                                + mapParameters_->thrusterExhaustVelocity*ejectDirection;
             
             float t = 1.0f - timeLeft/time;
-            particle->position =   (1.0f - t)*lastLanderPosition + t*landerPosition
-                                 + mapParameters_->thrusterJetSize*ejectDisplacement
-                                 + timeLeft*particle->velocity;
+            particle.position =   (1.0f - t)*lastLanderPosition + t*landerPosition
+                                + mapParameters_->thrusterJetSize*ejectDisplacement
+                                + timeLeft*particle.velocity;
             timeLeft -= mapParameters_->thrusterExhaustInterval;
         }
         particleTimeCarryOver_ = -timeLeft;

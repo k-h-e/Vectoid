@@ -39,11 +39,11 @@ Video::Video(
     processContext_.processes  = &processes_;
 }
 
-void Video::HandleEvent(const Event *event) {
-    switch (static_cast<const ZarchEvent *>(event)->Type()) {
+void Video::HandleEvent(const Event &event) {
+    switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::LanderMovedEvent:
             landerStateInfo_->transform
-                = static_cast<const TransformEvent *>(event)->Transform();
+                = static_cast<const TransformEvent &>(event).Transform();
             break;
         default:
             break;

@@ -24,7 +24,7 @@ namespace Zarch {
 class GameLogic : public virtual Game::EventHandlerInterface {
   public:
     GameLogic();
-    void HandleEvent(const Game::Event *event);
+    void HandleEvent(const Game::Event &event);
     void ExecuteProcesses();
     
   private:

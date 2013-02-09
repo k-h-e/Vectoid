@@ -25,32 +25,27 @@ namespace Game {
 template<class T>
 class EventQueue : private EventQueueCore {
   public:
-    //! Registers another event type with the event queue, together with an event pool that will
-    //! be managing the event objects for that event type.
-    void RegisterEventType(T eventType, boost::shared_ptr<EventPoolInterface> pool) {
+    //! See \ref EventQueueCore::RegisterEventPool().
+    int RegisterEventPool(boost::shared_ptr<EventPoolInterface> pool) {
+        return EventQueueCore::RegisterEventPool(pool);
+    }
+  
+    //! See \ref EventQueueCore::RegisterEventType().
+    void RegisterEventType(T eventType, int pool) {
         EventQueueCore::RegisterEventType((int)eventType, pool);
     }
     
-    //! Registers another handler for the specified event type.
-    /*!
-     *  The handler will be registered as a weak reference. Handlers will exclusively get accessed
-     *  from \ref ProcessEvents().
-     */
+    //! See \ref EventQueueCore::RegisterEventHandler().
     void RegisterEventHandler(T eventType, EventHandlerInterface *eventHandler) {
         EventQueueCore::RegisterEventHandler((int)eventType, eventHandler);
     }
     
-    //! Schedules a new event of the specified type on the scheduling queue and grants access to it
-    //! so that the client can configure it before the next call to \ref ProcessEvents().
-    /*!
-     *  May get called by event handlers registered with this event queue.
-     */
-    Event *ScheduleEvent(T eventType) {
+    //! See \ref EventQueueCore::ScheduleEvent().
+    Event &ScheduleEvent(T eventType) {
         return EventQueueCore::ScheduleEvent((int)eventType);
     }
     
-    //! Flips scheduling and processing queues and processes the events in the (new) processing
-    //! queue.
+    //! See \ref EventQueueCore::ProcessEvents().
     void ProcessEvents() {
         EventQueueCore::ProcessEvents();
     }

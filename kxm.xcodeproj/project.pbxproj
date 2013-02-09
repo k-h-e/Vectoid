@@ -56,7 +56,6 @@
 
 /* Begin PBXFileReference section */
 		2A1094EB16666790001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = Core/include/kxm/Core/Pool.h; sourceTree = "<group>"; };
-		2A1094F016667842001F298C /* CompactPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CompactPool.h; path = Core/include/kxm/Core/CompactPool.h; sourceTree = "<group>"; };
 		2A1094F41667F757001F298C /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = Game/include/kxm/Game/Event.h; sourceTree = "<group>"; };
 		2A1094F81667F903001F298C /* EventQueueCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueCore.h; path = Game/include/kxm/Game/EventQueueCore.h; sourceTree = "<group>"; };
 		2A1094F91667FB29001F298C /* EventQueueCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueCore.cpp; path = Game/EventQueueCore.cpp; sourceTree = "<group>"; };
@@ -158,7 +157,7 @@
 		2AECEF68154D850000033D14 /* TerrainProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainProcess.cpp; path = Zarch/Video/TerrainProcess.cpp; sourceTree = "<group>"; };
 		2AEECB34155EB8DF00AC21A2 /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Particles.h; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = Vectoid/Particles.cpp; sourceTree = "<group>"; };
-		2AFFAABC15D986C7006C9092 /* ItemGroups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ItemGroups.h; path = Core/include/kxm/Core/ItemGroups.h; sourceTree = "<group>"; };
+		2AFDAED016C5A24C00C003DA /* ReusableItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReusableItems.h; path = Core/include/kxm/Core/ReusableItems.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,11 +384,10 @@
 				2A65AF64153622DB0054F8E9 /* Interface.h */,
 				2A65AF671536281D0054F8E9 /* IntModN.h */,
 				2A65AF6A153631DC0054F8E9 /* NumberTools.h */,
-				2AFFAABC15D986C7006C9092 /* ItemGroups.h */,
 				2AE1DD001621B5FA00306D89 /* logging.h */,
 				2A8F4DCF1623501300AEA809 /* exceptions.h */,
 				2A1094EB16666790001F298C /* Pool.h */,
-				2A1094F016667842001F298C /* CompactPool.h */,
+				2AFDAED016C5A24C00C003DA /* ReusableItems.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -682,7 +680,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_49_0 kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_52_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -695,7 +693,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_49_0 kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_52_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

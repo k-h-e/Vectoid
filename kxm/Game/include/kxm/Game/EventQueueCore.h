@@ -12,7 +12,6 @@
 
 
 #include <vector>
-#include <deque>
 
 #include <boost/shared_ptr.hpp>
 
@@ -40,10 +39,11 @@ class EventHandlerInterface;
 class EventQueueCore {
   public:
     EventQueueCore();
-    ~EventQueueCore();
-    //! Registers another event type with the event queue, together with an event pool that will
-    //! be managing the event objects for that event type.
-    void RegisterEventType(int eventType, boost::shared_ptr<EventPoolInterface> pool);
+    //! Registers another event pool.
+    int RegisterEventPool(boost::shared_ptr<EventPoolInterface> pool);
+    //! Registers another event type and associates it with the event pool that will be managing the
+    //! event objects for that event type.
+    void RegisterEventType(int eventType, int pool);
     //! Registers another handler for the specified event type.
     /*!
      *  The handler will be registered as a weak reference. Handlers will exclusively get accessed
@@ -53,20 +53,30 @@ class EventQueueCore {
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
     /*!
-     *  May get called by event handlers registered with this event queue.
+     *  May get called when \ref ProcessEvents() is executing.
      */
-    Event *ScheduleEvent(int eventType);
+    Event &ScheduleEvent(int eventType);
     //! Flips scheduling and processing queues and processes the events in the (new) processing
     //! queue.
     void ProcessEvents();
     
   private:
+    struct EventTypeInfo {
+        int                                  pool;
+        std::vector<EventHandlerInterface *> handlers;    // Weak references.
+        EventTypeInfo(int aPool) : pool(aPool) {}
+    };
+    struct EventInfo {
+        int pool;
+        int itemId;
+        EventInfo(int aPool, int anItemId) : pool(aPool), itemId(anItemId) {}
+    };
     EventQueueCore(const EventQueueCore &other);
     EventQueueCore &operator=(const EventQueueCore &other);
     
-    std::vector<boost::shared_ptr<EventPoolInterface> > pools_;    // Even faster than a hash map.
-    std::vector<std::vector<EventHandlerInterface *> >  handlers_; // Weak references.
-    std::deque<Event *>                                 queues_[2];
+    std::vector<boost::shared_ptr<EventPoolInterface> > pools_;
+    std::vector<EventTypeInfo>                          eventTypes_;
+    std::vector<EventInfo>                              events_[2];
     int                                                 schedulingQueue_;
 };
 

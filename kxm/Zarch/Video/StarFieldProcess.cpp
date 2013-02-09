@@ -44,13 +44,13 @@ StarFieldProcess::StarFieldProcess(shared_ptr<Particles> particles,
         t = (float)randomDistribution(randomGenerator) / (float)randomMax;
         float z = mapParameters->starFieldCoordRange.AffineCombination(t);
         mapParameters->starFieldCoordRange.Clamp(&z);
-        particles->AddParticle(Vector(x, y, z), Vector());
+        particles->Add(Vector(x, y, z), Vector());
     }
 }
 
 bool StarFieldProcess::Execute(const Process::Context &context) {
     Vector cameraPosition = cameraState_->position;
-    Particles::Iterator iter = particles_->GetIterator();
+    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     while (Particles::ParticleInfo *particle = iter.Next()) {
         Vector position = particle->position;
         Range xRange(mapParameters_->starFieldCoordRange, cameraPosition.x);

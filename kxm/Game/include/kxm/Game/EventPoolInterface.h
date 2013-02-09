@@ -26,8 +26,9 @@ class Event;
  */
 class EventPoolInterface : public virtual Core::Interface {
   public:
-    virtual Event *Get() = 0;
-    virtual void Put(Event *event) = 0;
+    virtual Event &Get(int *id) = 0;
+    virtual Event &Access(int id) = 0;
+    virtual void Put(int id) = 0;
 };
 
 }    // Namespace Game.

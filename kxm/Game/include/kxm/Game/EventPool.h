@@ -11,7 +11,7 @@
 #define KXM_GAME_EVENTPOOL_H_
 
 
-#include <kxm/Core/Pool.h>
+#include <kxm/Core/ReusableItems.h>
 #include <kxm/Game/EventPoolInterface.h>
 
 
@@ -27,14 +27,15 @@ template<class T>
 class EventPool : public virtual EventPoolInterface {
   public:
     EventPool() {}
-    Event *Get() { return pool_.Get(); }
-    void Put(Event *event) { pool_.Put(static_cast<T *>(event)); }
+    Event &Get(int *id) { return pool_.Get(id); }
+    Event &Access(int id) { return pool_.Item(id); }
+    void Put(int id) { pool_.Put(id); }
     
   private:
     EventPool(const EventPool &other);
     EventPool &operator=(const EventPool &other);
   
-    Core::Pool<T> pool_;
+    Core::ReusableItems<T> pool_;
 };
 
 }    // Namespace Game.

@@ -35,7 +35,7 @@ void ParticlesRenderer::Render(RenderContext *context) {
     
     GLfloat *ptr        = &vertexBuffer_[0];
     int     numToRender = 0;
-    Particles::Iterator iter = particles_->GetIterator();
+    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
     while ((particle = iter.Next())) {
         if (particle->hidden)

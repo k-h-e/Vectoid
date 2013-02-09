@@ -71,13 +71,16 @@ Zarch::Zarch() {
                                starFieldParticles));
     
     // Register event types...
-    shared_ptr<EventPool<TransformEvent> > transformEventPool(new EventPool<TransformEvent>());
-    shared_ptr<EventPool<VariantEvent> >   variantEventPool(new EventPool<VariantEvent>());
-    eventQueue_.RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPool);
-    eventQueue_.RegisterEventType(
-        ZarchEvent::ControlsStateEvent,
-        shared_ptr<EventPool<ControlsStateEvent> >(new EventPool<ControlsStateEvent>()));
-    eventQueue_.RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPool);
+    shared_ptr<EventPool<TransformEvent> >     transformEventPool(new EventPool<TransformEvent>());
+    shared_ptr<EventPool<VariantEvent> >       variantEventPool(new EventPool<VariantEvent>());
+    shared_ptr<EventPool<ControlsStateEvent> > controlsStateEventPool(
+                                                   new EventPool<ControlsStateEvent>());
+    int transformEventPoolId     = eventQueue_.RegisterEventPool(transformEventPool),
+        variantEventPoolId       = eventQueue_.RegisterEventPool(variantEventPool),
+        controlsStateEventPoolId = eventQueue_.RegisterEventPool(controlsStateEventPool);
+    eventQueue_.RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPoolId);
+    eventQueue_.RegisterEventType(ZarchEvent::ControlsStateEvent, controlsStateEventPoolId);
+    eventQueue_.RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPoolId);
     
     // Register event handlers...
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, &*physics_);
@@ -90,10 +93,10 @@ Zarch::~Zarch() {
 
 void Zarch::Execute(const FrameTimeProcess::FrameTimeInfo &timeInfo,
                     const ControlsState &controlsState) {
-    static_cast<VariantEvent *>(eventQueue_.ScheduleEvent(ZarchEvent::FrameTimeEvent))
-        ->Reset(timeInfo.timeSinceLastFrame);
-    static_cast<ControlsStateEvent *>(eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent))
-        ->Reset(controlsState);
+    static_cast<VariantEvent &>(eventQueue_.ScheduleEvent(ZarchEvent::FrameTimeEvent))
+        .Reset(timeInfo.timeSinceLastFrame);
+    static_cast<ControlsStateEvent &>(eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent))
+        .Reset(controlsState);
     
     physics_->ExecuteProcesses();
     eventQueue_.ProcessEvents();

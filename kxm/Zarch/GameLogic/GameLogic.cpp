@@ -18,7 +18,7 @@ namespace Zarch {
 GameLogic::GameLogic() {
 }
 
-void GameLogic::HandleEvent(const Event *event) {
+void GameLogic::HandleEvent(const Event &event) {
 }
 
 void GameLogic::ExecuteProcesses() {

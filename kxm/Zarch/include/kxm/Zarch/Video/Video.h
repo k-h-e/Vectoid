@@ -46,7 +46,7 @@ class Video : public virtual Game::EventHandlerInterface {
           boost::shared_ptr<Vectoid::CoordSysInterface> camera,
           boost::shared_ptr<TerrainRenderer> terrainRenderer,
           boost::shared_ptr<Vectoid::Particles> starFieldParticles);
-    void HandleEvent(const Game::Event *event);
+    void HandleEvent(const Game::Event &event);
     void ExecuteProcesses();
     
   private:

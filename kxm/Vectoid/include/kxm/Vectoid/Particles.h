@@ -17,28 +17,22 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
+#include <kxm/Core/ReusableItems.h>
 #include <kxm/Vectoid/Vector.h>
 
 
 namespace kxm {
-
-namespace Core {
-    template<class T> class CompactPool;
-}
-
 namespace Vectoid {
 
 //! Manages a set of particles.
 /*!
  *  \ingroup Vectoid
  *
- *  Particles generally have quite a limited lifetime: They get created, move around for some time,
- *  and then they die. To avoid unnecessary re-allocations of particle data structures, pooling is
- *  used. */
+ *  Particles have quite a limited lifetime: They get created, move around for some time, and then
+ *  they die. To avoid unnecessary re-allocations of particle data structures, pooling is used
+ *  transparently.
+ */
 class Particles {
-  private:
-    struct ParticleNode;    // Needed in public nested class below.
-
   public:
     //! Holds information about a particle.
     /*!
@@ -54,51 +48,24 @@ class Particles {
         ParticleInfo();
     };
     
-    //! Allows to iterate over the particles, and also to delete particles.
-    /*!
-     *  \ingroup Vectoid
-     */
-    class Iterator {
-      public:
-        Iterator(Particles *particles);
-        //! Advances to the next particle and returns it, or returns <c>0</c> in case there are no
-        //! more particles.
-        ParticleInfo *Next();
-        //! Removes the current particle from the set (if there is one), without invalidating the
-        //! iterator.
-        void Remove();
-    
-      private:
-        Particles                       *particles_;
-        Core::CompactPool<ParticleNode> *particlePool_;
-        ParticleNode                    *lastNode_,
-                                        *currentNode_;
-    };
-    
     Particles();
-    ~Particles();
     //! Adds a new particle with specified starting position and velocity, and provides access to
     //! it.
-    ParticleInfo *AddParticle(const Vector &position, const Vector &velocity);
+    ParticleInfo &Add(const Vector &position, const Vector &velocity);
+    //! Removes the specified particle.
+    void Remove(int id);
     //! Tells the number of particles.
     int Count();
-    //! Returns an iterator for the active particles.
-    Iterator GetIterator();
+    //! Returns an iterator for the particles.
+    Core::ReusableItems<ParticleInfo>::Iterator GetIterator();
     
   private:
-    struct ParticleNode {
-        ParticleNode *next;
-        ParticleInfo info;
-    };
-    
     Particles(const Particles &other);
     Particles &operator=(const Particles &other);
     
-    boost::shared_ptr<Core::CompactPool<ParticleNode> > particles_;    // Might be shared, someday.
-    ParticleNode                                        particleAnchor_;
-    int                                                 numParticles_;
-    boost::random::mt19937                              randomGenerator_;
-    boost::random::uniform_int_distribution<>           random1000_;
+    Core::ReusableItems<ParticleInfo>         particles_;
+    boost::random::mt19937                    randomGenerator_;
+    boost::random::uniform_int_distribution<> random1000_;
 };
 
 

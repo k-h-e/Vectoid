@@ -39,7 +39,7 @@ bool ShotsProcess::Execute(const Process::Context &context) {
     float  time               = timeInfo_->timeSinceLastFrame;
     Vector landerPosition     = landerState_->transform.TranslationPart(),
            lastLanderPosition = landerPosition - time*landerState_->velocity; 
-    Particles::Iterator iter = particles_->GetIterator();
+    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
     while ((particle = iter.Next())) {
         particle->velocity.y += time * -mapParameters_->gravity;
@@ -50,7 +50,7 @@ bool ShotsProcess::Execute(const Process::Context &context) {
         mapParameters_->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
         particle->age += timeInfo_->timeSinceLastFrame;
         if (particle->age >= mapParameters_->maxShotParticleAge)
-            iter.Remove();
+            particles_->Remove(iter.ItemId());
     }
     
     // Add new particles...?
@@ -59,17 +59,17 @@ bool ShotsProcess::Execute(const Process::Context &context) {
         transform.SetTranslationPart(Vector());
         float timeLeft = time - particleTimeCarryOver_;
         while (timeLeft > 0.0f) {
-            Particles::ParticleInfo *particle = particles_->AddParticle(Vector(), Vector());
+            Particles::ParticleInfo &particle = particles_->Add(Vector(), Vector());
             Vector firingDirection(0.0f, 0.0f, 1.0f),
                    startPoint(0.0f, 0.0f, .55f);
             transform.ApplyTo(&firingDirection);
             transform.ApplyTo(&startPoint);
-            particle->velocity =   landerState_->velocity
-                                 + mapParameters_->shotVelocity*firingDirection;
+            particle.velocity =   landerState_->velocity
+                                + mapParameters_->shotVelocity*firingDirection;
             float t = 1.0f - timeLeft/time;
-            particle->position =   (1.0f - t)*lastLanderPosition + t*landerPosition
-                                 + startPoint
-                                 + timeLeft*particle->velocity;
+            particle.position =   (1.0f - t)*lastLanderPosition + t*landerPosition
+                                + startPoint
+                                + timeLeft*particle.velocity;
             timeLeft -= mapParameters_->shotFiringInterval;
         }
         particleTimeCarryOver_ = -timeLeft;

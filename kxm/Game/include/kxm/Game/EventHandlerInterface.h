@@ -22,7 +22,7 @@ class Event;
 class EventHandlerInterface : public virtual Core::Interface {
   public:
     //! Makes the handler handle the specified event.
-    virtual void HandleEvent(const Event *event) = 0;
+    virtual void HandleEvent(const Event &event) = 0;
 };
 
 }    // Namespace Game.

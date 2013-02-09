@@ -47,9 +47,9 @@ void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
     int     numToRender   = 0,
             numColorSlots = (int)colors_.size() -1;
     float   colorSlotSize = highAge_ / (float)numColorSlots;
-    Particles::Iterator iter = particles_->GetIterator();
+    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     Particles::ParticleInfo *particle;
-    Vector                  particleColor;
+    Vector                   particleColor;
     while ((particle = iter.Next())) {
         if (particle->hidden)
             continue;

@@ -47,7 +47,7 @@ class Physics : public virtual Game::EventHandlerInterface {
         boost::shared_ptr<Vectoid::CoordSysInterface> landerCoordSys,
         boost::shared_ptr<Vectoid::Particles> thrusterParticles,
         boost::shared_ptr<Vectoid::Particles> shotsParticles);
-    void HandleEvent(const Game::Event *event);
+    void HandleEvent(const Game::Event &event);
     void ExecuteProcesses();
     
   private:

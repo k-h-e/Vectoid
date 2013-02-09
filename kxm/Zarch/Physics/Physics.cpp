@@ -47,14 +47,14 @@ Physics::Physics(
     processContext_.processes  = &processes_;
 }
 
-void Physics::HandleEvent(const Event *event) {
-    switch (static_cast<const ZarchEvent *>(event)->Type()) {
+void Physics::HandleEvent(const Event &event) {
+    switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
             frameTimeInfo_->timeSinceLastFrame
-                = static_cast<const VariantEvent *>(event)->AsFloat();
+                = static_cast<const VariantEvent &>(event).AsFloat();
             break;
         case ZarchEvent::ControlsStateEvent:
-            *controlsState_ = static_cast<const ControlsStateEvent *>(event)->ControlsState();
+            *controlsState_ = static_cast<const ControlsStateEvent &>(event).ControlsState();
             break;
         default:
             break;

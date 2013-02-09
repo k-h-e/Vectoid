@@ -26,57 +26,53 @@ EventQueueCore::EventQueueCore()
         : schedulingQueue_(0) {
 }
 
-EventQueueCore::~EventQueueCore() {
-    for (int i = 0; i < 2; ++i) {
-        while (queues_[i].size()) {
-            Event *event = queues_[i].front();
-            pools_[event->type_]->Put(event);
-            queues_[i].pop_front();
-        }
-    }
+int EventQueueCore::RegisterEventPool(shared_ptr<EventPoolInterface> pool) {
+    int poolId = (int)pools_.size();
+    pools_.push_back(pool);
+    return poolId;
 }
 
-void EventQueueCore::RegisterEventType(int eventType, shared_ptr<EventPoolInterface> pool) {
-    while ((int)pools_.size() <= eventType)
-        pools_.push_back(shared_ptr<EventPoolInterface>());
-    assert(!pools_[eventType].get());
-    pools_[eventType] = pool;
+void EventQueueCore::RegisterEventType(int eventType, int pool) {
+    assert((pool >= 0) && (pool < (int)pools_.size()));
+    while ((int)eventTypes_.size() <= eventType)
+        eventTypes_.push_back(EventTypeInfo(-1));
+    eventTypes_[eventType] = EventTypeInfo(pool);
 }
 
 void EventQueueCore::RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler) {
-    assert((eventType >= 0) && (eventType < (int)pools_.size()) && pools_[eventType].get());
-    while ((int)handlers_.size() <= eventType)
-        handlers_.push_back(vector<EventHandlerInterface *>());
-    handlers_[eventType].push_back(eventHandler);
+    assert(   (eventType >= 0) && (eventType < (int)eventTypes_.size())
+           && (eventTypes_[eventType].pool != -1));
+    eventTypes_[eventType].handlers.push_back(eventHandler);
 }
 
-Event *EventQueueCore::ScheduleEvent(int eventType) {
-    assert((eventType >= 0) && (eventType < (int)pools_.size()) && pools_[eventType].get());
-    Event *event = pools_[eventType]->Get();
-    event->type_ = eventType;
-    queues_[schedulingQueue_].push_back(event);
+Event &EventQueueCore::ScheduleEvent(int eventType) {
+    assert(   (eventType >= 0) && (eventType < (int)eventTypes_.size())
+           && (eventTypes_[eventType].pool != -1));
+    int pool = eventTypes_[eventType].pool,
+        itemId;
+    Event &event = pools_[pool]->Get(&itemId);
+    event.type_  = eventType;
+    events_[schedulingQueue_].push_back(EventInfo(pool, itemId));
     return event;
 }
 
 void EventQueueCore::ProcessEvents() {
-    //Log(this).Stream() << "event queues: " << (int)queues_[0].size() << " "
-    //                   << (int)queues_[1].size() << endl;
-    deque<Event *> *processingQueue = &queues_[schedulingQueue_];
+    vector<EventInfo> &eventsToProcess = events_[schedulingQueue_];
     schedulingQueue_ = 1 - schedulingQueue_;
-    int num = 0;
-    while (processingQueue->size()) {
-        ++num;
-        Event *event = processingQueue->front();
-        processingQueue->pop_front();
-        //Log(this).Stream() << "processing event, type=" << event->Type()
-        //                   << ", rtti_type=" << typeid(*event).name() << endl;
-        vector<EventHandlerInterface *>::iterator endIter = handlers_[event->type_].end();
-        for (vector<EventHandlerInterface *>::iterator iter = handlers_[event->type_].begin();
-             iter != endIter; ++iter)
+    
+    for (vector<EventInfo>::iterator iter = eventsToProcess.begin(); iter != eventsToProcess.end();
+         ++iter) {
+        Event &event = pools_[iter->pool]->Access(iter->itemId);
+        vector<EventHandlerInterface *> &handlers = eventTypes_[event.type_].handlers;
+        for (vector<EventHandlerInterface *>::iterator iter = handlers.begin();
+             iter != handlers.end(); ++iter)
             (*iter)->HandleEvent(event);
-        pools_[event->type_]->Put(event);
+        //printf("called %d handlers for event (%d,%d)\n", (int)handlers.size(), iter->pool,
+        //    iter->itemId);
+        pools_[iter->pool]->Put(iter->itemId);
     }
-    //Log().Stream() << "handled " << num << " events" << endl;
+    //printf("processed %d events\n", (int)eventsToProcess.size());
+    eventsToProcess.clear();
 }
 
 }    // Namespace Game.
