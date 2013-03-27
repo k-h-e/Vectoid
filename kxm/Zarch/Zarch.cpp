@@ -17,12 +17,13 @@
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
-#include <kxm/Game/EventPool.h>
+#include <kxm/Game/Pool.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 #include <kxm/Zarch/events.h>
+
 
 using namespace std;
 using namespace boost;
@@ -71,10 +72,12 @@ Zarch::Zarch() {
                                starFieldParticles));
     
     // Register event types...
-    shared_ptr<EventPool<TransformEvent> >     transformEventPool(new EventPool<TransformEvent>());
-    shared_ptr<EventPool<VariantEvent> >       variantEventPool(new EventPool<VariantEvent>());
-    shared_ptr<EventPool<ControlsStateEvent> > controlsStateEventPool(
-                                                   new EventPool<ControlsStateEvent>());
+    shared_ptr<Pool<Event, TransformEvent> >     transformEventPool(
+                                                     new Pool<Event, TransformEvent>());
+    shared_ptr<Pool<Event, VariantEvent> >       variantEventPool(
+                                                     new Pool<Event, VariantEvent>());
+    shared_ptr<Pool<Event, ControlsStateEvent> > controlsStateEventPool(
+                                                     new Pool<Event, ControlsStateEvent>());
     int transformEventPoolId     = eventQueue_.RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue_.RegisterEventPool(variantEventPool),
         controlsStateEventPoolId = eventQueue_.RegisterEventPool(controlsStateEventPool);

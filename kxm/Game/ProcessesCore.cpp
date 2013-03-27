@@ -10,7 +10,7 @@
 #include <kxm/Game/ProcessesCore.h>
 
 #include <kxm/Core/logging.h>
-#include <kxm/Game/ProcessPoolInterface.h>
+#include <kxm/Game/CustomProcessPool.h>
 
 using namespace std;
 using namespace boost;
@@ -21,98 +21,67 @@ namespace kxm {
 namespace Game {
 
 ProcessesCore::ProcessesCore()
-        : numProcesses_(0) {
-    processesAnchor_.next_    = &processesAnchor_;
-    processesAnchor_.prev_    = &processesAnchor_;
-    newProcessesAnchor_.next_ = &newProcessesAnchor_;
-    newProcessesAnchor_.prev_ = &newProcessesAnchor_;
+        : processes_(2),
+          numProcesses_(0) {
+    pools_.push_back(shared_ptr<PoolInterface<Process> >(
+        customProcessPool_ = new CustomProcessPool()));
 }
 
-ProcessesCore::~ProcessesCore() {
-    ActivateNewProcesses();
-    while (numProcesses_)
-        Remove(processesAnchor_.next_);
+void ProcessesCore::RegisterProcessType(int processType,
+                                        boost::shared_ptr<PoolInterface<Process> > pool) {
+    assert(processType >= 0);
+    int slot = processType + 1;    // Slot 0 is for custom process pool.
+    while ((int)pools_.size() <= slot)
+        pools_.push_back(shared_ptr<PoolInterface<Process> >());
+    assert(!pools_[slot].get());
+    pools_[slot] = pool;
 }
 
-void ProcessesCore::RegisterProcessType(int processType, shared_ptr<ProcessPoolInterface> pool) {
-    while ((int)pools_.size() <= processType)
-        pools_.push_back(shared_ptr<ProcessPoolInterface>());
-    assert(!pools_[processType].get());
-    pools_[processType] = pool;
-}
-
-Process *ProcessesCore::AddProcess(int processType) {
-    assert((processType >= 0) && (processType < (int)pools_.size()) && pools_[processType].get());
-    Process *process = pools_[processType]->Get();
-    process->type_ = processType;    // This means it will be put back into its pool when finished.
-    Add(process);
+Process &ProcessesCore::AddProcess(int processType) {
+    assert (processType >= 0);
+    int slot = processType + 1;    // Slot 0 is for custom process pool.
+    assert((slot < (int)pools_.size()) && (!pools_[slot].get()));
+    int itemId;
+    Process &process = pools_[slot]->Get(&itemId);
+    processes_.Get(addedProcessesGroup).Set(slot, itemId);
+    ++numProcesses_;
     return process;
 }
 
-void ProcessesCore::AddProcess(Process *process) {
-    process->type_ = -1;    // This means it will get deleted when it is finished.
-    Add(process);
+void ProcessesCore::AddProcess(const boost::shared_ptr<Process> &process) {
+    int itemId;
+    customProcessPool_->Get(process, &itemId);
+    processes_.Get(addedProcessesGroup).Set(0, itemId);
+    ++numProcesses_;
 }
 
 void ProcessesCore::ExecuteProcesses(const Process::Context &context) {
-    ActivateNewProcesses();
-    Process *last = &processesAnchor_,
-            *current;
-    while ((current = last->next_) != &processesAnchor_) {
-        if (current->Execute(context))
-            last = current;
-        else
-            Remove(current);
+    ReusableItems<ProcessInfo>::Iterator iter = processes_.GetIterator(addedProcessesGroup);
+    int num = 0;
+    while (iter.Next()) {
+        processes_.Move(iter.ItemId(), activeProcessesGroup);
+        ++num;
     }
+    if (num)
+        printf("activated %d processes\n", num);
+    
+    iter = processes_.GetIterator(activeProcessesGroup);
+    num  = 0;
+    while (ProcessInfo *info = iter.Next()) {
+        if (!(pools_[info->pool]->Access(info->itemId).Execute(context))) {
+            pools_[info->pool]->Put(info->itemId);
+            processes_.Put(iter.ItemId());
+            --numProcesses_;
+            ++num;
+        }
+    }
+    if (num)
+        printf("deregistered %d processes\n", num);
 }
 
 int ProcessesCore::Count() {
     return numProcesses_;
 }
-
-void ProcessesCore::Add(Process *process) {
-    Process *prev = newProcessesAnchor_.prev_;
-    prev->next_               = process;
-    process->prev_            = prev;
-    process->next_            = &newProcessesAnchor_;
-    newProcessesAnchor_.prev_ = process;
-    ++numProcesses_;
-    Log(this).Stream() << "process added, num=" << numProcesses_ << endl;
-}
-
-void ProcessesCore::ActivateNewProcesses() {
-    if (newProcessesAnchor_.next_ == &newProcessesAnchor_)
-        return;    // There are no new processs to activate.
-    Process *last     = processesAnchor_.prev_,
-            *firstNew = newProcessesAnchor_.next_,
-            *lastNew  = newProcessesAnchor_.prev_;
-    last->next_            = firstNew;
-    firstNew->prev_        = last;
-    lastNew->next_         = &processesAnchor_;
-    processesAnchor_.prev_ = lastNew;
     
-    newProcessesAnchor_.next_ = &newProcessesAnchor_;
-    newProcessesAnchor_.prev_ = &newProcessesAnchor_;
-    
-    Log(this).Stream() << "activated new processes" << endl;
-}
-
-void ProcessesCore::Remove(Process *process) {
-    Process *prev = process->prev_,
-            *next = process->next_;
-    prev->next_ = next;
-    next->prev_ = prev;
-    --numProcesses_;
-    
-    if (process->type_ == -1) {
-        delete process;
-        Log(this).Stream() << "process deleted, num=" << numProcesses_ << endl;
-    }
-    else {
-        pools_[process->type_]->Put(process);
-        Log(this).Stream() << "process returned to pool, num=" << numProcesses_ << endl;
-    }
-}
-
 }    // Namespace Game.
 }    // Namespace kxm.

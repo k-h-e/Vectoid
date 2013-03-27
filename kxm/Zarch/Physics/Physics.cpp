@@ -33,15 +33,15 @@ Physics::Physics(
     shared_ptr<Particles> shotsParticles)
         : frameTimeInfo_(new FrameTimeProcess::FrameTimeInfo()),
           controlsState_(new ControlsState()) {
-    LanderProcess *landerProcess = new LanderProcess(
-        landerCoordSys, frameTimeInfo_, controlsState_, terrain, mapParameters);
+    shared_ptr<LanderProcess> landerProcess(new LanderProcess(
+        landerCoordSys, frameTimeInfo_, controlsState_, terrain, mapParameters));
     processes_.AddProcess(landerProcess);
-    processes_.AddProcess(
+    processes_.AddProcess(shared_ptr<Process>(
         new ThrusterParticlesProcess(thrusterParticles, landerProcess->LanderState(),
-                                     frameTimeInfo_, mapParameters));
-    processes_.AddProcess(
+                                     frameTimeInfo_, mapParameters)));
+    processes_.AddProcess(shared_ptr<Process>(
         new ShotsProcess(shotsParticles, landerProcess->LanderState(), frameTimeInfo_,
-                         mapParameters));
+                         mapParameters)));
               
     processContext_.eventQueue = eventQueue;
     processContext_.processes  = &processes_;

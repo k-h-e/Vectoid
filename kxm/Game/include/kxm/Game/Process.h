@@ -30,14 +30,13 @@ class Process : public virtual Core::Interface {
     Process();
     //! Executes the process until it co-operatively yields (by returning).
     /*!
-     *  \return <c>false</c> in case the process has finished and wishes to be deregistered.
+     *  \return <c>false</c> in case the process has finished and does not want to be called again.
      */
     virtual bool Execute(const Context &context);
     
   private:
-    friend class ProcessesCore;
-    int     type_;
-    Process *next_, *prev_;
+    Process(const Process &other);
+    Process &operator=(const Process &other);
 };
 
 }    // Namespace Game.

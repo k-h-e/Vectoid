@@ -13,10 +13,7 @@
 namespace kxm {
 namespace Game {
 
-Process::Process()
-        : type_(-1),
-          next_(0),
-          prev_(0) {
+Process::Process() {
 }
 
 bool Process::Execute(const Context &context) {

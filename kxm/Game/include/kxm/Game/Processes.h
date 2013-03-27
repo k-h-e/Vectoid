@@ -17,31 +17,45 @@
 namespace kxm {
 namespace Game {
 
-//! Manages a set of processes, i.e. instances of \ref ProcessInterface. Wraps \ref ProcessesCore to
-//! allow clients to use custom enums to specify (pooled) process types, instead of <c>int</c>s.
+//! Orchestrates a set of processes (i.e. instances of \ref Process) into a cooperative multitasking
+//! scheme. Wraps \ref ProcessesCore to allow clients to use custom enums to specify (pooled)
+//! process types, instead of <c>int</c>s.
 /*!
  *  \ingroup Game
  */
 template<class T>
 class Processes : private ProcessesCore {
   public:
-    //! Adds the specified process, transferring ownership to the \ref Processes object.
-    /*!
-     *  The process object must have been <c>new</c>ed by the client.  When it has finished
-     *  executing, as it can indicate via the return value of \ref ProcessInterface::Execute(), it
-     *  will get <c>deleted</c>.
-     *
-     *  May be called from processes managed by this process group.
-     */
-    void AddProcess(Process *process) { ProcessesCore::AddProcess(process); }
-    //! Executes all processes and deregisters all processes that indicate that they have finished.
-    /*!
-     *  Pooled processes that have finished are returned to their respective pool, the others (i.e.
-     *  not pooled) get <c>deleted</c>.
-     */
+    Processes() {}
+  
+    //! See \ref ProcessesCore::RegisterProcessType().
+    void RegisterProcessType(T processType, boost::shared_ptr<PoolInterface<Process> > pool) {
+        ProcessesCore::RegisterProcessType((int)processType, pool);
+    }
+    
+    //! See \ref ProcessesCore::AddProcess(int).
+    Process &AddProcess(T processType) {
+        return ProcessesCore::AddProcess((int)processType);
+    }
+    
+    //! See \ref ProcessesCore::AddProcess(const boost::shared_ptr<Process> &).
+    void AddProcess(const boost::shared_ptr<Process> &process) {
+        ProcessesCore::AddProcess(process);
+    }
+    
+    //! See \ref ProcessesCore::ExecuteProcesses().
     void ExecuteProcesses(const Process::Context &context) {
         ProcessesCore::ExecuteProcesses(context);
     }
+    
+    //! See \ref ProcessesCore::Count().
+    int Count() {
+        return ProcessesCore::Count();
+    }
+    
+  private:
+    Processes(const Processes &other);
+    Processes &operator=(const Processes &other);
 };
 
 }    // Namespace Game.

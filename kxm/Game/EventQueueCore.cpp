@@ -11,7 +11,7 @@
 
 #include <kxm/Core/logging.h>
 #include <kxm/Game/Event.h>
-#include <kxm/Game/EventPoolInterface.h>
+#include <kxm/Game/PoolInterface.h>
 #include <kxm/Game/EventHandlerInterface.h>
 
 using namespace std;
@@ -26,7 +26,7 @@ EventQueueCore::EventQueueCore()
         : schedulingQueue_(0) {
 }
 
-int EventQueueCore::RegisterEventPool(shared_ptr<EventPoolInterface> pool) {
+int EventQueueCore::RegisterEventPool(shared_ptr<PoolInterface<Event> > pool) {
     int poolId = (int)pools_.size();
     pools_.push_back(pool);
     return poolId;

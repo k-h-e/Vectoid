@@ -29,6 +29,7 @@
 		2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F714F6ECC70091BD84 /* KXMViewController.mm */; };
 		2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */; };
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
+		2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */; };
 		2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A952015F4DEEA00E64389 /* Interface.cpp */; };
 		2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4B15361E700054F8E9 /* Camera.cpp */; };
 		2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4C15361E700054F8E9 /* CoordSys.cpp */; };
@@ -55,12 +56,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A1094EB16666790001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = Core/include/kxm/Core/Pool.h; sourceTree = "<group>"; };
 		2A1094F41667F757001F298C /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = Game/include/kxm/Game/Event.h; sourceTree = "<group>"; };
 		2A1094F81667F903001F298C /* EventQueueCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueCore.h; path = Game/include/kxm/Game/EventQueueCore.h; sourceTree = "<group>"; };
 		2A1094F91667FB29001F298C /* EventQueueCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueCore.cpp; path = Game/EventQueueCore.cpp; sourceTree = "<group>"; };
-		2A1094FC1667FC9F001F298C /* EventPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventPool.h; path = Game/include/kxm/Game/EventPool.h; sourceTree = "<group>"; };
-		2A1094FD1668C38F001F298C /* EventPoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventPoolInterface.h; path = Game/include/kxm/Game/EventPoolInterface.h; sourceTree = "<group>"; };
+		2A1094FC1667FC9F001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = Game/include/kxm/Game/Pool.h; sourceTree = "<group>"; };
+		2A1094FD1668C38F001F298C /* PoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PoolInterface.h; path = Game/include/kxm/Game/PoolInterface.h; sourceTree = "<group>"; };
 		2A1094FE1668CC5D001F298C /* EventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueue.h; path = Game/include/kxm/Game/EventQueue.h; sourceTree = "<group>"; };
 		2A1094FF1668CF30001F298C /* events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = events.h; path = Zarch/include/kxm/Zarch/events.h; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
@@ -69,8 +69,6 @@
 		2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarFieldProcess.cpp; path = Zarch/Video/StarFieldProcess.cpp; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
-		2A2A6114166A4F450073658E /* ProcessPoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessPoolInterface.h; path = Game/include/kxm/Game/ProcessPoolInterface.h; sourceTree = "<group>"; };
-		2A2A6116166A51710073658E /* ProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessPool.h; path = Game/include/kxm/Game/ProcessPool.h; sourceTree = "<group>"; };
 		2A2A6117166A61350073658E /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = Game/include/kxm/Game/Process.h; sourceTree = "<group>"; };
 		2A2A6118166A623D0073658E /* ProcessesCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessesCore.h; path = Game/include/kxm/Game/ProcessesCore.h; sourceTree = "<group>"; };
 		2A2A6119166A624E0073658E /* ProcessesCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProcessesCore.cpp; path = Game/ProcessesCore.cpp; sourceTree = "<group>"; };
@@ -104,6 +102,8 @@
 		2A3C13F714F6ECC70091BD84 /* KXMViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KXMViewController.mm; sourceTree = "<group>"; };
 		2A3C13FA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPhone.xib; sourceTree = "<group>"; };
 		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
+		2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomProcessPool.h; path = Game/include/kxm/Game/CustomProcessPool.h; sourceTree = "<group>"; };
+		2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomProcessPool.cpp; path = Game/CustomProcessPool.cpp; sourceTree = "<group>"; };
 		2A4A952015F4DEEA00E64389 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Interface.cpp; path = Core/Interface.cpp; sourceTree = "<group>"; };
 		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
 		2A63D014150CF5A50068E054 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
@@ -120,7 +120,6 @@
 		2A65AF6A153631DC0054F8E9 /* NumberTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NumberTools.h; path = Core/include/kxm/Core/NumberTools.h; sourceTree = "<group>"; };
 		2A67326915600FEC0095481F /* ThrusterParticlesProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesProcess.h; path = Zarch/include/kxm/Zarch/Physics/ThrusterParticlesProcess.h; sourceTree = "<group>"; };
 		2A67326C1560103A0095481F /* ThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesProcess.cpp; path = Zarch/Physics/ThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
-		2A8F4DCF1623501300AEA809 /* exceptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = exceptions.h; path = Core/include/kxm/Core/exceptions.h; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
 		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerspectiveProjection.h; sourceTree = "<group>"; };
@@ -385,8 +384,6 @@
 				2A65AF671536281D0054F8E9 /* IntModN.h */,
 				2A65AF6A153631DC0054F8E9 /* NumberTools.h */,
 				2AE1DD001621B5FA00306D89 /* logging.h */,
-				2A8F4DCF1623501300AEA809 /* exceptions.h */,
-				2A1094EB16666790001F298C /* Pool.h */,
 				2AFDAED016C5A24C00C003DA /* ReusableItems.h */,
 			);
 			name = Core;
@@ -404,10 +401,11 @@
 			isa = PBXGroup;
 			children = (
 				2AECEF51154D613000033D14 /* include */,
-				2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */,
 				2A1094F91667FB29001F298C /* EventQueueCore.cpp */,
 				2A2A611D166A700B0073658E /* Process.cpp */,
+				2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */,
 				2A2A6119166A624E0073658E /* ProcessesCore.cpp */,
+				2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -431,18 +429,17 @@
 		2AECEF53154D613E00033D14 /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				2AC40A1C15567AFF00026789 /* FrameTimeProcess.h */,
+				2A1094FD1668C38F001F298C /* PoolInterface.h */,
+				2A1094FC1667FC9F001F298C /* Pool.h */,
 				2A1094F41667F757001F298C /* Event.h */,
-				2A1094FD1668C38F001F298C /* EventPoolInterface.h */,
-				2A1094FC1667FC9F001F298C /* EventPool.h */,
 				2A2A6137166D3A190073658E /* EventHandlerInterface.h */,
 				2A1094F81667F903001F298C /* EventQueueCore.h */,
 				2A1094FE1668CC5D001F298C /* EventQueue.h */,
 				2A2A6117166A61350073658E /* Process.h */,
-				2A2A6114166A4F450073658E /* ProcessPoolInterface.h */,
-				2A2A6116166A51710073658E /* ProcessPool.h */,
+				2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */,
 				2A2A6118166A623D0073658E /* ProcessesCore.h */,
 				2A2A611C166A64690073658E /* Processes.h */,
+				2AC40A1C15567AFF00026789 /* FrameTimeProcess.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -521,7 +518,7 @@
 		2A3C13CF14F6ECC60091BD84 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 2A3C13D214F6ECC60091BD84 /* Build configuration list for PBXProject "kxm" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -594,6 +591,7 @@
 				2A2A612F166D21E40073658E /* Physics.cpp in Sources */,
 				2A2A6133166D22F60073658E /* Video.cpp in Sources */,
 				2A2A6136166D23530073658E /* GameLogic.cpp in Sources */,
+				2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,6 +630,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -645,6 +647,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -657,12 +660,17 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";

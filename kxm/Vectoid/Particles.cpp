@@ -21,11 +21,12 @@ namespace kxm {
 namespace Vectoid {
 
 Particles::Particles()
-        : random1000_(uniform_int_distribution<>(0, 1000)) {
+        : particles_(1),
+          random1000_(uniform_int_distribution<>(0, 1000)) {
 }
 
 Particles::ParticleInfo &Particles::Add(const Vector &position, const Vector &velocity) {
-    ParticleInfo &particle = particles_.Get();
+    ParticleInfo &particle = particles_.Get(0);
     particle.position = position;
     particle.velocity = velocity;
     particle.age      = 0.0f;
@@ -46,11 +47,11 @@ void Particles::Remove(int id) {
 }
 
 int Particles::Count() {
-    return particles_.Count();
+    return particles_.Count() - particles_.IdleCount();
 }
 
 ReusableItems<Particles::ParticleInfo>::Iterator Particles::GetIterator() {
-    return particles_.GetIterator();
+    return particles_.GetIterator(0);
 }
 
 Particles::ParticleInfo::ParticleInfo()

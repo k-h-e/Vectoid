@@ -20,7 +20,7 @@ namespace kxm {
 namespace Game {
 
 class Event;
-class EventPoolInterface;
+template<class T> class PoolInterface;
 class EventHandlerInterface;
 
 //! Event queue mechanism.
@@ -40,13 +40,13 @@ class EventQueueCore {
   public:
     EventQueueCore();
     //! Registers another event pool.
-    int RegisterEventPool(boost::shared_ptr<EventPoolInterface> pool);
+    int RegisterEventPool(boost::shared_ptr<PoolInterface<Event> > pool);
     //! Registers another event type and associates it with the event pool that will be managing the
     //! event objects for that event type.
     void RegisterEventType(int eventType, int pool);
     //! Registers another handler for the specified event type.
     /*!
-     *  The handler will be registered as a weak reference. Handlers will exclusively get accessed
+     *  The handler will be registered as a weak reference. Handlers will exclusively get called
      *  from \ref ProcessEvents().
      */
     void RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler);
@@ -56,8 +56,10 @@ class EventQueueCore {
      *  May get called when \ref ProcessEvents() is executing.
      */
     Event &ScheduleEvent(int eventType);
-    //! Flips scheduling and processing queues and processes the events in the (new) processing
-    //! queue.
+    //! Processes the events scheduled earlier.
+    /*!
+     *  Flips scheduling and processing queues before processing events.
+     */
     void ProcessEvents();
     
   private:
@@ -74,10 +76,10 @@ class EventQueueCore {
     EventQueueCore(const EventQueueCore &other);
     EventQueueCore &operator=(const EventQueueCore &other);
     
-    std::vector<boost::shared_ptr<EventPoolInterface> > pools_;
-    std::vector<EventTypeInfo>                          eventTypes_;
-    std::vector<EventInfo>                              events_[2];
-    int                                                 schedulingQueue_;
+    std::vector<boost::shared_ptr<PoolInterface<Event> > > pools_;
+    std::vector<EventTypeInfo>                             eventTypes_;
+    std::vector<EventInfo>                                 events_[2];
+    int                                                    schedulingQueue_;
 };
 
 }    // Namespace Game.

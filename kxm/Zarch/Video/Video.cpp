@@ -29,11 +29,13 @@ Video::Video(
         shared_ptr<MapParameters> mapParameters, shared_ptr<CoordSysInterface> camera,
         shared_ptr<TerrainRenderer> terrainRenderer, shared_ptr<Particles> starFieldParticles)
     : landerStateInfo_(new LanderProcess::LanderStateInfo()) {
-    CameraProcess *cameraProcess = new CameraProcess(camera, landerStateInfo_, mapParameters);
+    shared_ptr<CameraProcess> cameraProcess(
+        new CameraProcess(camera, landerStateInfo_, mapParameters));
     processes_.AddProcess(cameraProcess);
-    processes_.AddProcess(new TerrainProcess(terrainRenderer, landerStateInfo_));
-    processes_.AddProcess(new StarFieldProcess(starFieldParticles, cameraProcess->CameraState(),
-                          mapParameters));
+    processes_.AddProcess(shared_ptr<Process>(
+        new TerrainProcess(terrainRenderer, landerStateInfo_)));
+    processes_.AddProcess(shared_ptr<Process>(
+        new StarFieldProcess(starFieldParticles, cameraProcess->CameraState(), mapParameters)));
     
     processContext_.eventQueue = eventQueue;
     processContext_.processes  = &processes_;

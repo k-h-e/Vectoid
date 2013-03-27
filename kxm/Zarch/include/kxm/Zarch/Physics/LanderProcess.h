@@ -19,11 +19,6 @@
 #include <kxm/Zarch/processes.h>
 
 
-/*!
- *  \defgroup Zarch Game inspired by Zarch
- */
-
-
 namespace kxm {
 
 namespace Vectoid {

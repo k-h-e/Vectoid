@@ -17,6 +17,10 @@
 #include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/events.h>
 
+/*!
+ *  \defgroup Zarch Zarch-like Game
+ */
+
 
 namespace kxm {
 

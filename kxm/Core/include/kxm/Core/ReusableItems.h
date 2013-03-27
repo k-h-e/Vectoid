@@ -23,6 +23,9 @@ namespace Core {
 /*!
  *  \ingroup Core
  *
+ *  Multiple groups can be set up in order to organize the items currently in use. Each item that is
+ *  currently in use belongs to exactly one of these groups.
+ *
  *  The template parameter type <code>T</code> must be copyable and default-constructible. 
  *
  *  There's no support for multithreaded use. Specifically, the items might get stored in a compact
@@ -33,34 +36,46 @@ class ReusableItems {
   public:
     class Iterator;
     
-    ReusableItems();
-    //! Provides another item for the client to use, either by taking one from the set of idle
-    //! items, or by creating a new one if no idle item is currently present.
+    ReusableItems(int numGroups);
+    //! Provides another item for the client to use, assigning it to the specified group. The item
+    //! is either taken from the set of idle items, or newly created if no idle item is currently
+    //! present.
     /*!
-     *  The item remains owned by the container. With respect to iterations of the in-use items, the
-     *  new items gets appended at the end.
+     *  The item remains owned by the container. With respect to iterations over the in-use items,
+     *  new items get appended at the end of their group.
      *
      *  When the client has finished using the item, it must put it back into the pool of idle items
      *  for future re-use using \ref Put().
+     *
+     *  Iterators for groups other than the one specified will not get invalidated.
      */
-    T &Get();
+    inline T &Get(int groupId);
     //! Same as \ref Get(), but also provides the id of the item returned.
-    T &Get(int *id);
+    T &Get(int groupId, int *itemId);
     //! Puts back the specified item into the idle pool for future re-use.
     /*!
      *  The item \ref Put() back last will be the first item that \ref Get() returns to use.
      */
-    void Put(int id);
-    //! Returns an iterator allowing to iterate over the items currently in use.
+    void Put(int itemId);
+    //! Moves the specified in-use item to the specified in-use group.
+    /*!
+     *  The item is added to the back of the target group.
+     */
+    void Move(int itemId, int targetGroup);
+    //! Returns an iterator allowing to iterate over those items currently in use that are assigned
+    //! to the specified group.
     /*!
      *  The iterator may only be used as long as the container lives. Unless noted otherwise, 
      *  operations on the container invalidate handed-out iterators.
      */
-    Iterator GetIterator();
+    Iterator GetIterator(int groupId);
     //! Grants access to the specified item.
-    T &Item(int id);
-    //! Tells how many items are currently in use.
-    int Count();
+    inline T &Item(int itemId);
+    //! Tells the total number of items in the container, including the idle ones.
+    inline int Count();
+    //! Tells the number of idle items in the container (those not currently in use, but waiting to
+    //! be re-used).
+    inline int IdleCount();
     
   private:
     struct ItemInfo {
@@ -72,11 +87,12 @@ class ReusableItems {
     void AddIdleItem();
     
     std::vector<ItemInfo> items_;
-    int                   inUseAnchor_, idleAnchor_;
+    std::vector<int>      groupAnchors_;
+    int                   idleAnchor_;
     int                   idleCount_;
 };
 
-//! Allows for iterating over the items currently in use.
+//! Allows for iterating over the items that are currently in use and assigned to a specific group.
 /*!
  *  \ingroup Core
  */
@@ -88,27 +104,32 @@ class ReusableItems<T>::Iterator {
     //! If the iterator has returned an item in the last call to \ref Next(), this item's id is
     //! returned. Otherwise, the method's behavior is undefined.
     /*!
-     *  The current item can be \ref Put() back using the returned id without invalidating the
-     *  iterator.
+     *  The current item can be \ref Put() back or \ref Move() d to another group using the returned
+     *  id without invalidating the iterator.
      */
     int ItemId();
     
   private:
     friend class ReusableItems;
-    Iterator(std::vector<ItemInfo> &items, int inUseAnchor);
-    std::vector<ItemInfo> &items_;
+    Iterator(std::vector<ItemInfo> *items, int groupAnchor);
+    std::vector<ItemInfo> *items_;
     int                    currentItem_, nextItem_,
-                           inUseAnchor_;
+                           groupAnchor_;
 };
 
 template<class T>
-ReusableItems<T>::ReusableItems()
+ReusableItems<T>::ReusableItems(int numGroups)
         : idleCount_(0) {
+    if (numGroups < 1)
+        numGroups = 1;
     ItemInfo info;
-    inUseAnchor_ = (int)items_.size();
-    info.prev = inUseAnchor_;
-    info.next = inUseAnchor_;
-    items_.push_back(info);
+    for (int i = 0; i < numGroups; ++i) {
+        int anchor = (int)items_.size();
+        groupAnchors_.push_back(anchor);
+        info.prev = anchor;
+        info.next = anchor;
+        items_.push_back(info);
+    }
     idleAnchor_ = (int)items_.size();
     info.prev = idleAnchor_;
     info.next = idleAnchor_;
@@ -116,7 +137,7 @@ ReusableItems<T>::ReusableItems()
 }
 
 template<class T>
-T &ReusableItems<T>::Get(int *id) {
+T &ReusableItems<T>::Get(int groupId, int *itemId) {
     if (!idleCount_)
         AddIdleItem();
     
@@ -127,53 +148,77 @@ T &ReusableItems<T>::Get(int *id) {
     idleAnchorInfo.next        = nextIdleItem;
     items_[nextIdleItem].prev  = idleAnchor_;
     
-    ItemInfo &inUseAnchorInfo  = items_[inUseAnchor_];
+    int       inUseAnchor      = groupAnchors_[groupId];
+    ItemInfo &inUseAnchorInfo  = items_[inUseAnchor];
     int       lastInUseItem    = inUseAnchorInfo.prev;
     items_[lastInUseItem].next = item;
     itemInfo.prev              = lastInUseItem;
-    itemInfo.next              = inUseAnchor_;
+    itemInfo.next              = inUseAnchor;
     inUseAnchorInfo.prev       = item;
     
     --idleCount_;
-    *id = item;
+    *itemId = item;
     return itemInfo.item;
 }
 
 template<class T>
-T &ReusableItems<T>::Get() {
+T &ReusableItems<T>::Get(int groupId) {
     int id;
-    return Get(&id);
+    return Get(groupId, &id);
 }
 
 template<class T>
-void ReusableItems<T>::Put(int id) {
-    ItemInfo &itemInfo = items_[id];
+void ReusableItems<T>::Put(int itemId) {
+    // Unlink...
+    ItemInfo &itemInfo = items_[itemId];
     items_[itemInfo.prev].next = itemInfo.next;
     items_[itemInfo.next].prev = itemInfo.prev;
     
+    // Link in as first idle item...
     ItemInfo &idleAnchorInfo   = items_[idleAnchor_];
     int firstIdleItem          = idleAnchorInfo.next;
-    idleAnchorInfo.next        = id;
+    idleAnchorInfo.next        = itemId;
     itemInfo.prev              = idleAnchor_;
     itemInfo.next              = firstIdleItem;
-    items_[firstIdleItem].prev = id;
+    items_[firstIdleItem].prev = itemId;
     
     ++idleCount_;
 }
 
 template<class T>
-typename ReusableItems<T>::Iterator ReusableItems<T>::GetIterator() {
-    return Iterator(items_, inUseAnchor_);
+void ReusableItems<T>::Move(int itemId, int targetGroup) {
+    // Unlink...
+    ItemInfo &itemInfo = items_[itemId];
+    items_[itemInfo.prev].next = itemInfo.next;
+    items_[itemInfo.next].prev = itemInfo.prev;
+    
+    // Link in as last item in target group...
+    ItemInfo &targetGroupAnchorInfo  = items_[groupAnchors_[targetGroup]];
+    int lastTargetGroupItem          = targetGroupAnchorInfo.prev;
+    items_[lastTargetGroupItem].next = itemId;
+    itemInfo.prev                    = lastTargetGroupItem;
+    itemInfo.next                    = groupAnchors_[targetGroup];
+    targetGroupAnchorInfo.prev       = itemId;
 }
 
 template<class T>
-T &ReusableItems<T>::Item(int id) {
-    return items_[id].item;
+typename ReusableItems<T>::Iterator ReusableItems<T>::GetIterator(int groupId) {
+    return Iterator(&items_, groupAnchors_[groupId]);
+}
+
+template<class T>
+T &ReusableItems<T>::Item(int itemId) {
+    return items_[itemId].item;
 }
 
 template<class T>
 int ReusableItems<T>::Count() {
-    return (int)items_.size() - 2 - idleCount_;
+    return (int)items_.size() - (int)groupAnchors_.size() - 1;
+}
+
+template<class T>
+int ReusableItems<T>::IdleCount() {
+    return idleCount_;
 }
 
 template<class T>
@@ -193,19 +238,19 @@ void ReusableItems<T>::AddIdleItem() {
 }
 
 template<class T>
-ReusableItems<T>::Iterator::Iterator(std::vector<ItemInfo> &items, int inUseAnchor)
+ReusableItems<T>::Iterator::Iterator(std::vector<ItemInfo> *items, int groupAnchor)
         : items_(items),
-          inUseAnchor_(inUseAnchor),
+          groupAnchor_(groupAnchor),
           currentItem_(-1) {
-    nextItem_ = items_[inUseAnchor_].next;
+    nextItem_ = (*items_)[groupAnchor_].next;
 }
 
 template<class T>
 T *ReusableItems<T>::Iterator::Next() {
-    if (nextItem_ == inUseAnchor_)
+    if (nextItem_ == groupAnchor_)
         return 0;
     currentItem_              = nextItem_;
-    ItemInfo &currentItemInfo = items_[currentItem_];
+    ItemInfo &currentItemInfo = (*items_)[currentItem_];
     nextItem_                 = currentItemInfo.next;
     return &currentItemInfo.item;
 }

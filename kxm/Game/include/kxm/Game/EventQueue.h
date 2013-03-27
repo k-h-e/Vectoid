@@ -25,8 +25,10 @@ namespace Game {
 template<class T>
 class EventQueue : private EventQueueCore {
   public:
+    EventQueue() {}
+    
     //! See \ref EventQueueCore::RegisterEventPool().
-    int RegisterEventPool(boost::shared_ptr<EventPoolInterface> pool) {
+    int RegisterEventPool(boost::shared_ptr<PoolInterface<Event> > pool) {
         return EventQueueCore::RegisterEventPool(pool);
     }
   
@@ -49,6 +51,10 @@ class EventQueue : private EventQueueCore {
     void ProcessEvents() {
         EventQueueCore::ProcessEvents();
     }
+    
+  private:
+    EventQueue(const EventQueue &other);
+    EventQueue &operator=(const EventQueue &other);
 };
 
 }    // Namespace Game.
