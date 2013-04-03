@@ -44,6 +44,10 @@
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
 		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
+		2ABC807817064AD600D909FA /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC807717064AD600D909FA /* Buffer.cpp */; };
+		2ABC807C17065B9F00D909FA /* ThreadCouplingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */; };
+		2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC80831706794000D909FA /* POSIXThreadingFactory.cpp */; };
+		2ABC808B17088B4800D909FA /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC808917088B4800D909FA /* Thread.cpp */; };
 		2AC40A1F15567B1400026789 /* FrameTimeProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
 		2AE1DD031621B69600306D89 /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1DD011621B69600306D89 /* logging.cpp */; };
@@ -138,6 +142,21 @@
 		2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
 		2AAC2566158D223D004A37C6 /* TerrainRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = Zarch/include/kxm/Zarch/Video/TerrainRenderer.h; sourceTree = "<group>"; };
 		2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainRenderer.cpp; path = Zarch/Video/TerrainRenderer.cpp; sourceTree = "<group>"; };
+		2ABC807617064ABC00D909FA /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Buffer.h; path = Core/include/kxm/Core/Buffer.h; sourceTree = "<group>"; };
+		2ABC807717064AD600D909FA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = Core/Buffer.cpp; sourceTree = "<group>"; };
+		2ABC807917065B7B00D909FA /* ThreadCouplingBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThreadCouplingBuffer.h; path = Game/include/kxm/Game/ThreadCouplingBuffer.h; sourceTree = "<group>"; };
+		2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadCouplingBuffer.cpp; path = Game/ThreadCouplingBuffer.cpp; sourceTree = "<group>"; };
+		2ABC807D17066BA000D909FA /* LockInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LockInterface.h; path = Core/include/kxm/Core/LockInterface.h; sourceTree = "<group>"; };
+		2ABC807E17066C7200D909FA /* ConditionVariableInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConditionVariableInterface.h; path = Core/include/kxm/Core/ConditionVariableInterface.h; sourceTree = "<group>"; };
+		2ABC807F17066E9C00D909FA /* ThreadControlInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThreadControlInterface.h; path = Core/include/kxm/Core/ThreadControlInterface.h; sourceTree = "<group>"; };
+		2ABC8080170673E400D909FA /* ThreadingFactoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThreadingFactoryInterface.h; path = Core/include/kxm/Core/ThreadingFactoryInterface.h; sourceTree = "<group>"; };
+		2ABC80811706752800D909FA /* CriticalSection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CriticalSection.h; path = Core/include/kxm/Core/CriticalSection.h; sourceTree = "<group>"; };
+		2ABC80821706788100D909FA /* POSIXThreadingFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = POSIXThreadingFactory.h; path = Core/include/kxm/Core/POSIXThreadingFactory.h; sourceTree = "<group>"; };
+		2ABC80831706794000D909FA /* POSIXThreadingFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = POSIXThreadingFactory.cpp; path = Core/POSIXThreadingFactory.cpp; sourceTree = "<group>"; };
+		2ABC808617074C6200D909FA /* terminal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = terminal.h; path = Core/include/kxm/Core/terminal.h; sourceTree = "<group>"; };
+		2ABC8087170759F000D909FA /* ActionInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActionInterface.h; path = Core/include/kxm/Core/ActionInterface.h; sourceTree = "<group>"; };
+		2ABC80881708887D00D909FA /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = Core/include/kxm/Core/Thread.h; sourceTree = "<group>"; };
+		2ABC808917088B4800D909FA /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = Core/Thread.cpp; sourceTree = "<group>"; };
 		2AC40A1C15567AFF00026789 /* FrameTimeProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameTimeProcess.h; path = Game/include/kxm/Game/FrameTimeProcess.h; sourceTree = "<group>"; };
 		2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTimeProcess.cpp; path = Game/FrameTimeProcess.cpp; sourceTree = "<group>"; };
 		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Range.h; sourceTree = "<group>"; };
@@ -362,9 +381,12 @@
 			isa = PBXGroup;
 			children = (
 				2A65AF5A15361ECE0054F8E9 /* include */,
+				2AE1DD011621B69600306D89 /* logging.cpp */,
 				2A4A952015F4DEEA00E64389 /* Interface.cpp */,
 				2A65AF6815362EF40054F8E9 /* IntModN.cpp */,
-				2AE1DD011621B69600306D89 /* logging.cpp */,
+				2ABC807717064AD600D909FA /* Buffer.cpp */,
+				2ABC808917088B4800D909FA /* Thread.cpp */,
+				2ABC80831706794000D909FA /* POSIXThreadingFactory.cpp */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -380,11 +402,21 @@
 		2A65AF5B15361EE00054F8E9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2AE1DD001621B5FA00306D89 /* logging.h */,
+				2ABC808617074C6200D909FA /* terminal.h */,
 				2A65AF64153622DB0054F8E9 /* Interface.h */,
 				2A65AF671536281D0054F8E9 /* IntModN.h */,
 				2A65AF6A153631DC0054F8E9 /* NumberTools.h */,
-				2AE1DD001621B5FA00306D89 /* logging.h */,
+				2ABC807617064ABC00D909FA /* Buffer.h */,
 				2AFDAED016C5A24C00C003DA /* ReusableItems.h */,
+				2ABC8087170759F000D909FA /* ActionInterface.h */,
+				2ABC807D17066BA000D909FA /* LockInterface.h */,
+				2ABC807E17066C7200D909FA /* ConditionVariableInterface.h */,
+				2ABC807F17066E9C00D909FA /* ThreadControlInterface.h */,
+				2ABC8080170673E400D909FA /* ThreadingFactoryInterface.h */,
+				2ABC80811706752800D909FA /* CriticalSection.h */,
+				2ABC80881708887D00D909FA /* Thread.h */,
+				2ABC80821706788100D909FA /* POSIXThreadingFactory.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -406,6 +438,7 @@
 				2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */,
 				2A2A6119166A624E0073658E /* ProcessesCore.cpp */,
 				2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */,
+				2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -440,6 +473,7 @@
 				2A2A6118166A623D0073658E /* ProcessesCore.h */,
 				2A2A611C166A64690073658E /* Processes.h */,
 				2AC40A1C15567AFF00026789 /* FrameTimeProcess.h */,
+				2ABC807917065B7B00D909FA /* ThreadCouplingBuffer.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -592,6 +626,10 @@
 				2A2A6133166D22F60073658E /* Video.cpp in Sources */,
 				2A2A6136166D23530073658E /* GameLogic.cpp in Sources */,
 				2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */,
+				2ABC807817064AD600D909FA /* Buffer.cpp in Sources */,
+				2ABC807C17065B9F00D909FA /* ThreadCouplingBuffer.cpp in Sources */,
+				2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */,
+				2ABC808B17088B4800D909FA /* Thread.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

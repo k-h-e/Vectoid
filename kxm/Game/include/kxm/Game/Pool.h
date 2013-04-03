@@ -1,5 +1,5 @@
 //
-//  EventPool.h
+//  Pool.h
 //  kxm
 //
 //  Created by Kai Hergenröther on 11/29/12.
@@ -26,8 +26,8 @@ template<class ItemType, class SubType>
 class Pool : public virtual PoolInterface<ItemType> {
   public:
     Pool() : pool_(1) {}
-    Event &Get(int *id) { return pool_.Get(0, id); }
-    Event &Access(int id) { return pool_.Item(id); }
+    ItemType &Get(int *id) { return pool_.Get(0, id); }
+    ItemType &Access(int id) { return pool_.Item(id); }
     void Put(int id) { pool_.Put(id); }
     
   private:
