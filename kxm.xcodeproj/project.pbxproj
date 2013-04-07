@@ -726,7 +726,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_52_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "3rdParty/boost_1_53_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -739,7 +739,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../boost_1_52_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "3rdParty/boost_1_53_0/include kxm/Core/include kxm/Vectoid/include kxm/Game/include kxm/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

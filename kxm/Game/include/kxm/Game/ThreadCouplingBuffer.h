@@ -48,6 +48,10 @@ class ThreadCouplingBuffer {
     
     ThreadCouplingBuffer();
     //! Grants access to the buffer in a threadsafe way, using the RAII scheme.
+    /*!
+     *  The accessor must not outlive the buffer. The buffer remains locked as long as the accessor
+     *  lives (RAII).
+     */
     Accessor Access();
     
   private:
