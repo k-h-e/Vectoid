@@ -17,27 +17,20 @@
 #import <CoreMotion/CMMotionManager.h>
 
 #include <kxm/Core/logging.h>
+#include <kxm/Core/POSIXThreadingFactory.h>
 #include <kxm/Game/FrameTimeProcess.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
 
 #import "KXMGLView.h"
 
-
-// TESING...
-#include <kxm/Core/ActionInterface.h>
-#include <kxm/Core/Thread.h>
-#include <kxm/Core/POSIXThreadingFactory.h>
-#include <kxm/Core/LockInterface.h>
-#include <kxm/Core/ConditionVariableInterface.h>
-#include <kxm/Core/CriticalSection.h>
-
-
 using namespace std;
-using namespace boost;
+using namespace kxm::Core;
 using namespace kxm::Game;
 using namespace kxm::Vectoid;
 using namespace kxm::Zarch;
+
+using boost::shared_ptr;
 
 
 @interface KXMViewController () {
@@ -90,61 +83,6 @@ using namespace kxm::Zarch;
     
     //self.preferredFramesPerSecond = 10;
     //accelerometerOverride = true;
-    
-    // TESTING...
-    {
-        class TestAction : public virtual kxm::Core::ActionInterface {
-          public:
-            TestAction(const kxm::Core::ThreadingFactoryInterface &threadingFactory) {
-                lock_ = shared_ptr<kxm::Core::LockInterface>(threadingFactory.CreateLock());
-                stateChanged_ = shared_ptr<kxm::Core::ConditionVariableInterface>(
-                                    threadingFactory.CreateConditionVariable(lock_.get()));
-                terminationRequest_ = false;
-            }
-            void ExecuteAction() {
-                puts("thread spawned");
-                while (true) {
-                    {
-                        kxm::Core::CriticalSection critical(lock_.get());
-                        if (terminationRequest_)
-                            break;
-                        puts("going to sleep");
-                        stateChanged_->Wait();
-                    }
-                    puts("awake");
-                }
-                puts("thread exiting");
-            }
-            void Wake() {
-                kxm::Core::CriticalSection critical(lock_.get());
-                stateChanged_->SignalAll();
-            }
-            void ShutDown() {
-                kxm::Core::CriticalSection critical(lock_.get());
-                terminationRequest_ = true;
-                stateChanged_->SignalAll();
-
-            }
-          private:
-            shared_ptr<kxm::Core::LockInterface>              lock_;
-            uint64_t                                          spacer_;
-            shared_ptr<kxm::Core::ConditionVariableInterface> stateChanged_;
-            bool                                              terminationRequest_;
-        };
-        
-        shared_ptr<kxm::Core::ThreadingFactoryInterface>
-            threadingFactory(new kxm::Core::POSIXThreadingFactory());
-        {
-            shared_ptr<TestAction> action(new TestAction(*threadingFactory));
-            kxm::Core::Thread thread(action, *threadingFactory);
-            for (int i = 0; i < 3; ++i) {
-                action->Wake();
-                sleep(1);
-            }
-            action->ShutDown();
-        }
-        puts("thread terminated");
-    }
 }
 
 - (void)viewDidUnload
@@ -178,7 +116,8 @@ using namespace kxm::Zarch;
     [EAGLContext setCurrentContext: glContext];
     glEnable(GL_DEPTH_TEST);
     
-    zarch = shared_ptr<Zarch>(new Zarch());
+    shared_ptr<ThreadingFactoryInterface> threadingFactory(new POSIXThreadingFactory());
+    zarch = shared_ptr<Zarch>(new Zarch(threadingFactory));
     frameTimeInfo = timeProcess.TimeInfo();
     [motionManager startDeviceMotionUpdates];
 }

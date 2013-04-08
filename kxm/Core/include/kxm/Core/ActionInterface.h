@@ -11,6 +11,9 @@
 #define KXM_CORE_ACTIONINTERFACE_H_
 
 
+#include <kxm/Core/Interface.h>
+
+
 namespace kxm {
 namespace Core {
 

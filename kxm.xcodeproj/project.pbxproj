@@ -29,6 +29,8 @@
 		2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C13F714F6ECC70091BD84 /* KXMViewController.mm */; };
 		2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13F914F6ECC70091BD84 /* KXMViewController_iPhone.xib */; };
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
+		2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1B171204E100A078CF /* Simulation.cpp */; };
+		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
 		2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */; };
 		2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A952015F4DEEA00E64389 /* Interface.cpp */; };
 		2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4B15361E700054F8E9 /* Camera.cpp */; };
@@ -106,6 +108,11 @@
 		2A3C13F714F6ECC70091BD84 /* KXMViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KXMViewController.mm; sourceTree = "<group>"; };
 		2A3C13FA14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPhone.xib; sourceTree = "<group>"; };
 		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
+		2A41FB181711FC8900A078CF /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = config.h; path = Core/include/kxm/Core/config.h; sourceTree = "<group>"; };
+		2A41FB19171204A000A078CF /* Simulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Simulation.h; path = Zarch/include/kxm/Zarch/Simulation.h; sourceTree = "<group>"; };
+		2A41FB1A171204C200A078CF /* Presentation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Presentation.h; path = Zarch/include/kxm/Zarch/Presentation.h; sourceTree = "<group>"; };
+		2A41FB1B171204E100A078CF /* Simulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Simulation.cpp; path = Zarch/Simulation.cpp; sourceTree = "<group>"; };
+		2A41FB1E171204F900A078CF /* Presentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Presentation.cpp; path = Zarch/Presentation.cpp; sourceTree = "<group>"; };
 		2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomProcessPool.h; path = Game/include/kxm/Game/CustomProcessPool.h; sourceTree = "<group>"; };
 		2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomProcessPool.cpp; path = Game/CustomProcessPool.cpp; sourceTree = "<group>"; };
 		2A4A952015F4DEEA00E64389 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Interface.cpp; path = Core/Interface.cpp; sourceTree = "<group>"; };
@@ -402,6 +409,7 @@
 		2A65AF5B15361EE00054F8E9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2A41FB181711FC8900A078CF /* config.h */,
 				2AE1DD001621B5FA00306D89 /* logging.h */,
 				2ABC808617074C6200D909FA /* terminal.h */,
 				2A65AF64153622DB0054F8E9 /* Interface.h */,
@@ -489,6 +497,8 @@
 				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
 				2AECEF62154D6CC900033D14 /* Terrain.cpp */,
 				2A2A6128166D1E960073658E /* Zarch.cpp */,
+				2A41FB1B171204E100A078CF /* Simulation.cpp */,
+				2A41FB1E171204F900A078CF /* Presentation.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -522,6 +532,8 @@
 				2A1094FF1668CF30001F298C /* events.h */,
 				2A2A6120166A85610073658E /* processes.h */,
 				2A2A6127166D1DF70073658E /* Zarch.h */,
+				2A41FB19171204A000A078CF /* Simulation.h */,
+				2A41FB1A171204C200A078CF /* Presentation.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -630,6 +642,8 @@
 				2ABC807C17065B9F00D909FA /* ThreadCouplingBuffer.cpp in Sources */,
 				2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */,
 				2ABC808B17088B4800D909FA /* Thread.cpp in Sources */,
+				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
+				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

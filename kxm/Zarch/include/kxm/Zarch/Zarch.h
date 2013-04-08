@@ -24,12 +24,20 @@
 
 namespace kxm {
 
+namespace Core {
+    class ThreadingFactoryInterface;
+}
 namespace Vectoid {
     class PerspectiveProjection;
+}
+namespace Game {
+    class ThreadCouplingBuffer;
 }
 
 namespace Zarch {
 
+class Simulation;
+class Presentation;
 class MapParameters;
 
 //! Ties together the various <c>Zarch</c> game subsystems.
@@ -38,7 +46,7 @@ class MapParameters;
  */
 class Zarch {
   public:
-    Zarch();
+    Zarch(boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory);
     ~Zarch();
     void Execute(const Game::FrameTimeProcess::FrameTimeInfo &timeInfo,
                  const ControlsState &controlsState);
@@ -55,6 +63,11 @@ class Zarch {
     boost::shared_ptr<Video>                          video_;
     boost::shared_ptr<Vectoid::PerspectiveProjection> projection_;
     boost::shared_ptr<MapParameters>                  mapParameters_;
+    
+    boost::shared_ptr<Simulation>                      simulation_;
+    boost::shared_ptr<Presentation>                    presentation_;
+    boost::shared_ptr<Game::ThreadCouplingBuffer>      simulationCouplingBuffer_;
+    boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
 };
 
 }    // Namespace Zarch.

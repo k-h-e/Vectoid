@@ -11,6 +11,9 @@
 #define KXM_CORE_LOCKINTERFACE_H_
 
 
+#include <kxm/Core/Interface.h>
+
+
 namespace kxm {
 namespace Core {
 

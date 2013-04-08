@@ -18,24 +18,27 @@
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
 #include <kxm/Game/Pool.h>
+#include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Zarch/Simulation.h>
+#include <kxm/Zarch/Presentation.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 #include <kxm/Zarch/events.h>
 
-
 using namespace std;
-using namespace boost;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
+
+using boost::shared_ptr;
 
 
 namespace kxm {
 namespace Zarch {
 
-Zarch::Zarch() {
+Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
     mapParameters_ = shared_ptr<MapParameters>(new MapParameters());
     
     // Create scene graph...
@@ -89,6 +92,15 @@ Zarch::Zarch() {
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, &*physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, &*physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, &*video_);
+    
+    
+    threadingFactory_         = threadingFactory;
+    simulationCouplingBuffer_ = shared_ptr<ThreadCouplingBuffer>(
+                                    new ThreadCouplingBuffer(*threadingFactory_));
+    simulation_               = shared_ptr<Simulation>(
+                                    new Simulation(simulationCouplingBuffer_, 0));
+    presentation_             = shared_ptr<Presentation>(
+                                    new Presentation(simulationCouplingBuffer_, 1));
 }
 
 Zarch::~Zarch() {
@@ -106,16 +118,23 @@ void Zarch::Execute(const FrameTimeProcess::FrameTimeInfo &timeInfo,
     video_->ExecuteProcesses();
     
     gameLogic_->ExecuteProcesses();
+    
+    
+    presentation_->PrepareFrame();
 }
 
 void Zarch::SetViewPort(int width, int height) {
     projection_->SetViewPort((float)width, (float)height);
     Log().Stream() << "viewport set" << ", size=(" << (int)width << "," << (int)height << ")"
                    << endl;
+    
+    presentation_->SetViewPort(width, height);
 }
 
 void Zarch::RenderFrame() {
     projection_->Render(0);
+    
+    presentation_->RenderFrame();
 }
 
 }    // Namespace Zarch.

@@ -23,6 +23,9 @@ class ThreadControlInterface;
 
 //! Interface to factories creating threading primitives for a given threading mechanism.
 /*!
+ *  A threading factory instance must be sharable between multiple threads, so its methods are
+ *  required to be threadsafe.
+ *
  *  \ingroup Core
  */
 class ThreadingFactoryInterface : public virtual Interface {
