@@ -26,6 +26,7 @@ namespace kxm {
 
 namespace Core {
     class ThreadingFactoryInterface;
+    class Thread;
 }
 namespace Vectoid {
     class PerspectiveProjection;
@@ -52,6 +53,9 @@ class Zarch {
                  const ControlsState &controlsState);
     void SetViewPort(int width, int height);
     void RenderFrame();
+    //! Registers <c>Zarch</c> game events with the specified event queue, and creates and attaches
+    //! the required event pools.
+    static void RegisterEvents(Game::EventQueue<ZarchEvent::EventType> *eventQueue);
     
   private:
     Zarch(const Zarch &other);
@@ -68,6 +72,7 @@ class Zarch {
     boost::shared_ptr<Presentation>                    presentation_;
     boost::shared_ptr<Game::ThreadCouplingBuffer>      simulationCouplingBuffer_;
     boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
+    boost::shared_ptr<Core::Thread>                    simulationThread_;
 };
 
 }    // Namespace Zarch.

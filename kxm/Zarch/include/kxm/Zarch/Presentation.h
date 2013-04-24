@@ -13,6 +13,9 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <kxm/Game/EventQueue.h>
+#include <kxm/Zarch/events.h>
+
 
 namespace kxm {
 
@@ -37,6 +40,8 @@ class Presentation {
   private:
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
+    
+    Game::EventQueue<ZarchEvent::EventType>       eventQueue_;
     boost::shared_ptr<Game::ThreadCouplingBuffer> simulationCouplingBuffer_;
     int                                           sendToSimulationDirection_;
 };

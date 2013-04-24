@@ -56,8 +56,14 @@ class ThreadCouplingBuffer {
         //! Increments the update sequence number for the send direction and wakes all waiting
         //! threads.
         void SignalUpdateForSendDirection();
+        //! Goes to sleep until signalled by another thread via \ref SignalUpdateForSendDirection().
+        void Wait();
         //! Gets the current update sequence number for the receive direction.
         uint32_t SeqNoForReceiveDirection();
+        //! Raises the shutdown-request flag inside the coupling buffer.
+        void RequestShutdown();
+        //! Tells whether the shutdown-request flag inside the coupling buffer is set.
+        bool ShutdownRequested();
       private:
         Accessor(ThreadCouplingBuffer *buffer, int sendDirection);
         ThreadCouplingBuffer *buffer_;
@@ -65,7 +71,7 @@ class ThreadCouplingBuffer {
     };
     
     ThreadCouplingBuffer(const Core::ThreadingFactoryInterface &threadingFactory);
-    //! Grants access to the buffer in a threadsafe way, using the RAII scheme.
+    //! <b>[Threadsafe]</b> Grants access to the buffer in a threadsafe way, using the RAII scheme.
     /*!
      *  The accessor must not outlive the buffer. The buffer remains locked as long as the accessor
      *  or any of its copies lives (RAII). All copies of an accessor must live in the same thread.
@@ -88,6 +94,7 @@ class ThreadCouplingBuffer {
         Core::Buffer                                        buffers[2];
         uint32_t                                            seqNos[2];
         int                                                 numAccessors;
+        bool                                                shutDownRequested_;
     }                                                       lockProtected_;
 };
 

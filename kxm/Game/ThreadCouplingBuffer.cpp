@@ -24,20 +24,21 @@ ThreadCouplingBuffer::ThreadCouplingBuffer(const ThreadingFactoryInterface &thre
     lock_ = shared_ptr<LockInterface>(threadingFactory.CreateLock());
     lockProtected_.stateChanged = shared_ptr<ConditionVariableInterface>(
                                       threadingFactory.CreateConditionVariable(lock_.get()));
-    lockProtected_.seqNos[0]    = 0;
-    lockProtected_.seqNos[1]    = 0;
-    lockProtected_.numAccessors = 0;
+    lockProtected_.seqNos[0]          = 0;
+    lockProtected_.seqNos[1]          = 0;
+    lockProtected_.numAccessors       = 0;
+    lockProtected_.shutDownRequested_ = false;
 }
 
 ThreadCouplingBuffer::Accessor ThreadCouplingBuffer::Access(int sendDirection) {
     assert((sendDirection >= 0) && (sendDirection <= 1));
     lock_->Lock();
-    ++lockProtected_.numAccessors;
+    ++(lockProtected_.numAccessors);
     return Accessor(this, sendDirection);
 }
 
 void ThreadCouplingBuffer::SignOffAccessor() {
-    --lockProtected_.numAccessors;
+    --(lockProtected_.numAccessors);
     if (!lockProtected_.numAccessors)
         lock_->Unlock();
 }
@@ -75,8 +76,24 @@ void ThreadCouplingBuffer::Accessor::SignalUpdateForSendDirection() {
     buffer_->lockProtected_.stateChanged->SignalAll();
 }
 
+void ThreadCouplingBuffer::Accessor::Wait() {
+    int numAccessors = buffer_->lockProtected_.numAccessors;    // We exist, so the lock is held.
+    buffer_->lockProtected_.numAccessors = 0;
+    buffer_->lockProtected_.stateChanged->Wait();
+    buffer_->lockProtected_.numAccessors = numAccessors;
+}
+
 uint32_t ThreadCouplingBuffer::Accessor::SeqNoForReceiveDirection() {
     return buffer_->lockProtected_.seqNos[1 - sendDirection_];    // We exist, so the lock is held.
+}
+
+void ThreadCouplingBuffer::Accessor::RequestShutdown() {
+    buffer_->lockProtected_.shutDownRequested_ = true;    // We exist, so the lock is held.
+    buffer_->lockProtected_.stateChanged->SignalAll();
+}
+
+bool ThreadCouplingBuffer::Accessor::ShutdownRequested() {
+    return buffer_->lockProtected_.shutDownRequested_;    // We exist, so the lock is held.
 }
 
 }    // Namespace Game.

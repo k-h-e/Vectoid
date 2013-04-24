@@ -10,6 +10,8 @@
 #include <kxm/Zarch/Zarch.h>
 
 #include <kxm/Core/logging.h>
+#include <kxm/Core/ThreadingFactoryInterface.h>
+#include <kxm/Core/Thread.h>
 #include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -74,25 +76,12 @@ Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
                      new Video(&eventQueue_, mapParameters_, camera, terrainRenderer,
                                starFieldParticles));
     
-    // Register event types...
-    shared_ptr<Pool<Event, TransformEvent> >     transformEventPool(
-                                                     new Pool<Event, TransformEvent>());
-    shared_ptr<Pool<Event, VariantEvent> >       variantEventPool(
-                                                     new Pool<Event, VariantEvent>());
-    shared_ptr<Pool<Event, ControlsStateEvent> > controlsStateEventPool(
-                                                     new Pool<Event, ControlsStateEvent>());
-    int transformEventPoolId     = eventQueue_.RegisterEventPool(transformEventPool),
-        variantEventPoolId       = eventQueue_.RegisterEventPool(variantEventPool),
-        controlsStateEventPoolId = eventQueue_.RegisterEventPool(controlsStateEventPool);
-    eventQueue_.RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPoolId);
-    eventQueue_.RegisterEventType(ZarchEvent::ControlsStateEvent, controlsStateEventPoolId);
-    eventQueue_.RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPoolId);
-    
+    RegisterEvents(&eventQueue_);
+        
     // Register event handlers...
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, &*physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, &*physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, &*video_);
-    
     
     threadingFactory_         = threadingFactory;
     simulationCouplingBuffer_ = shared_ptr<ThreadCouplingBuffer>(
@@ -101,9 +90,12 @@ Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
                                     new Simulation(simulationCouplingBuffer_, 0));
     presentation_             = shared_ptr<Presentation>(
                                     new Presentation(simulationCouplingBuffer_, 1));
+    
+    simulationThread_         = shared_ptr<Thread>(new Thread(simulation_, *threadingFactory_));
 }
 
 Zarch::~Zarch() {
+    // TODO : Ask simulation thread to shut down.
 }
 
 void Zarch::Execute(const FrameTimeProcess::FrameTimeInfo &timeInfo,
@@ -135,6 +127,21 @@ void Zarch::RenderFrame() {
     projection_->Render(0);
     
     presentation_->RenderFrame();
+}
+
+void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
+    shared_ptr<Pool<Event, TransformEvent> >     transformEventPool(
+                                                     new Pool<Event, TransformEvent>());
+    shared_ptr<Pool<Event, VariantEvent> >       variantEventPool(
+                                                     new Pool<Event, VariantEvent>());
+    shared_ptr<Pool<Event, ControlsStateEvent> > controlsStateEventPool(
+                                                     new Pool<Event, ControlsStateEvent>());
+    int transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
+        variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),
+        controlsStateEventPoolId = eventQueue->RegisterEventPool(controlsStateEventPool);
+    eventQueue->RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::ControlsStateEvent, controlsStateEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPoolId);
 }
 
 }    // Namespace Zarch.

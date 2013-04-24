@@ -81,12 +81,11 @@ using boost::shared_ptr;
     
     [self setupGL];
     
-    //self.preferredFramesPerSecond = 10;
+    //self.preferredFramesPerSecond = 1;
     //accelerometerOverride = true;
 }
 
-- (void)viewDidUnload
-{    
+- (void)viewDidUnload {    
     [super viewDidUnload];
     
     [self tearDownGL];

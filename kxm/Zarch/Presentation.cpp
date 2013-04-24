@@ -10,6 +10,8 @@
 #include <kxm/Zarch/Presentation.h>
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Zarch/Zarch.h>
+
 
 using namespace boost;
 using namespace kxm::Game;
@@ -22,12 +24,14 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
                            int sendToSimulationDirection)
         : simulationCouplingBuffer_(simulationCouplingBuffer),
           sendToSimulationDirection_(sendToSimulationDirection) {
+    Zarch::RegisterEvents(&eventQueue_);
 }
 
 void Presentation::PrepareFrame() {
-    ThreadCouplingBuffer::Accessor simulationCouplingAccess = simulationCouplingBuffer_->Access(
-                                                                  sendToSimulationDirection_);
-    simulationCouplingAccess.SignalUpdateForSendDirection();
+    ThreadCouplingBuffer::Accessor accessor = simulationCouplingBuffer_->Access(
+                                                  sendToSimulationDirection_);
+    
+    accessor.SignalUpdateForSendDirection();
 }
 
 void Presentation::SetViewPort(int width, int height) {
