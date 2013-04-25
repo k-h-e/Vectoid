@@ -54,9 +54,9 @@ class Buffer {
 
 	  private:
 		friend class Buffer;
-		Reader(Buffer &buffer);
-		Buffer &buffer_;
-		int     cursor_;
+		Reader(const Buffer &buffer);
+		const Buffer &buffer_;
+		int           cursor_;
 	};
 
     //! Creates an empty buffer.
@@ -101,7 +101,7 @@ class Buffer {
 	/*!
 	 *  The reader may only be used as long as the associated buffer is alive.
 	 */
-	Reader GetReader();
+	Reader GetReader() const;
 
   private:
 	Buffer(const Buffer &other);

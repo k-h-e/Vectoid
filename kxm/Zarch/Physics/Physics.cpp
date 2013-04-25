@@ -31,7 +31,8 @@ Physics::Physics(
     shared_ptr<MapParameters> mapParameters, shared_ptr<Terrain> terrain,
     shared_ptr<CoordSysInterface> landerCoordSys, shared_ptr<Particles> thrusterParticles,
     shared_ptr<Particles> shotsParticles)
-        : frameTimeInfo_(new FrameTimeProcess::FrameTimeInfo()),
+        : processContext_(processes_, *eventQueue),
+          frameTimeInfo_(new FrameTimeProcess::FrameTimeInfo()),
           controlsState_(new ControlsState()) {
     shared_ptr<LanderProcess> landerProcess(new LanderProcess(
         landerCoordSys, frameTimeInfo_, controlsState_, terrain, mapParameters));
@@ -42,9 +43,6 @@ Physics::Physics(
     processes_.AddProcess(shared_ptr<Process>(
         new ShotsProcess(shotsParticles, landerProcess->LanderState(), frameTimeInfo_,
                          mapParameters)));
-              
-    processContext_.eventQueue = eventQueue;
-    processContext_.processes  = &processes_;
 }
 
 void Physics::HandleEvent(const Event &event) {

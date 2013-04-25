@@ -15,7 +15,9 @@
 
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/EventQueue.h>
+#include <kxm/Game/Processes.h>
 #include <kxm/Zarch/events.h>
+#include <kxm/Zarch/processes.h>
 
 
 namespace kxm {
@@ -42,6 +44,8 @@ class Simulation : public Core::ActionInterface {
     Simulation &operator=(const Simulation &other);
     
     Game::EventQueue<ZarchEvent::EventType>       eventQueue_;
+    Game::Processes<ZarchProcess::ProcessType>    processes_;
+    ZarchProcess::Context                         processContext_;
     boost::shared_ptr<Game::ThreadCouplingBuffer> presentationCouplingBuffer_;
     int                                           sendToPresentationDirection_;
 };

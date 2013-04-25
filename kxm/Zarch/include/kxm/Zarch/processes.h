@@ -27,8 +27,14 @@ class ZarchProcess : public Game::Process {
   public:
     enum ProcessType { SeederProcess };
     struct Context : public Process::Context {
-        Game::Processes<ProcessType>            *processes;     // Weak reference.
-        Game::EventQueue<ZarchEvent::EventType> *eventQueue;    // Weak reference.
+        Context(
+            Game::Processes<ProcessType> &aProcessesSet,
+            Game::EventQueue<ZarchEvent::EventType> &anEventQueue)
+                : processes(aProcessesSet),
+                  eventQueue(anEventQueue) {
+        }
+        Game::Processes<ProcessType>            &processes;
+        Game::EventQueue<ZarchEvent::EventType> &eventQueue;
     };
 };
 

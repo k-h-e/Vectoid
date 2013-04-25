@@ -17,6 +17,11 @@
 
 
 namespace kxm {
+
+namespace Core {
+    class Buffer;
+}
+
 namespace Game {
 
 class Event;
@@ -61,6 +66,14 @@ class EventQueueCore {
      *  Flips scheduling and processing queues before processing events.
      */
     void ProcessEvents();
+    //! Serializes the currently scheduled events to the specified buffer, potentially appending to
+    //! already present content.
+    void SerializeScheduledEvents(Core::Buffer *targetBuffer);
+    //! Deserializes events from the specified buffer and schedules them.
+    /*!
+     *  If the specified data contains invalid serialization data, the results are undefined.
+     */
+    void DeserializeAndScheduleEvents(const Core::Buffer &buffer);
     
   private:
     struct EventTypeInfo {

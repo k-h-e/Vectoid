@@ -24,11 +24,11 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(
-        EventQueue<ZarchEvent::EventType> *eventQueue,
-        shared_ptr<MapParameters> mapParameters, shared_ptr<CoordSysInterface> camera,
-        shared_ptr<TerrainRenderer> terrainRenderer, shared_ptr<Particles> starFieldParticles)
-    : landerStateInfo_(new LanderProcess::LanderStateInfo()) {
+Video::Video(EventQueue<ZarchEvent::EventType> *eventQueue,
+             shared_ptr<MapParameters> mapParameters, shared_ptr<CoordSysInterface> camera,
+             shared_ptr<TerrainRenderer> terrainRenderer, shared_ptr<Particles> starFieldParticles)
+        : processContext_(processes_, *eventQueue),
+          landerStateInfo_(new LanderProcess::LanderStateInfo()) {
     shared_ptr<CameraProcess> cameraProcess(
         new CameraProcess(camera, landerStateInfo_, mapParameters));
     processes_.AddProcess(cameraProcess);
@@ -36,9 +36,6 @@ Video::Video(
         new TerrainProcess(terrainRenderer, landerStateInfo_)));
     processes_.AddProcess(shared_ptr<Process>(
         new StarFieldProcess(starFieldParticles, cameraProcess->CameraState(), mapParameters)));
-    
-    processContext_.eventQueue = eventQueue;
-    processContext_.processes  = &processes_;
 }
 
 void Video::HandleEvent(const Event &event) {

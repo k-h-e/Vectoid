@@ -11,6 +11,7 @@
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A1303F6157BC52700A89134 /* StarFieldProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
+		2A19E8671729CF4E00654652 /* NewFrameTimeProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */; };
 		2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6119166A624E0073658E /* ProcessesCore.cpp */; };
 		2A2A611F166A700C0073658E /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A611D166A700B0073658E /* Process.cpp */; };
 		2A2A612A166D1E980073658E /* Zarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6128166D1E960073658E /* Zarch.cpp */; };
@@ -75,6 +76,8 @@
 		2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarFieldProcess.cpp; path = Zarch/Video/StarFieldProcess.cpp; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
+		2A19E8651729CF0300654652 /* NewFrameTimeProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewFrameTimeProcess.h; path = Zarch/include/kxm/Zarch/NewFrameTimeProcess.h; sourceTree = "<group>"; };
+		2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewFrameTimeProcess.cpp; path = Zarch/NewFrameTimeProcess.cpp; sourceTree = "<group>"; };
 		2A2A6117166A61350073658E /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = Game/include/kxm/Game/Process.h; sourceTree = "<group>"; };
 		2A2A6118166A623D0073658E /* ProcessesCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessesCore.h; path = Game/include/kxm/Game/ProcessesCore.h; sourceTree = "<group>"; };
 		2A2A6119166A624E0073658E /* ProcessesCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProcessesCore.cpp; path = Game/ProcessesCore.cpp; sourceTree = "<group>"; };
@@ -499,6 +502,7 @@
 				2A2A6128166D1E960073658E /* Zarch.cpp */,
 				2A41FB1B171204E100A078CF /* Simulation.cpp */,
 				2A41FB1E171204F900A078CF /* Presentation.cpp */,
+				2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -534,6 +538,7 @@
 				2A2A6127166D1DF70073658E /* Zarch.h */,
 				2A41FB19171204A000A078CF /* Simulation.h */,
 				2A41FB1A171204C200A078CF /* Presentation.h */,
+				2A19E8651729CF0300654652 /* NewFrameTimeProcess.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -644,6 +649,7 @@
 				2ABC808B17088B4800D909FA /* Thread.cpp in Sources */,
 				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
+				2A19E8671729CF4E00654652 /* NewFrameTimeProcess.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

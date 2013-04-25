@@ -10,10 +10,12 @@
 #include <kxm/Zarch/Simulation.h>
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Zarch/NewFrameTimeProcess.h>
 #include <kxm/Zarch/Zarch.h>
 
 
 using namespace boost;
+using namespace kxm::Core;
 using namespace kxm::Game;
 
 
@@ -22,9 +24,11 @@ namespace Zarch {
 
 Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuffer,
                        int sendToPresentationDirection)
-        : presentationCouplingBuffer_(presentationCouplingBuffer),
+        : processContext_(processes_, eventQueue_),
+          presentationCouplingBuffer_(presentationCouplingBuffer),
           sendToPresentationDirection_(sendToPresentationDirection) {
     Zarch::RegisterEvents(&eventQueue_);
+    processes_.AddProcess(shared_ptr<Process>(new NewFrameTimeProcess()));
 }
 
 void Simulation::ExecuteAction() {
@@ -52,7 +56,14 @@ void Simulation::ExecuteAction() {
                     break;
                 accessor.Wait();
             }
+            
+            eventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
+            Buffer &receiveBuffer = accessor.ReceiveBuffer();
+            eventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
+            receiveBuffer.Clear();
         }
+        eventQueue_.ProcessEvents();
+        processes_.ExecuteProcesses(processContext_);
     }
     
     puts("simulation thread terminating");

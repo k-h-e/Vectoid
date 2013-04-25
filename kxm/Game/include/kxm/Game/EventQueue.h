@@ -31,7 +31,7 @@ class EventQueue : private EventQueueCore {
     int RegisterEventPool(boost::shared_ptr<PoolInterface<Event> > pool) {
         return EventQueueCore::RegisterEventPool(pool);
     }
-  
+    
     //! See \ref EventQueueCore::RegisterEventType().
     void RegisterEventType(T eventType, int pool) {
         EventQueueCore::RegisterEventType((int)eventType, pool);
@@ -50,6 +50,16 @@ class EventQueue : private EventQueueCore {
     //! See \ref EventQueueCore::ProcessEvents().
     void ProcessEvents() {
         EventQueueCore::ProcessEvents();
+    }
+    
+    //! See \ref EventQueueCore::SerializeScheduledEvents().
+    void SerializeScheduledEvents(Core::Buffer *targetBuffer) {
+        EventQueueCore::SerializeScheduledEvents(targetBuffer);
+    }
+    
+    //! See \ref EventQueueCore::DeserializeAndScheduleEvents().
+    void DeserializeAndScheduleEvents(const Core::Buffer &buffer) {
+        EventQueueCore::DeserializeAndScheduleEvents(buffer);
     }
     
   private:

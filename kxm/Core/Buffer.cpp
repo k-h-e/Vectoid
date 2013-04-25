@@ -56,11 +56,11 @@ void Buffer::RestoreToCurrentCapacity() {
     bufferFill_ = (int)buffer_.size();
 }
 
-Buffer::Reader Buffer::GetReader() {
+Buffer::Reader Buffer::GetReader() const {
     return Reader(*this);
 }
 
-Buffer::Reader::Reader(Buffer &buffer)
+Buffer::Reader::Reader(const Buffer &buffer)
 	: buffer_(buffer),
 	  cursor_(0) {
 }

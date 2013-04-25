@@ -9,6 +9,7 @@
 
 #include <kxm/Game/EventQueueCore.h>
 
+#include <kxm/Core/Buffer.h>
 #include <kxm/Core/logging.h>
 #include <kxm/Game/Event.h>
 #include <kxm/Game/PoolInterface.h>
@@ -73,6 +74,27 @@ void EventQueueCore::ProcessEvents() {
     }
     //printf("processed %d events\n", (int)eventsToProcess.size());
     eventsToProcess.clear();
+}
+
+void EventQueueCore::SerializeScheduledEvents(Buffer *targetBuffer) {
+    vector<EventInfo> &scheduledEvents = events_[schedulingQueue_];
+    for (vector<EventInfo>::iterator iter = scheduledEvents.begin(); iter != scheduledEvents.end();
+         ++iter) {
+        Event &event = pools_[iter->pool]->Access(iter->itemId);
+        event.Serialize(targetBuffer);
+    }
+}
+
+void EventQueueCore::DeserializeAndScheduleEvents(const Buffer &buffer) {
+    Buffer::Reader reader = buffer.GetReader();
+    int type;
+    int num = 0;
+    while (reader.Read(&type, sizeof(type)) == sizeof(type)) {
+        Event &event = ScheduleEvent(type);
+        event.Deserialize(&reader);
+        ++num;
+    }
+    printf("deserialized %d events\n", num);
 }
 
 }    // Namespace Game.

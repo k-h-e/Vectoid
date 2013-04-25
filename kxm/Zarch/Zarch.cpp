@@ -112,7 +112,7 @@ void Zarch::Execute(const FrameTimeProcess::FrameTimeInfo &timeInfo,
     gameLogic_->ExecuteProcesses();
     
     
-    presentation_->PrepareFrame();
+    presentation_->PrepareFrame(controlsState);
 }
 
 void Zarch::SetViewPort(int width, int height) {
@@ -139,6 +139,7 @@ void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
     int transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),
         controlsStateEventPoolId = eventQueue->RegisterEventPool(controlsStateEventPool);
+    
     eventQueue->RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPoolId);
     eventQueue->RegisterEventType(ZarchEvent::ControlsStateEvent, controlsStateEventPoolId);
     eventQueue->RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPoolId);
