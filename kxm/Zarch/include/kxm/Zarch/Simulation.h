@@ -12,6 +12,7 @@
 
 
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/EventQueue.h>
@@ -28,6 +29,8 @@ namespace Game {
 
 namespace Zarch {
 
+class NewPhysics;
+
 //! Ties together the simulation subsytems, that together run on the dedicated simulation thread (as
 //! opposed to the main UI thread).
 /*!
@@ -42,12 +45,15 @@ class Simulation : public Core::ActionInterface {
   private:
     Simulation(const Simulation &other);
     Simulation &operator=(const Simulation &other);
+    void GenerateTimeEvent();
     
-    Game::EventQueue<ZarchEvent::EventType>       eventQueue_;
-    Game::Processes<ZarchProcess::ProcessType>    processes_;
-    ZarchProcess::Context                         processContext_;
-    boost::shared_ptr<Game::ThreadCouplingBuffer> presentationCouplingBuffer_;
-    int                                           sendToPresentationDirection_;
+    Game::EventQueue<ZarchEvent::EventType>                        eventQueue_;
+    boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
+    ZarchProcess::Context                                          processContext_;
+    boost::shared_ptr<Game::ThreadCouplingBuffer>                  presentationCouplingBuffer_;
+    int                                                            sendToPresentationDirection_;
+    boost::shared_ptr<NewPhysics>                                  physics_;
+    boost::posix_time::ptime                                       lastFrameTime_;
 };
 
 }

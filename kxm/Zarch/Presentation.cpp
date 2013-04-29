@@ -23,10 +23,15 @@ namespace Zarch {
 
 Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBuffer,
                            int sendToSimulationDirection)
-        : processContext_(processes_, eventQueue_),
+        : processes_(new Processes<ZarchProcess::ProcessType>()),
+          processContext_(*processes_, eventQueue_),
           simulationCouplingBuffer_(simulationCouplingBuffer),
           sendToSimulationDirection_(sendToSimulationDirection) {
     Zarch::RegisterEvents(&eventQueue_);
+    
+    video_ = shared_ptr<NewVideo>(new NewVideo(processes_));
+    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, video_);
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
@@ -48,13 +53,7 @@ void Presentation::PrepareFrame(const ControlsState &controlsState) {
             // If necessary, wake the simulation thread for a new iteration.
     }
     eventQueue_.ProcessEvents();
-    processes_.ExecuteProcesses(processContext_);
-}
-
-void Presentation::SetViewPort(int width, int height) {
-}
-
-void Presentation::RenderFrame() {
+    processes_->ExecuteProcesses(processContext_);
 }
 
 }

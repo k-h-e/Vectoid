@@ -10,8 +10,8 @@
 #include <kxm/Zarch/Simulation.h>
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
-#include <kxm/Zarch/NewFrameTimeProcess.h>
 #include <kxm/Zarch/Zarch.h>
+#include <kxm/Zarch/Physics/NewPhysics.h>
 
 
 using namespace boost;
@@ -24,11 +24,16 @@ namespace Zarch {
 
 Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuffer,
                        int sendToPresentationDirection)
-        : processContext_(processes_, eventQueue_),
+        : processes_(new Processes<ZarchProcess::ProcessType>()),
+          processContext_(*processes_, eventQueue_),
           presentationCouplingBuffer_(presentationCouplingBuffer),
-          sendToPresentationDirection_(sendToPresentationDirection) {
+          sendToPresentationDirection_(sendToPresentationDirection),
+          lastFrameTime_(posix_time::microsec_clock::local_time()) {
     Zarch::RegisterEvents(&eventQueue_);
-    processes_.AddProcess(shared_ptr<Process>(new NewFrameTimeProcess()));
+    
+    physics_ = shared_ptr<NewPhysics>(new NewPhysics(processes_));
+    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
 }
 
 void Simulation::ExecuteAction() {
@@ -57,16 +62,27 @@ void Simulation::ExecuteAction() {
                 accessor.Wait();
             }
             
+            GenerateTimeEvent();
+            
             eventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
             Buffer &receiveBuffer = accessor.ReceiveBuffer();
             eventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
             receiveBuffer.Clear();
         }
         eventQueue_.ProcessEvents();
-        processes_.ExecuteProcesses(processContext_);
+        processes_->ExecuteProcesses(processContext_);
     }
     
     puts("simulation thread terminating");
+}
+
+void Simulation::GenerateTimeEvent() {
+    posix_time::ptime now = posix_time::microsec_clock::local_time();
+    int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
+    lastFrameTime_ = now;
+    float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+    Event &event = processContext_.eventQueue.ScheduleEvent(ZarchEvent::FrameTimeEvent);
+    static_cast<VariantEvent &>(event).Reset(frameDeltaTimeS);
 }
 
 }

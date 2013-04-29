@@ -38,7 +38,8 @@ class EventQueue : private EventQueueCore {
     }
     
     //! See \ref EventQueueCore::RegisterEventHandler().
-    void RegisterEventHandler(T eventType, EventHandlerInterface *eventHandler) {
+    void RegisterEventHandler(T eventType,
+                              const boost::shared_ptr<EventHandlerInterface> &eventHandler) {
         EventQueueCore::RegisterEventHandler((int)eventType, eventHandler);
     }
     

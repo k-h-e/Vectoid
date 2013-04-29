@@ -21,7 +21,7 @@ namespace Zarch {
 
 class ZarchEvent : public Game::Event {
   public:
-    enum EventType { FrameTimeEvent,
+    enum EventType { FrameTimeEvent     = 0,
                      ControlsStateEvent,
                      LanderMovedEvent };
     EventType Type() const { return (EventType)type_; }

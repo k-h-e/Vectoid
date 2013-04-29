@@ -40,7 +40,8 @@ void EventQueueCore::RegisterEventType(int eventType, int pool) {
     eventTypes_[eventType] = EventTypeInfo(pool);
 }
 
-void EventQueueCore::RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler) {
+void EventQueueCore::RegisterEventHandler(int eventType,
+                                          const shared_ptr<EventHandlerInterface> &eventHandler) {
     assert(   (eventType >= 0) && (eventType < (int)eventTypes_.size())
            && (eventTypes_[eventType].pool != -1));
     eventTypes_[eventType].handlers.push_back(eventHandler);
@@ -64,15 +65,12 @@ void EventQueueCore::ProcessEvents() {
     for (vector<EventInfo>::iterator iter = eventsToProcess.begin(); iter != eventsToProcess.end();
          ++iter) {
         Event &event = pools_[iter->pool]->Access(iter->itemId);
-        vector<EventHandlerInterface *> &handlers = eventTypes_[event.type_].handlers;
-        for (vector<EventHandlerInterface *>::iterator iter = handlers.begin();
+        vector<shared_ptr<EventHandlerInterface > > &handlers = eventTypes_[event.type_].handlers;
+        for (vector<shared_ptr<EventHandlerInterface > >::iterator iter = handlers.begin();
              iter != handlers.end(); ++iter)
             (*iter)->HandleEvent(event);
-        //printf("called %d handlers for event (%d,%d)\n", (int)handlers.size(), iter->pool,
-        //    iter->itemId);
         pools_[iter->pool]->Put(iter->itemId);
     }
-    //printf("processed %d events\n", (int)eventsToProcess.size());
     eventsToProcess.clear();
 }
 
@@ -88,13 +86,10 @@ void EventQueueCore::SerializeScheduledEvents(Buffer *targetBuffer) {
 void EventQueueCore::DeserializeAndScheduleEvents(const Buffer &buffer) {
     Buffer::Reader reader = buffer.GetReader();
     int type;
-    int num = 0;
     while (reader.Read(&type, sizeof(type)) == sizeof(type)) {
         Event &event = ScheduleEvent(type);
         event.Deserialize(&reader);
-        ++num;
     }
-    printf("deserialized %d events\n", num);
 }
 
 }    // Namespace Game.

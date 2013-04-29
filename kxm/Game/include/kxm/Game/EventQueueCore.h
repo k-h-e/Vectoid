@@ -51,10 +51,10 @@ class EventQueueCore {
     void RegisterEventType(int eventType, int pool);
     //! Registers another handler for the specified event type.
     /*!
-     *  The handler will be registered as a weak reference. Handlers will exclusively get called
-     *  from \ref ProcessEvents().
+     *  Handlers will exclusively get called from \ref ProcessEvents().
      */
-    void RegisterEventHandler(int eventType, EventHandlerInterface *eventHandler);
+    void RegisterEventHandler(int eventType,
+                              const boost::shared_ptr<EventHandlerInterface> &eventHandler);
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
     /*!
@@ -77,8 +77,8 @@ class EventQueueCore {
     
   private:
     struct EventTypeInfo {
-        int                                  pool;
-        std::vector<EventHandlerInterface *> handlers;    // Weak references.
+        int                                                     pool;
+        std::vector<boost::shared_ptr<EventHandlerInterface > > handlers;
         EventTypeInfo(int aPool) : pool(aPool) {}
     };
     struct EventInfo {

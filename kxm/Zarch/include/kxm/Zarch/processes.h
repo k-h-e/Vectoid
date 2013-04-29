@@ -25,7 +25,7 @@ namespace Zarch {
 
 class ZarchProcess : public Game::Process {
   public:
-    enum ProcessType { SeederProcess };
+    enum ProcessType { SeederProcess = 0 };
     struct Context : public Process::Context {
         Context(
             Game::Processes<ProcessType> &aProcessesSet,

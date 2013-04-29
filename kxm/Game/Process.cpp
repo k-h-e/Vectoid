@@ -16,9 +16,9 @@ namespace Game {
 Process::Process() {
 }
 
-bool Process::Execute(const Context &context) {
-    return true;
-}
+//bool Process::Execute(const Context &context) {
+//    return true;
+//}
 
 }    // Namespace Game.
 }    // Namespace kxm.

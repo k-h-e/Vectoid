@@ -32,7 +32,7 @@ class Process : public virtual Core::Interface {
     /*!
      *  \return <c>false</c> in case the process has finished and does not want to be called again.
      */
-    virtual bool Execute(const Context &context);
+    virtual bool Execute(const Context &context) = 0;
     
   private:
     Process(const Process &other);

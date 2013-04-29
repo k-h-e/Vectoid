@@ -68,20 +68,20 @@ Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
         new ParticlesRenderer(starFieldParticles)))));
     
     // Install subsystems...
-    gameLogic_ = boost::shared_ptr<GameLogic>(new GameLogic());
-    physics_   = boost::shared_ptr<Physics>(
+    gameLogic_ = shared_ptr<GameLogic>(new GameLogic());
+    physics_   = shared_ptr<Physics>(
                      new Physics(&eventQueue_, mapParameters_, terrain, landerCoordSys,
-                                 thrusterParticles, shotsParticles));
-    video_     = boost::shared_ptr<Video>(
+                     thrusterParticles, shotsParticles));
+    video_     = shared_ptr<Video>(
                      new Video(&eventQueue_, mapParameters_, camera, terrainRenderer,
                                starFieldParticles));
     
     RegisterEvents(&eventQueue_);
         
     // Register event handlers...
-    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, &*physics_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, &*physics_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, &*video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, video_);
     
     threadingFactory_         = threadingFactory;
     simulationCouplingBuffer_ = shared_ptr<ThreadCouplingBuffer>(
@@ -124,7 +124,7 @@ void Zarch::SetViewPort(int width, int height) {
 }
 
 void Zarch::RenderFrame() {
-    projection_->Render(0);
+    //projection_->Render(0);
     
     presentation_->RenderFrame();
 }

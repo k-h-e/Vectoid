@@ -43,6 +43,7 @@ class CameraProcess : public ZarchProcess {
     
     //! Grants read-only access to the object where the task maintains the camera's state.
     boost::shared_ptr<const CameraStateInfo> CameraState();
+    //! (Re)implemented.
     bool Execute(const Process::Context &context);
     
   private:
