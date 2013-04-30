@@ -36,22 +36,22 @@ NewPhysics::NewPhysics(shared_ptr<Processes<ZarchProcess::ProcessType> > process
 void NewPhysics::HandleEvent(const Event &event) {
     switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
-            HandleTimeEvent(static_cast<const VariantEvent &>(event));
+            HandleTimeEvent(static_cast<const PayloadEvent<Variant> &>(event));
             break;
         case ZarchEvent::ControlsStateEvent:
-            HandleControlsStateEvent(static_cast<const ControlsStateEvent &>(event));
+            HandleControlsStateEvent(static_cast<const PayloadEvent<ControlsState> &>(event));
             break;
         default:
             break;
     }
 }
 
-void NewPhysics::HandleTimeEvent(const VariantEvent &event) {
-    data_->frameDeltaTimeS = event.AsFloat();
+void NewPhysics::HandleTimeEvent(const PayloadEvent<Variant> &event) {
+    data_->frameDeltaTimeS = event.Data().AsFloat();
 }
 
-void NewPhysics::HandleControlsStateEvent(const ControlsStateEvent &event) {
-    data_->controlsState = event.ControlsState();
+void NewPhysics::HandleControlsStateEvent(const PayloadEvent<ControlsState> &event) {
+    data_->controlsState = event.Data();
 }
 
 }    // Namespace Zarch.

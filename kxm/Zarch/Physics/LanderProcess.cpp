@@ -93,8 +93,8 @@ bool LanderProcess::Execute(const Process::Context &context) {
     landerState_->transform = newLanderTransform;
     
     Event &event = static_cast<const ZarchProcess::Context &>(context).eventQueue.ScheduleEvent(
-                       ZarchEvent::LanderMovedEvent);
-    static_cast<TransformEvent &>(event).Reset(newLanderTransform);
+                       ZarchEvent::LanderMoveEvent);
+    static_cast<PayloadEvent<Transform> &>(event).Reset(newLanderTransform);
         
     return true;
 }

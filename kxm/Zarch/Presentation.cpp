@@ -10,6 +10,7 @@
 #include <kxm/Zarch/Presentation.h>
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
 
 
@@ -30,15 +31,17 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
     Zarch::RegisterEvents(&eventQueue_);
     
     video_ = shared_ptr<NewVideo>(new NewVideo(processes_));
-    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, video_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent,      video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMoveEvent,     video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderVelocityEvent, video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderThrusterEvent, video_);
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
     Event &event = eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent);
-    static_cast<ControlsStateEvent &>(event).Reset(controlsState);
+    static_cast<PayloadEvent<ControlsState> &>(event).Reset(controlsState);
     
     {
         ThreadCouplingBuffer::Accessor accessor = simulationCouplingBuffer_->Access(

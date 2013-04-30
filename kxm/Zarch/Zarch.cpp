@@ -21,12 +21,13 @@
 #include <kxm/Vectoid/AgeColoredParticles.h>
 #include <kxm/Game/Pool.h>
 #include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Zarch/Video/TerrainRenderer.h>
 #include <kxm/Zarch/Simulation.h>
 #include <kxm/Zarch/Presentation.h>
-#include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/LanderGeometry.h>
-#include <kxm/Zarch/Video/TerrainRenderer.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/events.h>
 
 using namespace std;
@@ -81,7 +82,7 @@ Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
     // Register event handlers...
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMovedEvent, video_);
+    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMoveEvent, video_);
     
     threadingFactory_         = threadingFactory;
     simulationCouplingBuffer_ = shared_ptr<ThreadCouplingBuffer>(
@@ -100,9 +101,9 @@ Zarch::~Zarch() {
 
 void Zarch::Execute(const FrameTimeProcess::FrameTimeInfo &timeInfo,
                     const ControlsState &controlsState) {
-    static_cast<VariantEvent &>(eventQueue_.ScheduleEvent(ZarchEvent::FrameTimeEvent))
-        .Reset(timeInfo.timeSinceLastFrame);
-    static_cast<ControlsStateEvent &>(eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent))
+    static_cast<PayloadEvent<Variant> &>(eventQueue_.ScheduleEvent(ZarchEvent::FrameTimeEvent))
+        .Data().Reset(timeInfo.timeSinceLastFrame);
+    static_cast<PayloadEvent<ControlsState> &>(eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent))
         .Reset(controlsState);
     
     physics_->ExecuteProcesses();
@@ -130,19 +131,24 @@ void Zarch::RenderFrame() {
 }
 
 void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
-    shared_ptr<Pool<Event, TransformEvent> >     transformEventPool(
-                                                     new Pool<Event, TransformEvent>());
-    shared_ptr<Pool<Event, VariantEvent> >       variantEventPool(
-                                                     new Pool<Event, VariantEvent>());
-    shared_ptr<Pool<Event, ControlsStateEvent> > controlsStateEventPool(
-                                                     new Pool<Event, ControlsStateEvent>());
-    int transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
+    shared_ptr<Pool<Event, PayloadEvent<Vector> > >
+        vectorEventPool(new Pool<Event, PayloadEvent<Vector> >());
+    shared_ptr<Pool<Event, PayloadEvent<Transform> > >
+        transformEventPool(new Pool<Event, PayloadEvent<Transform> >());
+    shared_ptr<Pool<Event, PayloadEvent<Variant> > >
+        variantEventPool(new Pool<Event, PayloadEvent<Variant> >());
+    shared_ptr<Pool<Event, PayloadEvent<ControlsState> > >
+        controlsStateEventPool(new Pool<Event, PayloadEvent<ControlsState> >());
+    int vectorEventPoolId        = eventQueue->RegisterEventPool(vectorEventPool),
+        transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),
         controlsStateEventPoolId = eventQueue->RegisterEventPool(controlsStateEventPool);
     
-    eventQueue->RegisterEventType(ZarchEvent::FrameTimeEvent, variantEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::ControlsStateEvent, controlsStateEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::LanderMovedEvent, transformEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::FrameTimeEvent,      variantEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::ControlsStateEvent,  controlsStateEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::LanderMoveEvent,     transformEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::LanderVelocityEvent, vectorEventPoolId);
+    eventQueue->RegisterEventType(ZarchEvent::LanderThrusterEvent, variantEventPoolId);
 }
 
 }    // Namespace Zarch.

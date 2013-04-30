@@ -29,15 +29,18 @@ NewLanderProcess::NewLanderProcess(const boost::shared_ptr<NewPhysics::Data> &da
 }
 
 bool NewLanderProcess::Execute(const Process::Context &context) {
-    data_->landerState.thrusterEnabled = data_->controlsState.thrusterRequested;
-    data_->landerState.firingEnabled   = data_->controlsState.firingRequested;
+    NewPhysics::Data &data = *data_;
     
-    float projection = data_->controlsState.orientationInput.x;
+    bool oldThrusterEnabled = data.landerState.thrusterEnabled;
+    data.landerState.thrusterEnabled = data.controlsState.thrusterRequested;
+    data.landerState.firingEnabled   = data.controlsState.firingRequested;
+    
+    float projection = data.controlsState.orientationInput.x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
-    projection = data_->controlsState.orientationInput.y;
+    float xAngle = (float)asin(projection) * 180.0f / NumberTools::piAsFloat;
+    projection = data.controlsState.orientationInput.y;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
+    float yAngle = -(float)asin(projection) * 180.0f / NumberTools::piAsFloat;
     float maxAngle = 30.0f;
     NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
     NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
@@ -53,29 +56,40 @@ bool NewLanderProcess::Execute(const Process::Context &context) {
     newLanderTransform.Prepend(Transform(YAxis, 180.0));
     
     // Apply gravity...
-    data_->landerState.velocity.y += data_->frameDeltaTimeS * -data_->mapParameters->gravity;
+    data.landerState.velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
     // Apply thrust...?
-    if (data_->landerState.thrusterEnabled) {
+    if (data.landerState.thrusterEnabled) {
         Vector thrustDirection(0.0f, 1.0f, 0.0f);
         newLanderTransform.ApplyTo(&thrustDirection);
-        data_->landerState.velocity += (  data_->frameDeltaTimeS
-                                        * data_->mapParameters->landerThrust) * thrustDirection;
+        data.landerState.velocity += (  data.frameDeltaTimeS
+                                        * data.mapParameters->landerThrust) * thrustDirection;
     }
-    Vector position = data_->landerState.transform.TranslationPart();
-    position += data_->frameDeltaTimeS * data_->landerState.velocity;
-    data_->mapParameters->xRange.ClampModulo(&position.x);
-    data_->mapParameters->zRange.ClampModulo(&position.z);
-    float terrainHeight = data_->terrain->Height(position.x, position.z);
+    Vector position = data.landerState.transform.TranslationPart();
+    position += data.frameDeltaTimeS * data.landerState.velocity;
+    data.mapParameters->xRange.ClampModulo(&position.x);
+    data.mapParameters->zRange.ClampModulo(&position.z);
+    float terrainHeight = data.terrain->Height(position.x, position.z);
     if (position.y < terrainHeight) {
-        position.y                    = terrainHeight;
-        data_->landerState.velocity.y = 0.0f;
+        position.y                  = terrainHeight;
+        data.landerState.velocity.y = 0.0f;
     }
     newLanderTransform.SetTranslationPart(position);
+    data.landerState.transform = newLanderTransform;
     
-    data_->landerState.transform = newLanderTransform;
-    Event &event = static_cast<const ZarchProcess::Context &>(context).eventQueue.ScheduleEvent(
-                       ZarchEvent::LanderMovedEvent);
-    static_cast<TransformEvent &>(event).Reset(newLanderTransform);
+    // Generate events...
+    Event &moveEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                           .ScheduleEvent(ZarchEvent::LanderMoveEvent);
+    static_cast<PayloadEvent<Transform> &>(moveEvent).Reset(newLanderTransform);
+    Event &velocityEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                               .ScheduleEvent(ZarchEvent::LanderVelocityEvent);
+    static_cast<PayloadEvent<Vector> &>(velocityEvent).Reset(data.landerState.velocity);
+    if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
+        Event &thrusterEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                                   .ScheduleEvent(ZarchEvent::LanderThrusterEvent);
+        static_cast<PayloadEvent<Variant> &>(thrusterEvent)
+            .Data().Reset(data.landerState.thrusterEnabled);
+    }
+    
     return true;
 }
 

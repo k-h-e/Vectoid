@@ -11,7 +11,6 @@
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A1303F6157BC52700A89134 /* StarFieldProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
-		2A19E8671729CF4E00654652 /* NewFrameTimeProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */; };
 		2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6119166A624E0073658E /* ProcessesCore.cpp */; };
 		2A2A611F166A700C0073658E /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A611D166A700B0073658E /* Process.cpp */; };
 		2A2A612A166D1E980073658E /* Zarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6128166D1E960073658E /* Zarch.cpp */; };
@@ -43,6 +42,10 @@
 		2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF5115361E710054F8E9 /* TestTriangle.cpp */; };
 		2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF6815362EF40054F8E9 /* IntModN.cpp */; };
 		2A67326D1560103A0095481F /* ThrusterParticlesProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A67326C1560103A0095481F /* ThrusterParticlesProcess.cpp */; };
+		2A8AD4D6172D51ED007290C7 /* NewPhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4D4172D51ED007290C7 /* NewPhysics.cpp */; };
+		2A8AD4DA172D7738007290C7 /* NewLanderProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4D8172D7737007290C7 /* NewLanderProcess.cpp */; };
+		2A8AD4DE172D8527007290C7 /* NewVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4DC172D8527007290C7 /* NewVideo.cpp */; };
+		2A8AD4E1172F068C007290C7 /* NewCameraProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4E0172F068C007290C7 /* NewCameraProcess.cpp */; };
 		2A9D7C1E154D9DF700D7DE2F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */; };
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
@@ -51,6 +54,8 @@
 		2ABC807C17065B9F00D909FA /* ThreadCouplingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */; };
 		2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC80831706794000D909FA /* POSIXThreadingFactory.cpp */; };
 		2ABC808B17088B4800D909FA /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC808917088B4800D909FA /* Thread.cpp */; };
+		2ABE9CDC17305EC700F5251C /* NewStarFieldProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE9CDB17305EC700F5251C /* NewStarFieldProcess.cpp */; };
+		2ABE9CE1173071BF00F5251C /* NewThrusterParticlesProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE9CDF173071BF00F5251C /* NewThrusterParticlesProcess.cpp */; };
 		2AC40A1F15567B1400026789 /* FrameTimeProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
 		2AE1DD031621B69600306D89 /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1DD011621B69600306D89 /* logging.cpp */; };
@@ -76,8 +81,6 @@
 		2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarFieldProcess.cpp; path = Zarch/Video/StarFieldProcess.cpp; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = Zarch/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
-		2A19E8651729CF0300654652 /* NewFrameTimeProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewFrameTimeProcess.h; path = Zarch/include/kxm/Zarch/NewFrameTimeProcess.h; sourceTree = "<group>"; };
-		2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewFrameTimeProcess.cpp; path = Zarch/NewFrameTimeProcess.cpp; sourceTree = "<group>"; };
 		2A2A6117166A61350073658E /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = Game/include/kxm/Game/Process.h; sourceTree = "<group>"; };
 		2A2A6118166A623D0073658E /* ProcessesCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessesCore.h; path = Game/include/kxm/Game/ProcessesCore.h; sourceTree = "<group>"; };
 		2A2A6119166A624E0073658E /* ProcessesCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProcessesCore.cpp; path = Game/ProcessesCore.cpp; sourceTree = "<group>"; };
@@ -134,6 +137,14 @@
 		2A65AF6A153631DC0054F8E9 /* NumberTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NumberTools.h; path = Core/include/kxm/Core/NumberTools.h; sourceTree = "<group>"; };
 		2A67326915600FEC0095481F /* ThrusterParticlesProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesProcess.h; path = Zarch/include/kxm/Zarch/Physics/ThrusterParticlesProcess.h; sourceTree = "<group>"; };
 		2A67326C1560103A0095481F /* ThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesProcess.cpp; path = Zarch/Physics/ThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
+		2A8AD4D3172D51BD007290C7 /* NewPhysics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewPhysics.h; path = Zarch/include/kxm/Zarch/Physics/NewPhysics.h; sourceTree = "<group>"; };
+		2A8AD4D4172D51ED007290C7 /* NewPhysics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewPhysics.cpp; path = Zarch/Physics/NewPhysics.cpp; sourceTree = "<group>"; };
+		2A8AD4D7172D75F2007290C7 /* NewLanderProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewLanderProcess.h; path = Zarch/include/kxm/Zarch/Physics/NewLanderProcess.h; sourceTree = "<group>"; };
+		2A8AD4D8172D7737007290C7 /* NewLanderProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewLanderProcess.cpp; path = Zarch/Physics/NewLanderProcess.cpp; sourceTree = "<group>"; };
+		2A8AD4DB172D84A3007290C7 /* NewVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewVideo.h; path = Zarch/include/kxm/Zarch/Video/NewVideo.h; sourceTree = "<group>"; };
+		2A8AD4DC172D8527007290C7 /* NewVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewVideo.cpp; path = Zarch/Video/NewVideo.cpp; sourceTree = "<group>"; };
+		2A8AD4E0172F068C007290C7 /* NewCameraProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewCameraProcess.cpp; path = Zarch/Video/NewCameraProcess.cpp; sourceTree = "<group>"; };
+		2A8AD4E2172F07A0007290C7 /* NewCameraProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewCameraProcess.h; path = Zarch/include/kxm/Zarch/Video/NewCameraProcess.h; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneGraphNode.h; sourceTree = "<group>"; };
 		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerspectiveProjection.h; sourceTree = "<group>"; };
@@ -167,6 +178,10 @@
 		2ABC8087170759F000D909FA /* ActionInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActionInterface.h; path = Core/include/kxm/Core/ActionInterface.h; sourceTree = "<group>"; };
 		2ABC80881708887D00D909FA /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = Core/include/kxm/Core/Thread.h; sourceTree = "<group>"; };
 		2ABC808917088B4800D909FA /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = Core/Thread.cpp; sourceTree = "<group>"; };
+		2ABE9CDB17305EC700F5251C /* NewStarFieldProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewStarFieldProcess.cpp; path = Zarch/Video/NewStarFieldProcess.cpp; sourceTree = "<group>"; };
+		2ABE9CDD17305F1F00F5251C /* NewStarFieldProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewStarFieldProcess.h; path = Zarch/include/kxm/Zarch/Video/NewStarFieldProcess.h; sourceTree = "<group>"; };
+		2ABE9CDE173070AD00F5251C /* NewThrusterParticlesProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NewThrusterParticlesProcess.h; path = Zarch/include/kxm/Zarch/Video/NewThrusterParticlesProcess.h; sourceTree = "<group>"; };
+		2ABE9CDF173071BF00F5251C /* NewThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NewThrusterParticlesProcess.cpp; path = Zarch/Video/NewThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
 		2AC40A1C15567AFF00026789 /* FrameTimeProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameTimeProcess.h; path = Game/include/kxm/Game/FrameTimeProcess.h; sourceTree = "<group>"; };
 		2AC40A1E15567B1400026789 /* FrameTimeProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTimeProcess.cpp; path = Game/FrameTimeProcess.cpp; sourceTree = "<group>"; };
 		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Range.h; sourceTree = "<group>"; };
@@ -213,6 +228,10 @@
 				2AECEF64154D802800033D14 /* CameraProcess.h */,
 				2AAC2566158D223D004A37C6 /* TerrainRenderer.h */,
 				2A2A6130166D22540073658E /* Video.h */,
+				2A8AD4DB172D84A3007290C7 /* NewVideo.h */,
+				2A8AD4E2172F07A0007290C7 /* NewCameraProcess.h */,
+				2ABE9CDD17305F1F00F5251C /* NewStarFieldProcess.h */,
+				2ABE9CDE173070AD00F5251C /* NewThrusterParticlesProcess.h */,
 			);
 			name = Video;
 			sourceTree = "<group>";
@@ -232,6 +251,8 @@
 				2A67326915600FEC0095481F /* ThrusterParticlesProcess.h */,
 				2AECEF5E154D691600033D14 /* LanderProcess.h */,
 				2A2A612C166D21670073658E /* Physics.h */,
+				2A8AD4D3172D51BD007290C7 /* NewPhysics.h */,
+				2A8AD4D7172D75F2007290C7 /* NewLanderProcess.h */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -243,6 +264,8 @@
 				2A67326C1560103A0095481F /* ThrusterParticlesProcess.cpp */,
 				2AE5BEE41580F057000B62D6 /* ShotsProcess.cpp */,
 				2A2A612D166D21E40073658E /* Physics.cpp */,
+				2A8AD4D4172D51ED007290C7 /* NewPhysics.cpp */,
+				2A8AD4D8172D7737007290C7 /* NewLanderProcess.cpp */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -255,6 +278,10 @@
 				2A1303F5157BC52700A89134 /* StarFieldProcess.cpp */,
 				2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */,
 				2A2A6131166D22F50073658E /* Video.cpp */,
+				2A8AD4DC172D8527007290C7 /* NewVideo.cpp */,
+				2A8AD4E0172F068C007290C7 /* NewCameraProcess.cpp */,
+				2ABE9CDB17305EC700F5251C /* NewStarFieldProcess.cpp */,
+				2ABE9CDF173071BF00F5251C /* NewThrusterParticlesProcess.cpp */,
 			);
 			name = Video;
 			sourceTree = "<group>";
@@ -502,7 +529,6 @@
 				2A2A6128166D1E960073658E /* Zarch.cpp */,
 				2A41FB1B171204E100A078CF /* Simulation.cpp */,
 				2A41FB1E171204F900A078CF /* Presentation.cpp */,
-				2A19E8661729CF4E00654652 /* NewFrameTimeProcess.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -538,7 +564,6 @@
 				2A2A6127166D1DF70073658E /* Zarch.h */,
 				2A41FB19171204A000A078CF /* Simulation.h */,
 				2A41FB1A171204C200A078CF /* Presentation.h */,
-				2A19E8651729CF0300654652 /* NewFrameTimeProcess.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
@@ -649,7 +674,12 @@
 				2ABC808B17088B4800D909FA /* Thread.cpp in Sources */,
 				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
-				2A19E8671729CF4E00654652 /* NewFrameTimeProcess.cpp in Sources */,
+				2A8AD4D6172D51ED007290C7 /* NewPhysics.cpp in Sources */,
+				2A8AD4DA172D7738007290C7 /* NewLanderProcess.cpp in Sources */,
+				2A8AD4DE172D8527007290C7 /* NewVideo.cpp in Sources */,
+				2A8AD4E1172F068C007290C7 /* NewCameraProcess.cpp in Sources */,
+				2ABE9CDC17305EC700F5251C /* NewStarFieldProcess.cpp in Sources */,
+				2ABE9CE1173071BF00F5251C /* NewThrusterParticlesProcess.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

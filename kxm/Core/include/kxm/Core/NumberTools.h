@@ -14,6 +14,8 @@ namespace kxm {
 namespace Core {
 namespace NumberTools {
 
+static const float piAsFloat = 3.141592654f;
+
 inline void Clamp(int *numba, int min, int max) {
     if (*numba < min)
         *numba = min;

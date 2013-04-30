@@ -15,6 +15,7 @@
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Game/EventHandlerInterface.h>
+#include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/processes.h>
 
 
@@ -59,8 +60,8 @@ class NewPhysics : public virtual Game::EventHandlerInterface {
   private:
     NewPhysics(const NewPhysics &other);
     NewPhysics &operator=(const NewPhysics &other);
-    void HandleTimeEvent(const VariantEvent &event);
-    void HandleControlsStateEvent(const ControlsStateEvent &event);
+    void HandleTimeEvent(const PayloadEvent<Variant> &event);
+    void HandleControlsStateEvent(const PayloadEvent<ControlsState> &event);
 
     boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
     boost::shared_ptr<Data>                                        data_;

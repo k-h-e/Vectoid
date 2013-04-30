@@ -62,14 +62,7 @@ bool StarFieldProcess::Execute(const Process::Context &context) {
         particle->position = position;
         particle->hidden   = (position.y < mapParameters_->starFieldMinHeight);
     }
-    
-    // TESTING...
-    if (count_ < 500) {
-        ++count_;
-        return true;
-    }
-    else
-        return false;
+    return true;
 }
 
 }    // Namespace Zarch.

@@ -11,14 +11,13 @@
 #define KXM_VECTOID_TRANSFORM_H_
 
 
+#include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Vector.h>
 
 
 namespace kxm {
 namespace Vectoid {
-    
-//! <c>Pi</c> as <c>float</c>.
-static const float Pi = 3.141592654f;
+
 //! Indicates one of the three coordinate axes of 3-space.
 /*!
  *  Note that we are using a right-hand system and that as such - if we identify the screen
@@ -124,7 +123,7 @@ Transform::Transform(const Vector &t) {
 }
 
 Transform::Transform(Axis axis, float angleDeg) {
-    float rad = angleDeg / 180.0f * Pi;
+    float rad = angleDeg / 180.0f * Core::NumberTools::piAsFloat;
     // First, we'll set the rotation part depending on rotation axis...
     switch (axis) {
         case YAxis:

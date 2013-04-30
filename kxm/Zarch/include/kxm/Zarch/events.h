@@ -13,7 +13,6 @@
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Game/Event.h>
-#include <kxm/Zarch/ControlsState.h>
 
 
 namespace kxm {
@@ -23,67 +22,46 @@ class ZarchEvent : public Game::Event {
   public:
     enum EventType { FrameTimeEvent     = 0,
                      ControlsStateEvent,
-                     LanderMovedEvent };
+                     LanderMoveEvent,
+                     LanderVelocityEvent,
+                     LanderThrusterEvent };
     EventType Type() const { return (EventType)type_; }
 };
 
-class ControlsStateEvent : public ZarchEvent {
-  public:
-    void Reset(const ControlsState &controlsState) { controlsState_ = controlsState; }
-    const ControlsState &ControlsState() const { return controlsState_; }
-    void Serialize(Core::Buffer *targetBuffer) {
-        targetBuffer->Append(&type_, sizeof(type_));
-        targetBuffer->Append(&controlsState_, sizeof(controlsState_));
-    }
-    void Deserialize(Core::Buffer::Reader *bufferReader) {
-        bufferReader->ReadBlock(&controlsState_, sizeof(controlsState_));
-    }
-    bool DeserializeAndValidate(Core::Buffer::Reader *bufferReader) {
-        return false;
-    }
-  private:
-    struct ControlsState controlsState_;
-};
-
-class TransformEvent : public ZarchEvent {
-  public:
-    void Reset(const Vectoid::Transform &transform) { transform_ = transform; }
-    const Vectoid::Transform &Transform() const { return transform_; }
-    void Serialize(Core::Buffer *targetBuffer) {
-        targetBuffer->Append(&type_, sizeof(type_));
-        targetBuffer->Append(&transform_, sizeof(transform_));
-    }
-    void Deserialize(Core::Buffer::Reader *bufferReader) {
-        bufferReader->ReadBlock(&transform_, sizeof(transform_));
-    }
-    bool DeserializeAndValidate(Core::Buffer::Reader *bufferReader) {
-        return false;
-    }
-  private:
-    Vectoid::Transform transform_;
-};
-
-class VariantEvent : public ZarchEvent {
+class Variant {
   public:
     void Reset(int value)   { value_.intValue   = value; }
     void Reset(float value) { value_.floatValue = value; }
+    void Reset(bool value)  { value_.boolValue  = value; }
     int AsInt() const       { return value_.intValue;    }
     float AsFloat() const   { return value_.floatValue;  }
-    void Serialize(Core::Buffer *targetBuffer) {
-        targetBuffer->Append(&type_, sizeof(type_));
-        targetBuffer->Append(&value_, sizeof(value_));
-    }
-    void Deserialize(Core::Buffer::Reader *bufferReader) {
-        bufferReader->ReadBlock(&value_, sizeof(value_));
-    }
-    bool DeserializeAndValidate(Core::Buffer::Reader *bufferReader) {
-        return false;
-    }
+    bool AsBool() const     { return value_.boolValue;   }
+  
   private:
     union {
         int   intValue;
         float floatValue;
+        bool  boolValue;
     } value_;
+};
+
+template<class T> class PayloadEvent : public ZarchEvent {
+  public:
+    void Reset(const T &data) { data_ = data; }
+    const T &Data() const     { return data_; }
+    T &Data()                 { return data_; }
+    void Serialize(Core::Buffer *targetBuffer) {
+        targetBuffer->Append(&type_, sizeof(type_));
+        targetBuffer->Append(&data_, sizeof(data_));
+    }
+    void Deserialize(Core::Buffer::Reader *bufferReader) {
+        bufferReader->ReadBlock(&data_, sizeof(data_));
+    }
+    bool DeserializeAndValidate(Core::Buffer::Reader *bufferReader) {
+        return false;
+    }
+  private:
+    T data_;
 };
 
 }    // Namespace Zarch.

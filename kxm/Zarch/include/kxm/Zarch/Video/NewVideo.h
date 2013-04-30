@@ -31,6 +31,7 @@ namespace Vectoid {
 
 namespace Zarch {
 
+class TerrainRenderer;
 class MapParameters;
 class Terrain;
 
@@ -41,11 +42,15 @@ class Terrain;
 class NewVideo : public virtual Game::EventHandlerInterface {
   public:
     struct Data {
-        Data() : frameDeltaTimeS(0.0f) {}
+        Data() : frameDeltaTimeS(0.0f),
+                 landerThrusterEnabled(false) {}
         float                                             frameDeltaTimeS;
         boost::shared_ptr<Vectoid::PerspectiveProjection> projection;
         boost::shared_ptr<Vectoid::Camera>                camera;
         boost::shared_ptr<Vectoid::CoordSys>              landerCoordSys;
+        Vectoid::Vector                                   landerVelocity;
+        bool                                              landerThrusterEnabled;
+        boost::shared_ptr<TerrainRenderer>                terrainRenderer;
         boost::shared_ptr<MapParameters>                  mapParameters;
         boost::shared_ptr<Terrain>                        terrain;
     };
@@ -60,8 +65,7 @@ class NewVideo : public virtual Game::EventHandlerInterface {
     NewVideo &operator=(const NewVideo &other);
     //! (Re)implemented.
     void HandleEvent(const Game::Event &event);
-    void HandleTimeEvent(const VariantEvent &event);
-    void HandleLanderMovedEvent(const TransformEvent &event);
+    void HandleLanderMovedEvent(const PayloadEvent<Vectoid::Transform> &event);
     
     boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
     boost::shared_ptr<Data>                                        data_;

@@ -49,10 +49,10 @@ void Physics::HandleEvent(const Event &event) {
     switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
             frameTimeInfo_->timeSinceLastFrame
-                = static_cast<const VariantEvent &>(event).AsFloat();
+                = static_cast<const PayloadEvent<Variant> &>(event).Data().AsFloat();
             break;
         case ZarchEvent::ControlsStateEvent:
-            *controlsState_ = static_cast<const ControlsStateEvent &>(event).ControlsState();
+            *controlsState_ = static_cast<const PayloadEvent<ControlsState> &>(event).Data();
             break;
         default:
             break;

@@ -82,7 +82,7 @@ void Simulation::GenerateTimeEvent() {
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
     Event &event = processContext_.eventQueue.ScheduleEvent(ZarchEvent::FrameTimeEvent);
-    static_cast<VariantEvent &>(event).Reset(frameDeltaTimeS);
+    static_cast<PayloadEvent<Variant> &>(event).Data().Reset(frameDeltaTimeS);
 }
 
 }
