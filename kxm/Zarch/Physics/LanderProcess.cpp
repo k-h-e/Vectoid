@@ -1,60 +1,46 @@
 //
-//  LanderProcess.cpp
+//  NewLanderProcess.cpp
 //  kxm
 //
-//  Created by Kai Hergenroether on 4/29/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Kai Hergenröther on 4/28/13.
+//
 //
 
 
 #include <kxm/Zarch/Physics/LanderProcess.h>
 
 #include <kxm/Core/NumberTools.h>
-#include <kxm/Vectoid/Transform.h>
-#include <kxm/Vectoid/CoordSysInterface.h>
 #include <kxm/Game/EventQueue.h>
-#include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/MapParameters.h>
-#include <kxm/Zarch/ControlsState.h>
+#include <kxm/Zarch/Terrain.h>
 
-using boost::shared_ptr;
+
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
-using namespace kxm::Zarch;
 
 
 namespace kxm {
 namespace Zarch {
 
-LanderProcess::LanderProcess(shared_ptr<CoordSysInterface> landerCoordSys,
-                             shared_ptr<const FrameTimeProcess::FrameTimeInfo> timeInfo,
-                             shared_ptr<const ControlsState> controlsState,
-                             shared_ptr<Terrain> terrain,
-                             shared_ptr<const MapParameters> mapParameters)
-        : landerCoordSys_(landerCoordSys),
-          timeInfo_(timeInfo),
-          controlsState_(controlsState),
-          terrain_(terrain),
-          mapParameters_(mapParameters),
-          landerState_(new LanderStateInfo()),
+LanderProcess::LanderProcess(const boost::shared_ptr<Physics::Data> &data)
+        : data_(data),
           heading_(0.0f, 0.0f, -1.0f) {
 }
 
-shared_ptr<const LanderProcess::LanderStateInfo> LanderProcess::LanderState() {
-    return landerState_;
-}
-
 bool LanderProcess::Execute(const Process::Context &context) {
-    landerState_->thrusterEnabled = controlsState_->thrusterRequested;
-    landerState_->firingEnabled   = controlsState_->firingRequested;
+    Physics::Data &data = *data_;
     
-    float projection = controlsState_->orientationInput.x;
+    bool oldThrusterEnabled = data.landerState.thrusterEnabled;
+    data.landerState.thrusterEnabled = data.controlsState.thrusterRequested;
+    data.landerState.firingEnabled   = data.controlsState.firingRequested;
+    
+    float projection = data.controlsState.orientationInput.x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float xAngle = (float)asin(projection) * 180.0f / 3.141592654f;
-    projection = controlsState_->orientationInput.y;
+    float xAngle = (float)asin(projection) * 180.0f / NumberTools::piAsFloat;
+    projection = data.controlsState.orientationInput.y;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float yAngle = -(float)asin(projection) * 180.0f / 3.141592654f;
+    float yAngle = -(float)asin(projection) * 180.0f / NumberTools::piAsFloat;
     float maxAngle = 30.0f;
     NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
     NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
@@ -70,35 +56,42 @@ bool LanderProcess::Execute(const Process::Context &context) {
     newLanderTransform.Prepend(Transform(YAxis, 180.0));
     
     // Apply gravity...
-    landerState_->velocity.y += timeInfo_->timeSinceLastFrame * -mapParameters_->gravity;
+    data.landerState.velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
     // Apply thrust...?
-    if (landerState_->thrusterEnabled) {
+    if (data.landerState.thrusterEnabled) {
         Vector thrustDirection(0.0f, 1.0f, 0.0f);
         newLanderTransform.ApplyTo(&thrustDirection);
-        landerState_->velocity += (  timeInfo_->timeSinceLastFrame
-                                   * mapParameters_->landerThrust ) * thrustDirection;
+        data.landerState.velocity += (  data.frameDeltaTimeS
+                                        * data.mapParameters->landerThrust) * thrustDirection;
     }
-    Vector position = landerState_->transform.TranslationPart();
-    position += timeInfo_->timeSinceLastFrame * landerState_->velocity;
-    mapParameters_->xRange.ClampModulo(&position.x);
-    mapParameters_->zRange.ClampModulo(&position.z);
-    float terrainHeight = terrain_->Height(position.x, position.z);
+    Vector position = data.landerState.transform.TranslationPart();
+    position += data.frameDeltaTimeS * data.landerState.velocity;
+    data.mapParameters->xRange.ClampModulo(&position.x);
+    data.mapParameters->zRange.ClampModulo(&position.z);
+    float terrainHeight = data.terrain->Height(position.x, position.z);
     if (position.y < terrainHeight) {
-        position.y               = terrainHeight;
-        landerState_->velocity.y = 0.0f;
+        position.y                  = terrainHeight;
+        data.landerState.velocity.y = 0.0f;
     }
     newLanderTransform.SetTranslationPart(position);
+    data.landerState.transform = newLanderTransform;
     
-    landerCoordSys_->SetTransform(newLanderTransform);
-    landerState_->transform = newLanderTransform;
+    // Generate events...
+    Event &moveEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                           .ScheduleEvent(ZarchEvent::LanderMoveEvent);
+    static_cast<PayloadEvent<Transform> &>(moveEvent).Reset(newLanderTransform);
+    Event &velocityEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                               .ScheduleEvent(ZarchEvent::LanderVelocityEvent);
+    static_cast<PayloadEvent<Vector> &>(velocityEvent).Reset(data.landerState.velocity);
+    if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
+        Event &thrusterEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
+                                   .ScheduleEvent(ZarchEvent::LanderThrusterEvent);
+        static_cast<PayloadEvent<Variant> &>(thrusterEvent)
+            .Data().Reset(data.landerState.thrusterEnabled);
+    }
     
-    Event &event = static_cast<const ZarchProcess::Context &>(context).eventQueue.ScheduleEvent(
-                       ZarchEvent::LanderMoveEvent);
-    static_cast<PayloadEvent<Transform> &>(event).Reset(newLanderTransform);
-        
     return true;
 }
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
-

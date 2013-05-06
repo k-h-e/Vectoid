@@ -11,15 +11,15 @@
 #define KXM_ZARCH_ZARCH_H_
 
 
-#include <kxm/Game/EventQueue.h>
-#include <kxm/Zarch/GameLogic/GameLogic.h>
-#include <kxm/Zarch/Physics/Physics.h>
-#include <kxm/Zarch/Video/Video.h>
-#include <kxm/Zarch/events.h>
-
 /*!
  *  \defgroup Zarch Zarch-like Game
  */
+
+
+#include <boost/shared_ptr.hpp>
+
+#include <kxm/Zarch/Presentation.h>
+#include <kxm/Zarch/events.h>
 
 
 namespace kxm {
@@ -28,18 +28,15 @@ namespace Core {
     class ThreadingFactoryInterface;
     class Thread;
 }
-namespace Vectoid {
-    class PerspectiveProjection;
-}
 namespace Game {
     class ThreadCouplingBuffer;
+    template<class T> class EventQueue;
 }
 
 namespace Zarch {
 
 class Simulation;
-class Presentation;
-class MapParameters;
+class ControlsState;
 
 //! Ties together the various <c>Zarch</c> game subsystems.
 /*!
@@ -49,10 +46,15 @@ class Zarch {
   public:
     Zarch(boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory);
     ~Zarch();
-    void Execute(const Game::FrameTimeProcess::FrameTimeInfo &timeInfo,
-                 const ControlsState &controlsState);
-    void SetViewPort(int width, int height);
-    void RenderFrame();
+    void PrepareFrame(const ControlsState &controlsState) {
+        presentation_->PrepareFrame(controlsState);
+    }
+    void SetViewPort(int width, int height) {
+        presentation_->SetViewPort(width, height);
+    }
+    void RenderFrame() {
+        presentation_->RenderFrame();
+    }
     //! Registers <c>Zarch</c> game events with the specified event queue, and creates and attaches
     //! the required event pools.
     static void RegisterEvents(Game::EventQueue<ZarchEvent::EventType> *eventQueue);
@@ -60,13 +62,6 @@ class Zarch {
   private:
     Zarch(const Zarch &other);
     Zarch &operator=(const Zarch &other);
-    
-    Game::EventQueue<ZarchEvent::EventType>           eventQueue_;    // Will be deleted last.
-    boost::shared_ptr<GameLogic>                      gameLogic_;
-    boost::shared_ptr<Physics>                        physics_;
-    boost::shared_ptr<Video>                          video_;
-    boost::shared_ptr<Vectoid::PerspectiveProjection> projection_;
-    boost::shared_ptr<MapParameters>                  mapParameters_;
     
     boost::shared_ptr<Simulation>                      simulation_;
     boost::shared_ptr<Presentation>                    presentation_;

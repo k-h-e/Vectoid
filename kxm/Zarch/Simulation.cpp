@@ -11,7 +11,7 @@
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
 #include <kxm/Zarch/Zarch.h>
-#include <kxm/Zarch/Physics/NewPhysics.h>
+#include <kxm/Zarch/Physics/Physics.h>
 
 
 using namespace boost;
@@ -31,7 +31,7 @@ Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuff
           lastFrameTime_(posix_time::microsec_clock::local_time()) {
     Zarch::RegisterEvents(&eventQueue_);
     
-    physics_ = shared_ptr<NewPhysics>(new NewPhysics(processes_));
+    physics_ = shared_ptr<Physics>(new Physics(processes_));
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
 }

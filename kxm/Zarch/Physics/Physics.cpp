@@ -1,66 +1,57 @@
 //
-//  Physics.cpp
+//  NewPhysics.cpp
 //  kxm
 //
-//  Created by Kai Hergenröther on 12/3/12.
+//  Created by Kai Hergenröther on 4/28/13.
 //
 //
 
 
 #include <kxm/Zarch/Physics/Physics.h>
 
-#include <kxm/Core/logging.h>
+#include <kxm/Game/Processes.h>
 #include <kxm/Zarch/Physics/LanderProcess.h>
-#include <kxm/Zarch/Physics/ThrusterParticlesProcess.h>
-#include <kxm/Zarch/Physics/ShotsProcess.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/events.h>
 
-using namespace std;
+
 using namespace boost;
-using namespace kxm::Core;
-using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
 
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(
-    EventQueue<ZarchEvent::EventType> *eventQueue,
-    shared_ptr<MapParameters> mapParameters, shared_ptr<Terrain> terrain,
-    shared_ptr<CoordSysInterface> landerCoordSys, shared_ptr<Particles> thrusterParticles,
-    shared_ptr<Particles> shotsParticles)
-        : processContext_(processes_, *eventQueue),
-          frameTimeInfo_(new FrameTimeProcess::FrameTimeInfo()),
-          controlsState_(new ControlsState()) {
-    shared_ptr<LanderProcess> landerProcess(new LanderProcess(
-        landerCoordSys, frameTimeInfo_, controlsState_, terrain, mapParameters));
-    processes_.AddProcess(landerProcess);
-    processes_.AddProcess(shared_ptr<Process>(
-        new ThrusterParticlesProcess(thrusterParticles, landerProcess->LanderState(),
-                                     frameTimeInfo_, mapParameters)));
-    processes_.AddProcess(shared_ptr<Process>(
-        new ShotsProcess(shotsParticles, landerProcess->LanderState(), frameTimeInfo_,
-                         mapParameters)));
+Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType> > processes)
+        : processes_(processes) {
+    data_ = shared_ptr<Data>(new Data());
+    data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
+    data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
+    
+    processes_->AddProcess(shared_ptr<Process>(new LanderProcess(data_)));
 }
 
 void Physics::HandleEvent(const Event &event) {
     switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
-            frameTimeInfo_->timeSinceLastFrame
-                = static_cast<const PayloadEvent<Variant> &>(event).Data().AsFloat();
+            HandleTimeEvent(static_cast<const PayloadEvent<Variant> &>(event));
             break;
         case ZarchEvent::ControlsStateEvent:
-            *controlsState_ = static_cast<const PayloadEvent<ControlsState> &>(event).Data();
+            HandleControlsStateEvent(static_cast<const PayloadEvent<ControlsState> &>(event));
             break;
         default:
             break;
     }
 }
 
-void Physics::ExecuteProcesses() {
-    processes_.ExecuteProcesses(processContext_);
+void Physics::HandleTimeEvent(const PayloadEvent<Variant> &event) {
+    data_->frameDeltaTimeS = event.Data().AsFloat();
+}
+
+void Physics::HandleControlsStateEvent(const PayloadEvent<ControlsState> &event) {
+    data_->controlsState = event.Data();
 }
 
 }    // Namespace Zarch.

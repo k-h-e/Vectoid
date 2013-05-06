@@ -15,7 +15,7 @@
 
 #include <kxm/Game/EventQueue.h>
 #include <kxm/Game/Processes.h>
-#include <kxm/Zarch/Video/NewVideo.h>
+#include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/events.h>
 #include <kxm/Zarch/processes.h>
 
@@ -51,7 +51,7 @@ class Presentation {
     ZarchProcess::Context                                          processContext_;
     boost::shared_ptr<Game::ThreadCouplingBuffer>                  simulationCouplingBuffer_;
     int                                                            sendToSimulationDirection_;
-    boost::shared_ptr<NewVideo>                                    video_;
+    boost::shared_ptr<Video>                                       video_;
 };
 
 }

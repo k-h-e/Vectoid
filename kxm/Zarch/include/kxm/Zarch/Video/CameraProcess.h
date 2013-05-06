@@ -1,9 +1,9 @@
 //
-//  CameraProcess.h
+//  NewCameraProcess.h
 //  kxm
 //
-//  Created by Kai Hergenroether on 4/29/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Kai Hergenröther on 4/29/13.
+//
 //
 
 
@@ -13,19 +13,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <kxm/Zarch/Physics/LanderProcess.h>
+#include <kxm/Zarch/Video/Video.h>
+#include <kxm/Zarch/processes.h>
 
 
 namespace kxm {
-
-namespace Vectoid {
-    class CoordSysInterface;
-    class Transform;
-}
-
 namespace Zarch {
-
-class MapParameters;
 
 //! Keeps the camera position in sync with the lander position.
 /*!
@@ -33,32 +26,20 @@ class MapParameters;
  */
 class CameraProcess : public ZarchProcess {
   public:
-    struct CameraStateInfo {
-        Vectoid::Vector position;
-    };
-    
-    CameraProcess(boost::shared_ptr<Vectoid::CoordSysInterface> cameraCoordSys,
-                  boost::shared_ptr<const LanderProcess::LanderStateInfo> landerState,
-                  boost::shared_ptr<const MapParameters> mapParameters);
-    
-    //! Grants read-only access to the object where the task maintains the camera's state.
-    boost::shared_ptr<const CameraStateInfo> CameraState();
-    //! (Re)implemented.
-    bool Execute(const Process::Context &context);
+    CameraProcess(const boost::shared_ptr<Video::Data> data);
     
   private:
     CameraProcess(const CameraProcess &other);
     CameraProcess &operator=(const CameraProcess &other);
+    //! (Re)implemented.
+    bool Execute(const Process::Context &context);
     
-    boost::shared_ptr<Vectoid::CoordSysInterface>           cameraCoordSys_;
-    boost::shared_ptr<const LanderProcess::LanderStateInfo> landerState_;
-    boost::shared_ptr<const MapParameters>                  mapParameters_;
-    boost::shared_ptr<CameraStateInfo>                      cameraState_;
+    boost::shared_ptr<Video::Data> data_;
 };
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
 
 #endif    // KXM_ZARCH_CAMERAPROCESS_H_
+

@@ -30,7 +30,7 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
           sendToSimulationDirection_(sendToSimulationDirection) {
     Zarch::RegisterEvents(&eventQueue_);
     
-    video_ = shared_ptr<NewVideo>(new NewVideo(processes_));
+    video_ = shared_ptr<Video>(new Video(processes_));
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent,      video_);
     eventQueue_.RegisterEventHandler(ZarchEvent::LanderMoveEvent,     video_);
     eventQueue_.RegisterEventHandler(ZarchEvent::LanderVelocityEvent, video_);

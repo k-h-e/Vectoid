@@ -7,13 +7,13 @@
 //
 
 
-#ifndef KXM_ZARCH_NEWTHRUSTERPARTICLESPROCESS_H_
-#define KXM_ZARCH_NEWTHRUSTERPARTICLESPROCESS_H_
+#ifndef KXM_ZARCH_THRUSTERPARTICLESPROCESS_H_
+#define KXM_ZARCH_THRUSTERPARTICLESPROCESS_H_
 
 
 #include <boost/shared_ptr.hpp>
 
-#include <kxm/Zarch/Video/NewVideo.h>
+#include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/processes.h>
 
 
@@ -29,17 +29,17 @@ namespace Zarch {
 /*!
  *  \ingroup Zarch
  */
-class NewThrusterParticlesProcess : public ZarchProcess {
+class ThrusterParticlesProcess : public ZarchProcess {
   public:
-    NewThrusterParticlesProcess(boost::shared_ptr<NewVideo::Data> data,
-                                boost::shared_ptr<Vectoid::Particles> particles);
+    ThrusterParticlesProcess(boost::shared_ptr<Video::Data> data,
+                             boost::shared_ptr<Vectoid::Particles> particles);
     bool Execute(const Process::Context &context);
     
   private:
-    NewThrusterParticlesProcess(const NewThrusterParticlesProcess &other);
-    NewThrusterParticlesProcess &operator=(const NewThrusterParticlesProcess &other);
+    ThrusterParticlesProcess(const ThrusterParticlesProcess &other);
+    ThrusterParticlesProcess &operator=(const ThrusterParticlesProcess &other);
     
-    boost::shared_ptr<NewVideo::Data>     data_;
+    boost::shared_ptr<Video::Data>        data_;
     boost::shared_ptr<Vectoid::Particles> particles_;
     Vectoid::Vector                       lastLanderPosition_;
     float                                 particleTimeCarryOver_;
@@ -50,4 +50,4 @@ class NewThrusterParticlesProcess : public ZarchProcess {
 }    // Namespace kxm.
 
 
-#endif    // KXM_ZARCH_NEWTHRUSTERPARTICLESPROCESS_H_
+#endif    // KXM_ZARCH_THRUSTERPARTICLESPROCESS_H_

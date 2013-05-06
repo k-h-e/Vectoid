@@ -7,7 +7,7 @@
 //
 
 
-#include <kxm/Zarch/Video/NewThrusterParticlesProcess.h>
+#include <kxm/Zarch/Video/ThrusterParticlesProcess.h>
 
 #include <kxm/Core/ReusableItems.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -23,15 +23,15 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Zarch {
 
-NewThrusterParticlesProcess::NewThrusterParticlesProcess(shared_ptr<NewVideo::Data> data,
-                                                         shared_ptr<Vectoid::Particles> particles)
+ThrusterParticlesProcess::ThrusterParticlesProcess(shared_ptr<Video::Data> data,
+                                                   shared_ptr<Vectoid::Particles> particles)
         : data_(data),
           particles_(particles),
           particleTimeCarryOver_(0.0f) {
 }
 
-bool NewThrusterParticlesProcess::Execute(const Process::Context &context) {
-    NewVideo::Data &data = *data_;
+bool ThrusterParticlesProcess::Execute(const Process::Context &context) {
+    Video::Data &data = *data_;
     
     // Move and age particles...
     Vector landerPosition = data.landerCoordSys->Position(); 

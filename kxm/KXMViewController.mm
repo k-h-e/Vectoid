@@ -18,7 +18,6 @@
 
 #include <kxm/Core/logging.h>
 #include <kxm/Core/POSIXThreadingFactory.h>
-#include <kxm/Game/FrameTimeProcess.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
 
@@ -34,18 +33,16 @@ using boost::shared_ptr;
 
 
 @interface KXMViewController () {
-    EAGLContext                                       *glContext;
-    CGFloat                                           width, height;
-    CMMotionManager                                   *motionManager;
-    Transform                                         calibrationTransform;
-    bool                                              accelerometerOverride;
-    float                                             accelerometerOverrideStartX,
-                                                      accelerometerOverrideStartY;
+    EAGLContext               *glContext;
+    CGFloat                    width, height;
+    CMMotionManager           *motionManager;
+    Transform                  calibrationTransform;
+    bool                       accelerometerOverride;
+    float                      accelerometerOverrideStartX,
+                               accelerometerOverrideStartY;
     
-    shared_ptr<Zarch>                                 zarch;
-    FrameTimeProcess                                  timeProcess;
-    shared_ptr<const FrameTimeProcess::FrameTimeInfo> frameTimeInfo;
-    shared_ptr<ControlsState>                         controlsState;
+    shared_ptr<Zarch>          zarch;
+    shared_ptr<ControlsState>  controlsState;
 }
 
 - (void)setupGL;
@@ -117,7 +114,6 @@ using boost::shared_ptr;
     
     shared_ptr<ThreadingFactoryInterface> threadingFactory(new POSIXThreadingFactory());
     zarch = shared_ptr<Zarch>(new Zarch(threadingFactory));
-    frameTimeInfo = timeProcess.TimeInfo();
     [motionManager startDeviceMotionUpdates];
 }
 
@@ -132,7 +128,6 @@ using boost::shared_ptr;
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update {
-    timeProcess.Execute(Process::Context());
     if (!accelerometerOverride) {
         CMAcceleration gravity = motionManager.deviceMotion.gravity;
         Vector orientationInput(gravity.x, gravity.y, gravity.z);
@@ -140,7 +135,7 @@ using boost::shared_ptr;
         controlsState->orientationInput = orientationInput;
     }
     
-    zarch->Execute(*frameTimeInfo, *controlsState);
+    zarch->PrepareFrame(*controlsState);
 }
 
 - (void)glkView: (GLKView *)view drawInRect: (CGRect)rect {
