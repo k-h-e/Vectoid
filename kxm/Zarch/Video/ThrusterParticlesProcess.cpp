@@ -18,6 +18,7 @@
 using namespace boost;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
+using namespace kxm::Game;
 
 
 namespace kxm {
@@ -30,7 +31,7 @@ ThrusterParticlesProcess::ThrusterParticlesProcess(shared_ptr<Video::Data> data,
           particleTimeCarryOver_(0.0f) {
 }
 
-bool ThrusterParticlesProcess::Execute(const Process::Context &context) {
+bool ThrusterParticlesProcess::Execute(const ExecutionContext &context) {
     Video::Data &data = *data_;
     
     // Move and age particles...

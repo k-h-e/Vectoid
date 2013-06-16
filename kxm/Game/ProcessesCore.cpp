@@ -55,7 +55,7 @@ void ProcessesCore::AddProcess(const boost::shared_ptr<Process> &process) {
     ++numProcesses_;
 }
 
-void ProcessesCore::ExecuteProcesses(const Process::Context &context) {
+void ProcessesCore::ExecuteProcesses(const ExecutionContext &context) {
     ReusableItems<ProcessInfo>::Iterator iter = processes_.GetIterator(addedProcessesGroup);
     int num = 0;
     while (iter.Next()) {

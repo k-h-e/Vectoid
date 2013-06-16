@@ -48,7 +48,7 @@ StarFieldProcess::StarFieldProcess(shared_ptr<Video::Data> videoData,
     }
 }
 
-bool StarFieldProcess::Execute(const Process::Context &context) {
+bool StarFieldProcess::Execute(const ExecutionContext &context) {
     Video::Data &data = *data_;
     Vector       base = data.camera->Position();
     ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();

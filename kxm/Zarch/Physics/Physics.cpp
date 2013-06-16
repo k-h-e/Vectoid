@@ -33,25 +33,19 @@ Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType> > processes)
     processes_->AddProcess(shared_ptr<Process>(new LanderProcess(data_)));
 }
 
-void Physics::HandleEvent(const Event &event) {
+void Physics::HandleEvent(const Game::Event &event) {
     switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
-            HandleTimeEvent(static_cast<const PayloadEvent<Variant> &>(event));
+            data_->frameDeltaTimeS = static_cast<const Event<Variant> &>(event).Data().AsFloat();
             break;
+            
         case ZarchEvent::ControlsStateEvent:
-            HandleControlsStateEvent(static_cast<const PayloadEvent<ControlsState> &>(event));
+            data_->controlsState = static_cast<const Event<ControlsState> &>(event).Data();
             break;
+            
         default:
             break;
     }
-}
-
-void Physics::HandleTimeEvent(const PayloadEvent<Variant> &event) {
-    data_->frameDeltaTimeS = event.Data().AsFloat();
-}
-
-void Physics::HandleControlsStateEvent(const PayloadEvent<ControlsState> &event) {
-    data_->controlsState = event.Data();
 }
 
 }    // Namespace Zarch.

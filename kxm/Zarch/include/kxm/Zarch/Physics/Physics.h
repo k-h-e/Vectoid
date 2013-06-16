@@ -60,8 +60,6 @@ class Physics : public virtual Game::EventHandlerInterface {
   private:
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
-    void HandleTimeEvent(const PayloadEvent<Variant> &event);
-    void HandleControlsStateEvent(const PayloadEvent<ControlsState> &event);
 
     boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
     boost::shared_ptr<Data>                                        data_;

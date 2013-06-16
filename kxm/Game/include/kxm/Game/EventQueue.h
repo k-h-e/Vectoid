@@ -48,6 +48,12 @@ class EventQueue : private EventQueueCore {
         return EventQueueCore::ScheduleEvent((int)eventType);
     }
     
+    //! Same as \ref ScheduleEvent(), but <c>static_cast</c>s to the specified event type, for
+    //! convenience.
+    template<class EventType> EventType &ScheduleEvent(T eventType) {
+        return static_cast<EventType &>(EventQueueCore::ScheduleEvent((int)eventType));
+    }
+    
     //! See \ref EventQueueCore::ProcessEvents().
     void ProcessEvents() {
         EventQueueCore::ProcessEvents();

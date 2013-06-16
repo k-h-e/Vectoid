@@ -65,7 +65,7 @@ class Video : public virtual Game::EventHandlerInterface {
     Video &operator=(const Video &other);
     //! (Re)implemented.
     void HandleEvent(const Game::Event &event);
-    void HandleLanderMovedEvent(const PayloadEvent<Vectoid::Transform> &event);
+    void HandleLanderMovedEvent(const Event<Vectoid::Transform> &event);
     
     boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
     boost::shared_ptr<Data>                                        data_;

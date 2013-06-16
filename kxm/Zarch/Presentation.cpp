@@ -40,8 +40,8 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
-    Event &event = eventQueue_.ScheduleEvent(ZarchEvent::ControlsStateEvent);
-    static_cast<PayloadEvent<ControlsState> &>(event).Reset(controlsState);
+    eventQueue_.ScheduleEvent<Event<ControlsState> >(ZarchEvent::ControlsStateEvent)
+               .Reset(controlsState);
     
     {
         ThreadCouplingBuffer::Accessor accessor = simulationCouplingBuffer_->Access(

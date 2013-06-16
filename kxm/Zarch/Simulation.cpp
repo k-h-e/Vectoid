@@ -11,6 +11,7 @@
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
 #include <kxm/Zarch/Zarch.h>
+#include <kxm/Zarch/GameLogic/GameLogic.h>
 #include <kxm/Zarch/Physics/Physics.h>
 
 
@@ -34,6 +35,9 @@ Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuff
     physics_ = shared_ptr<Physics>(new Physics(processes_));
     eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
     eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
+    
+    gameLogic_ = shared_ptr<GameLogic>(new GameLogic());
+    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, gameLogic_);
 }
 
 void Simulation::ExecuteAction() {
@@ -81,8 +85,8 @@ void Simulation::GenerateTimeEvent() {
     int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    Event &event = processContext_.eventQueue.ScheduleEvent(ZarchEvent::FrameTimeEvent);
-    static_cast<PayloadEvent<Variant> &>(event).Data().Reset(frameDeltaTimeS);
+    processContext_.eventQueue.ScheduleEvent<Event<Variant> >(ZarchEvent::FrameTimeEvent).Data()
+                              .Reset(frameDeltaTimeS);
 }
 
 }

@@ -44,7 +44,7 @@ class Processes : private ProcessesCore {
     }
     
     //! See \ref ProcessesCore::ExecuteProcesses().
-    void ExecuteProcesses(const Process::Context &context) {
+    void ExecuteProcesses(const ExecutionContext &context) {
         ProcessesCore::ExecuteProcesses(context);
     }
     

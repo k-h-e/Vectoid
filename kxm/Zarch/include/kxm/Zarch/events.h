@@ -45,7 +45,7 @@ class Variant {
     } value_;
 };
 
-template<class T> class PayloadEvent : public ZarchEvent {
+template<class T> class Event : public ZarchEvent {
   public:
     void Reset(const T &data) { data_ = data; }
     const T &Data() const     { return data_; }

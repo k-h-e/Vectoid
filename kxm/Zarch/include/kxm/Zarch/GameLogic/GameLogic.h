@@ -17,7 +17,7 @@
 namespace kxm {
 namespace Zarch {
 
-//! Game logic subsystem for the <c>Zarch</c> game.
+//! Game logic for the <c>Zarch</c> game.
 /*!
  *  \ingroup Zarch
  */
@@ -25,11 +25,13 @@ class GameLogic : public virtual Game::EventHandlerInterface {
   public:
     GameLogic();
     void HandleEvent(const Game::Event &event);
-    void ExecuteProcesses();
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
+    
+    bool landerThrusterEnabled_,
+         landerFiringEnabled_;
 };
 
 }    // Namespace Zarch.

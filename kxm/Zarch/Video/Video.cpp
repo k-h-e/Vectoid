@@ -83,20 +83,19 @@ void Video::RenderFrame() {
 void Video::HandleEvent(const Game::Event &event) {
     switch (static_cast<const ZarchEvent &>(event).Type()) {
         case ZarchEvent::FrameTimeEvent:
-            data_->frameDeltaTimeS = static_cast<const PayloadEvent<Variant> &>(event)
-                                         .Data().AsFloat();
+            data_->frameDeltaTimeS = static_cast<const Event<Variant> &>(event).Data().AsFloat();
             break;
             
         case ZarchEvent::LanderMoveEvent:
-            HandleLanderMovedEvent(static_cast<const PayloadEvent<Transform> &>(event));
+            HandleLanderMovedEvent(static_cast<const Event<Transform> &>(event));
             break;
             
         case ZarchEvent::LanderVelocityEvent:
-            data_->landerVelocity = static_cast<const PayloadEvent<Vector> &>(event).Data();
+            data_->landerVelocity = static_cast<const Event<Vector> &>(event).Data();
             break;
         
         case ZarchEvent::LanderThrusterEvent:
-            data_->landerThrusterEnabled = static_cast<const PayloadEvent<Variant> &>(event)
+            data_->landerThrusterEnabled = static_cast<const Event<Variant> &>(event)
                                                .Data().AsBool();
             break;
         
@@ -105,7 +104,7 @@ void Video::HandleEvent(const Game::Event &event) {
     }
 }
 
-void Video::HandleLanderMovedEvent(const PayloadEvent<Transform> &event) {
+void Video::HandleLanderMovedEvent(const Event<Transform> &event) {
     data_->landerCoordSys->SetTransform(event.Data());
     
     Vector landerPosition = data_->landerCoordSys->Position();

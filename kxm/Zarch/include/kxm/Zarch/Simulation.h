@@ -29,6 +29,7 @@ namespace Game {
 
 namespace Zarch {
 
+class GameLogic;
 class Physics;
 
 //! Ties together the simulation subsytems, that together run on the dedicated simulation thread (as
@@ -52,6 +53,7 @@ class Simulation : public Core::ActionInterface {
     ZarchProcess::Context                                          processContext_;
     boost::shared_ptr<Game::ThreadCouplingBuffer>                  presentationCouplingBuffer_;
     int                                                            sendToPresentationDirection_;
+    boost::shared_ptr<GameLogic>                                   gameLogic_;
     boost::shared_ptr<Physics>                                     physics_;
     boost::posix_time::ptime                                       lastFrameTime_;
 };

@@ -53,7 +53,7 @@ Event &EventQueueCore::ScheduleEvent(int eventType) {
     int pool = eventTypes_[eventType].pool,
         itemId;
     Event &event = pools_[pool]->Get(&itemId);
-    event.type_  = eventType;
+    event.type_      = eventType;
     events_[schedulingQueue_].push_back(EventInfo(pool, itemId));
     return event;
 }

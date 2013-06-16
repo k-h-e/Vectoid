@@ -46,14 +46,14 @@ Zarch::~Zarch() {
 }
 
 void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
-    shared_ptr<Pool<Event, PayloadEvent<Vector> > >
-        vectorEventPool(new Pool<Event, PayloadEvent<Vector> >());
-    shared_ptr<Pool<Event, PayloadEvent<Transform> > >
-        transformEventPool(new Pool<Event, PayloadEvent<Transform> >());
-    shared_ptr<Pool<Event, PayloadEvent<Variant> > >
-        variantEventPool(new Pool<Event, PayloadEvent<Variant> >());
-    shared_ptr<Pool<Event, PayloadEvent<ControlsState> > >
-        controlsStateEventPool(new Pool<Event, PayloadEvent<ControlsState> >());
+    shared_ptr<Pool<Game::Event, Event<Vector> > >
+        vectorEventPool(new Pool<Game::Event, Event<Vector> >());
+    shared_ptr<Pool<Game::Event, Event<Transform> > >
+        transformEventPool(new Pool<Game::Event, Event<Transform> >());
+    shared_ptr<Pool<Game::Event, Event<Variant> > >
+        variantEventPool(new Pool<Game::Event, Event<Variant> >());
+    shared_ptr<Pool<Game::Event, Event<ControlsState> > >
+        controlsStateEventPool(new Pool<Game::Event, Event<ControlsState> >());
     int vectorEventPoolId        = eventQueue->RegisterEventPool(vectorEventPool),
         transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),

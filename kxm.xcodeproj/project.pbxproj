@@ -175,6 +175,7 @@
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = Zarch/Terrain.cpp; sourceTree = "<group>"; };
 		2AEECB34155EB8DF00AC21A2 /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Particles.h; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = Vectoid/Particles.cpp; sourceTree = "<group>"; };
+		2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExecutionContext.h; path = Game/include/kxm/Game/ExecutionContext.h; sourceTree = "<group>"; };
 		2AFDAED016C5A24C00C003DA /* ReusableItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReusableItems.h; path = Core/include/kxm/Core/ReusableItems.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -470,6 +471,7 @@
 				2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */,
 				2A2A6118166A623D0073658E /* ProcessesCore.h */,
 				2A2A611C166A64690073658E /* Processes.h */,
+				2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */,
 				2ABC807917065B7B00D909FA /* ThreadCouplingBuffer.h */,
 			);
 			name = Game;

@@ -8,6 +8,8 @@
 
 
 #include <kxm/Zarch/GameLogic/GameLogic.h>
+#include <kxm/Zarch/events.h>
+
 
 using namespace kxm::Game;
 
@@ -15,13 +17,19 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-GameLogic::GameLogic() {
+GameLogic::GameLogic()
+        : landerThrusterEnabled_(false),
+          landerFiringEnabled_(false) {
 }
 
-void GameLogic::HandleEvent(const Event &event) {
-}
-
-void GameLogic::ExecuteProcesses() {
+void GameLogic::HandleEvent(const Game::Event &event) {
+    switch (static_cast<const ZarchEvent &>(event).Type()) {
+        case ZarchEvent::ControlsStateEvent:
+            break;
+            
+        default:
+            break;
+    }
 }
 
 }    // Namespace Zarch.

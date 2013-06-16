@@ -18,6 +18,11 @@
 
 
 namespace kxm {
+
+namespace Game {
+    class ExecutionContext;
+}
+
 namespace Zarch {
 
 //! Keeps the camera position in sync with the lander position.
@@ -32,7 +37,7 @@ class CameraProcess : public ZarchProcess {
     CameraProcess(const CameraProcess &other);
     CameraProcess &operator=(const CameraProcess &other);
     //! (Re)implemented.
-    bool Execute(const Process::Context &context);
+    bool Execute(const Game::ExecutionContext &context);
     
     boost::shared_ptr<Video::Data> data_;
 };

@@ -77,17 +77,14 @@ bool LanderProcess::Execute(const Process::Context &context) {
     data.landerState.transform = newLanderTransform;
     
     // Generate events...
-    Event &moveEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
-                           .ScheduleEvent(ZarchEvent::LanderMoveEvent);
-    static_cast<PayloadEvent<Transform> &>(moveEvent).Reset(newLanderTransform);
-    Event &velocityEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
-                               .ScheduleEvent(ZarchEvent::LanderVelocityEvent);
-    static_cast<PayloadEvent<Vector> &>(velocityEvent).Reset(data.landerState.velocity);
+    auto &eventQueue = static_cast<const ZarchProcess::Context &>(context).eventQueue;
+    eventQueue.ScheduleEvent<Event<Transform> >(ZarchEvent::LanderMoveEvent)
+              .Reset(newLanderTransform);
+    eventQueue.ScheduleEvent<Event<Vector> >(ZarchEvent::LanderVelocityEvent)
+              .Reset(data.landerState.velocity);
     if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
-        Event &thrusterEvent = static_cast<const ZarchProcess::Context &>(context).eventQueue
-                                   .ScheduleEvent(ZarchEvent::LanderThrusterEvent);
-        static_cast<PayloadEvent<Variant> &>(thrusterEvent)
-            .Data().Reset(data.landerState.thrusterEnabled);
+        eventQueue.ScheduleEvent<Event<Variant> >(ZarchEvent::LanderThrusterEvent).Data()
+                  .Reset(data.landerState.thrusterEnabled);
     }
     
     return true;

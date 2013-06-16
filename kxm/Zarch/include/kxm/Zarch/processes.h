@@ -12,6 +12,7 @@
 
 
 #include <kxm/Game/Process.h>
+#include <kxm/Game/ExecutionContext.h>
 #include <kxm/Zarch/events.h>
 
 namespace kxm {
@@ -26,7 +27,7 @@ namespace Zarch {
 class ZarchProcess : public Game::Process {
   public:
     enum ProcessType { SeederProcess = 0 };
-    struct Context : public Process::Context {
+    struct Context : public Game::ExecutionContext {
         Context(
             Game::Processes<ProcessType> &aProcessesSet,
             Game::EventQueue<ZarchEvent::EventType> &anEventQueue)
