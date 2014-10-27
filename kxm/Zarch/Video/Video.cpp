@@ -27,7 +27,7 @@
 #include <kxm/Zarch/Terrain.h>
 
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
@@ -35,7 +35,7 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<Processes<ZarchProcess::ProcessType> > processes)
+Video::Video(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
         : processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());

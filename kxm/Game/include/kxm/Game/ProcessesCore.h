@@ -12,8 +12,7 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Core/ReusableItems.h>
 #include <kxm/Game/Process.h>
@@ -39,7 +38,7 @@ class ProcessesCore {
     ProcessesCore();
     //! Registers another pooled process type, together with the process pool that will be managing
     //! the process objects for that process type.
-    void RegisterProcessType(int processType, boost::shared_ptr<PoolInterface<Process> > pool);
+    void RegisterProcessType(int processType, std::shared_ptr<PoolInterface<Process>> pool);
     //! Adds a new pooled process of the specified type and grants access to it, so that the client
     //! can configure it before the next call to \ref ExecuteProcesses().
     /*!
@@ -58,7 +57,7 @@ class ProcessesCore {
      *
      *  May be called from processes managed by this process group.
      */
-    void AddProcess(const boost::shared_ptr<Process> &process);
+    void AddProcess(const std::shared_ptr<Process> &process);
     //! Executes all processes and deregisters all processes that indicate that they have finished.
     /*!
      *  Pooled processes that have finished are returned to their respective pools. For custom
@@ -80,11 +79,11 @@ class ProcessesCore {
     ProcessesCore(const ProcessesCore &other);
     ProcessesCore &operator=(const ProcessesCore &other);
     
-    std::vector<boost::shared_ptr<PoolInterface<Process> > >  pools_;
-    CustomProcessPool                                        *customProcessPool_;
+    std::vector<std::shared_ptr<PoolInterface<Process>>>  pools_;
+    CustomProcessPool                                     *customProcessPool_;
         // Faster than a hash map, pool in slot 0 will be the custom process pool.
-    Core::ReusableItems<ProcessInfo>                          processes_;
-    int                                                       numProcesses_;
+    Core::ReusableItems<ProcessInfo>                      processes_;
+    int                                                   numProcesses_;
 };
 
 }    // Namespace Game.

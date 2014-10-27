@@ -13,9 +13,7 @@
 #include <kxm/Core/IntModN.h>
 #include <kxm/Zarch/MapParameters.h>
 
-using std::vector;
-using boost::shared_ptr;
-using boost::random::uniform_int_distribution;
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
@@ -51,7 +49,7 @@ void Terrain::GenerateTerrain() {
     }
     
     for (int i = 0; i < 100; i++) {
-        FormationType formation = (FormationType)randomFormation_(randomGenerator_);
+        FormationType formation = (FormationType)randomFormation_(randomEngine_);
         switch (formation) {
             case ValleyFormation:
                 GenerateValleyFormation();
@@ -106,9 +104,9 @@ void Terrain::GenerateTerrain() {
 
 void Terrain::GenerateMountainFormation() {
     IntModN baseCellX(mapParameters_->numCellsX, 0);
-    baseCellX.SetValue(randomCellX_(randomGenerator_));
+    baseCellX.SetValue(randomCellX_(randomEngine_));
     IntModN baseCellZ(mapParameters_->numCellsZ, 0);
-    baseCellZ.SetValue(randomCellZ_(randomGenerator_));
+    baseCellZ.SetValue(randomCellZ_(randomEngine_));
     int   extent = 5;
     float height = 1.5f;
     for (int x = -extent; x <= extent; x++) {
@@ -126,9 +124,9 @@ void Terrain::GenerateMountainFormation() {
 
 void Terrain::GenerateValleyFormation() {
     IntModN baseCellX(mapParameters_->numCellsX, 0);
-    baseCellX.SetValue(randomCellX_(randomGenerator_));
+    baseCellX.SetValue(randomCellX_(randomEngine_));
     IntModN baseCellZ(mapParameters_->numCellsZ, 0);
-    baseCellZ.SetValue(randomCellZ_(randomGenerator_));
+    baseCellZ.SetValue(randomCellZ_(randomEngine_));
     int   extent = 2;
     float height = -.5f;
     for (int x = -extent; x <= extent; x++) {

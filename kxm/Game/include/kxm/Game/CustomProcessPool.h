@@ -11,7 +11,7 @@
 #define KXM_GAME_CUSTOMPROCESSPOOL_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Core/ReusableItems.h>
 #include <kxm/Game/PoolInterface.h>
@@ -29,7 +29,7 @@ class Process;
 class CustomProcessPool : public virtual PoolInterface<Process> {
   public:
     CustomProcessPool();
-    Process &Get(const boost::shared_ptr<Process> &customProcess, int *id);
+    Process &Get(const std::shared_ptr<Process> &customProcess, int *id);
     Process &Get(int *id);
     Process &Access(int id);
     void Put(int id);
@@ -38,7 +38,7 @@ class CustomProcessPool : public virtual PoolInterface<Process> {
     CustomProcessPool(const CustomProcessPool &other);
     CustomProcessPool &operator=(const CustomProcessPool &other);
     
-    Core::ReusableItems<boost::shared_ptr<Process> > processes_;
+    Core::ReusableItems<std::shared_ptr<Process>> processes_;
 };
 
 }    // Namespace Game.

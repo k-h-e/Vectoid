@@ -10,8 +10,9 @@
 #include <kxm/Vectoid/SceneGraphNode.h>
 
 #include <cstdio>
+#include <cassert>
 
-using boost::shared_ptr;
+using namespace std;
 
 
 namespace kxm {

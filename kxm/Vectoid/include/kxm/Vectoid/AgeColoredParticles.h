@@ -12,8 +12,7 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/Vector.h>
@@ -31,7 +30,7 @@ class Particles;
  */
 class AgeColoredParticles : public virtual GeometryInterface {
  public:
-    AgeColoredParticles(boost::shared_ptr<Vectoid::Particles> particles);
+    AgeColoredParticles(std::shared_ptr<Vectoid::Particles> particles);
     
     void Render(Vectoid::RenderContext *context);
     
@@ -39,11 +38,11 @@ class AgeColoredParticles : public virtual GeometryInterface {
     AgeColoredParticles(const AgeColoredParticles &other);
     AgeColoredParticles &operator=(const AgeColoredParticles &other);
     
-    boost::shared_ptr<Vectoid::Particles> particles_;
-    float                                 highAge_;
-    std::vector<Vectoid::Vector>          colors_;
-    std::vector<GLfloat>                  vertexBuffer_,
-                                          colorBuffer_;
+    std::shared_ptr<Vectoid::Particles> particles_;
+    float                               highAge_;
+    std::vector<Vectoid::Vector>        colors_;
+    std::vector<GLfloat>                vertexBuffer_,
+                                        colorBuffer_;
 };
 
 

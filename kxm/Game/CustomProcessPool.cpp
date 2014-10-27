@@ -9,7 +9,9 @@
 
 #include <kxm/Game/CustomProcessPool.h>
 
-using namespace boost;
+#include <cassert>
+
+using namespace std;
 
 
 namespace kxm {

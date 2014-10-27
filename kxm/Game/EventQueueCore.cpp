@@ -9,6 +9,8 @@
 
 #include <kxm/Game/EventQueueCore.h>
 
+#include <cassert>
+
 #include <kxm/Core/Buffer.h>
 #include <kxm/Core/logging.h>
 #include <kxm/Game/Event.h>
@@ -16,7 +18,6 @@
 #include <kxm/Game/EventHandlerInterface.h>
 
 using namespace std;
-using namespace boost;
 using namespace kxm::Core;
 
 
@@ -27,7 +28,7 @@ EventQueueCore::EventQueueCore()
         : schedulingQueue_(0) {
 }
 
-int EventQueueCore::RegisterEventPool(shared_ptr<PoolInterface<Event> > pool) {
+int EventQueueCore::RegisterEventPool(shared_ptr<PoolInterface<Event>> pool) {
     int poolId = (int)pools_.size();
     pools_.push_back(pool);
     return poolId;
@@ -65,8 +66,8 @@ void EventQueueCore::ProcessEvents() {
     for (vector<EventInfo>::iterator iter = eventsToProcess.begin(); iter != eventsToProcess.end();
          ++iter) {
         Event &event = pools_[iter->pool]->Access(iter->itemId);
-        vector<shared_ptr<EventHandlerInterface > > &handlers = eventTypes_[event.type_].handlers;
-        for (vector<shared_ptr<EventHandlerInterface > >::iterator iter = handlers.begin();
+        vector<shared_ptr<EventHandlerInterface >> &handlers = eventTypes_[event.type_].handlers;
+        for (vector<shared_ptr<EventHandlerInterface>>::iterator iter = handlers.begin();
              iter != handlers.end(); ++iter)
             (*iter)->HandleEvent(event);
         pools_[iter->pool]->Put(iter->itemId);

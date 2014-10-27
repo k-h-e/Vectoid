@@ -11,7 +11,7 @@
 #define KXM_ZARCH_VIDEO_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Game/EventHandlerInterface.h>
 #include <kxm/Zarch/processes.h>
@@ -44,17 +44,17 @@ class Video : public virtual Game::EventHandlerInterface {
     struct Data {
         Data() : frameDeltaTimeS(0.0f),
                  landerThrusterEnabled(false) {}
-        float                                             frameDeltaTimeS;
-        boost::shared_ptr<Vectoid::PerspectiveProjection> projection;
-        boost::shared_ptr<Vectoid::Camera>                camera;
-        boost::shared_ptr<Vectoid::CoordSys>              landerCoordSys;
-        Vectoid::Vector                                   landerVelocity;
-        bool                                              landerThrusterEnabled;
-        boost::shared_ptr<TerrainRenderer>                terrainRenderer;
-        boost::shared_ptr<MapParameters>                  mapParameters;
-        boost::shared_ptr<Terrain>                        terrain;
+        float                                           frameDeltaTimeS;
+        std::shared_ptr<Vectoid::PerspectiveProjection> projection;
+        std::shared_ptr<Vectoid::Camera>                camera;
+        std::shared_ptr<Vectoid::CoordSys>              landerCoordSys;
+        Vectoid::Vector                                 landerVelocity;
+        bool                                            landerThrusterEnabled;
+        std::shared_ptr<TerrainRenderer>                terrainRenderer;
+        std::shared_ptr<MapParameters>                  mapParameters;
+        std::shared_ptr<Terrain>                        terrain;
     };
-    Video(boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes);
+    Video(std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     //! Renders a frame using the current scene graph state.
@@ -67,8 +67,8 @@ class Video : public virtual Game::EventHandlerInterface {
     void HandleEvent(const Game::Event &event);
     void HandleLanderMovedEvent(const Event<Vectoid::Transform> &event);
     
-    boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
-    boost::shared_ptr<Data>                                        data_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    std::shared_ptr<Data>                                        data_;
 };
 
 }    // Namespace Zarch.

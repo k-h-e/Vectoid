@@ -11,7 +11,7 @@
 #define KXM_ZARCH_CAMERAPROCESS_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/processes.h>
@@ -31,7 +31,7 @@ namespace Zarch {
  */
 class CameraProcess : public ZarchProcess {
   public:
-    CameraProcess(const boost::shared_ptr<Video::Data> data);
+    CameraProcess(const std::shared_ptr<Video::Data> data);
     
   private:
     CameraProcess(const CameraProcess &other);
@@ -39,7 +39,7 @@ class CameraProcess : public ZarchProcess {
     //! (Re)implemented.
     bool Execute(const Game::ExecutionContext &context);
     
-    boost::shared_ptr<Video::Data> data_;
+    std::shared_ptr<Video::Data> data_;
 };
 
 }    // Namespace Zarch.

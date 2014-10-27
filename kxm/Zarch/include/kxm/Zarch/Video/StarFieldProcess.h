@@ -11,6 +11,8 @@
 #define KXM_ZARCH_STARFIELDPROCESS_H_
 
 
+#include <memory>
+
 #include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/processes.h>
 
@@ -29,16 +31,16 @@ namespace Zarch {
  */
 class StarFieldProcess : public ZarchProcess {
   public:
-    StarFieldProcess(boost::shared_ptr<Video::Data> data,
-                     boost::shared_ptr<Vectoid::Particles> particles);
+    StarFieldProcess(std::shared_ptr<Video::Data> data,
+                     std::shared_ptr<Vectoid::Particles> particles);
     bool Execute(const Game::ExecutionContext &context);
     
   private:
     StarFieldProcess(const StarFieldProcess &other);
     StarFieldProcess &operator=(const StarFieldProcess &other);
     
-    boost::shared_ptr<Video::Data>        data_;
-    boost::shared_ptr<Vectoid::Particles> particles_;
+    std::shared_ptr<Video::Data>        data_;
+    std::shared_ptr<Vectoid::Particles> particles_;
 };
 
 }    // Namespace Zarch.

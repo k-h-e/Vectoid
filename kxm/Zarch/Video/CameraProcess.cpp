@@ -14,7 +14,7 @@
 #include <kxm/Zarch/MapParameters.h>
 
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Vectoid;
 
 

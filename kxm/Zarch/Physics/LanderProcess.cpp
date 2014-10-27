@@ -15,6 +15,7 @@
 #include <kxm/Zarch/Terrain.h>
 
 
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
@@ -23,12 +24,12 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-LanderProcess::LanderProcess(const boost::shared_ptr<Physics::Data> &data)
+LanderProcess::LanderProcess(const shared_ptr<Physics::Data> &data)
         : data_(data),
           heading_(0.0f, 0.0f, -1.0f) {
 }
 
-bool LanderProcess::Execute(const Process::Context &context) {
+bool LanderProcess::Execute(const ExecutionContext &context) {
     Physics::Data &data = *data_;
     
     bool oldThrusterEnabled = data.landerState.thrusterEnabled;
@@ -78,12 +79,12 @@ bool LanderProcess::Execute(const Process::Context &context) {
     
     // Generate events...
     auto &eventQueue = static_cast<const ZarchProcess::Context &>(context).eventQueue;
-    eventQueue.ScheduleEvent<Event<Transform> >(ZarchEvent::LanderMoveEvent)
+    eventQueue.ScheduleEvent<Event<Transform>>(ZarchEvent::LanderMoveEvent)
               .Reset(newLanderTransform);
-    eventQueue.ScheduleEvent<Event<Vector> >(ZarchEvent::LanderVelocityEvent)
+    eventQueue.ScheduleEvent<Event<Vector>>(ZarchEvent::LanderVelocityEvent)
               .Reset(data.landerState.velocity);
     if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
-        eventQueue.ScheduleEvent<Event<Variant> >(ZarchEvent::LanderThrusterEvent).Data()
+        eventQueue.ScheduleEvent<Event<Variant>>(ZarchEvent::LanderThrusterEvent).Data()
                   .Reset(data.landerState.thrusterEnabled);
     }
     

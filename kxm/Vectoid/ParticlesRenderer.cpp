@@ -11,8 +11,7 @@
 
 #include <kxm/Vectoid/Particles.h>
 
-using std::vector;
-using boost::shared_ptr;
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 

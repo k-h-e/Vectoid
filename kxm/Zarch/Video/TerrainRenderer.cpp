@@ -13,7 +13,7 @@
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/MapParameters.h>
 
-using boost::shared_ptr;
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 

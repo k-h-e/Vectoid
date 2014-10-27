@@ -12,8 +12,7 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 
 namespace kxm {
@@ -45,7 +44,7 @@ class EventQueueCore {
   public:
     EventQueueCore();
     //! Registers another event pool.
-    int RegisterEventPool(boost::shared_ptr<PoolInterface<Event> > pool);
+    int RegisterEventPool(std::shared_ptr<PoolInterface<Event>> pool);
     //! Registers another event type and associates it with the event pool that will be managing the
     //! event objects for that event type.
     void RegisterEventType(int eventType, int pool);
@@ -54,7 +53,7 @@ class EventQueueCore {
      *  Handlers will exclusively get called from \ref ProcessEvents().
      */
     void RegisterEventHandler(int eventType,
-                              const boost::shared_ptr<EventHandlerInterface> &eventHandler);
+                              const std::shared_ptr<EventHandlerInterface> &eventHandler);
     //! Schedules a new event of the specified type on the scheduling queue and grants access to it
     //! so that the client can configure it before the next call to \ref ProcessEvents().
     /*!
@@ -77,8 +76,8 @@ class EventQueueCore {
     
   private:
     struct EventTypeInfo {
-        int                                                     pool;
-        std::vector<boost::shared_ptr<EventHandlerInterface > > handlers;
+        int                                                 pool;
+        std::vector<std::shared_ptr<EventHandlerInterface>> handlers;
         EventTypeInfo(int aPool) : pool(aPool) {}
     };
     struct EventInfo {
@@ -89,10 +88,10 @@ class EventQueueCore {
     EventQueueCore(const EventQueueCore &other);
     EventQueueCore &operator=(const EventQueueCore &other);
     
-    std::vector<boost::shared_ptr<PoolInterface<Event> > > pools_;
-    std::vector<EventTypeInfo>                             eventTypes_;
-    std::vector<EventInfo>                                 events_[2];
-    int                                                    schedulingQueue_;
+    std::vector<std::shared_ptr<PoolInterface<Event>>> pools_;
+    std::vector<EventTypeInfo>                         eventTypes_;
+    std::vector<EventInfo>                             events_[2];
+    int                                                schedulingQueue_;
 };
 
 }    // Namespace Game.

@@ -14,7 +14,7 @@
 #include <kxm/Zarch/Zarch.h>
 
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Game;
 
@@ -40,7 +40,7 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
-    eventQueue_.ScheduleEvent<Event<ControlsState> >(ZarchEvent::ControlsStateEvent)
+    eventQueue_.ScheduleEvent<Event<ControlsState>>(ZarchEvent::ControlsStateEvent)
                .Reset(controlsState);
     
     {

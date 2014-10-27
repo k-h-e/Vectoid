@@ -11,10 +11,10 @@
 #define KXM_ZARCH_LANDERPROCESS_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Zarch/Physics/Physics.h>
-#include <kxm/Zarch/processes.h>
+#include <kxm/Zarch/Processes.h>
 
 
 namespace kxm {
@@ -26,16 +26,16 @@ namespace Zarch {
  */
 class LanderProcess : public ZarchProcess {
   public:
-    LanderProcess(const boost::shared_ptr<Physics::Data> &data);
+    LanderProcess(const std::shared_ptr<Physics::Data> &data);
     
   private:
     LanderProcess(const LanderProcess &other);
     LanderProcess &operator=(const LanderProcess &other);
     //! (Re)implemented.
-    bool Execute(const Process::Context &context);
+    bool Execute(const Game::ExecutionContext &context);
     
-    boost::shared_ptr<Physics::Data> data_;
-    Vectoid::Vector                  heading_;
+    std::shared_ptr<Physics::Data> data_;
+    Vectoid::Vector                heading_;
 };
 
 }    // Namespace Zarch.

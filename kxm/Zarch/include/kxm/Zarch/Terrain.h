@@ -12,10 +12,8 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <memory>
+#include <random>
 
 #include <kxm/Core/IntModN.h>
 #include <kxm/Core/Interface.h>
@@ -43,7 +41,7 @@ namespace Zarch {
 class Terrain : public virtual Core::Interface {
   public:
     //! Well, constructor.
-    Terrain(boost::shared_ptr<const MapParameters> mapParameters);
+    Terrain(std::shared_ptr<const MapParameters> mapParameters);
     
     //! Returns the height at the specified position in the <c>xz</c>-plane. 
     inline float Height(float x, float z);
@@ -67,12 +65,12 @@ class Terrain : public virtual Core::Interface {
     void GenerateMountainFormation();
     void GenerateValleyFormation();
     
-    boost::shared_ptr<const MapParameters>    mapParameters_;
-    std::vector<float>                        heights_;
-    std::vector<Vectoid::Vector>              colors_;
-    boost::random::mt19937                    randomGenerator_;
-    boost::random::uniform_int_distribution<> randomFormation_,
-                                              randomCellX_, randomCellZ_;
+    std::shared_ptr<const MapParameters> mapParameters_;
+    std::vector<float>                   heights_;
+    std::vector<Vectoid::Vector>         colors_;
+    std::default_random_engine           randomEngine_;
+    std::uniform_int_distribution<>      randomFormation_,
+                                         randomCellX_, randomCellZ_;
 };
 
 float Terrain::Height(float x, float z) {

@@ -11,7 +11,7 @@
 #define KXM_CORE_THREAD_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 
 namespace kxm {
@@ -28,7 +28,7 @@ class ThreadControlInterface;
 class Thread {
   public:
     //! Spawns a new thread and makes it execute the specified action.
-    Thread(const boost::shared_ptr<ActionInterface> &action,
+    Thread(const std::shared_ptr<ActionInterface> &action,
            const ThreadingFactoryInterface &threadingFactory);
     //! Joins the thread (= waits until it has terminated), so be sure to ask the thread to
     //! shut down before letting the receiver go out of scope (if applicable).
@@ -38,8 +38,8 @@ class Thread {
     Thread(const Thread &other);
     Thread &operator=(const Thread &other);
     
-    boost::shared_ptr<ActionInterface>        action_;
-    boost::shared_ptr<ThreadControlInterface> threadControl_;
+    std::shared_ptr<ActionInterface>        action_;
+    std::shared_ptr<ThreadControlInterface> threadControl_;
 };
 
 }    // Namespace Core.

@@ -11,7 +11,7 @@
 #define KXM_GAME_THREADCOUPLINGBUFFER_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Core/config.h>
 #include <kxm/Core/Buffer.h>
@@ -87,15 +87,15 @@ class ThreadCouplingBuffer {
     ThreadCouplingBuffer &operator=(const ThreadCouplingBuffer &other);
     void SignOffAccessor();
     
-    boost::shared_ptr<Core::LockInterface>                  lock_;
-    Core::spacer_t                                          spacer_;
+    std::shared_ptr<Core::LockInterface>                  lock_;
+    Core::spacer_t                                        spacer_;
     struct {
-        boost::shared_ptr<Core::ConditionVariableInterface> stateChanged;
-        Core::Buffer                                        buffers[2];
-        uint32_t                                            seqNos[2];
-        int                                                 numAccessors;
-        bool                                                shutDownRequested_;
-    }                                                       lockProtected_;
+        std::shared_ptr<Core::ConditionVariableInterface> stateChanged;
+        Core::Buffer                                      buffers[2];
+        uint32_t                                          seqNos[2];
+        int                                               numAccessors;
+        bool                                              shutDownRequested_;
+    }                                                     lockProtected_;
 };
 
 }    // Namespace Game.

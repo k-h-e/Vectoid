@@ -7,9 +7,11 @@
 //
 
 
+#include <cassert>
+
 #include <kxm/Vectoid/Geode.h>
 
-using boost::shared_ptr;
+using namespace std;
 
 
 namespace kxm {

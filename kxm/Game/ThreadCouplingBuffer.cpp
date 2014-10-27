@@ -9,11 +9,13 @@
 
 #include <kxm/Game/ThreadCouplingBuffer.h>
 
+#include <cassert>
+
 #include <kxm/Core/LockInterface.h>
 #include <kxm/Core/ConditionVariableInterface.h>
 #include <kxm/Core/ThreadingFactoryInterface.h>
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Core;
 
 

@@ -12,10 +12,8 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <memory>
+#include <random>
 
 #include <kxm/Core/ReusableItems.h>
 #include <kxm/Vectoid/Vector.h>
@@ -63,9 +61,9 @@ class Particles {
     Particles(const Particles &other);
     Particles &operator=(const Particles &other);
     
-    Core::ReusableItems<ParticleInfo>         particles_;
-    boost::random::mt19937                    randomGenerator_;
-    boost::random::uniform_int_distribution<> random1000_;
+    Core::ReusableItems<ParticleInfo> particles_;
+    std::default_random_engine        randomEngine_;
+    std::uniform_int_distribution<>   random1000_;
 };
 
 

@@ -12,7 +12,7 @@
 #include <kxm/Core/ThreadingFactoryInterface.h>
 #include <kxm/Core/ThreadControlInterface.h>
 
-using namespace boost;
+using namespace std;
 
 
 namespace kxm {

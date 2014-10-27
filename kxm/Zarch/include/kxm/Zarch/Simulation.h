@@ -11,8 +11,8 @@
 #define KXM_ZARCH_SIMULATION_H_
 
 
-#include <boost/shared_ptr.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <memory>
+#include <chrono>
 
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/EventQueue.h>
@@ -39,7 +39,7 @@ class Physics;
  */
 class Simulation : public Core::ActionInterface {
   public:
-    Simulation(boost::shared_ptr<Game::ThreadCouplingBuffer> presentationCouplingBuffer,
+    Simulation(std::shared_ptr<Game::ThreadCouplingBuffer> presentationCouplingBuffer,
                int sendToPresentationDirection);
     void ExecuteAction();
     
@@ -48,14 +48,14 @@ class Simulation : public Core::ActionInterface {
     Simulation &operator=(const Simulation &other);
     void GenerateTimeEvent();
     
-    Game::EventQueue<ZarchEvent::EventType>                        eventQueue_;
-    boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
-    ZarchProcess::Context                                          processContext_;
-    boost::shared_ptr<Game::ThreadCouplingBuffer>                  presentationCouplingBuffer_;
-    int                                                            sendToPresentationDirection_;
-    boost::shared_ptr<GameLogic>                                   gameLogic_;
-    boost::shared_ptr<Physics>                                     physics_;
-    boost::posix_time::ptime                                       lastFrameTime_;
+    Game::EventQueue<ZarchEvent::EventType>                     eventQueue_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    ZarchProcess::Context                                       processContext_;
+    std::shared_ptr<Game::ThreadCouplingBuffer>                 presentationCouplingBuffer_;
+    int                                                         sendToPresentationDirection_;
+    std::shared_ptr<GameLogic>                                  gameLogic_;
+    std::shared_ptr<Physics>                                    physics_;
+    std::chrono::time_point<std::chrono::steady_clock>          lastFrameTime_;
 };
 
 }

@@ -17,14 +17,14 @@
 #include <kxm/Zarch/events.h>
 
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Game;
 
 
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType> > processes)
+Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
         : processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());

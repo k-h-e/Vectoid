@@ -12,8 +12,7 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
@@ -34,7 +33,7 @@ namespace Zarch {
  */
 class ParticlesRenderer : public virtual Vectoid::GeometryInterface {
   public:
-    ParticlesRenderer(boost::shared_ptr<Vectoid::Particles> particles);
+    ParticlesRenderer(std::shared_ptr<Vectoid::Particles> particles);
     
     void Render(Vectoid::RenderContext *context);
     
@@ -42,8 +41,8 @@ class ParticlesRenderer : public virtual Vectoid::GeometryInterface {
     ParticlesRenderer(const ParticlesRenderer &other);
     ParticlesRenderer &operator=(const ParticlesRenderer &other);
     
-    boost::shared_ptr<Vectoid::Particles> particles_;
-    std::vector<GLfloat>                  vertexBuffer_;
+    std::shared_ptr<Vectoid::Particles> particles_;
+    std::vector<GLfloat>                vertexBuffer_;
 };
 
 

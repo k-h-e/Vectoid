@@ -11,7 +11,7 @@
 #define KXM_ZARCH_PHYSICS_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Game/EventHandlerInterface.h>
@@ -46,14 +46,14 @@ class Physics : public virtual Game::EventHandlerInterface {
     };
     struct Data {
         Data() : frameDeltaTimeS(0.0f) {}
-        float                            frameDeltaTimeS;
-        ControlsState                    controlsState;
-        LanderState                      landerState;
-        boost::shared_ptr<MapParameters> mapParameters;
-        boost::shared_ptr<Terrain>       terrain;
+        float                          frameDeltaTimeS;
+        ControlsState                  controlsState;
+        LanderState                    landerState;
+        std::shared_ptr<MapParameters> mapParameters;
+        std::shared_ptr<Terrain>       terrain;
     };
     
-    Physics(boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes);
+    Physics(std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
     //! (Re)implemented.
     void HandleEvent(const Game::Event &event);
     
@@ -61,8 +61,8 @@ class Physics : public virtual Game::EventHandlerInterface {
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
-    boost::shared_ptr<Data>                                        data_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    std::shared_ptr<Data>                                       data_;
 };
 
 

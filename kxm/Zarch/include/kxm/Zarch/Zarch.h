@@ -16,7 +16,7 @@
  */
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Zarch/Presentation.h>
 #include <kxm/Zarch/events.h>
@@ -44,7 +44,7 @@ class ControlsState;
  */
 class Zarch {
   public:
-    Zarch(boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory);
+    Zarch(std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory);
     ~Zarch();
     void PrepareFrame(const ControlsState &controlsState) {
         presentation_->PrepareFrame(controlsState);
@@ -63,11 +63,11 @@ class Zarch {
     Zarch(const Zarch &other);
     Zarch &operator=(const Zarch &other);
     
-    boost::shared_ptr<Simulation>                      simulation_;
-    boost::shared_ptr<Presentation>                    presentation_;
-    boost::shared_ptr<Game::ThreadCouplingBuffer>      simulationCouplingBuffer_;
-    boost::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
-    boost::shared_ptr<Core::Thread>                    simulationThread_;
+    std::shared_ptr<Simulation>                      simulation_;
+    std::shared_ptr<Presentation>                    presentation_;
+    std::shared_ptr<Game::ThreadCouplingBuffer>      simulationCouplingBuffer_;
+    std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
+    std::shared_ptr<Core::Thread>                    simulationThread_;
 };
 
 }    // Namespace Zarch.

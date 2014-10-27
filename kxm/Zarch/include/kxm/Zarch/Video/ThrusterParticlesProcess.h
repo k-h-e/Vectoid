@@ -11,7 +11,7 @@
 #define KXM_ZARCH_THRUSTERPARTICLESPROCESS_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Zarch/Video/Video.h>
 #include <kxm/Zarch/processes.h>
@@ -35,18 +35,18 @@ namespace Zarch {
  */
 class ThrusterParticlesProcess : public ZarchProcess {
   public:
-    ThrusterParticlesProcess(boost::shared_ptr<Video::Data> data,
-                             boost::shared_ptr<Vectoid::Particles> particles);
+    ThrusterParticlesProcess(std::shared_ptr<Video::Data> data,
+                             std::shared_ptr<Vectoid::Particles> particles);
     bool Execute(const Game::ExecutionContext &context);
     
   private:
     ThrusterParticlesProcess(const ThrusterParticlesProcess &other);
     ThrusterParticlesProcess &operator=(const ThrusterParticlesProcess &other);
     
-    boost::shared_ptr<Video::Data>        data_;
-    boost::shared_ptr<Vectoid::Particles> particles_;
-    Vectoid::Vector                       lastLanderPosition_;
-    float                                 particleTimeCarryOver_;
+    std::shared_ptr<Video::Data>        data_;
+    std::shared_ptr<Vectoid::Particles> particles_;
+    Vectoid::Vector                     lastLanderPosition_;
+    float                               particleTimeCarryOver_;
 };
 
 

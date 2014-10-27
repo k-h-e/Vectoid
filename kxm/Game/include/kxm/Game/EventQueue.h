@@ -28,7 +28,7 @@ class EventQueue : private EventQueueCore {
     EventQueue() {}
     
     //! See \ref EventQueueCore::RegisterEventPool().
-    int RegisterEventPool(boost::shared_ptr<PoolInterface<Event> > pool) {
+    int RegisterEventPool(std::shared_ptr<PoolInterface<Event>> pool) {
         return EventQueueCore::RegisterEventPool(pool);
     }
     
@@ -39,7 +39,7 @@ class EventQueue : private EventQueueCore {
     
     //! See \ref EventQueueCore::RegisterEventHandler().
     void RegisterEventHandler(T eventType,
-                              const boost::shared_ptr<EventHandlerInterface> &eventHandler) {
+                              const std::shared_ptr<EventHandlerInterface> &eventHandler) {
         EventQueueCore::RegisterEventHandler((int)eventType, eventHandler);
     }
     

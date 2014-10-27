@@ -11,7 +11,7 @@
 #define KXM_ZARCH_PRESENTATION_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Game/EventQueue.h>
 #include <kxm/Game/Processes.h>
@@ -36,7 +36,7 @@ class ControlsState;
  */
 class Presentation {
   public:
-    Presentation(boost::shared_ptr<Game::ThreadCouplingBuffer> simulationCouplingBuffer,
+    Presentation(std::shared_ptr<Game::ThreadCouplingBuffer> simulationCouplingBuffer,
                  int sendToSimulationDirection);
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height) { video_->SetViewPort(width, height); }
@@ -46,12 +46,12 @@ class Presentation {
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
     
-    Game::EventQueue<ZarchEvent::EventType>                        eventQueue_;
-    boost::shared_ptr<Game::Processes<ZarchProcess::ProcessType> > processes_;
-    ZarchProcess::Context                                          processContext_;
-    boost::shared_ptr<Game::ThreadCouplingBuffer>                  simulationCouplingBuffer_;
-    int                                                            sendToSimulationDirection_;
-    boost::shared_ptr<Video>                                       video_;
+    Game::EventQueue<ZarchEvent::EventType>                     eventQueue_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    ZarchProcess::Context                                       processContext_;
+    std::shared_ptr<Game::ThreadCouplingBuffer>                 simulationCouplingBuffer_;
+    int                                                         sendToSimulationDirection_;
+    std::shared_ptr<Video>                                      video_;
 };
 
 }

@@ -9,7 +9,7 @@
 
 #import "KXMGLView.h"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Zarch/ControlsState.h>
 

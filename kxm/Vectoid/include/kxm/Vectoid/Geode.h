@@ -11,7 +11,7 @@
 #define KXM_VECTOID_GEODE_H_
 
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Vectoid/SceneGraphNode.h>
 #include <kxm/Vectoid/GeometryInterface.h>
@@ -26,14 +26,14 @@ namespace Vectoid {
  */ 
 class Geode : public SceneGraphNode {
   public:
-    Geode(const boost::shared_ptr<GeometryInterface> &geometry);
+    Geode(const std::shared_ptr<GeometryInterface> &geometry);
     void Render(RenderContext *context);
     
   private:
     Geode(const Geode &other);
     Geode &operator=(const Geode &other);
     
-    boost::shared_ptr<GeometryInterface> geometry_;
+    std::shared_ptr<GeometryInterface> geometry_;
 };
 
 }    // Namespace Vectoid.

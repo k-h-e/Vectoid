@@ -11,8 +11,7 @@
 
 #include <string>
 #include <sstream>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #import <CoreMotion/CMMotionManager.h>
 
@@ -29,20 +28,18 @@ using namespace kxm::Game;
 using namespace kxm::Vectoid;
 using namespace kxm::Zarch;
 
-using boost::shared_ptr;
-
 
 @interface KXMViewController () {
     EAGLContext               *glContext;
-    CGFloat                    width, height;
+    CGFloat                   width, height;
     CMMotionManager           *motionManager;
-    Transform                  calibrationTransform;
-    bool                       accelerometerOverride;
-    float                      accelerometerOverrideStartX,
-                               accelerometerOverrideStartY;
+    Transform                 calibrationTransform;
+    bool                      accelerometerOverride;
+    float                     accelerometerOverrideStartX,
+                              accelerometerOverrideStartY;
     
-    shared_ptr<Zarch>          zarch;
-    shared_ptr<ControlsState>  controlsState;
+    shared_ptr<Zarch>         zarch;
+    shared_ptr<ControlsState> controlsState;
 }
 
 - (void)setupGL;

@@ -17,7 +17,7 @@
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/events.h>
 
-using namespace boost;
+using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
@@ -46,14 +46,14 @@ Zarch::~Zarch() {
 }
 
 void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
-    shared_ptr<Pool<Game::Event, Event<Vector> > >
-        vectorEventPool(new Pool<Game::Event, Event<Vector> >());
-    shared_ptr<Pool<Game::Event, Event<Transform> > >
-        transformEventPool(new Pool<Game::Event, Event<Transform> >());
-    shared_ptr<Pool<Game::Event, Event<Variant> > >
-        variantEventPool(new Pool<Game::Event, Event<Variant> >());
-    shared_ptr<Pool<Game::Event, Event<ControlsState> > >
-        controlsStateEventPool(new Pool<Game::Event, Event<ControlsState> >());
+    shared_ptr<Pool<Game::Event, Event<Vector>>>
+        vectorEventPool(new Pool<Game::Event, Event<Vector>>());
+    shared_ptr<Pool<Game::Event, Event<Transform>>>
+        transformEventPool(new Pool<Game::Event, Event<Transform>>());
+    shared_ptr<Pool<Game::Event, Event<Variant>>>
+        variantEventPool(new Pool<Game::Event, Event<Variant>>());
+    shared_ptr<Pool<Game::Event, Event<ControlsState>>>
+        controlsStateEventPool(new Pool<Game::Event, Event<ControlsState>>());
     int vectorEventPoolId        = eventQueue->RegisterEventPool(vectorEventPool),
         transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),

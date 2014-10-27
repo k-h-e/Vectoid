@@ -20,7 +20,7 @@ using namespace kxm::Core;
 namespace kxm {
 namespace Vectoid {
 
-AgeColoredParticles::AgeColoredParticles(boost::shared_ptr<Vectoid::Particles> particles)
+AgeColoredParticles::AgeColoredParticles(shared_ptr<Vectoid::Particles> particles)
         : particles_(particles),
           highAge_(1.5f) {
     colors_.push_back(Vector(1.0f, 1.0f, 1.0f));

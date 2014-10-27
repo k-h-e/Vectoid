@@ -29,7 +29,7 @@ class Processes : private ProcessesCore {
     Processes() {}
   
     //! See \ref ProcessesCore::RegisterProcessType().
-    void RegisterProcessType(T processType, boost::shared_ptr<PoolInterface<Process> > pool) {
+    void RegisterProcessType(T processType, std::shared_ptr<PoolInterface<Process>> pool) {
         ProcessesCore::RegisterProcessType((int)processType, pool);
     }
     
@@ -39,7 +39,7 @@ class Processes : private ProcessesCore {
     }
     
     //! See \ref ProcessesCore::AddProcess(const boost::shared_ptr<Process> &).
-    void AddProcess(const boost::shared_ptr<Process> &process) {
+    void AddProcess(const std::shared_ptr<Process> &process) {
         ProcessesCore::AddProcess(process);
     }
     

@@ -15,7 +15,8 @@
 #include <kxm/Zarch/Physics/Physics.h>
 
 
-using namespace boost;
+using namespace std;
+using namespace std::chrono;
 using namespace kxm::Core;
 using namespace kxm::Game;
 
@@ -29,7 +30,7 @@ Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuff
           processContext_(*processes_, eventQueue_),
           presentationCouplingBuffer_(presentationCouplingBuffer),
           sendToPresentationDirection_(sendToPresentationDirection),
-          lastFrameTime_(posix_time::microsec_clock::local_time()) {
+          lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(&eventQueue_);
     
     physics_ = shared_ptr<Physics>(new Physics(processes_));
@@ -81,11 +82,11 @@ void Simulation::ExecuteAction() {
 }
 
 void Simulation::GenerateTimeEvent() {
-    posix_time::ptime now = posix_time::microsec_clock::local_time();
-    int milliSeconds = (int)((now - lastFrameTime_).total_milliseconds());
+    auto now = steady_clock::now();
+    int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    processContext_.eventQueue.ScheduleEvent<Event<Variant> >(ZarchEvent::FrameTimeEvent).Data()
+    processContext_.eventQueue.ScheduleEvent<Event<Variant>>(ZarchEvent::FrameTimeEvent).Data()
                               .Reset(frameDeltaTimeS);
 }
 

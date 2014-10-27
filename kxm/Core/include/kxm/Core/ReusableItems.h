@@ -12,6 +12,7 @@
 
 
 #include <vector>
+#include <cassert>
 
 
 namespace kxm {

@@ -12,8 +12,7 @@
 
 
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <kxm/Core/Interface.h>
 
@@ -33,7 +32,7 @@ class SceneGraphNode : public virtual Core::Interface {
     ~SceneGraphNode();
     //! Adds the specified node as child of the receiver node. The child node must not already be
     //! child to another parent node.
-    void AddChild(const boost::shared_ptr<SceneGraphNode> &child);
+    void AddChild(const std::shared_ptr<SceneGraphNode> &child);
     //! Removes all child nodes from the scene graph node.
     /*!
      *  For each child, data structure linkage will be properly disconnected in both parent and
@@ -48,8 +47,8 @@ class SceneGraphNode : public virtual Core::Interface {
     SceneGraphNode(const SceneGraphNode &other);
     SceneGraphNode &operator=(const SceneGraphNode &other);
     
-    SceneGraphNode                                  *parent_;     // Might be 0.
-    std::vector<boost::shared_ptr<SceneGraphNode> > children_;
+    SceneGraphNode                               *parent_;     // Might be 0.
+    std::vector<std::shared_ptr<SceneGraphNode>> children_;
 };
     
 }    // Namespace Vectoid.
