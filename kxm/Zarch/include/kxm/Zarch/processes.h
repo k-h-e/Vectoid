@@ -18,7 +18,7 @@
 namespace kxm {
 
 namespace Game {
-    template<class T> class EventQueue;
+    template<class T> class OldEventQueue;
     template<class T> class Processes;
 }
 
@@ -30,12 +30,12 @@ class ZarchProcess : public Game::Process {
     struct Context : public Game::ExecutionContext {
         Context(
             Game::Processes<ProcessType> &aProcessesSet,
-            Game::EventQueue<ZarchEvent::EventType> &anEventQueue)
+            Game::OldEventQueue<OldZarchEvent::EventType> &anEventQueue)
                 : processes(aProcessesSet),
                   eventQueue(anEventQueue) {
         }
-        Game::Processes<ProcessType>            &processes;
-        Game::EventQueue<ZarchEvent::EventType> &eventQueue;
+        Game::Processes<ProcessType>                  &processes;
+        Game::OldEventQueue<OldZarchEvent::EventType> &eventQueue;
     };
 };
 

@@ -2,9 +2,10 @@
 //  Event.h
 //  kxm
 //
-//  Created by Kai Hergenröther on 11/29/12.
+//  Created by Kai Hergenröther on 10/29/14.
 //
 //
+
 
 #ifndef KXM_GAME_EVENT_H_
 #define KXM_GAME_EVENT_H_
@@ -26,32 +27,28 @@ namespace Game {
  */
 class Event : public virtual Core::Interface {
   public:
-    Event() : type_(-1) {}
-    //! Writes the integer-valued event type to the specified target binary buffer, followed by a
-    //! binary representation of the event data.
+    //! Threadsafe.
+    class EventType {
+      public:
+        //! Pass a verbose name used to initially compute a hash value. Only pass C-style string
+        //! literals (must live forever and be safely accessible by multiple threads).
+        EventType(const char *aName);
+            // Copyable, movable.
+        const char   *name;
+        const size_t id;
+    };
+    
+    //! Returns the type of the event.
+    virtual const EventType &Type() = 0;
+    //! Writes a binary state representation to the specified target buffer.
     virtual void Serialize(Core::Buffer *targetBuffer) = 0;
     //! Reads from the specified buffer a binary event data representation as produced by
-    //! \ref Serialize(), but without the leading integer-valued event type, and sets the receiver's
-    //! state accordingly.
+    //! \ref Serialize() and updates the object state accordingly.
     /*!
      *  This fast method expects valid data to be present at the current buffer read position. If
-     *  this is not the case, the resulting event state will be undefined. If you also need to
-     *  validate the input data, for example if it has been read from the network, use
-     *  \ref DeserializeAndValidate() instead.
+     *  this is not the case, the resulting event state will be undefined.
      */
     virtual void Deserialize(Core::Buffer::Reader *bufferReader) = 0;
-    //! Like \ref Deserialize(), but also validates the input data.
-    /*!
-     *  \return <c>false</c> in case the input data was invalid. In this case the resulting event
-     *          state will be undefined, as well as the resulting buffer read position.
-     */
-    virtual bool DeserializeAndValidate(Core::Buffer::Reader *bufferReader) = 0;
-    
-  protected:
-    int type_;
-    
-  private:
-    friend class EventQueueCore;
 };
 
 }    // Namespace Game.
@@ -59,4 +56,3 @@ class Event : public virtual Core::Interface {
 
 
 #endif    // KXM_GAME_EVENT_H_
-

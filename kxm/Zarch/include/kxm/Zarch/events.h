@@ -12,13 +12,13 @@
 
 
 #include <kxm/Vectoid/Transform.h>
-#include <kxm/Game/Event.h>
+#include <kxm/Game/OldEvent.h>
 
 
 namespace kxm {
 namespace Zarch {
 
-class ZarchEvent : public Game::Event {
+class OldZarchEvent : public Game::OldEvent {
   public:
     enum EventType { FrameTimeEvent     = 0,
                      ControlsStateEvent,
@@ -45,7 +45,7 @@ class Variant {
     } value_;
 };
 
-template<class T> class Event : public ZarchEvent {
+template<class T> class OldEvent : public OldZarchEvent {
   public:
     void Reset(const T &data) { data_ = data; }
     const T &Data() const     { return data_; }

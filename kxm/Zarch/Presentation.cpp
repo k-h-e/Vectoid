@@ -12,6 +12,7 @@
 #include <kxm/Game/ThreadCouplingBuffer.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
+#include <kxm/Zarch/Events/FrameTimeEvent.h>
 
 
 using namespace std;
@@ -25,37 +26,40 @@ namespace Zarch {
 Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBuffer,
                            int sendToSimulationDirection)
         : processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, eventQueue_),
+          processContext_(*processes_, oldEventQueue_),
           simulationCouplingBuffer_(simulationCouplingBuffer),
           sendToSimulationDirection_(sendToSimulationDirection) {
-    Zarch::RegisterEvents(&eventQueue_);
+    Zarch::RegisterEvents(&oldEventQueue_);
     
     video_ = shared_ptr<Video>(new Video(processes_));
-    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent,      video_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderMoveEvent,     video_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderVelocityEvent, video_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::LanderThrusterEvent, video_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent,      video_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderMoveEvent,     video_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderVelocityEvent, video_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderThrusterEvent, video_);
+    
+    eventQueue_.RegisterEvent(unique_ptr<Event>(new FrameTimeEvent));
+    
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
-    eventQueue_.ScheduleEvent<Event<ControlsState>>(ZarchEvent::ControlsStateEvent)
-               .Reset(controlsState);
+    oldEventQueue_.ScheduleEvent<OldEvent<ControlsState>>(OldZarchEvent::ControlsStateEvent)
+                  .Reset(controlsState);
     
     {
         ThreadCouplingBuffer::Accessor accessor = simulationCouplingBuffer_->Access(
                                                       sendToSimulationDirection_);
         
-        eventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
+        oldEventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
         Buffer &receiveBuffer = accessor.ReceiveBuffer();
-        eventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
+        oldEventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
         receiveBuffer.Clear();
         
         accessor.SignalUpdateForSendDirection();
             // If necessary, wake the simulation thread for a new iteration.
     }
-    eventQueue_.ProcessEvents();
+    oldEventQueue_.ProcessEvents();
     processes_->ExecuteProcesses(processContext_);
 }
 

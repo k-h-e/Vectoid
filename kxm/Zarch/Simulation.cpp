@@ -34,11 +34,11 @@ Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuff
     Zarch::RegisterEvents(&eventQueue_);
     
     physics_ = shared_ptr<Physics>(new Physics(processes_));
-    eventQueue_.RegisterEventHandler(ZarchEvent::FrameTimeEvent, physics_);
-    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, physics_);
+    eventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent, physics_);
+    eventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, physics_);
     
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic());
-    eventQueue_.RegisterEventHandler(ZarchEvent::ControlsStateEvent, gameLogic_);
+    eventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, gameLogic_);
 }
 
 void Simulation::ExecuteAction() {
@@ -86,8 +86,9 @@ void Simulation::GenerateTimeEvent() {
     int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    processContext_.eventQueue.ScheduleEvent<Event<Variant>>(ZarchEvent::FrameTimeEvent).Data()
-                              .Reset(frameDeltaTimeS);
+    processContext_.eventQueue
+                   .ScheduleEvent<OldEvent<Variant>>(OldZarchEvent::FrameTimeEvent).Data()
+                   .Reset(frameDeltaTimeS);
 }
 
 }

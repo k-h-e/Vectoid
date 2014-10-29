@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A1094FB1667FB29001F298C /* EventQueueCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1094F91667FB29001F298C /* EventQueueCore.cpp */; };
+		2A1094FB1667FB29001F298C /* OldEventQueueCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1094F91667FB29001F298C /* OldEventQueueCore.cpp */; };
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6119166A624E0073658E /* ProcessesCore.cpp */; };
@@ -53,18 +53,22 @@
 		2ABE9CDC17305EC700F5251C /* StarFieldProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE9CDB17305EC700F5251C /* StarFieldProcess.cpp */; };
 		2ABE9CE1173071BF00F5251C /* ThrusterParticlesProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE9CDF173071BF00F5251C /* ThrusterParticlesProcess.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
+		2ADD5C221A0175F1006533B8 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD5C211A0175F1006533B8 /* Event.cpp */; };
+		2ADD5C251A01802F006533B8 /* EventQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD5C241A01802F006533B8 /* EventQueue.cpp */; };
+		2ADD5C2B1A019CAB006533B8 /* ZarchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD5C2A1A019CAB006533B8 /* ZarchEvent.cpp */; };
+		2ADD5C2F1A01A00E006533B8 /* FrameTimeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD5C2E1A01A00E006533B8 /* FrameTimeEvent.cpp */; };
 		2AE1DD031621B69600306D89 /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1DD011621B69600306D89 /* logging.cpp */; };
 		2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF62154D6CC900033D14 /* Terrain.cpp */; };
 		2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEECB36155EB90800AC21A2 /* Particles.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A1094F41667F757001F298C /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = Game/include/kxm/Game/Event.h; sourceTree = "<group>"; };
-		2A1094F81667F903001F298C /* EventQueueCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueCore.h; path = Game/include/kxm/Game/EventQueueCore.h; sourceTree = "<group>"; };
-		2A1094F91667FB29001F298C /* EventQueueCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueCore.cpp; path = Game/EventQueueCore.cpp; sourceTree = "<group>"; };
+		2A1094F41667F757001F298C /* OldEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OldEvent.h; path = Game/include/kxm/Game/OldEvent.h; sourceTree = "<group>"; };
+		2A1094F81667F903001F298C /* OldEventQueueCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OldEventQueueCore.h; path = Game/include/kxm/Game/OldEventQueueCore.h; sourceTree = "<group>"; };
+		2A1094F91667FB29001F298C /* OldEventQueueCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OldEventQueueCore.cpp; path = Game/OldEventQueueCore.cpp; sourceTree = "<group>"; };
 		2A1094FC1667FC9F001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = Game/include/kxm/Game/Pool.h; sourceTree = "<group>"; };
 		2A1094FD1668C38F001F298C /* PoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PoolInterface.h; path = Game/include/kxm/Game/PoolInterface.h; sourceTree = "<group>"; };
-		2A1094FE1668CC5D001F298C /* EventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueue.h; path = Game/include/kxm/Game/EventQueue.h; sourceTree = "<group>"; };
+		2A1094FE1668CC5D001F298C /* OldEventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OldEventQueue.h; path = Game/include/kxm/Game/OldEventQueue.h; sourceTree = "<group>"; };
 		2A1094FF1668CF30001F298C /* events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = events.h; path = Zarch/include/kxm/Zarch/events.h; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
 		2A1303F3157BC07900A89134 /* ParticlesRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticlesRenderer.h; sourceTree = "<group>"; };
@@ -167,6 +171,14 @@
 		2ABE9CDF173071BF00F5251C /* ThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesProcess.cpp; path = Zarch/Video/ThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
 		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Range.h; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = Vectoid/Range.cpp; sourceTree = "<group>"; };
+		2ADD5C201A017271006533B8 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = Game/include/kxm/Game/Event.h; sourceTree = "<group>"; };
+		2ADD5C211A0175F1006533B8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = Game/Event.cpp; sourceTree = "<group>"; };
+		2ADD5C231A017EDF006533B8 /* EventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueue.h; path = Game/include/kxm/Game/EventQueue.h; sourceTree = "<group>"; };
+		2ADD5C241A01802F006533B8 /* EventQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueue.cpp; path = Game/EventQueue.cpp; sourceTree = "<group>"; };
+		2ADD5C291A019BBD006533B8 /* ZarchEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZarchEvent.h; path = Zarch/include/kxm/Zarch/Events/ZarchEvent.h; sourceTree = "<group>"; };
+		2ADD5C2A1A019CAB006533B8 /* ZarchEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZarchEvent.cpp; path = Zarch/Events/ZarchEvent.cpp; sourceTree = "<group>"; };
+		2ADD5C2C1A019E1A006533B8 /* FrameTimeEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameTimeEvent.h; path = Zarch/include/kxm/Zarch/Events/FrameTimeEvent.h; sourceTree = "<group>"; };
+		2ADD5C2E1A01A00E006533B8 /* FrameTimeEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTimeEvent.cpp; path = Zarch/Events/FrameTimeEvent.cpp; sourceTree = "<group>"; };
 		2AE1DD001621B5FA00306D89 /* logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = logging.h; path = Core/include/kxm/Core/logging.h; sourceTree = "<group>"; };
 		2AE1DD011621B69600306D89 /* logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logging.cpp; path = Core/logging.cpp; sourceTree = "<group>"; };
 		2AE5BEE41580F057000B62D6 /* ShotsProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShotsProcess.cpp; path = Zarch/Physics/ShotsProcess.cpp; sourceTree = "<group>"; };
@@ -429,15 +441,35 @@
 			name = kxm;
 			sourceTree = "<group>";
 		};
+		2ADD5C271A019B51006533B8 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				2ADD5C291A019BBD006533B8 /* ZarchEvent.h */,
+				2ADD5C2C1A019E1A006533B8 /* FrameTimeEvent.h */,
+			);
+			name = Events;
+			sourceTree = "<group>";
+		};
+		2ADD5C281A019B68006533B8 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				2ADD5C2A1A019CAB006533B8 /* ZarchEvent.cpp */,
+				2ADD5C2E1A01A00E006533B8 /* FrameTimeEvent.cpp */,
+			);
+			name = Events;
+			sourceTree = "<group>";
+		};
 		2AECEF4F154D60E600033D14 /* Game */ = {
 			isa = PBXGroup;
 			children = (
 				2AECEF51154D613000033D14 /* include */,
-				2A1094F91667FB29001F298C /* EventQueueCore.cpp */,
+				2A1094F91667FB29001F298C /* OldEventQueueCore.cpp */,
 				2A2A611D166A700B0073658E /* Process.cpp */,
 				2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */,
 				2A2A6119166A624E0073658E /* ProcessesCore.cpp */,
 				2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */,
+				2ADD5C211A0175F1006533B8 /* Event.cpp */,
+				2ADD5C241A01802F006533B8 /* EventQueue.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -463,16 +495,18 @@
 			children = (
 				2A1094FD1668C38F001F298C /* PoolInterface.h */,
 				2A1094FC1667FC9F001F298C /* Pool.h */,
-				2A1094F41667F757001F298C /* Event.h */,
+				2A1094F41667F757001F298C /* OldEvent.h */,
 				2A2A6137166D3A190073658E /* EventHandlerInterface.h */,
-				2A1094F81667F903001F298C /* EventQueueCore.h */,
-				2A1094FE1668CC5D001F298C /* EventQueue.h */,
+				2A1094F81667F903001F298C /* OldEventQueueCore.h */,
+				2A1094FE1668CC5D001F298C /* OldEventQueue.h */,
 				2A2A6117166A61350073658E /* Process.h */,
 				2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */,
 				2A2A6118166A623D0073658E /* ProcessesCore.h */,
 				2A2A611C166A64690073658E /* Processes.h */,
 				2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */,
 				2ABC807917065B7B00D909FA /* ThreadCouplingBuffer.h */,
+				2ADD5C201A017271006533B8 /* Event.h */,
+				2ADD5C231A017EDF006533B8 /* EventQueue.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -481,6 +515,7 @@
 			isa = PBXGroup;
 			children = (
 				2AECEF5B154D68D300033D14 /* include */,
+				2ADD5C281A019B68006533B8 /* Events */,
 				2A2A6126166B812E0073658E /* GameLogic */,
 				2A2A6124166B811F0073658E /* Physics */,
 				2A2A6125166B81280073658E /* Video */,
@@ -513,6 +548,7 @@
 		2AECEF5D154D68E700033D14 /* Zarch */ = {
 			isa = PBXGroup;
 			children = (
+				2ADD5C271A019B51006533B8 /* Events */,
 				2A2A6122166B7FB50073658E /* GameLogic */,
 				2A2A6123166B7FBF0073658E /* Physics */,
 				2A2A6121166B7FAB0073658E /* Video */,
@@ -602,8 +638,10 @@
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
 				2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */,
 				2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */,
+				2ADD5C2B1A019CAB006533B8 /* ZarchEvent.cpp in Sources */,
 				2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */,
 				2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */,
+				2ADD5C251A01802F006533B8 /* EventQueue.cpp in Sources */,
 				2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */,
 				2AC40A221556CEC700026789 /* Range.cpp in Sources */,
 				2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */,
@@ -614,7 +652,8 @@
 				2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */,
 				2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */,
 				2AE1DD031621B69600306D89 /* logging.cpp in Sources */,
-				2A1094FB1667FB29001F298C /* EventQueueCore.cpp in Sources */,
+				2A1094FB1667FB29001F298C /* OldEventQueueCore.cpp in Sources */,
+				2ADD5C221A0175F1006533B8 /* Event.cpp in Sources */,
 				2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */,
 				2A2A611F166A700C0073658E /* Process.cpp in Sources */,
 				2A2A612A166D1E980073658E /* Zarch.cpp in Sources */,
@@ -632,6 +671,7 @@
 				2A8AD4E1172F068C007290C7 /* CameraProcess.cpp in Sources */,
 				2ABE9CDC17305EC700F5251C /* StarFieldProcess.cpp in Sources */,
 				2ABE9CE1173071BF00F5251C /* ThrusterParticlesProcess.cpp in Sources */,
+				2ADD5C2F1A01A00E006533B8 /* FrameTimeEvent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

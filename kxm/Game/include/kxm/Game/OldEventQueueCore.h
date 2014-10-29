@@ -7,8 +7,8 @@
 //
 
 
-#ifndef KXM_GAME_EVENTQUEUECORE_H_
-#define KXM_GAME_EVENTQUEUECORE_H_
+#ifndef KXM_GAME_OLDEVENTQUEUECORE_H_
+#define KXM_GAME_OLDEVENTQUEUECORE_H_
 
 
 #include <vector>
@@ -23,7 +23,7 @@ namespace Core {
 
 namespace Game {
 
-class Event;
+class OldEvent;
 template<class T> class PoolInterface;
 class EventHandlerInterface;
 
@@ -40,11 +40,11 @@ class EventHandlerInterface;
  *  The core mechanism uses non-negative integers to identify event types. \ref EventQueue<T> then
  *  provides a thin wrapper template so clients can use custom enum types instead.
  */
-class EventQueueCore {
+class OldEventQueueCore {
   public:
-    EventQueueCore();
+    OldEventQueueCore();
     //! Registers another event pool.
-    int RegisterEventPool(std::shared_ptr<PoolInterface<Event>> pool);
+    int RegisterEventPool(std::shared_ptr<PoolInterface<OldEvent>> pool);
     //! Registers another event type and associates it with the event pool that will be managing the
     //! event objects for that event type.
     void RegisterEventType(int eventType, int pool);
@@ -59,7 +59,7 @@ class EventQueueCore {
     /*!
      *  May get called when \ref ProcessEvents() is executing.
      */
-    Event &ScheduleEvent(int eventType);
+    OldEvent &ScheduleEvent(int eventType);
     //! Processes the events scheduled earlier.
     /*!
      *  Flips scheduling and processing queues before processing events.
@@ -85,18 +85,18 @@ class EventQueueCore {
         int itemId;
         EventInfo(int aPool, int anItemId) : pool(aPool), itemId(anItemId) {}
     };
-    EventQueueCore(const EventQueueCore &other);
-    EventQueueCore &operator=(const EventQueueCore &other);
+    OldEventQueueCore(const OldEventQueueCore &other);
+    OldEventQueueCore &operator=(const OldEventQueueCore &other);
     
-    std::vector<std::shared_ptr<PoolInterface<Event>>> pools_;
-    std::vector<EventTypeInfo>                         eventTypes_;
-    std::vector<EventInfo>                             events_[2];
-    int                                                schedulingQueue_;
+    std::vector<std::shared_ptr<PoolInterface<OldEvent>>> pools_;
+    std::vector<EventTypeInfo>                            eventTypes_;
+    std::vector<EventInfo>                                events_[2];
+    int                                                   schedulingQueue_;
 };
 
 }    // Namespace Game.
 }    // Namespace kxm.
 
 
-#endif    // KXM_GAME_EVENTQUEUECORE_H_
+#endif    // KXM_GAME_OLDEVENTQUEUECORE_H_
 

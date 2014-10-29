@@ -80,22 +80,22 @@ void Video::RenderFrame() {
     data_->projection->Render(0);
 }
 
-void Video::HandleEvent(const Game::Event &event) {
-    switch (static_cast<const ZarchEvent &>(event).Type()) {
-        case ZarchEvent::FrameTimeEvent:
-            data_->frameDeltaTimeS = static_cast<const Event<Variant> &>(event).Data().AsFloat();
+void Video::HandleEvent(const Game::OldEvent &event) {
+    switch (static_cast<const OldZarchEvent &>(event).Type()) {
+        case OldZarchEvent::FrameTimeEvent:
+            data_->frameDeltaTimeS = static_cast<const OldEvent<Variant> &>(event).Data().AsFloat();
             break;
             
-        case ZarchEvent::LanderMoveEvent:
-            HandleLanderMovedEvent(static_cast<const Event<Transform> &>(event));
+        case OldZarchEvent::LanderMoveEvent:
+            HandleLanderMovedEvent(static_cast<const OldEvent<Transform> &>(event));
             break;
             
-        case ZarchEvent::LanderVelocityEvent:
-            data_->landerVelocity = static_cast<const Event<Vector> &>(event).Data();
+        case OldZarchEvent::LanderVelocityEvent:
+            data_->landerVelocity = static_cast<const OldEvent<Vector> &>(event).Data();
             break;
         
-        case ZarchEvent::LanderThrusterEvent:
-            data_->landerThrusterEnabled = static_cast<const Event<Variant> &>(event)
+        case OldZarchEvent::LanderThrusterEvent:
+            data_->landerThrusterEnabled = static_cast<const OldEvent<Variant> &>(event)
                                                .Data().AsBool();
             break;
         
@@ -104,13 +104,13 @@ void Video::HandleEvent(const Game::Event &event) {
     }
 }
 
-void Video::HandleLanderMovedEvent(const Event<Transform> &event) {
+void Video::HandleLanderMovedEvent(const OldEvent<Transform> &event) {
     data_->landerCoordSys->SetTransform(event.Data());
     
     Vector landerPosition = data_->landerCoordSys->Position();
     data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
 }
 
-}    //Namespace Zarch.
+}    // Namespace Zarch.
 }    // Namespace kxm.
 

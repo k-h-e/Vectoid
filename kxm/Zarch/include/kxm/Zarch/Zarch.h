@@ -30,7 +30,7 @@ namespace Core {
 }
 namespace Game {
     class ThreadCouplingBuffer;
-    template<class T> class EventQueue;
+    template<class T> class OldEventQueue;
 }
 
 namespace Zarch {
@@ -57,7 +57,7 @@ class Zarch {
     }
     //! Registers <c>Zarch</c> game events with the specified event queue, and creates and attaches
     //! the required event pools.
-    static void RegisterEvents(Game::EventQueue<ZarchEvent::EventType> *eventQueue);
+    static void RegisterEvents(Game::OldEventQueue<OldZarchEvent::EventType> *eventQueue);
     
   private:
     Zarch(const Zarch &other);

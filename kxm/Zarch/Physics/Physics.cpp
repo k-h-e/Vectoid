@@ -33,14 +33,14 @@ Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
     processes_->AddProcess(shared_ptr<Process>(new LanderProcess(data_)));
 }
 
-void Physics::HandleEvent(const Game::Event &event) {
-    switch (static_cast<const ZarchEvent &>(event).Type()) {
-        case ZarchEvent::FrameTimeEvent:
-            data_->frameDeltaTimeS = static_cast<const Event<Variant> &>(event).Data().AsFloat();
+void Physics::HandleEvent(const Game::OldEvent &event) {
+    switch (static_cast<const OldZarchEvent &>(event).Type()) {
+        case OldZarchEvent::FrameTimeEvent:
+            data_->frameDeltaTimeS = static_cast<const OldEvent<Variant> &>(event).Data().AsFloat();
             break;
             
-        case ZarchEvent::ControlsStateEvent:
-            data_->controlsState = static_cast<const Event<ControlsState> &>(event).Data();
+        case OldZarchEvent::ControlsStateEvent:
+            data_->controlsState = static_cast<const OldEvent<ControlsState> &>(event).Data();
             break;
             
         default:

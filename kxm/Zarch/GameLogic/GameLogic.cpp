@@ -22,9 +22,9 @@ GameLogic::GameLogic()
           landerFiringEnabled_(false) {
 }
 
-void GameLogic::HandleEvent(const Game::Event &event) {
-    switch (static_cast<const ZarchEvent &>(event).Type()) {
-        case ZarchEvent::ControlsStateEvent:
+void GameLogic::HandleEvent(const Game::OldEvent &event) {
+    switch (static_cast<const OldZarchEvent &>(event).Type()) {
+        case OldZarchEvent::ControlsStateEvent:
             break;
             
         default:

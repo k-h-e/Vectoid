@@ -64,11 +64,11 @@ class Video : public virtual Game::EventHandlerInterface {
     Video(const Video &other);
     Video &operator=(const Video &other);
     //! (Re)implemented.
-    void HandleEvent(const Game::Event &event);
-    void HandleLanderMovedEvent(const Event<Vectoid::Transform> &event);
+    void HandleEvent(const Game::OldEvent &event);
+    void HandleLanderMovedEvent(const OldEvent<Vectoid::Transform> &event);
     
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    std::shared_ptr<Data>                                        data_;
+    std::shared_ptr<Data>                                       data_;
 };
 
 }    // Namespace Zarch.

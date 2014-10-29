@@ -17,12 +17,12 @@
 namespace kxm {
 namespace Game {
 
-class Event;
+class OldEvent;
 
 class EventHandlerInterface : public virtual Core::Interface {
   public:
     //! Makes the handler handle the specified event.
-    virtual void HandleEvent(const Event &event) = 0;
+    virtual void HandleEvent(const OldEvent &event) = 0;
 };
 
 }    // Namespace Game.

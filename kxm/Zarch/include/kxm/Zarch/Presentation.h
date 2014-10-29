@@ -13,6 +13,7 @@
 
 #include <memory>
 
+#include <kxm/Game/OldEventQueue.h>
 #include <kxm/Game/EventQueue.h>
 #include <kxm/Game/Processes.h>
 #include <kxm/Zarch/Video/Video.h>
@@ -46,7 +47,8 @@ class Presentation {
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
     
-    Game::EventQueue<ZarchEvent::EventType>                     eventQueue_;
+    Game::OldEventQueue<OldZarchEvent::EventType>               oldEventQueue_;
+    Game::EventQueue                                            eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     ZarchProcess::Context                                       processContext_;
     std::shared_ptr<Game::ThreadCouplingBuffer>                 simulationCouplingBuffer_;

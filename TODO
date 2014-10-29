@@ -1,1 +1,3 @@
 - check everywhere regarding default move operations!
+- switch Log().Stream() to moving
+

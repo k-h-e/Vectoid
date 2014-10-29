@@ -45,25 +45,25 @@ Zarch::~Zarch() {
     accessor.RequestShutdown();
 }
 
-void Zarch::RegisterEvents(EventQueue<ZarchEvent::EventType> *eventQueue) {
-    shared_ptr<Pool<Game::Event, Event<Vector>>>
-        vectorEventPool(new Pool<Game::Event, Event<Vector>>());
-    shared_ptr<Pool<Game::Event, Event<Transform>>>
-        transformEventPool(new Pool<Game::Event, Event<Transform>>());
-    shared_ptr<Pool<Game::Event, Event<Variant>>>
-        variantEventPool(new Pool<Game::Event, Event<Variant>>());
-    shared_ptr<Pool<Game::Event, Event<ControlsState>>>
-        controlsStateEventPool(new Pool<Game::Event, Event<ControlsState>>());
+void Zarch::RegisterEvents(OldEventQueue<OldZarchEvent::EventType> *eventQueue) {
+    shared_ptr<Pool<Game::OldEvent, OldEvent<Vector>>>
+        vectorEventPool(new Pool<Game::OldEvent, OldEvent<Vector>>());
+    shared_ptr<Pool<Game::OldEvent, OldEvent<Transform>>>
+        transformEventPool(new Pool<Game::OldEvent, OldEvent<Transform>>());
+    shared_ptr<Pool<Game::OldEvent, OldEvent<Variant>>>
+        variantEventPool(new Pool<Game::OldEvent, OldEvent<Variant>>());
+    shared_ptr<Pool<Game::OldEvent, OldEvent<ControlsState>>>
+        controlsStateEventPool(new Pool<Game::OldEvent, OldEvent<ControlsState>>());
     int vectorEventPoolId        = eventQueue->RegisterEventPool(vectorEventPool),
         transformEventPoolId     = eventQueue->RegisterEventPool(transformEventPool),
         variantEventPoolId       = eventQueue->RegisterEventPool(variantEventPool),
         controlsStateEventPoolId = eventQueue->RegisterEventPool(controlsStateEventPool);
     
-    eventQueue->RegisterEventType(ZarchEvent::FrameTimeEvent,      variantEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::ControlsStateEvent,  controlsStateEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::LanderMoveEvent,     transformEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::LanderVelocityEvent, vectorEventPoolId);
-    eventQueue->RegisterEventType(ZarchEvent::LanderThrusterEvent, variantEventPoolId);
+    eventQueue->RegisterEventType(OldZarchEvent::FrameTimeEvent,      variantEventPoolId);
+    eventQueue->RegisterEventType(OldZarchEvent::ControlsStateEvent,  controlsStateEventPoolId);
+    eventQueue->RegisterEventType(OldZarchEvent::LanderMoveEvent,     transformEventPoolId);
+    eventQueue->RegisterEventType(OldZarchEvent::LanderVelocityEvent, vectorEventPoolId);
+    eventQueue->RegisterEventType(OldZarchEvent::LanderThrusterEvent, variantEventPoolId);
 }
 
 }    // Namespace Zarch.
