@@ -30,6 +30,11 @@
 		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
 		2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */; };
 		2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A952015F4DEEA00E64389 /* Interface.cpp */; };
+		2A5E8AD41A114AAE0000617C /* ControlsStateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsStateEvent.cpp */; };
+		2A5E8AD61A114AD00000617C /* LanderMoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* LanderMoveEvent.cpp */; };
+		2A5E8AD81A114AEA0000617C /* LanderVelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* LanderVelocityEvent.cpp */; };
+		2A5E8ADB1A114B0B0000617C /* LanderThrusterEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD91A114B0B0000617C /* LanderThrusterEvent.cpp */; };
+		2A5E8ADE1A115E1B0000617C /* EventQueueHub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */; };
 		2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4B15361E700054F8E9 /* Camera.cpp */; };
 		2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4C15361E700054F8E9 /* CoordSys.cpp */; };
 		2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */; };
@@ -111,6 +116,16 @@
 		2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomProcessPool.h; path = Game/include/kxm/Game/CustomProcessPool.h; sourceTree = "<group>"; };
 		2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomProcessPool.cpp; path = Game/CustomProcessPool.cpp; sourceTree = "<group>"; };
 		2A4A952015F4DEEA00E64389 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Interface.cpp; path = Core/Interface.cpp; sourceTree = "<group>"; };
+		2A5E8ACE1A1147370000617C /* ControlsStateEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsStateEvent.h; path = Zarch/include/kxm/Zarch/Events/ControlsStateEvent.h; sourceTree = "<group>"; };
+		2A5E8ACF1A1148A50000617C /* LanderMoveEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderMoveEvent.h; path = Zarch/include/kxm/Zarch/Events/LanderMoveEvent.h; sourceTree = "<group>"; };
+		2A5E8AD01A1149940000617C /* LanderVelocityEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderVelocityEvent.h; path = Zarch/include/kxm/Zarch/Events/LanderVelocityEvent.h; sourceTree = "<group>"; };
+		2A5E8AD11A114A2C0000617C /* LanderThrusterEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderThrusterEvent.h; path = Zarch/include/kxm/Zarch/Events/LanderThrusterEvent.h; sourceTree = "<group>"; };
+		2A5E8AD31A114AAE0000617C /* ControlsStateEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsStateEvent.cpp; path = Zarch/Events/ControlsStateEvent.cpp; sourceTree = "<group>"; };
+		2A5E8AD51A114AD00000617C /* LanderMoveEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderMoveEvent.cpp; path = Zarch/Events/LanderMoveEvent.cpp; sourceTree = "<group>"; };
+		2A5E8AD71A114AEA0000617C /* LanderVelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderVelocityEvent.cpp; path = Zarch/Events/LanderVelocityEvent.cpp; sourceTree = "<group>"; };
+		2A5E8AD91A114B0B0000617C /* LanderThrusterEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderThrusterEvent.cpp; path = Zarch/Events/LanderThrusterEvent.cpp; sourceTree = "<group>"; };
+		2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueHub.h; path = Game/include/kxm/Game/EventQueueHub.h; sourceTree = "<group>"; };
+		2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueHub.cpp; path = Game/EventQueueHub.cpp; sourceTree = "<group>"; };
 		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
 		2A63D014150CF5A50068E054 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		2A65AF4B15361E700054F8E9 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = Vectoid/Camera.cpp; sourceTree = "<group>"; };
@@ -446,6 +461,10 @@
 			children = (
 				2ADD5C291A019BBD006533B8 /* ZarchEvent.h */,
 				2ADD5C2C1A019E1A006533B8 /* FrameTimeEvent.h */,
+				2A5E8ACE1A1147370000617C /* ControlsStateEvent.h */,
+				2A5E8ACF1A1148A50000617C /* LanderMoveEvent.h */,
+				2A5E8AD01A1149940000617C /* LanderVelocityEvent.h */,
+				2A5E8AD11A114A2C0000617C /* LanderThrusterEvent.h */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -455,6 +474,10 @@
 			children = (
 				2ADD5C2A1A019CAB006533B8 /* ZarchEvent.cpp */,
 				2ADD5C2E1A01A00E006533B8 /* FrameTimeEvent.cpp */,
+				2A5E8AD31A114AAE0000617C /* ControlsStateEvent.cpp */,
+				2A5E8AD51A114AD00000617C /* LanderMoveEvent.cpp */,
+				2A5E8AD71A114AEA0000617C /* LanderVelocityEvent.cpp */,
+				2A5E8AD91A114B0B0000617C /* LanderThrusterEvent.cpp */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -470,6 +493,7 @@
 				2ABC807A17065B9F00D909FA /* ThreadCouplingBuffer.cpp */,
 				2ADD5C211A0175F1006533B8 /* Event.cpp */,
 				2ADD5C241A01802F006533B8 /* EventQueue.cpp */,
+				2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -507,6 +531,7 @@
 				2ABC807917065B7B00D909FA /* ThreadCouplingBuffer.h */,
 				2ADD5C201A017271006533B8 /* Event.h */,
 				2ADD5C231A017EDF006533B8 /* EventQueue.h */,
+				2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -629,15 +654,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
+				2A5E8ADB1A114B0B0000617C /* LanderThrusterEvent.cpp in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */,
 				2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */,
 				2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */,
 				2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */,
+				2A5E8AD41A114AAE0000617C /* ControlsStateEvent.cpp in Sources */,
 				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
 				2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */,
 				2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */,
+				2A5E8AD81A114AEA0000617C /* LanderVelocityEvent.cpp in Sources */,
 				2ADD5C2B1A019CAB006533B8 /* ZarchEvent.cpp in Sources */,
 				2A65AF6915362EF40054F8E9 /* IntModN.cpp in Sources */,
 				2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */,
@@ -657,6 +685,7 @@
 				2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */,
 				2A2A611F166A700C0073658E /* Process.cpp in Sources */,
 				2A2A612A166D1E980073658E /* Zarch.cpp in Sources */,
+				2A5E8ADE1A115E1B0000617C /* EventQueueHub.cpp in Sources */,
 				2A2A6136166D23530073658E /* GameLogic.cpp in Sources */,
 				2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */,
 				2ABC807817064AD600D909FA /* Buffer.cpp in Sources */,
@@ -666,6 +695,7 @@
 				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
 				2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */,
+				2A5E8AD61A114AD00000617C /* LanderMoveEvent.cpp in Sources */,
 				2A8AD4DA172D7738007290C7 /* LanderProcess.cpp in Sources */,
 				2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */,
 				2A8AD4E1172F068C007290C7 /* CameraProcess.cpp in Sources */,

@@ -13,6 +13,9 @@
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/Events/FrameTimeEvent.h>
+#include <kxm/Zarch/Events/LanderMoveEvent.h>
+#include <kxm/Zarch/Events/LanderVelocityEvent.h>
+#include <kxm/Zarch/Events/LanderThrusterEvent.h>
 
 
 using namespace std;
@@ -29,16 +32,19 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
           processContext_(*processes_, oldEventQueue_),
           simulationCouplingBuffer_(simulationCouplingBuffer),
           sendToSimulationDirection_(sendToSimulationDirection) {
-    Zarch::RegisterEvents(&oldEventQueue_);
+    Zarch::RegisterEvents(&eventQueue_);
     
     video_ = shared_ptr<Video>(new Video(processes_));
+    eventQueue_.AddHandler(FrameTimeEvent::type,      video_);
+    eventQueue_.AddHandler(LanderMoveEvent::type,     video_);
+    eventQueue_.AddHandler(LanderVelocityEvent::type, video_);
+    eventQueue_.AddHandler(LanderThrusterEvent::type, video_);
+    
+    Zarch::RegisterEvents(&oldEventQueue_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent,      video_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderMoveEvent,     video_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderVelocityEvent, video_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderThrusterEvent, video_);
-    
-    eventQueue_.RegisterEvent(unique_ptr<Event>(new FrameTimeEvent));
-    
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {

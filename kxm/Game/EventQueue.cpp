@@ -35,5 +35,13 @@ void EventQueue::RegisterEvent(std::unique_ptr<Event> protoType) {
     idToSlotMap_[id] = slot;
 }
 
+void EventQueue::AddHandler(const Event::EventType &eventType,
+                            const std::shared_ptr<EventHandlerInterface> &handler) {
+    auto info = idToSlotMap_.find(eventType.id);
+    assert(info != idToSlotMap_.end());
+    events_[info->second].handlers.push_back(handler);
+    
+}
+
 }    // Namespace Game.
 }    // Namespace kxm.

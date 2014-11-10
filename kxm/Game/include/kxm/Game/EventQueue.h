@@ -38,6 +38,9 @@ class EventQueue {
     EventQueue &operator=(const EventQueue &&other) = delete;
     //! Registers the specified event.
     void RegisterEvent(std::unique_ptr<Event> protoType);
+    //! Adds a handler for the specified event.
+    void AddHandler(const Event::EventType &eventType,
+                    const std::shared_ptr<EventHandlerInterface> &handler);
     
   private:
     struct EventInfo {

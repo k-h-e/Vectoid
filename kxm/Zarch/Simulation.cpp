@@ -13,6 +13,8 @@
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/GameLogic/GameLogic.h>
 #include <kxm/Zarch/Physics/Physics.h>
+#include <kxm/Zarch/Events/FrameTimeEvent.h>
+#include <kxm/Zarch/Events/ControlsStateEvent.h>
 
 
 using namespace std;
@@ -27,18 +29,23 @@ namespace Zarch {
 Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuffer,
                        int sendToPresentationDirection)
         : processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, eventQueue_),
+          processContext_(*processes_, oldEventQueue_),
           presentationCouplingBuffer_(presentationCouplingBuffer),
           sendToPresentationDirection_(sendToPresentationDirection),
           lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(&eventQueue_);
     
     physics_ = shared_ptr<Physics>(new Physics(processes_));
-    eventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent, physics_);
-    eventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, physics_);
+    eventQueue_.AddHandler(FrameTimeEvent::type, physics_);
+    eventQueue_.AddHandler(ControlsStateEvent::type, physics_);
     
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic());
-    eventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, gameLogic_);
+    eventQueue_.AddHandler(ControlsStateEvent::type, gameLogic_);
+
+    Zarch::RegisterEvents(&oldEventQueue_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent, physics_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, physics_);
+    oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, gameLogic_);
 }
 
 void Simulation::ExecuteAction() {
@@ -69,12 +76,12 @@ void Simulation::ExecuteAction() {
             
             GenerateTimeEvent();
             
-            eventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
+            oldEventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
             Buffer &receiveBuffer = accessor.ReceiveBuffer();
-            eventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
+            oldEventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
             receiveBuffer.Clear();
         }
-        eventQueue_.ProcessEvents();
+        oldEventQueue_.ProcessEvents();
         processes_->ExecuteProcesses(processContext_);
     }
     

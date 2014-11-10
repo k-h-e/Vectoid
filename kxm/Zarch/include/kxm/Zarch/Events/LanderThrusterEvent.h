@@ -1,14 +1,13 @@
 //
-//  FrameTimeEvent.h
+//  LanderThrusterEvent.h
 //  kxm
 //
-//  Created by Kai Hergenröther on 10/29/14.
+//  Created by Kai Hergenröther on 11/10/14.
 //
 //
 
-
-#ifndef KXM_ZARCH_FRAMETIMEEVENT_H_
-#define KXM_ZARCH_FRAMETIMEEVENT_H_
+#ifndef KXM_ZARCH_LANDERTHRUSTEREVENT_H_
+#define KXM_ZARCH_LANDERTHRUSTEREVENT_H_
 
 
 #include <kxm/Zarch/Events/ZarchEvent.h>
@@ -17,7 +16,7 @@
 namespace kxm {
 namespace Zarch {
 
-class FrameTimeEvent : public ZarchEvent {
+class LanderThrusterEvent : public ZarchEvent {
   public:
     const EventType &Type() { return type; }
     void Serialize(Core::Buffer *targetBuffer);
@@ -29,5 +28,5 @@ class FrameTimeEvent : public ZarchEvent {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_FRAMETIMEEVENT_H_
+#endif    // KXM_ZARCH_LANDERTHRUSTEREVENT_H_
 

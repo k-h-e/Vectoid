@@ -15,6 +15,7 @@
 #include <chrono>
 
 #include <kxm/Core/ActionInterface.h>
+#include <kxm/Game/EventQueue.h>
 #include <kxm/Game/OldEventQueue.h>
 #include <kxm/Game/Processes.h>
 #include <kxm/Zarch/events.h>
@@ -48,7 +49,8 @@ class Simulation : public Core::ActionInterface {
     Simulation &operator=(const Simulation &other);
     void GenerateTimeEvent();
     
-    Game::OldEventQueue<OldZarchEvent::EventType>               eventQueue_;
+    Game::EventQueue                                            eventQueue_;
+    Game::OldEventQueue<OldZarchEvent::EventType>               oldEventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     ZarchProcess::Context                                       processContext_;
     std::shared_ptr<Game::ThreadCouplingBuffer>                 presentationCouplingBuffer_;
