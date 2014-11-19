@@ -41,7 +41,7 @@ class Event : public virtual Core::Interface {
     //! Returns the type of the event.
     virtual const EventType &Type() = 0;
     //! Writes a binary state representation to the specified target buffer.
-    virtual void Serialize(Core::Buffer *targetBuffer) = 0;
+    virtual void Serialize(Core::Buffer *targetBuffer) const = 0;
     //! Reads from the specified buffer a binary event data representation as produced by
     //! \ref Serialize() and updates the object state accordingly.
     /*!

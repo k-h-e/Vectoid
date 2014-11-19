@@ -16,6 +16,7 @@
 #include <kxm/Zarch/Events/LanderMoveEvent.h>
 #include <kxm/Zarch/Events/LanderVelocityEvent.h>
 #include <kxm/Zarch/Events/LanderThrusterEvent.h>
+#include <kxm/Zarch/Events/ControlsStateEvent.h>
 
 
 using namespace std;
@@ -26,10 +27,13 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBuffer,
+Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub,
+                           const shared_ptr<ThreadCouplingBuffer> &simulationCouplingBuffer,
                            int sendToSimulationDirection)
-        : processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, oldEventQueue_),
+        : eventQueue_(EventQueueHub::initialBufferSize),
+          processes_(new Processes<ZarchProcess::ProcessType>()),
+          processContext_(*processes_, eventQueue_, oldEventQueue_),
+          eventQueueHub_(eventQueueHub),
           simulationCouplingBuffer_(simulationCouplingBuffer),
           sendToSimulationDirection_(sendToSimulationDirection) {
     Zarch::RegisterEvents(&eventQueue_);
@@ -45,13 +49,19 @@ Presentation::Presentation(shared_ptr<ThreadCouplingBuffer> simulationCouplingBu
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderMoveEvent,     video_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderVelocityEvent, video_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::LanderThrusterEvent, video_);
+    
+    hubClientId_ = eventQueueHub_->AllocUniqueClientId();
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
+    eventQueue_.Schedule(ControlsStateEvent(controlsState));
     oldEventQueue_.ScheduleEvent<OldEvent<ControlsState>>(OldZarchEvent::ControlsStateEvent)
                   .Reset(controlsState);
+    
+    eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_);
+    eventQueue_.ProcessEvents();
     
     {
         ThreadCouplingBuffer::Accessor accessor = simulationCouplingBuffer_->Access(
@@ -66,6 +76,7 @@ void Presentation::PrepareFrame(const ControlsState &controlsState) {
             // If necessary, wake the simulation thread for a new iteration.
     }
     oldEventQueue_.ProcessEvents();
+    
     processes_->ExecuteProcesses(processContext_);
 }
 

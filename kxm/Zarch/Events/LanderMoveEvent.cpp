@@ -13,9 +13,17 @@
 namespace kxm {
 namespace Zarch {
 
+LanderMoveEvent::LanderMoveEvent() {
+    // Nop.
+}
+
+LanderMoveEvent::LanderMoveEvent(const Vectoid::Transform &newLanderTransform)
+    : newLanderTransform_(newLanderTransform) {
+}
+
 const Game::Event::EventType LanderMoveEvent::type("LanderMoveEvent");
 
-void LanderMoveEvent::Serialize(Core::Buffer *targetBuffer) {
+void LanderMoveEvent::Serialize(Core::Buffer *targetBuffer) const {
 }
 
 void LanderMoveEvent::Deserialize(Core::Buffer::Reader *bufferReader) {

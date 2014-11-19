@@ -31,6 +31,7 @@ namespace Game {
 class EventQueueHub {
   public:
     typedef unsigned int ClientId;
+    static const int initialBufferSize = 128;
     
     EventQueueHub();
     EventQueueHub(const EventQueueHub &other)            = delete;
@@ -38,10 +39,10 @@ class EventQueueHub {
     EventQueueHub(EventQueueHub &&other)                 = delete;
     EventQueueHub &operator=(EventQueueHub &&other)      = delete;
     
-    //! Get a unique client id to be used with a specific event queue.
-    ClientId GetUniqueClientId();
+    //! <b>[Thread-safe]</b> Allocates a unique client id to be used with a specific event queue.
+    ClientId AllocUniqueClientId();
     
-    //! <b>[Thread-safe]</b>Allows an \ref EventQueue to sync with the hub.
+    //! <b>[Thread-safe]</b> Allows an \ref EventQueue to sync with the hub.
     /*!
      *  \param toHubBuffer
      *  Buffer holding the event data going into the hub. The client's buffer will be swapped with

@@ -13,9 +13,17 @@
 namespace kxm {
 namespace Zarch {
 
+ControlsStateEvent::ControlsStateEvent() {
+    // Nop.
+}
+
+ControlsStateEvent::ControlsStateEvent(const ControlsState &controlsState)
+    : controlsState_(controlsState) {
+}
+
 const Game::Event::EventType ControlsStateEvent::type("ControlsStateEvent");
 
-void ControlsStateEvent::Serialize(Core::Buffer *targetBuffer) {
+void ControlsStateEvent::Serialize(Core::Buffer *targetBuffer) const {
 }
 
 void ControlsStateEvent::Deserialize(Core::Buffer::Reader *bufferReader) {

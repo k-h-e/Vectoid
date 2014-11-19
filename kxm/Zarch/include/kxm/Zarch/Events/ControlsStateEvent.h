@@ -11,6 +11,7 @@
 #define KXM_ZARCH_CONTROLSSTATEEVENT_H_
 
 
+#include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 
 
@@ -19,11 +20,15 @@ namespace Zarch {
 
 class ControlsStateEvent : public ZarchEvent {
   public:
+    ControlsStateEvent();
+    ControlsStateEvent(const ControlsState &controlsState);
     const EventType &Type() { return type; }
-    void Serialize(Core::Buffer *targetBuffer);
+    void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
     
     static const EventType type;
+    
+    ControlsState controlsState_;
 };
 
 }    // Namespace Zarch.

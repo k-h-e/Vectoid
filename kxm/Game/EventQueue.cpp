@@ -18,7 +18,9 @@ using namespace kxm::Core;
 namespace kxm {
 namespace Game {
 
-EventQueue::EventQueue() {
+EventQueue::EventQueue(int initialBufferSize)
+    : activeQueue_(initialBufferSize >= 16 ? initialBufferSize : 16),
+      scheduleQueue_(new Buffer(initialBufferSize >= 16 ? initialBufferSize : 16)) {
     // Nop.
 }
 
@@ -40,7 +42,15 @@ void EventQueue::AddHandler(const Event::EventType &eventType,
     auto info = idToSlotMap_.find(eventType.id);
     assert(info != idToSlotMap_.end());
     events_[info->second].handlers.push_back(handler);
-    
+}
+
+void EventQueue::Schedule(const Event &event) {
+}
+
+void EventQueue::ProcessEvents() {
+}
+
+void EventQueue::SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId) {
 }
 
 }    // Namespace Game.

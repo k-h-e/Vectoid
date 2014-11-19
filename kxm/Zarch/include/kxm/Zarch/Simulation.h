@@ -25,6 +25,7 @@
 namespace kxm {
 
 namespace Game {
+    class EventQueueHub;
     class ThreadCouplingBuffer;
 }
 
@@ -40,7 +41,8 @@ class Physics;
  */
 class Simulation : public Core::ActionInterface {
   public:
-    Simulation(std::shared_ptr<Game::ThreadCouplingBuffer> presentationCouplingBuffer,
+    Simulation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub,
+               const std::shared_ptr<Game::ThreadCouplingBuffer> &presentationCouplingBuffer,
                int sendToPresentationDirection);
     void ExecuteAction();
     
@@ -53,6 +55,8 @@ class Simulation : public Core::ActionInterface {
     Game::OldEventQueue<OldZarchEvent::EventType>               oldEventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     ZarchProcess::Context                                       processContext_;
+    std::shared_ptr<Game::EventQueueHub>                        eventQueueHub_;
+    Game::EventQueueHub::ClientId                               hubClientId_;
     std::shared_ptr<Game::ThreadCouplingBuffer>                 presentationCouplingBuffer_;
     int                                                         sendToPresentationDirection_;
     std::shared_ptr<GameLogic>                                  gameLogic_;

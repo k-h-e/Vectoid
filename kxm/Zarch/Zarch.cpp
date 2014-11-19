@@ -38,9 +38,9 @@ Zarch::Zarch(shared_ptr<ThreadingFactoryInterface> threadingFactory) {
     simulationCouplingBuffer_ = shared_ptr<ThreadCouplingBuffer>(
                                     new ThreadCouplingBuffer(*threadingFactory_));
     simulation_               = shared_ptr<Simulation>(
-                                    new Simulation(simulationCouplingBuffer_, 0));
+                                    new Simulation(eventQueueHub_, simulationCouplingBuffer_, 0));
     presentation_             = shared_ptr<Presentation>(
-                                    new Presentation(simulationCouplingBuffer_, 1));
+                                    new Presentation(eventQueueHub_, simulationCouplingBuffer_, 1));
     
     simulationThread_         = shared_ptr<Thread>(new Thread(simulation_, *threadingFactory_));
 }

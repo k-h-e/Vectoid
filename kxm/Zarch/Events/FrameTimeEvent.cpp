@@ -13,9 +13,17 @@
 namespace kxm {
 namespace Zarch {
 
+FrameTimeEvent::FrameTimeEvent()
+    : timeS_(0.0f) {
+}
+
+FrameTimeEvent::FrameTimeEvent(float timeS)
+    : timeS_(timeS) {
+}
+
 const Game::Event::EventType FrameTimeEvent::type("FrameTimeEvent");
 
-void FrameTimeEvent::Serialize(Core::Buffer *targetBuffer) {
+void FrameTimeEvent::Serialize(Core::Buffer *targetBuffer) const {
 }
 
 void FrameTimeEvent::Deserialize(Core::Buffer::Reader *bufferReader) {

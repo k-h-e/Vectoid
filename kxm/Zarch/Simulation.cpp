@@ -26,10 +26,13 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuffer,
+Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub,
+                       const shared_ptr<ThreadCouplingBuffer> &presentationCouplingBuffer,
                        int sendToPresentationDirection)
-        : processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, oldEventQueue_),
+        : eventQueue_(EventQueueHub::initialBufferSize),
+          processes_(new Processes<ZarchProcess::ProcessType>()),
+          processContext_(*processes_, eventQueue_, oldEventQueue_),
+          eventQueueHub_(eventQueueHub),
           presentationCouplingBuffer_(presentationCouplingBuffer),
           sendToPresentationDirection_(sendToPresentationDirection),
           lastFrameTime_(steady_clock::now()) {
@@ -46,6 +49,8 @@ Simulation::Simulation(shared_ptr<ThreadCouplingBuffer> presentationCouplingBuff
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent, physics_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, physics_);
     oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, gameLogic_);
+    
+    hubClientId_ = eventQueueHub_->AllocUniqueClientId();
 }
 
 void Simulation::ExecuteAction() {
@@ -60,6 +65,9 @@ void Simulation::ExecuteAction() {
     
     bool shutdownRequested = false;
     while (!shutdownRequested) {
+        eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_);
+        eventQueue_.ProcessEvents();
+        
         {
             ThreadCouplingBuffer::Accessor accessor = presentationCouplingBuffer_->Access(
                                                           sendToPresentationDirection_);
@@ -82,6 +90,7 @@ void Simulation::ExecuteAction() {
             receiveBuffer.Clear();
         }
         oldEventQueue_.ProcessEvents();
+        
         processes_->ExecuteProcesses(processContext_);
     }
     
@@ -93,7 +102,8 @@ void Simulation::GenerateTimeEvent() {
     int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    processContext_.eventQueue
+    processContext_.eventQueue.Schedule(FrameTimeEvent(frameDeltaTimeS));
+    processContext_.oldEventQueue
                    .ScheduleEvent<OldEvent<Variant>>(OldZarchEvent::FrameTimeEvent).Data()
                    .Reset(frameDeltaTimeS);
 }

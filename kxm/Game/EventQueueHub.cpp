@@ -24,7 +24,7 @@ EventQueueHub::EventQueueHub() {
     shared_.toReadMask = 0;
 }
 
-EventQueueHub::ClientId EventQueueHub::GetUniqueClientId() {
+EventQueueHub::ClientId EventQueueHub::AllocUniqueClientId() {
     lock_guard<mutex> critical(lock_);    // Critical section...
     
     assert(shared_.nextId < (unsigned int)256);
@@ -49,7 +49,7 @@ void EventQueueHub::Sync(ClientId id, unique_ptr<Buffer> *toHubBuffer, Buffer *t
             // Buffers get cleared as they are added to the pool.
     }
     else {
-        newBuffer = unique_ptr<Buffer>(new Buffer(128));
+        newBuffer = unique_ptr<Buffer>(new Buffer(initialBufferSize));
         newBuffer->Clear();
     }
     *toHubBuffer = std::move(newBuffer);

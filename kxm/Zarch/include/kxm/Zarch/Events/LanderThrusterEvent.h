@@ -18,11 +18,15 @@ namespace Zarch {
 
 class LanderThrusterEvent : public ZarchEvent {
   public:
+    LanderThrusterEvent();
+    LanderThrusterEvent(bool thrusterEnabled);
     const EventType &Type() { return type; }
-    void Serialize(Core::Buffer *targetBuffer);
+    void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
     
     static const EventType type;
+    
+    bool thrusterEnabled_;
 };
 
 }    // Namespace Zarch.

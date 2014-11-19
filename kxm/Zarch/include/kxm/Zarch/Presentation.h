@@ -24,6 +24,7 @@
 namespace kxm {
 
 namespace Game {
+    class EventQueueHub;
     class ThreadCouplingBuffer;
 }
 
@@ -37,7 +38,8 @@ class ControlsState;
  */
 class Presentation {
   public:
-    Presentation(std::shared_ptr<Game::ThreadCouplingBuffer> simulationCouplingBuffer,
+    Presentation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub,
+                 const std::shared_ptr<Game::ThreadCouplingBuffer> &simulationCouplingBuffer,
                  int sendToSimulationDirection);
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height) { video_->SetViewPort(width, height); }
@@ -51,6 +53,8 @@ class Presentation {
     Game::EventQueue                                            eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     ZarchProcess::Context                                       processContext_;
+    std::shared_ptr<Game::EventQueueHub>                        eventQueueHub_;
+    Game::EventQueueHub::ClientId                               hubClientId_;
     std::shared_ptr<Game::ThreadCouplingBuffer>                 simulationCouplingBuffer_;
     int                                                         sendToSimulationDirection_;
     std::shared_ptr<Video>                                      video_;
