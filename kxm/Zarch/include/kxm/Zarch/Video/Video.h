@@ -34,6 +34,11 @@ namespace Zarch {
 class TerrainRenderer;
 class MapParameters;
 class Terrain;
+class FrameTimeEvent;
+class LanderMoveEvent;
+class LanderVelocityEvent;
+class LanderThrusterEvent;
+
 
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
@@ -59,13 +64,19 @@ class Video : public virtual Game::EventHandlerInterface {
     void SetViewPort(int width, int height);
     //! Renders a frame using the current scene graph state.
     void RenderFrame();
+    //! (Re)implemented.
+    void HandleEvent(const Game::Event &event);
+    void HandleFrameTimeEvent(const FrameTimeEvent &event);
+    void HandleLanderMoveEvent(const LanderMoveEvent &event);
+    void HandleLanderVelocityEvent(const LanderVelocityEvent &event);
+    void HandleLanderThrusterEvent(const LanderThrusterEvent &event);
+    //! (Re)implemented.
+    void HandleEvent(const Game::OldEvent &event);
+    void HandleLanderMovedEvent(const OldEvent<Vectoid::Transform> &event);
   
   private:
     Video(const Video &other);
     Video &operator=(const Video &other);
-    //! (Re)implemented.
-    void HandleEvent(const Game::OldEvent &event);
-    void HandleLanderMovedEvent(const OldEvent<Vectoid::Transform> &event);
     
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     std::shared_ptr<Data>                                       data_;

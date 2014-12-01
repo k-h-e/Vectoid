@@ -28,9 +28,10 @@ namespace Game {
 namespace Zarch {
 
 class VariantEvent;
-class ControlsStateEvent;
 class MapParameters;
 class Terrain;
+class FrameTimeEvent;
+class ControlsStateEvent;
 
 //! Physics subsystem for the <c>Zarch</c> game.
 /*!
@@ -54,6 +55,10 @@ class Physics : public virtual Game::EventHandlerInterface {
     };
     
     Physics(std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
+    //! (Re)implemented.
+    void HandleEvent(const Game::Event &event);
+    void HandleFrameTimeEvent(const FrameTimeEvent &event);
+    void HandleControlsStateEvent(const ControlsStateEvent &event);
     //! (Re)implemented.
     void HandleEvent(const Game::OldEvent &event);
     

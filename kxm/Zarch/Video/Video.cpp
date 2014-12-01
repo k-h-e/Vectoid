@@ -9,6 +9,7 @@
 
 #include <kxm/Zarch/Video/Video.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -25,6 +26,11 @@
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/Events/ZarchEvent.h>
+#include <kxm/Zarch/Events/FrameTimeEvent.h>
+#include <kxm/Zarch/Events/LanderMoveEvent.h>
+#include <kxm/Zarch/Events/LanderVelocityEvent.h>
+#include <kxm/Zarch/Events/LanderThrusterEvent.h>
 
 
 using namespace std;
@@ -80,7 +86,31 @@ void Video::RenderFrame() {
     data_->projection->Render(0);
 }
 
+void Video::HandleEvent(const Game::Event &event) {
+    static_cast<const Zarch::ZarchEvent &>(event).DispatchToVideo(this);
+}
+
+void Video::HandleFrameTimeEvent(const FrameTimeEvent &event) {
+    data_->frameDeltaTimeS = event.timeS;
+}
+
+void Video::HandleLanderMoveEvent(const LanderMoveEvent &event) {
+    data_->landerCoordSys->SetTransform(event.newLanderTransform);
+    
+    Vector landerPosition = data_->landerCoordSys->Position();
+    data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
+}
+
+void Video::HandleLanderVelocityEvent(const LanderVelocityEvent &event) {
+    data_->landerVelocity = event.velocity;
+}
+
+void Video::HandleLanderThrusterEvent(const LanderThrusterEvent &event) {
+    data_->landerThrusterEnabled = event.thrusterEnabled;
+}
+
 void Video::HandleEvent(const Game::OldEvent &event) {
+    return;
     switch (static_cast<const OldZarchEvent &>(event).Type()) {
         case OldZarchEvent::FrameTimeEvent:
             data_->frameDeltaTimeS = static_cast<const OldEvent<Variant> &>(event).Data().AsFloat();

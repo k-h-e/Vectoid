@@ -65,7 +65,7 @@ void Simulation::ExecuteAction() {
     
     bool shutdownRequested = false;
     while (!shutdownRequested) {
-        eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_);
+        eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_, false);
         eventQueue_.ProcessEvents();
         
         {

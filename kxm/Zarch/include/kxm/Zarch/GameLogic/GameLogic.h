@@ -17,6 +17,8 @@
 namespace kxm {
 namespace Zarch {
 
+class ControlsStateEvent;
+
 //! Game logic for the <c>Zarch</c> game.
 /*!
  *  \ingroup Zarch
@@ -24,6 +26,8 @@ namespace Zarch {
 class GameLogic : public virtual Game::EventHandlerInterface {
   public:
     GameLogic();
+    void HandleEvent(const Game::Event &event);
+    void HandleControlsStateEvent(const ControlsStateEvent &event);
     void HandleEvent(const Game::OldEvent &event);
     
   private:

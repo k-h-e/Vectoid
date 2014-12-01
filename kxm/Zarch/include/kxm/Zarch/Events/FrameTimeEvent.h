@@ -17,17 +17,22 @@
 namespace kxm {
 namespace Zarch {
 
+class Video;
+class Physics;
+
 class FrameTimeEvent : public ZarchEvent {
   public:
     FrameTimeEvent();
     FrameTimeEvent(float timeS);
-    const EventType &Type() { return type; }
+    const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
+    void DispatchToVideo(Video *video) const;
+    void DispatchToPhysics(Physics *physics) const;
     
     static const EventType type;
     
-    float timeS_;
+    float timeS;
 };
 
 }    // Namespace Zarch.

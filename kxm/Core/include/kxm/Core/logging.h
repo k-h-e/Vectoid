@@ -35,7 +35,7 @@ class LoggerHandle {
 };
 
 //! Returns a handle for the appropriate logging <c>ostream</c>.
-LoggerHandle Log(void *origin);
+LoggerHandle Log(const void *origin);
 //! Returns a handle for the appropriate logging <c>ostream</c>.
 LoggerHandle Log();
 

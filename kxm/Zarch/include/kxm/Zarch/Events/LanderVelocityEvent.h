@@ -17,17 +17,20 @@
 namespace kxm {
 namespace Zarch {
 
+class Video;
+
 class LanderVelocityEvent : public ZarchEvent {
   public:
     LanderVelocityEvent();
     LanderVelocityEvent(const Vectoid::Vector &velocity);
-    const EventType &Type() { return type; }
+    const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
+    void DispatchToVideo(Video *video) const;
     
     static const EventType type;
     
-    Vectoid::Vector velocity_;
+    Vectoid::Vector velocity;
 };
 
 }    // Namespace Zarch.

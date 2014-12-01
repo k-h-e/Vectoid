@@ -16,17 +16,20 @@
 namespace kxm {
 namespace Zarch {
 
+class Video;
+
 class LanderThrusterEvent : public ZarchEvent {
   public:
     LanderThrusterEvent();
     LanderThrusterEvent(bool thrusterEnabled);
-    const EventType &Type() { return type; }
+    const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
+    void DispatchToVideo(Video *video) const;
     
     static const EventType type;
     
-    bool thrusterEnabled_;
+    bool thrusterEnabled;
 };
 
 }    // Namespace Zarch.

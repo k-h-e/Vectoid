@@ -17,8 +17,15 @@
 namespace kxm {
 namespace Zarch {
 
+class Video;
+class Physics;
+class GameLogic;
+
 class ZarchEvent : public Game::Event {
   public:
+    virtual void DispatchToVideo(Video *video) const;
+    virtual void DispatchToPhysics(Physics *physics) const;
+    virtual void DispatchToGameLogic(GameLogic *gameLogic) const;
 };
 
 }    // Namespace Zarch.

@@ -60,7 +60,7 @@ void Presentation::PrepareFrame(const ControlsState &controlsState) {
     oldEventQueue_.ScheduleEvent<OldEvent<ControlsState>>(OldZarchEvent::ControlsStateEvent)
                   .Reset(controlsState);
     
-    eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_);
+    eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_, false);
     eventQueue_.ProcessEvents();
     
     {

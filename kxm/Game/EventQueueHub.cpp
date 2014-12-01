@@ -72,6 +72,7 @@ void EventQueueHub::Sync(ClientId id, unique_ptr<Buffer> *toHubBuffer, Buffer *t
             break;
         info.buffer->Clear();
         shared_.bufferPool.push(std::move(info.buffer));
+        shared_.activeBuffers.pop_front();
     }
 }    // ... critical section, end.
 

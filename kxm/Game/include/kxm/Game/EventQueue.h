@@ -64,7 +64,7 @@ class EventQueue {
      */
     void ProcessEvents();
     //! Syncs with the specified \ref EventQueueHub, activating the scheduled events in the process.
-    void SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId);
+    void SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait);
     
   private:
     struct EventInfo {
@@ -77,6 +77,8 @@ class EventQueue {
     std::unordered_map<size_t, int> idToSlotMap_;
     Core::Buffer                    activeQueue_;
     std::unique_ptr<Core::Buffer>   scheduleQueue_;
+    
+    std::vector<std::string> eventTrace_;
 };
 
 }    // Namespace Game.

@@ -18,17 +18,22 @@
 namespace kxm {
 namespace Zarch {
 
+class Physics;
+class GameLogic;
+
 class ControlsStateEvent : public ZarchEvent {
   public:
     ControlsStateEvent();
     ControlsStateEvent(const ControlsState &controlsState);
-    const EventType &Type() { return type; }
+    const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
+    void DispatchToPhysics(Physics *physics) const;
+    void DispatchToGameLogic(GameLogic *gameLogic) const;
     
     static const EventType type;
     
-    ControlsState controlsState_;
+    ControlsState controlsState;
 };
 
 }    // Namespace Zarch.

@@ -17,7 +17,7 @@ using namespace std;
 namespace kxm {
 namespace Core {
 
-LoggerHandle Log(void *origin) {
+LoggerHandle Log(const void *origin) {
     return LoggerHandle(&cout);
 }
 

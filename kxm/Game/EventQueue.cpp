@@ -13,6 +13,7 @@
 #include <kxm/Core/logging.h>
 #include <kxm/Game/Event.h>
 
+using namespace std;
 using namespace kxm::Core;
 
 namespace kxm {
@@ -45,12 +46,32 @@ void EventQueue::AddHandler(const Event::EventType &eventType,
 }
 
 void EventQueue::Schedule(const Event &event) {
+    int slot = idToSlotMap_[event.Type().id];
+    scheduleQueue_->Append(&slot, sizeof(slot));
+    event.Serialize(scheduleQueue_.get());
 }
 
 void EventQueue::ProcessEvents() {
+    Buffer::Reader reader = activeQueue_.GetReader();
+    int slot;
+    while (reader.ReadBlock(&slot, sizeof(slot))) {
+        EventInfo &info  = events_[slot];
+        Event     &event = *(info.prototype);
+        event.Deserialize(&reader);
+        for (auto handler : info.handlers)
+            handler->HandleEvent(event);
+        
+        //eventTrace_.push_back(string(event->Type().name));
+        //if (eventTrace_.size() == 150) {
+        //    for (int i = 0; i < eventTrace_.size(); ++i)
+        //        Log(this).Stream() << i << ". " << eventTrace_[i] << endl;
+        //}
+    }
+    activeQueue_.Clear();
 }
 
-void EventQueue::SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId) {
+void EventQueue::SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait) {
+    hub->Sync(clientId, &scheduleQueue_, &activeQueue_, wait);
 }
 
 }    // Namespace Game.
