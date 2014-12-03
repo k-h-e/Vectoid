@@ -20,12 +20,13 @@ namespace kxm {
 namespace Game {
 
 EventQueueHub::EventQueueHub() {
-    shared_.nextId     = 1;
-    shared_.toReadMask = 0;
+    shared_.nextId            = 1;
+    shared_.toReadMask        = 0;
+    shared_.shutdownRequested = false;
 }
 
 EventQueueHub::ClientId EventQueueHub::AllocUniqueClientId() {
-    lock_guard<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section...
     
     assert(shared_.nextId < (unsigned int)256);
     unsigned int id = shared_.nextId;
@@ -34,9 +35,12 @@ EventQueueHub::ClientId EventQueueHub::AllocUniqueClientId() {
     return id;
 }    // ... critical section, end.
 
-void EventQueueHub::Sync(ClientId id, unique_ptr<Buffer> *toHubBuffer, Buffer *toQueueBuffer,
+bool EventQueueHub::Sync(ClientId id, unique_ptr<Buffer> *toHubBuffer, Buffer *toQueueBuffer,
                          bool wait) {
-    lock_guard<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section...
+    
+    if (wait)
+        shared_.stateChanged.wait(critical);
     
     // Append to-hub-buffer to active buffer queue...
     shared_.activeBuffers.push_back(BufferInfo(std::move(*toHubBuffer), shared_.toReadMask));
@@ -74,6 +78,16 @@ void EventQueueHub::Sync(ClientId id, unique_ptr<Buffer> *toHubBuffer, Buffer *t
         shared_.bufferPool.push(std::move(info.buffer));
         shared_.activeBuffers.pop_front();
     }
+    
+    if (!wait)
+        shared_.stateChanged.notify_all();
+    return !shared_.shutdownRequested;
+}    // ... critical section, end.
+
+void EventQueueHub::RequestShutdown() {
+    unique_lock<mutex> critical(lock_);    // Critical section...
+    shared_.shutdownRequested = true;
+    shared_.stateChanged.notify_all();
 }    // ... critical section, end.
 
 EventQueueHub::BufferInfo::BufferInfo(std::unique_ptr<Core::Buffer> &&aBuffer,

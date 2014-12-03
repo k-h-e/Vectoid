@@ -70,8 +70,8 @@ void EventQueue::ProcessEvents() {
     activeQueue_.Clear();
 }
 
-void EventQueue::SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait) {
-    hub->Sync(clientId, &scheduleQueue_, &activeQueue_, wait);
+bool EventQueue::SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait) {
+    return hub->Sync(clientId, &scheduleQueue_, &activeQueue_, wait);
 }
 
 }    // Namespace Game.

@@ -9,7 +9,7 @@
 
 #include <kxm/Zarch/Simulation.h>
 
-#include <kxm/Game/ThreadCouplingBuffer.h>
+#include <kxm/Core/logging.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/GameLogic/GameLogic.h>
 #include <kxm/Zarch/Physics/Physics.h>
@@ -26,15 +26,11 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub,
-                       const shared_ptr<ThreadCouplingBuffer> &presentationCouplingBuffer,
-                       int sendToPresentationDirection)
+Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
         : eventQueue_(EventQueueHub::initialBufferSize),
-          processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, eventQueue_, oldEventQueue_),
           eventQueueHub_(eventQueueHub),
-          presentationCouplingBuffer_(presentationCouplingBuffer),
-          sendToPresentationDirection_(sendToPresentationDirection),
+          processes_(new Processes<ZarchProcess::ProcessType>()),
+          processContext_(*processes_, eventQueue_),
           lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(&eventQueue_);
     
@@ -45,51 +41,17 @@ Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub,
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic());
     eventQueue_.AddHandler(ControlsStateEvent::type, gameLogic_);
 
-    Zarch::RegisterEvents(&oldEventQueue_);
-    oldEventQueue_.RegisterEventHandler(OldZarchEvent::FrameTimeEvent, physics_);
-    oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, physics_);
-    oldEventQueue_.RegisterEventHandler(OldZarchEvent::ControlsStateEvent, gameLogic_);
-    
     hubClientId_ = eventQueueHub_->AllocUniqueClientId();
 }
 
 void Simulation::ExecuteAction() {
     puts("simulation thread spawned");
     
-    uint32_t seqNo, lastSeqNo;
-    {
-        ThreadCouplingBuffer::Accessor accessor = presentationCouplingBuffer_->Access(
-                                                      sendToPresentationDirection_);
-        lastSeqNo = accessor.SeqNoForReceiveDirection();
-    }
-    
     bool shutdownRequested = false;
     while (!shutdownRequested) {
-        eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_, false);
+        shutdownRequested = !eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_, true);
+        GenerateTimeEvent();
         eventQueue_.ProcessEvents();
-        
-        {
-            ThreadCouplingBuffer::Accessor accessor = presentationCouplingBuffer_->Access(
-                                                          sendToPresentationDirection_);
-            for (;;) {
-                seqNo = accessor.SeqNoForReceiveDirection();
-                if (seqNo != lastSeqNo) {
-                    lastSeqNo = seqNo;
-                    break;
-                }
-                if ((shutdownRequested = accessor.ShutdownRequested()))
-                    break;
-                accessor.Wait();
-            }
-            
-            GenerateTimeEvent();
-            
-            oldEventQueue_.SerializeScheduledEvents(&accessor.SendBuffer());
-            Buffer &receiveBuffer = accessor.ReceiveBuffer();
-            oldEventQueue_.DeserializeAndScheduleEvents(receiveBuffer);
-            receiveBuffer.Clear();
-        }
-        oldEventQueue_.ProcessEvents();
         
         processes_->ExecuteProcesses(processContext_);
     }
@@ -103,9 +65,6 @@ void Simulation::GenerateTimeEvent() {
     lastFrameTime_ = now;
     float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
     processContext_.eventQueue.Schedule(FrameTimeEvent(frameDeltaTimeS));
-    processContext_.oldEventQueue
-                   .ScheduleEvent<OldEvent<Variant>>(OldZarchEvent::FrameTimeEvent).Data()
-                   .Reset(frameDeltaTimeS);
 }
 
 }

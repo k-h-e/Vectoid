@@ -28,7 +28,6 @@ class GameLogic : public virtual Game::EventHandlerInterface {
     GameLogic();
     void HandleEvent(const Game::Event &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
-    void HandleEvent(const Game::OldEvent &event);
     
   private:
     GameLogic(const GameLogic &other);

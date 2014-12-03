@@ -10,11 +10,11 @@
 #include <kxm/Zarch/GameLogic/GameLogic.h>
 
 #include <kxm/Core/logging.h>
-#include <kxm/Zarch/events.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 
 
 using namespace std;
+using namespace kxm::Core;
 using namespace kxm::Game;
 
 
@@ -32,17 +32,6 @@ void GameLogic::HandleEvent(const Game::Event &event) {
 
 void GameLogic::HandleControlsStateEvent(const ControlsStateEvent &event) {
     // Nop.
-}
-
-void GameLogic::HandleEvent(const Game::OldEvent &event) {
-    return;
-    switch (static_cast<const OldZarchEvent &>(event).Type()) {
-        case OldZarchEvent::ControlsStateEvent:
-            break;
-            
-        default:
-            break;
-    }
 }
 
 }    // Namespace Zarch.

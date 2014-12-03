@@ -19,7 +19,6 @@
 #include <memory>
 
 #include <kxm/Zarch/Presentation.h>
-#include <kxm/Zarch/events.h>
 
 
 namespace kxm {
@@ -30,8 +29,6 @@ namespace Core {
 }
 namespace Game {
     class EventQueueHub;
-    class ThreadCouplingBuffer;
-    template<class T> class OldEventQueue;
 }
 
 namespace Zarch {
@@ -56,9 +53,7 @@ class Zarch {
     void RenderFrame() {
         presentation_->RenderFrame();
     }
-    //! Registers <c>Zarch</c> game events with the specified event queue, and creates and attaches
-    //! the required event pools.
-    static void RegisterEvents(Game::OldEventQueue<OldZarchEvent::EventType> *eventQueue);
+    
     //! Registers all <c>Zarch</c> game events with the specified event queue.
     static void RegisterEvents(Game::EventQueue *eventQueue);
     
@@ -69,7 +64,6 @@ class Zarch {
     std::shared_ptr<Simulation>                      simulation_;
     std::shared_ptr<Presentation>                    presentation_;
     std::shared_ptr<Game::EventQueueHub>             eventQueueHub_;
-    std::shared_ptr<Game::ThreadCouplingBuffer>      simulationCouplingBuffer_;
     std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
     std::shared_ptr<Core::Thread>                    simulationThread_;
 };

@@ -17,6 +17,7 @@
 
 #include <kxm/Core/logging.h>
 #include <kxm/Core/POSIXThreadingFactory.h>
+#include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Zarch.h>
 

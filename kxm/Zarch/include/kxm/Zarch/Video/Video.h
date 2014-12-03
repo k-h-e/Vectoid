@@ -14,6 +14,7 @@
 #include <memory>
 
 #include <kxm/Game/EventHandlerInterface.h>
+#include <kxm/Vectoid/Vector.h>
 #include <kxm/Zarch/processes.h>
 
 
@@ -64,15 +65,11 @@ class Video : public virtual Game::EventHandlerInterface {
     void SetViewPort(int width, int height);
     //! Renders a frame using the current scene graph state.
     void RenderFrame();
-    //! (Re)implemented.
     void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleLanderMoveEvent(const LanderMoveEvent &event);
     void HandleLanderVelocityEvent(const LanderVelocityEvent &event);
     void HandleLanderThrusterEvent(const LanderThrusterEvent &event);
-    //! (Re)implemented.
-    void HandleEvent(const Game::OldEvent &event);
-    void HandleLanderMovedEvent(const OldEvent<Vectoid::Transform> &event);
   
   private:
     Video(const Video &other);

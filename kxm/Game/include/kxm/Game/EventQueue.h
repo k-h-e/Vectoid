@@ -64,7 +64,10 @@ class EventQueue {
      */
     void ProcessEvents();
     //! Syncs with the specified \ref EventQueueHub, activating the scheduled events in the process.
-    void SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait);
+    /*!
+     *  \return <c>false</c> in case shutdown has been requested.
+     */
+    bool SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait);
     
   private:
     struct EventInfo {

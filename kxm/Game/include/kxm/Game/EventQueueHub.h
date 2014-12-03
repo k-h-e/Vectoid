@@ -14,6 +14,7 @@
 #include <memory>
 #include <queue>
 #include <thread>
+#include <condition_variable>
 
 
 namespace kxm {
@@ -52,9 +53,18 @@ class EventQueueHub {
      *  \param toQueueBuffer
      *  This buffer will accept the event data going from the hub into the queue. It will get
      *  cleared by the hub before new data is written.
+     *
+     *  \return <c>false</c> in case shutdown has been requested.
      */
-    void Sync(ClientId id, std::unique_ptr<Core::Buffer> *toHubBuffer, Core::Buffer *toQueueBuffer,
+    bool Sync(ClientId id, std::unique_ptr<Core::Buffer> *toHubBuffer, Core::Buffer *toQueueBuffer,
               bool wait);
+    //! <b>[Thread-safe]</b> Asks all participating threads to shut down (but does not wait for
+    //! them to terminate).
+    /*!
+     *  Participating threads can check for whether shutdown is requested by inspecting the return
+     *  value of \ref Sync().
+     */
+    void RequestShutdown();
     
   private:
     struct BufferInfo {
@@ -65,10 +75,12 @@ class EventQueueHub {
     
     std::mutex                                    lock_;
     struct {
+        std::condition_variable                       stateChanged;
         std::deque<BufferInfo>                        activeBuffers;
         std::queue<std::unique_ptr<Core::Buffer>>     bufferPool;
         unsigned int                                  nextId,
                                                       toReadMask;
+        bool                                          shutdownRequested;
     }                                             shared_;    // Protected by lock_.
 };
 

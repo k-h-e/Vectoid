@@ -109,38 +109,6 @@ void Video::HandleLanderThrusterEvent(const LanderThrusterEvent &event) {
     data_->landerThrusterEnabled = event.thrusterEnabled;
 }
 
-void Video::HandleEvent(const Game::OldEvent &event) {
-    return;
-    switch (static_cast<const OldZarchEvent &>(event).Type()) {
-        case OldZarchEvent::FrameTimeEvent:
-            data_->frameDeltaTimeS = static_cast<const OldEvent<Variant> &>(event).Data().AsFloat();
-            break;
-            
-        case OldZarchEvent::LanderMoveEvent:
-            HandleLanderMovedEvent(static_cast<const OldEvent<Transform> &>(event));
-            break;
-            
-        case OldZarchEvent::LanderVelocityEvent:
-            data_->landerVelocity = static_cast<const OldEvent<Vector> &>(event).Data();
-            break;
-        
-        case OldZarchEvent::LanderThrusterEvent:
-            data_->landerThrusterEnabled = static_cast<const OldEvent<Variant> &>(event)
-                                               .Data().AsBool();
-            break;
-        
-        default:
-            break;
-    }
-}
-
-void Video::HandleLanderMovedEvent(const OldEvent<Transform> &event) {
-    data_->landerCoordSys->SetTransform(event.Data());
-    
-    Vector landerPosition = data_->landerCoordSys->Position();
-    data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
-}
-
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

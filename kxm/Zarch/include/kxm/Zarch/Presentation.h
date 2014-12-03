@@ -13,11 +13,9 @@
 
 #include <memory>
 
-#include <kxm/Game/OldEventQueue.h>
 #include <kxm/Game/EventQueue.h>
 #include <kxm/Game/Processes.h>
 #include <kxm/Zarch/Video/Video.h>
-#include <kxm/Zarch/events.h>
 #include <kxm/Zarch/processes.h>
 
 
@@ -38,9 +36,7 @@ class ControlsState;
  */
 class Presentation {
   public:
-    Presentation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub,
-                 const std::shared_ptr<Game::ThreadCouplingBuffer> &simulationCouplingBuffer,
-                 int sendToSimulationDirection);
+    Presentation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height) { video_->SetViewPort(width, height); }
     void RenderFrame()                      { video_->RenderFrame();              }
@@ -49,14 +45,11 @@ class Presentation {
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
     
-    Game::OldEventQueue<OldZarchEvent::EventType>               oldEventQueue_;
     Game::EventQueue                                            eventQueue_;
-    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    ZarchProcess::Context                                       processContext_;
     std::shared_ptr<Game::EventQueueHub>                        eventQueueHub_;
     Game::EventQueueHub::ClientId                               hubClientId_;
-    std::shared_ptr<Game::ThreadCouplingBuffer>                 simulationCouplingBuffer_;
-    int                                                         sendToSimulationDirection_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    ZarchProcess::Context                                       processContext_;
     std::shared_ptr<Video>                                      video_;
 };
 

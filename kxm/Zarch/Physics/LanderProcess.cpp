@@ -11,7 +11,6 @@
 
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Game/EventQueue.h>
-#include <kxm/Game/OldEventQueue.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/LanderMoveEvent.h>
@@ -82,19 +81,11 @@ bool LanderProcess::Execute(const ExecutionContext &context) {
     data.landerState.transform = newLanderTransform;
     
     // Generate events...
-    auto &eventQueue    = static_cast<const ZarchProcess::Context &>(context).eventQueue;
-    auto &oldEventQueue = static_cast<const ZarchProcess::Context &>(context).oldEventQueue;
+    auto &eventQueue = static_cast<const ZarchProcess::Context &>(context).eventQueue;
     eventQueue.Schedule(LanderMoveEvent(newLanderTransform));
-    oldEventQueue.ScheduleEvent<OldEvent<Transform>>(OldZarchEvent::LanderMoveEvent)
-                 .Reset(newLanderTransform);
     eventQueue.Schedule(LanderVelocityEvent(data.landerState.velocity));
-    oldEventQueue.ScheduleEvent<OldEvent<Vector>>(OldZarchEvent::LanderVelocityEvent)
-                 .Reset(data.landerState.velocity);
-    if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
+    if (data.landerState.thrusterEnabled != oldThrusterEnabled)
         eventQueue.Schedule(LanderThrusterEvent(data.landerState.thrusterEnabled));
-        oldEventQueue.ScheduleEvent<OldEvent<Variant>>(OldZarchEvent::LanderThrusterEvent).Data()
-                     .Reset(data.landerState.thrusterEnabled);
-    }
     
     return true;
 }

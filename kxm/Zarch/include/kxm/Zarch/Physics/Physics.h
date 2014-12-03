@@ -55,12 +55,9 @@ class Physics : public virtual Game::EventHandlerInterface {
     };
     
     Physics(std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
-    //! (Re)implemented.
     void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
-    //! (Re)implemented.
-    void HandleEvent(const Game::OldEvent &event);
     
   private:
     Physics(const Physics &other);

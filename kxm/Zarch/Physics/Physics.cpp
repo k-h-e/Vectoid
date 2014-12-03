@@ -15,13 +15,13 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/ControlsState.h>
-#include <kxm/Zarch/events.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Events/FrameTimeEvent.h>
 #include <kxm/Zarch/Events/ControlsStateEvent.h>
 
 
 using namespace std;
+using namespace kxm::Core;
 using namespace kxm::Game;
 
 
@@ -47,22 +47,6 @@ void Physics::HandleFrameTimeEvent(const FrameTimeEvent &event) {
 
 void Physics::HandleControlsStateEvent(const ControlsStateEvent &event) {
     data_->controlsState = event.controlsState;
-}
-
-void Physics::HandleEvent(const Game::OldEvent &event) {
-    return;
-    switch (static_cast<const OldZarchEvent &>(event).Type()) {
-        case OldZarchEvent::FrameTimeEvent:
-            data_->frameDeltaTimeS = static_cast<const OldEvent<Variant> &>(event).Data().AsFloat();
-            break;
-            
-        case OldZarchEvent::ControlsStateEvent:
-            data_->controlsState = static_cast<const OldEvent<ControlsState> &>(event).Data();
-            break;
-            
-        default:
-            break;
-    }
 }
 
 }    // Namespace Zarch.

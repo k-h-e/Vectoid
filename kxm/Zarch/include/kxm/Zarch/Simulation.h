@@ -16,9 +16,7 @@
 
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/EventQueue.h>
-#include <kxm/Game/OldEventQueue.h>
 #include <kxm/Game/Processes.h>
-#include <kxm/Zarch/events.h>
 #include <kxm/Zarch/processes.h>
 
 
@@ -26,7 +24,6 @@ namespace kxm {
 
 namespace Game {
     class EventQueueHub;
-    class ThreadCouplingBuffer;
 }
 
 namespace Zarch {
@@ -41,9 +38,7 @@ class Physics;
  */
 class Simulation : public Core::ActionInterface {
   public:
-    Simulation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub,
-               const std::shared_ptr<Game::ThreadCouplingBuffer> &presentationCouplingBuffer,
-               int sendToPresentationDirection);
+    Simulation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
     void ExecuteAction();
     
   private:
@@ -52,13 +47,10 @@ class Simulation : public Core::ActionInterface {
     void GenerateTimeEvent();
     
     Game::EventQueue                                            eventQueue_;
-    Game::OldEventQueue<OldZarchEvent::EventType>               oldEventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     ZarchProcess::Context                                       processContext_;
     std::shared_ptr<Game::EventQueueHub>                        eventQueueHub_;
     Game::EventQueueHub::ClientId                               hubClientId_;
-    std::shared_ptr<Game::ThreadCouplingBuffer>                 presentationCouplingBuffer_;
-    int                                                         sendToPresentationDirection_;
     std::shared_ptr<GameLogic>                                  gameLogic_;
     std::shared_ptr<Physics>                                    physics_;
     std::chrono::time_point<std::chrono::steady_clock>          lastFrameTime_;
