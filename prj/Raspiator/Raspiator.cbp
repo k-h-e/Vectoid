@@ -80,6 +80,8 @@
          </MakeCommands>
       </Target>
       </Build>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Indicatower.cpp">
+      </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/VideoCoreDisplay.cpp">
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/main.cpp">
@@ -117,6 +119,8 @@
       <Unit filename="/Users/kai/Developer/kxm/src/kxm/Core/Thread.cpp">
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/src/kxm/Core/logging.cpp">
+      </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Indicatower.h">
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/VideoCoreDisplay.h">
       </Unit>

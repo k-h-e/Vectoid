@@ -4,8 +4,8 @@
 #include <Vectoid/Camera.h>
 #include <Vectoid/CoordSys.h>
 #include <Vectoid/Geode.h>
-#include <Vectoid/TestTriangle.h>
 
+#include "Indicatower.h"
 #include "VideoCoreDisplay.h"
 
 using namespace std;
@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
     auto projection = make_shared<PerspectiveProjection>();
     auto camera     = make_shared<Camera>();
     auto coordSys   = make_shared<CoordSys>();
-    auto triangle   = make_shared<TestTriangle>();
-    auto geode      = make_shared<Geode>(triangle);
+    auto tower      = make_shared<Indicatower>();
+    auto geode      = make_shared<Geode>(tower);
     projection->AddChild(camera);
     camera->AddChild(coordSys);
     coordSys->AddChild(geode);
