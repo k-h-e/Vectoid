@@ -30,17 +30,22 @@ int main(int argc, char **argv) {
     
     projection->SetViewPort((float)display.Width(), (float)display.Height());
     projection->SetWindowSize(1.0f);
-    projection->SetViewingDepth(3.0f);
+    projection->SetViewingDepth(4.0f);
     projection->SetEyepointDistance(1.0f);
-    camera->SetPosition(Vector(0.0f, 0.5f, 1.5f));
+    camera->SetPosition(Vector(0.0f, 0.5f, 2.5f));
     
     display.BeginFrame();
     glEnable(GL_DEPTH_TEST);
     glClearColor(.1f, .1f, .3f, 1.0f);
+    GLfloat lightPosition[] = { 2.0f, 2.0f, 5.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    glEnable(GL_LIGHT0);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
     display.EndFrame();
     
     for (int i = 0; i < 2; ++i) {
-        for (int angle = 0; angle < 360; angle += 5) {
+        for (int angle = 0; angle < 360; angle += 1) {
             Transform transform(YAxis, (float)angle);
             coordSys->SetTransform(transform);
             

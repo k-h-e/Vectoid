@@ -21,7 +21,11 @@ class Indicatower : public virtual kxm::Vectoid::GeometryInterface {
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:
-    GLfloat vertices_[90];
+    static const GLfloat normals[90];
+    
+    GLfloat vertices_[90],
+            color_[4];
+    
 };
 
 }    // Namespace Raspiator.
