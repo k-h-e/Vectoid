@@ -40,8 +40,10 @@ add_executable(raspiator
                ../../src/Vectoid/include/Vectoid/TestTriangle.h
                ../../src/Vectoid/include/Vectoid/Transform.h
                ../../src/Vectoid/include/Vectoid/Vector.h
+               src/Glyphs.h
                src/Indicatower.h
                src/VideoCoreDisplay.h
+               src/TextConsole.h
 
                ../../src/kxm/Core/Buffer.cpp
                ../../src/kxm/Core/Interface.cpp
@@ -60,8 +62,10 @@ add_executable(raspiator
                ../../src/Vectoid/Range.cpp
                ../../src/Vectoid/SceneGraphNode.cpp
                ../../src/Vectoid/TestTriangle.cpp
+               src/Glyphs.cpp
                src/Indicatower.cpp
                src/VideoCoreDisplay.cpp
+               src/TextConsole.cpp
                src/main.cpp
                )
 

@@ -8,7 +8,6 @@ using namespace std;
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
-    cout << "Alive." << endl;
 
     auto textDisplay = make_shared<TextDisplay>();
     textDisplay->setWindowTitle("fontgen");

@@ -1,6 +1,7 @@
 #include "TextDisplay.h"
 
 #include <iostream>
+#include <iomanip>
 #include <QPainter>
 
 using namespace std;
@@ -25,15 +26,13 @@ TextDisplay::TextDisplay()
             height = metrics_->height();
         if (width  > glyphWidth_)  glyphWidth_  = width;
         if (height > glyphHeight_) glyphHeight_ = height;
-        cout << "glyph=" << glyph.toStdString()
-             << " : size=(" << width << ", " << height << ")" << endl;
     }
-    cout << "glyph_size=(" << glyphWidth_ << ", " << glyphHeight_ << ")" << endl;
 }
 
 
 void TextDisplay::paintEvent(QPaintEvent *event) {
-    cout << "paintEvent()" << endl;
+    if (generateCode_)
+        cout << hex;
 
     QPainter painter(this);
     painter.setFont(font_);
@@ -54,21 +53,31 @@ void TextDisplay::paintEvent(QPaintEvent *event) {
         }
 
         if (generateCode_) {
-            cout << "glyph=" << glyph.toStdString() << endl;
             auto buffer = make_shared<QImage>(glyphWidth_, glyphHeight_, QImage::Format_RGB32);
             QPainter imagePainter(buffer.get());
             imagePainter.setFont(font_);
             imagePainter.fillRect(QRect(0, 0, glyphWidth_, glyphHeight_), QColor(255, 255, 255));
             imagePainter.drawText(QRect(0, 0, glyphWidth_, glyphHeight_), glyph);
             for (int yy = ascendReduction; yy < glyphHeight_; ++yy) {
+                cout << "    ";
                 for (int xx = 0; xx < glyphWidth_; ++xx) {
                     int grey = qGray(buffer->pixel(xx, yy));
-                    cout << grey << ",";
+                    cout << "0x" << setfill('0') << setw(2) << grey << ", ";
                 }
                 cout << endl;
             }
             cout << endl;
         }
+    }
+
+    if (generateCode_) {
+        for (QString &glyph : glyphs_) {
+            char c = (glyph.toStdString())[0];
+            cout << "0x" << setfill('0') << setw(2) << (int)c << ", ";
+        }
+        cout << endl << endl << dec;
+        cout << (int)glyphs_.size() << " glyphs of size (" << glyphWidth_ << "x"
+             << (glyphHeight_ - ascendReduction) << ")" << endl;
     }
 
     generateCode_ = false;

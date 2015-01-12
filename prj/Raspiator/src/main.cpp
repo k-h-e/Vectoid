@@ -5,8 +5,10 @@
 #include <Vectoid/CoordSys.h>
 #include <Vectoid/Geode.h>
 
+#include "Glyphs.h"
 #include "Indicatower.h"
 #include "VideoCoreDisplay.h"
+#include "TextConsole.h"
 
 using namespace std;
 using namespace kxm::Vectoid;
@@ -23,7 +25,10 @@ int main(int argc, char **argv) {
     auto camera     = make_shared<Camera>();
     auto coordSys   = make_shared<CoordSys>();
     auto tower      = make_shared<Indicatower>();
-    auto geode      = make_shared<Geode>(tower);
+    auto glyphs     = make_shared<Glyphs>();
+    auto console    = make_shared<TextConsole>(10, 2, glyphs);
+    auto geode      = make_shared<Geode>(console);
+    //auto geode      = make_shared<Geode>(tower);
     projection->AddChild(camera);
     camera->AddChild(coordSys);
     coordSys->AddChild(geode);
@@ -37,6 +42,7 @@ int main(int argc, char **argv) {
     display.BeginFrame();
     glEnable(GL_DEPTH_TEST);
     glClearColor(.1f, .1f, .3f, 1.0f);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     GLfloat lightPosition[] = { 2.0f, 2.0f, 5.0f, 1.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glEnable(GL_LIGHT0);
@@ -46,7 +52,7 @@ int main(int argc, char **argv) {
     
     for (int i = 0; i < 2; ++i) {
         for (int angle = 0; angle < 360; angle += 1) {
-            Transform transform(YAxis, (float)angle);
+            Transform transform(ZAxis, (float)angle);
             coordSys->SetTransform(transform);
             
             display.BeginFrame();
