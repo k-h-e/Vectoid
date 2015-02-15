@@ -3,6 +3,7 @@
 
 
 #include <memory>
+#include <vector>
 #include <Vectoid/GeometryInterface.h>
 
 
@@ -22,7 +23,8 @@ class TextConsole : public virtual kxm::Vectoid::GeometryInterface {
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:
-    int width_, height_;
+    int                     width_, height_;
+    std::vector<uint8_t>    buffer_;
     std::shared_ptr<Glyphs> glyphs_;
 };
 

@@ -1,6 +1,13 @@
+Zarch
 - Enhance thread interleaving.
 - Enhance generation of time event.
 
+Raspiator
+- fix header dependencies
+    - kxm Core dependencies missing in CMake stuff
+    - same in Qt version
+
+General
 - Check everywhere regarding default move operations!
 - Switch Log().Stream() to moving.
 - Move event registration to individual subsystems.

@@ -11,8 +11,9 @@
 #define KXM_VECTOID_OPENGL_H_
 
 
+#include <OpenGL/gl.h>
 //#include <OpenGLES/ES1/gl.h>
-#include <GLES/gl.h>
+//#include <GLES/gl.h>
 
 
 #endif    // KXM_VECTOID_OPENGL_H_

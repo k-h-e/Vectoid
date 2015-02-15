@@ -16,7 +16,7 @@ class Glyphs {
     Glyphs(Glyphs &&other)                 = delete;
     Glyphs &operator=(Glyphs &&other)      = delete;
     
-    //! Binds the texture for the specified glyph.
+    //! Binds the texture for the specified glyph, if present.
     void BindGlyphTexture(uint8_t glyph);
     
   private:
