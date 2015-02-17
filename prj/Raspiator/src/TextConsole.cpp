@@ -1,5 +1,6 @@
 #include "TextConsole.h"
 
+#include <string>
 #include <cassert>
 #include <Vectoid/OpenGL.h>
 
@@ -14,6 +15,7 @@ namespace Raspiator {
 TextConsole::TextConsole(int width, int height, shared_ptr<Glyphs> glyphs)
         : width_(width),
           height_(height),
+          rowCursor_(0),
           glyphs_(glyphs) {
     assert(width  > 0);
     assert(height > 0);
@@ -22,6 +24,30 @@ TextConsole::TextConsole(int width, int height, shared_ptr<Glyphs> glyphs)
     buffer_.resize(num);
     for (int i = 0; i < num; ++i)
         buffer_[i] = 65;
+}
+
+void TextConsole::WriteLine(const string &line) {
+    uint8_t *ptr = &buffer_[rowCursor_ * width_];
+    int     num  = 0;
+    for (const char &c : line) {
+        *ptr++ = (uint8_t)c;
+        ++num;
+        if (num == width_) {
+            num = 0;
+            ++rowCursor_;
+            if (rowCursor_ == height_) {
+                rowCursor_ = 0;
+                ptr = &buffer_[0];
+            }
+        }
+    }
+    while (num != width_) {
+        *ptr++ = (uint8_t)' ';
+        ++num;
+    }
+    ++rowCursor_;
+    if (rowCursor_ == height_)
+        rowCursor_ = 0;
 }
 
 void TextConsole::Render(RenderContext *context) {
@@ -48,14 +74,16 @@ void TextConsole::Render(RenderContext *context) {
    	glEnableClientState(GL_VERTEX_ARRAY);
    	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    float glyphWidth  = .15f,
-          glyphHeight = .2f,
+    float glyphWidth  = .14f,
+          glyphHeight = .19f,
           left        = -.5f * width_  * glyphWidth,
           top         =  .5f * height_ * glyphHeight,
           x           = left,
           y           = top;
-    uint8_t *ptr = &buffer_[0];
+    uint8_t *ptr = &buffer_[rowCursor_ * width_];
     for (int row = 0; row < height_; ++row) {
+        if (rowCursor_ + row == height_)
+            ptr = &buffer_[0];
         float nextY = y - glyphHeight;
         for (int col = 0; col < width_; ++col) {
             float nextX = x + glyphWidth;

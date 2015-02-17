@@ -7,7 +7,25 @@ INCLUDEPATH = ../../../../src/kxm/Core/include \
               ../../src
 DEPENDPATH  = $INCLUDEPATH
 
-HEADERS = ../../../../src/Vectoid/include/Vectoid/CoordSys.h \
+HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
+          ../../../../src/kxm/Core/include/kxm/Core/Buffer.h \
+          ../../../../src/kxm/Core/include/kxm/Core/ConditionVariableInterface.h \
+          ../../../../src/kxm/Core/include/kxm/Core/config.h \
+          ../../../../src/kxm/Core/include/kxm/Core/CriticalSection.h \
+          ../../../../src/kxm/Core/include/kxm/Core/Interface.h \
+          ../../../../src/kxm/Core/include/kxm/Core/IntModN.h \
+          ../../../../src/kxm/Core/include/kxm/Core/LockInterface.h \
+          ../../../../src/kxm/Core/include/kxm/Core/logging.h \
+          ../../../../src/kxm/Core/include/kxm/Core/NumberTools.h \
+          ../../../../src/kxm/Core/include/kxm/Core/POSIXThreadingFactory.h \
+          ../../../../src/kxm/Core/include/kxm/Core/ReusableItems.h \
+          ../../../../src/kxm/Core/include/kxm/Core/terminal.h \
+          ../../../../src/kxm/Core/include/kxm/Core/Thread.h \
+          ../../../../src/kxm/Core/include/kxm/Core/ThreadControlInterface.h \
+          ../../../../src/kxm/Core/include/kxm/Core/ThreadingFactoryInterface.h \
+          ../../../../src/Vectoid/include/Vectoid/AgeColoredParticles.h \
+          ../../../../src/Vectoid/include/Vectoid/Camera.h \
+          ../../../../src/Vectoid/include/Vectoid/CoordSys.h \
           ../../../../src/Vectoid/include/Vectoid/CoordSysCore.h \
           ../../../../src/Vectoid/include/Vectoid/CoordSysInterface.h \
           ../../../../src/Vectoid/include/Vectoid/Geode.h \
@@ -24,6 +42,7 @@ HEADERS = ../../../../src/Vectoid/include/Vectoid/CoordSys.h \
           ../../src/Glyphs.h \
           ../../src/Indicatower.h \
           ../../src/TextConsole.h \
+          ../../src/TextRing.h \
           src/QtController.h \
           src/QtGLDisplay.h
 
@@ -48,6 +67,7 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           ../../src/Glyphs.cpp \
           ../../src/Indicatower.cpp \
           ../../src/TextConsole.cpp \
+          ../../src/TextRing.cpp \
           src/QtController.cpp \
           src/QtGLDisplay.cpp \
           src/main.cpp

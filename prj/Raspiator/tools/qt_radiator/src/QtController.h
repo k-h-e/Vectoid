@@ -14,6 +14,8 @@ namespace Vectoid {
 
 namespace Raspiator {
 
+class TextConsole;
+class TextRing;
 class QtGLDisplay;
 
 class QtController : public QWidget {
@@ -35,7 +37,10 @@ class QtController : public QWidget {
     std::shared_ptr<QtGLDisplay>                         view_;
     std::shared_ptr<kxm::Vectoid::PerspectiveProjection> projection_;
     std::shared_ptr<kxm::Vectoid::CoordSys>              coordSys_;
-    int                                                  angle_;
+    std::shared_ptr<TextConsole>                         console_;
+    std::shared_ptr<TextRing>                            textRing_;
+    int                                                  angle_,
+                                                         counter_;
 };
 
 }

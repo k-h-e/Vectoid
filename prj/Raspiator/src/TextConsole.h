@@ -20,10 +20,17 @@ class TextConsole : public virtual kxm::Vectoid::GeometryInterface {
     TextConsole(TextConsole &&other)                 = delete;
     TextConsole &operator=(TextConsole &&other)      = delete;
     
+    //! Writes the specified line of text to the console, wrapping it into multiple rows if
+    //! necessary.
+    /*!
+     *  \note Encoding is ASCII for now.
+     */
+    void WriteLine(const std::string &line);
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:
-    int                     width_, height_;
+    int                     width_, height_,
+                            rowCursor_;
     std::vector<uint8_t>    buffer_;
     std::shared_ptr<Glyphs> glyphs_;
 };

@@ -1,6 +1,7 @@
 #include "QtController.h"
 
 #include <iostream>
+#include <sstream>
 
 #include <QTimer>
 
@@ -12,6 +13,7 @@
 #include "Glyphs.h"
 #include "Indicatower.h"
 #include "TextConsole.h"
+#include "TextRing.h"
 #include "QtGLDisplay.h"
 
 using namespace std;
@@ -26,8 +28,9 @@ QtController::QtController() {
     auto coordSys   = make_shared<CoordSys>();
     auto tower      = make_shared<Indicatower>();
     auto glyphs     = make_shared<Glyphs>();
-    auto console    = make_shared<TextConsole>(10, 4, glyphs);
-    auto geode      = make_shared<Geode>(console);
+    auto console    = make_shared<TextConsole>(20, 10, glyphs);
+    auto textRing   = make_shared<TextRing>(1.0f, .1f, .22f, glyphs);
+    auto geode      = make_shared<Geode>(textRing);
     //auto geode      = make_shared<Geode>(tower);
     projection->AddChild(camera);
     camera->AddChild(coordSys);
@@ -44,7 +47,10 @@ QtController::QtController() {
 
     projection_ = projection;
     coordSys_   = coordSys;
+    console_    = console;
+    textRing_   = textRing;
     angle_      = 0;
+    counter_    = 0;
 }
 
 void QtController::SetView(std::shared_ptr<QtGLDisplay> view) {
@@ -59,7 +65,20 @@ void QtController::ProcessTimer() {
     ++angle_;
     if (angle_ >= 360)
         angle_ = 0;
-    Transform transform(ZAxis, (float)angle_);
+
+    if (!(angle_ % 20)) {
+        stringstream txt;
+        txt << "Hallo Maus! (" << counter_ << ")";
+        console_->WriteLine(txt.str());
+        textRing_->SetText(txt.str());
+        ++counter_;
+    }
+
+    Transform transform(ZAxis, 360 - angle_ - 1);
+    transform.Append(Transform(XAxis, -30.0f));
+    transform.Append(Transform(YAxis, -30.0f));
+    transform.SetTranslationPart(Vector(0.1f, 0.5f, 0.0f));
+
     coordSys_->SetTransform(transform);
     QtGLDisplay *view = view_.get();
     if (view)
