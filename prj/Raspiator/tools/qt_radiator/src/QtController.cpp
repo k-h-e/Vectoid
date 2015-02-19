@@ -26,12 +26,12 @@ QtController::QtController() {
     auto projection = make_shared<PerspectiveProjection>();
     auto camera     = make_shared<Camera>();
     auto coordSys   = make_shared<CoordSys>();
-    auto tower      = make_shared<Indicatower>();
+    auto tower      = make_shared<Indicatower>(10, .002f);
     auto glyphs     = make_shared<Glyphs>();
     auto console    = make_shared<TextConsole>(20, 10, glyphs);
     auto textRing   = make_shared<TextRing>(1.0f, .1f, .22f, glyphs);
-    auto geode      = make_shared<Geode>(textRing);
-    //auto geode      = make_shared<Geode>(tower);
+    //auto geode      = make_shared<Geode>(textRing);
+    auto geode      = make_shared<Geode>(tower);
     projection->AddChild(camera);
     camera->AddChild(coordSys);
     coordSys->AddChild(geode);
@@ -45,12 +45,13 @@ QtController::QtController() {
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(ProcessTimer()));
     timer->start(0);
 
-    projection_ = projection;
-    coordSys_   = coordSys;
-    console_    = console;
-    textRing_   = textRing;
-    angle_      = 0;
-    counter_    = 0;
+    projection_  = projection;
+    coordSys_    = coordSys;
+    console_     = console;
+    textRing_    = textRing;
+    indicatower_ = tower;
+    angle_       = 0;
+    counter_     = 0;
 }
 
 void QtController::SetView(std::shared_ptr<QtGLDisplay> view) {
@@ -73,10 +74,11 @@ void QtController::ProcessTimer() {
         textRing_->SetText(txt.str());
         ++counter_;
     }
+    indicatower_->SetCounts(angle_, 360);
 
-    Transform transform(ZAxis, 360 - angle_ - 1);
-    transform.Append(Transform(XAxis, -30.0f));
-    transform.Append(Transform(YAxis, -30.0f));
+    Transform transform(YAxis, angle_);
+    transform.Append(Transform(XAxis, 30.0f));
+    transform.Append(Transform(YAxis, 30.0f));
     transform.SetTranslationPart(Vector(0.1f, 0.5f, 0.0f));
 
     coordSys_->SetTransform(transform);

@@ -16,6 +16,7 @@ namespace Raspiator {
 
 class TextConsole;
 class TextRing;
+class Indicatower;
 class QtGLDisplay;
 
 class QtController : public QWidget {
@@ -37,6 +38,7 @@ class QtController : public QWidget {
     std::shared_ptr<QtGLDisplay>                         view_;
     std::shared_ptr<kxm::Vectoid::PerspectiveProjection> projection_;
     std::shared_ptr<kxm::Vectoid::CoordSys>              coordSys_;
+    std::shared_ptr<Indicatower>                         indicatower_;
     std::shared_ptr<TextConsole>                         console_;
     std::shared_ptr<TextRing>                            textRing_;
     int                                                  angle_,
