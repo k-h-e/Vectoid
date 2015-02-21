@@ -5,19 +5,15 @@
 #include <QOpenGLWidget>
 
 
-namespace kxm {
-namespace Vectoid {
-    class PerspectiveProjection;
-}
-}
-
 namespace Raspiator {
+
+class Visualization;
 
 class QtGLDisplay : public QOpenGLWidget {
     Q_OBJECT
 
   public:
-    QtGLDisplay(std::shared_ptr<kxm::Vectoid::PerspectiveProjection> projection);
+    QtGLDisplay(std::shared_ptr<Visualization> visualization);
     QtGLDisplay(const QtGLDisplay &other)            = delete;
     QtGLDisplay &operator=(const QtGLDisplay &other) = delete;
     QtGLDisplay(QtGLDisplay &&other)                 = delete;
@@ -29,7 +25,7 @@ class QtGLDisplay : public QOpenGLWidget {
     void paintGL();
 
   private:
-    std::shared_ptr<kxm::Vectoid::PerspectiveProjection> projection_;
+    std::shared_ptr<Visualization> visualization_;
 };
 
 }    // Namespace Raspiator.

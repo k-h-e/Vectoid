@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <Vectoid/PerspectiveProjection.h>
+#include "Visualization.h";
 
 using namespace std;
 using namespace kxm::Vectoid;
@@ -10,8 +11,8 @@ using namespace kxm::Vectoid;
 
 namespace Raspiator {
 
-QtGLDisplay::QtGLDisplay(std::shared_ptr<PerspectiveProjection> projection)
-    : projection_(projection) {
+QtGLDisplay::QtGLDisplay(std::shared_ptr<Visualization> visualization)
+    : visualization_(visualization) {
     // Nop.
 }
 
@@ -27,12 +28,11 @@ void QtGLDisplay::initializeGL() {
 }
 
 void QtGLDisplay::resizeGL(int width, int height) {
-    projection_->SetViewPort((float)width, (float)height);
+    visualization_->SetViewPort(width, height);
 }
 
 void QtGLDisplay::paintGL() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    projection_->Render(nullptr);
+    visualization_->RenderFrame();
 }
 
 }    // Namespace Raspiator.

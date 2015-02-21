@@ -43,6 +43,7 @@ HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
           ../../src/Indicatower.h \
           ../../src/TextConsole.h \
           ../../src/TextRing.h \
+          ../../src/Visualization.h \
           src/QtController.h \
           src/QtGLDisplay.h
 
@@ -68,6 +69,7 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           ../../src/Indicatower.cpp \
           ../../src/TextConsole.cpp \
           ../../src/TextRing.cpp \
+          ../../src/Visualization.cpp \
           src/QtController.cpp \
           src/QtGLDisplay.cpp \
           src/main.cpp

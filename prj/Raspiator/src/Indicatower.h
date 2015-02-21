@@ -12,7 +12,7 @@ namespace Raspiator {
 //! "Tower" geometry for indicating numbers.
 class Indicatower : public virtual kxm::Vectoid::GeometryInterface {
   public:
-    Indicatower(int numSectors, float stretch);
+    Indicatower(float radius, int numSectors, float stretch);
     Indicatower(const Indicatower &other)            = delete;
     Indicatower &operator=(const Indicatower &other) = delete;
     Indicatower(Indicatower &&other)                 = delete;
@@ -25,13 +25,13 @@ class Indicatower : public virtual kxm::Vectoid::GeometryInterface {
     void ComputeHull(float top, float bottom);
     void ComputeCover(float top);
 
-    GLfloat              color_[4];
     std::vector<GLfloat> hullVertices_,
                          hullNormals_,
                          coverVertices_,
                          coverNormals_;
     int                  numSectors_;
-    float                stretch_,
+    float                radius_,
+                         stretch_,
                          top_,
                          mid_;
 };

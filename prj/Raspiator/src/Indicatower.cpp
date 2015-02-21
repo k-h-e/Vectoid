@@ -8,14 +8,14 @@ using namespace kxm::Vectoid;
 
 namespace Raspiator {
 
-Indicatower::Indicatower(int numSectors, float stretch)
+Indicatower::Indicatower(float radius, int numSectors, float stretch)
         : numSectors_(numSectors),
+          radius_(radius),
           stretch_(stretch),
           top_(0.0f),
           mid_(0.0f) {
     assert(numSectors_ >= 3);
     assert(stretch_ > 0.0f);
-    color_[0] = .8f;    color_[1] = .8f;    color_[2] = .2f;    color_[3] = 1.0f;
 
     hullVertices_.resize(numSectors_ * 18);
     hullNormals_.resize(numSectors_ * 18);
@@ -45,13 +45,14 @@ void Indicatower::Render(RenderContext *context) {
     glVertexPointer(3, GL_FLOAT, 0, &hullVertices_[0]);
     glNormalPointer(GL_FLOAT, 0, &hullNormals_[0]);
     ComputeHull(mid_, 0.0f);
-    color_[0] = .2f;    color_[1] = .8f;    color_[2] = .2f;    color_[3] = 1.0f;
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_);
+    GLfloat color[4];
+    color[0] = .2f;    color[1] = .8f;    color[2] = .2f;    color[3] = 1.0f;
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
     glDrawArrays(GL_TRIANGLES, 0, numSectors_ * 6);
 
     ComputeHull(top_, mid_);
-    color_[0] = .8f;    color_[1] = .2f;    color_[2] = .2f;    color_[3] = 1.0f;
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color_);
+    color[0] = .8f;    color[1] = .2f;    color[2] = .2f;    color[3] = 1.0f;
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
     glDrawArrays(GL_TRIANGLES, 0, numSectors_ * 6);
 
     glVertexPointer(3, GL_FLOAT, 0, &coverVertices_[0]);
@@ -68,7 +69,7 @@ void Indicatower::ComputeHull(float top, float bottom) {
             *nptr = &hullNormals_[0];
     Vector lastArm;
     for (int i = 0; i <= numSectors_; ++i) {
-        Vector arm(1.0f, 0.0f, 0.0f);
+        Vector arm(radius_, 0.0f, 0.0f);
         Transform(YAxis, (float)i / (float)numSectors_ * 360.0f).ApplyTo(&arm);
         if (!i) {
             lastArm = arm;
@@ -98,7 +99,7 @@ void Indicatower::ComputeCover(float top) {
             *nptr = &coverNormals_[0];
     Vector lastArm;
     for (int i = 0; i <= numSectors_; ++i) {
-        Vector arm(1.0f, 0.0f, 0.0f);
+        Vector arm(radius_, 0.0f, 0.0f);
         Transform(YAxis, (float)i / (float)numSectors_ * 360.0f).ApplyTo(&arm);
         if (!i) {
             lastArm = arm;
