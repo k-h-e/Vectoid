@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include <Vectoid/PerspectiveProjection.h>
-#include "Visualization.h";
+#include "Visualization.h"
 
 using namespace std;
 using namespace kxm::Vectoid;

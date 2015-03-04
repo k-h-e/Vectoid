@@ -14,7 +14,8 @@ class Glyphs;
 //! Text console geometry.
 class TextConsole : public virtual kxm::Vectoid::GeometryInterface {
   public:
-    TextConsole(int width, int height, std::shared_ptr<Glyphs> glyphs);
+    TextConsole(int width, int height, float glyphWidth, float glyphHeight,
+                std::shared_ptr<Glyphs> glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -31,6 +32,7 @@ class TextConsole : public virtual kxm::Vectoid::GeometryInterface {
   private:
     int                     width_, height_,
                             rowCursor_;
+    float                   glyphWidth_, glyphHeight_;
     std::vector<uint8_t>    buffer_;
     std::shared_ptr<Glyphs> glyphs_;
 };

@@ -12,10 +12,13 @@ using namespace kxm::Vectoid;
 
 namespace Raspiator {
 
-TextConsole::TextConsole(int width, int height, shared_ptr<Glyphs> glyphs)
+TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
+                         shared_ptr<Glyphs> glyphs)
         : width_(width),
           height_(height),
           rowCursor_(0),
+          glyphWidth_(glyphWidth),
+          glyphHeight_(glyphHeight),
           glyphs_(glyphs) {
     assert(width  > 0);
     assert(height > 0);
@@ -41,13 +44,15 @@ void TextConsole::WriteLine(const string &line) {
             }
         }
     }
-    while (num != width_) {
-        *ptr++ = (uint8_t)' ';
-        ++num;
+    if (num) {
+        while (num != width_) {
+            *ptr++ = (uint8_t)' ';
+            ++num;
+        }
+        ++rowCursor_;
+        if (rowCursor_ == height_)
+            rowCursor_ = 0;
     }
-    ++rowCursor_;
-    if (rowCursor_ == height_)
-        rowCursor_ = 0;
 }
 
 void TextConsole::Render(RenderContext *context) {
@@ -74,19 +79,17 @@ void TextConsole::Render(RenderContext *context) {
    	glEnableClientState(GL_VERTEX_ARRAY);
    	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    float glyphWidth  = .14f,
-          glyphHeight = .19f,
-          left        = -.5f * width_  * glyphWidth,
-          top         =  .5f * height_ * glyphHeight,
+    float left        = -.5f * width_  * glyphWidth_,
+          top         =  .5f * height_ * glyphHeight_,
           x           = left,
           y           = top;
     uint8_t *ptr = &buffer_[rowCursor_ * width_];
     for (int row = 0; row < height_; ++row) {
         if (rowCursor_ + row == height_)
             ptr = &buffer_[0];
-        float nextY = y - glyphHeight;
+        float nextY = y - glyphHeight_;
         for (int col = 0; col < width_; ++col) {
-            float nextX = x + glyphWidth;
+            float nextX = x + glyphWidth_;
             vertices[ 0] = x;        vertices[ 1] = nextY;
             vertices[ 3] = nextX;    vertices[ 4] = nextY;
             vertices[ 6] = nextX;    vertices[ 7] = y;

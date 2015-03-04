@@ -20,7 +20,8 @@ TextRing::TextRing(float radius, float glyphWidth, float glyphHeight, shared_ptr
     assert(glyphWidth  > 0.0f);
     assert(glyphHeight > 0.0f);
 
-    float angleStep = 10.0f;    // TODO: Calculate this.
+    auto angleStep = (float)(acos(1.0 - .5*glyphWidth*glyphWidth/radius/radius)
+                             / 3.141592654 * 180.0);
 
     vector<Vector> innerPoints;
     float angle = 0.0f;

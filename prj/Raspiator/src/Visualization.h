@@ -3,24 +3,30 @@
 
 
 #include <memory>
+#include <vector>
+#include <unordered_map>
+#include <string>
 
 
 namespace kxm {
 namespace Vectoid {
     class PerspectiveProjection;
     class Camera;
+    class CoordSys;
     class Vector;
 }
 }
 
 namespace Raspiator {
 
-class TextConsole;
+class Indicatower;
+class Glyphs;
 class TextRing;
 
 class Visualization {
   public:
-    Visualization();
+    Visualization(float indicatowerDistance, float indicatowerRadius,
+                  float glyphWidth, float glyphHeight, float groupDistanceModifier);
     Visualization(const Visualization &other)            = delete;
     Visualization &operator=(const Visualization &other) = delete;
     Visualization(Visualization &&other)                 = delete;
@@ -28,15 +34,59 @@ class Visualization {
     void SetViewPort(int width, int height);
     void RenderFrame();
 
-  private:
-    void AddIndicatower(const kxm::Vectoid::Vector &position);
+    //! Starts a new group.
+    void NewGroup(const std::string &name, float angle, float distanceModifier);
+    //! Starts a new sub group in the current group.
+    void NewSubGroup(const std::string &name, float angle);
+    //! Adds a new job to the current sub group.
+    void NewJob(const std::string &id, const std::string &name);
+    //! Layouts the visualization.
+    void UpdateLayout();
 
-    std::shared_ptr<kxm::Vectoid::PerspectiveProjection> projection_;
-    std::shared_ptr<kxm::Vectoid::Camera>                camera_;
-    std::shared_ptr<TextConsole>                         console_;
-    std::shared_ptr<TextRing>                            textRing_;
-    int                                                  angle_,
-                                                         counter_;
+    //! Updates the test counts for the specified job.
+    void SetJobCounts(const std::string &id, int numRed, int numTotal);
+
+  private:
+    struct JobInfo;
+    struct SubGroupInfo {
+        std::string                             name;
+        std::vector<std::shared_ptr<JobInfo>>   jobs;
+        float                                   angle;
+        std::shared_ptr<kxm::Vectoid::CoordSys> coordSys;
+        SubGroupInfo(const std::string &aName, float anAngle);
+        //! Lays out the sub group's towers around the origin in the xz-plane and returns the radius
+        //! of the enclosing circle.
+        float Layout(float indicatowerDistance, float indicatowerRadius);
+    };
+    struct GroupInfo {
+        std::string                                name;
+        std::vector<std::unique_ptr<SubGroupInfo>> subGroups;
+        float                                      angle,
+                                                   distanceModifier;
+        std::shared_ptr<kxm::Vectoid::CoordSys>    coordSys;
+        GroupInfo(const std::string &aName, float anAngle, float aDistanceModifier);
+        //! Lays out the group's sub groups around the origin in the xz-plane and returns the radius
+        //! of the enclosing circle.
+        float Layout(float indicatowerDistance, float indicatowerRadius);
+    };
+
+    static void LayoutPositions(
+        int num, float distance, std::vector<kxm::Vectoid::Vector> *positions, float *radius);
+
+    std::vector<std::unique_ptr<GroupInfo>>                   groups_;
+    GroupInfo                                                 *currentGroup_;
+    SubGroupInfo                                              *currentSubGroup_;
+    std::unordered_map<std::string, std::shared_ptr<JobInfo>> jobs_;
+    std::shared_ptr<kxm::Vectoid::PerspectiveProjection>      projection_;
+    std::shared_ptr<kxm::Vectoid::Camera>                     camera_;
+    std::shared_ptr<Glyphs>                                   glyphs_;
+    float                                                     glyphWidth_, glyphHeight_,
+                                                              indicatowerRadius_,
+                                                              indicatowerDistance_,
+                                                              indicatowerStretch_,
+                                                              groupDistanceModifier_,
+                                                              angle_,
+                                                              counter_;
 };
 
 }    // Namespace Raspiator.
