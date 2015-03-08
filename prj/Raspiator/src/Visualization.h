@@ -6,6 +6,10 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <chrono>
+#include <random>
+#include <Vectoid/Vector.h>
+#include "JenkinsAccess.h"
 
 
 namespace kxm {
@@ -13,7 +17,6 @@ namespace Vectoid {
     class PerspectiveProjection;
     class Camera;
     class CoordSys;
-    class Vector;
 }
 }
 
@@ -25,8 +28,10 @@ class TextRing;
 
 class Visualization {
   public:
-    Visualization(float indicatowerDistance, float indicatowerRadius,
-                  float glyphWidth, float glyphHeight, float groupDistanceModifier);
+    Visualization(const std::string &jenkinsServer,
+                  float indicatowerDistance, float indicatowerRadius, float indicatowerStretch,
+                  float glyphWidth, float glyphHeight, float groupDistanceModifier,
+                  kxm::Vectoid::Vector groupTranslation);
     Visualization(const Visualization &other)            = delete;
     Visualization &operator=(const Visualization &other) = delete;
     Visualization(Visualization &&other)                 = delete;
@@ -39,12 +44,13 @@ class Visualization {
     //! Starts a new sub group in the current group.
     void NewSubGroup(const std::string &name, float angle);
     //! Adds a new job to the current sub group.
-    void NewJob(const std::string &id, const std::string &name);
+    void NewJob(const std::string &id, const std::string &name, const std::string &jenkinsJob,
+                float updateIntervalS);
     //! Layouts the visualization.
     void UpdateLayout();
 
-    //! Updates the test counts for the specified job.
-    void SetJobCounts(const std::string &id, int numRed, int numTotal);
+    //! Updates the data for the specified job.
+    void SetJobData(const std::string &id, int numRed, int numTotal, int progressPercent);
 
   private:
     struct JobInfo;
@@ -85,8 +91,14 @@ class Visualization {
                                                               indicatowerDistance_,
                                                               indicatowerStretch_,
                                                               groupDistanceModifier_,
-                                                              angle_,
+                                                              angle_, angle2_,
                                                               counter_;
+    kxm::Vectoid::Vector                                      groupTranslation_;
+    std::chrono::time_point<std::chrono::steady_clock>        lastFrameTime_;
+    JenkinsAccess                                             jenkinsAccess_;
+    std::vector<JenkinsAccess::Data>                          jobDataBuffer_;
+    std::default_random_engine                                random_;
+    float                                                     timeSinceLastJobUpdateS_;
 };
 
 }    // Namespace Raspiator.

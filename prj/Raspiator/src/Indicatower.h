@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <Vectoid/OpenGL.h>
+#include <Vectoid/Vector.h>
 #include <Vectoid/GeometryInterface.h>
 
 
@@ -18,10 +19,14 @@ class Indicatower : public virtual kxm::Vectoid::GeometryInterface {
     Indicatower(Indicatower &&other)                 = delete;
     Indicatower &operator=(Indicatower &&other)      = delete;
     
-    void SetCounts(int num, int numTotal);
+    void SetCounts(int num, int numTotal, int progressPercent);
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:
+    static const kxm::Vectoid::Vector greenColor,
+                                      redColor,
+                                      yellowColor;
+
     void ComputeHull(float top, float bottom);
     void ComputeCover(float top);
 
@@ -34,6 +39,8 @@ class Indicatower : public virtual kxm::Vectoid::GeometryInterface {
                          stretch_,
                          top_,
                          mid_;
+    int                  progressPercent_;
+    kxm::Vectoid::Vector coverColor_;
 };
 
 }    // Namespace Raspiator.

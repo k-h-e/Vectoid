@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <sstream>
-#include <random>
 #include <kxm/Core/NumberTools.h>
 #include <Vectoid/PerspectiveProjection.h>
 #include <Vectoid/Camera.h>
@@ -13,6 +12,7 @@
 #include "TextRing.h"
 
 using namespace std;
+using namespace std::chrono;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
@@ -23,7 +23,8 @@ struct Visualization::JobInfo {
     JobInfo();
     // Default copy and move would be okay.
 
-    std::string                             name;
+    std::string                             id,
+                                            jenkinsJob;
     int                                     numRed,
                                             numTotal;
     std::shared_ptr<Indicatower>            tower;
@@ -32,23 +33,33 @@ struct Visualization::JobInfo {
     std::shared_ptr<kxm::Vectoid::CoordSys> towerCoordSys,
                                             textRingCoordSys,
                                             innerTextRingCoordSys;
-    float                                   stretch;
+    float                                   textRingAngle,
+                                            innerTextRingAngle,
+                                            stretch;
+    int                                     progressPercent;
+    float                                   updateIntervalS,
+                                            timeToUpdateS;
 };
 
 Visualization::Visualization(
-    float indicatowerDistance, float indicatowerRadius, float glyphWidth, float glyphHeight,
-    float groupDistanceModifier)
+    const string &jenkinsServer,
+    float indicatowerDistance, float indicatowerRadius, float indicatowerStretch,
+    float glyphWidth, float glyphHeight, float groupDistanceModifier, Vector groupTranslation)
         : currentGroup_(nullptr),
           currentSubGroup_(nullptr),
           glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
           indicatowerRadius_(indicatowerRadius),
           indicatowerDistance_(indicatowerDistance),
-          indicatowerStretch_(.001f),
-          groupDistanceModifier_(groupDistanceModifier) {
+          indicatowerStretch_(indicatowerStretch),
+          groupDistanceModifier_(groupDistanceModifier),
+          groupTranslation_(groupTranslation),
+          lastFrameTime_(steady_clock::now()),
+          jenkinsAccess_(jenkinsServer),
+          timeSinceLastJobUpdateS_(0.0f) {
     auto projection = make_shared<PerspectiveProjection>();
     projection->SetWindowSize(1.0f);
-    projection->SetViewingDepth(10.0f);
+    projection->SetViewingDepth(11.0f);
     projection->SetEyepointDistance(1.0f);
     auto camera = make_shared<Camera>();
     projection->AddChild(camera);
@@ -57,6 +68,7 @@ Visualization::Visualization(
     camera_      = camera;
     glyphs_      = make_shared<Glyphs>();
     angle_       = 0;
+    angle2_      = 0;
     counter_     = 0;
 }
 
@@ -65,16 +77,24 @@ void Visualization::SetViewPort(int width, int height) {
 }
 
 void Visualization::RenderFrame() {
-    // Animate...
-    angle_ += .1f;
-    if (angle_ > 360.0f)
-        angle_ -= 360.0f;
+    auto now = steady_clock::now();
+    int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
+    lastFrameTime_ = now;
+    float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
 
     // Animate camera...
-    float flightRadius = 4.0f,
-          flightHeight = 6.0f;
+    angle_ += 10.0f * frameDeltaTimeS;
+    if (angle_ > 360.0f)
+        angle_ -= 360.0f;
+    angle2_ += 5.0f * frameDeltaTimeS;
+    if (angle2_ > 360.0f)
+        angle2_ -= 360.0f;
+    float cameraAngle  = 90.0f + 30.0f*sin(angle_ * 3.141592654f / 180.0f),
+          cameraAngle2 = 20.0f + 20.0f*sin(angle2_ * 3.141592654f / 180.0f);
+    float flightRadius = 8.5f * sin(cameraAngle2 * 3.141592654f / 180.0f),
+          flightHeight = 8.5f * cos(cameraAngle2 * 3.141592654f / 180.0f);
     Vector position(flightRadius, flightHeight, 0.0f);
-    Transform(YAxis, angle_).ApplyTo(&position);
+    Transform(YAxis, cameraAngle).ApplyTo(&position);
     Vector viewDirection(-position);
     viewDirection.Normalize();
     Vector u(-viewDirection.z, 0.0f, viewDirection.x);
@@ -83,6 +103,52 @@ void Visualization::RenderFrame() {
     v.Normalize();    // Not really necessary.
     camera_->SetTransform(Transform(u, v, -viewDirection));
     camera_->SetPosition(position);
+
+    // Animate text rings...
+    float minAngularSpeed = 10.0f,
+          maxAngularSpeed = 40.0f;
+    for (auto &pair : jobs_) {
+        JobInfo &info = *pair.second;
+        float angularSpeed = maxAngularSpeed;
+        if (info.numTotal) {
+            float t = (float)info.numRed / (float)info.numTotal;
+            angularSpeed = (1.0f - t)*minAngularSpeed + t*maxAngularSpeed;
+        }
+        info.textRingAngle -= angularSpeed * frameDeltaTimeS;
+        if (info.textRingAngle < 360.0f)
+            info.textRingAngle += 360.0f;
+        Transform transform;
+        info.textRingCoordSys->GetTransform(&transform);
+        Vector position = transform.TranslationPart();
+        transform = Transform(XAxis, -90.0f);
+        transform.Append(Transform(YAxis, info.textRingAngle));
+        transform.SetTranslationPart(position);
+        info.textRingCoordSys->SetTransform(transform);
+
+        info.innerTextRingAngle -= 1.4f * angularSpeed * frameDeltaTimeS;
+        if (info.innerTextRingAngle < 360.0f)
+            info.innerTextRingAngle += 360.0f;
+        info.innerTextRingCoordSys->GetTransform(&transform);
+        position = transform.TranslationPart();
+        transform = Transform(XAxis, -90.0f);
+        transform.Append(Transform(YAxis, info.innerTextRingAngle));
+        transform.SetTranslationPart(position);
+        info.innerTextRingCoordSys->SetTransform(transform);
+
+        info.timeToUpdateS -= frameDeltaTimeS;
+        if (info.timeToUpdateS < 0.0f) {
+            jenkinsAccess_.RequestJobDataUpdate(info.id, info.jenkinsJob);
+            info.timeToUpdateS = info.updateIntervalS;
+        }
+    }
+
+    timeSinceLastJobUpdateS_ += frameDeltaTimeS;
+    if (timeSinceLastJobUpdateS_ > 5.0f) {
+        jenkinsAccess_.GetJobData(&jobDataBuffer_);
+        for (JenkinsAccess::Data &data : jobDataBuffer_)
+            SetJobData(data.id, data.numRed, data.numTotal, data.progressPercent);
+        timeSinceLastJobUpdateS_ = 0.0f;
+    }
 
     // Render...
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -102,12 +168,17 @@ void Visualization::NewSubGroup(const std::string &name, float angle) {
     currentGroup_->coordSys->AddChild(currentSubGroup_->coordSys);
 }
 
-void Visualization::NewJob(const std::string &id, const std::string &name) {
+void Visualization::NewJob(const std::string &id, const std::string &name, const string &jenkinsJob,
+                           float updateIntervalS) {
     assert(currentSubGroup_);
+    if (updateIntervalS < 1.0f)
+        updateIntervalS = 600.0f;
     if(jobs_.find(id) != jobs_.end())
         return;
 
     auto info = make_shared<JobInfo>();
+    info->id            = id;
+    info->jenkinsJob    = jenkinsJob;
     info->stretch       = indicatowerStretch_;
     info->tower         = make_shared<Indicatower>(indicatowerRadius_, 30, indicatowerStretch_);
     auto geode          = make_shared<Geode>(info->tower);
@@ -131,8 +202,15 @@ void Visualization::NewJob(const std::string &id, const std::string &name) {
     info->innerTextRingCoordSys->SetTransform(Transform(XAxis, -90.0f));
     info->towerCoordSys->AddChild(info->innerTextRingCoordSys);
 
+    updateIntervalS /= 4.0f;
+    info->updateIntervalS = updateIntervalS;
+    uniform_int_distribution<int> distribution(0, (int)updateIntervalS);
+    info->timeToUpdateS = (float)distribution(random_);
+
     currentSubGroup_->jobs.push_back(info);
     jobs_[id] = info;
+
+    SetJobData(id, 0, 0, 100);
 }
 
 void Visualization::UpdateLayout() {
@@ -149,25 +227,30 @@ void Visualization::UpdateLayout() {
     int i = 0;
     for (unique_ptr<GroupInfo> &info : groups_) {
         info->coordSys->SetTransform(Transform(YAxis, info->angle));
-        info->coordSys->SetPosition(positions[i]);
+        info->coordSys->SetPosition(positions[i] + groupTranslation_);
         ++i;
     }
 }
 
-void Visualization::SetJobCounts(const std::string &id, int numRed, int numTotal) {
+void Visualization::SetJobData(const std::string &id, int numRed, int numTotal,
+                               int progressPercent) {
     auto infoIter = jobs_.find(id);
     if (infoIter == jobs_.end())
         return;
     if (numTotal < 0)
         numTotal = 0;
     NumberTools::Clamp(&numRed, 0, numTotal);
+    NumberTools::Clamp(&progressPercent, 0, 100);
 
-    JobInfo *info = infoIter->second.get();
-    info->tower->SetCounts(numRed, numTotal);
-    Vector ringPosition(0.0f, (float)numTotal*info->stretch + .01f, 0.0f);
-    info->textRingCoordSys->SetPosition(ringPosition);
-    info->innerTextRingCoordSys->SetPosition(ringPosition);
-    info->innerTextRing->SetText(to_string(numRed) + "/" + to_string(numTotal));
+    JobInfo &info = *infoIter->second;
+    info.numRed          = numRed;
+    info.numTotal        = numTotal;
+    info.progressPercent = progressPercent;
+    info.tower->SetCounts(numRed, numTotal, progressPercent);
+    Vector ringPosition(0.0f, (float)numTotal*info.stretch + .01f, 0.0f);
+    info.textRingCoordSys->SetPosition(ringPosition);
+    info.innerTextRingCoordSys->SetPosition(ringPosition);
+    info.innerTextRing->SetText(to_string(numRed) + "/" + to_string(numTotal));
 }
 
 void Visualization::LayoutPositions(
@@ -210,7 +293,12 @@ void Visualization::LayoutPositions(
 
 Visualization::JobInfo::JobInfo()
     : numRed(0),
-      numTotal(0) {
+      numTotal(0),
+      textRingAngle(0.0f),
+      innerTextRingAngle(0.0f),
+      progressPercent(0),
+      updateIntervalS(0.0f),
+      timeToUpdateS(0.0f) {
     // Nop.
 }
 

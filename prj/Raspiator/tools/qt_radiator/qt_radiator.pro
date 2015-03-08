@@ -7,6 +7,9 @@ INCLUDEPATH = ../../../../src/kxm/Core/include \
               ../../src
 DEPENDPATH  = $INCLUDEPATH
 
+INCLUDEPATH += /Users/kai/opt/boost/include
+LIBS        += /Users/kai/opt/boost/lib/libboost_system.a
+
 HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
           ../../../../src/kxm/Core/include/kxm/Core/Buffer.h \
           ../../../../src/kxm/Core/include/kxm/Core/ConditionVariableInterface.h \
@@ -41,6 +44,7 @@ HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
           ../../../../src/Vectoid/include/Vectoid/Vector.h \
           ../../src/Glyphs.h \
           ../../src/Indicatower.h \
+          ../../src/JenkinsAccess.h \
           ../../src/TextConsole.h \
           ../../src/TextRing.h \
           ../../src/Visualization.h \
@@ -67,6 +71,7 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           ../../../../src/Vectoid/TestTriangle.cpp \
           ../../src/Glyphs.cpp \
           ../../src/Indicatower.cpp \
+          ../../src/JenkinsAccess.cpp \
           ../../src/TextConsole.cpp \
           ../../src/TextRing.cpp \
           ../../src/Visualization.cpp \
