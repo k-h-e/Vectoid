@@ -47,9 +47,10 @@
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/Vectoid/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/kxm/Core/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/src" />
-            <Add directory="/Volumes/xtools/vc/include" />
-            <Add directory="/Volumes/xtools/vc/include/interface/vcos/pthreads" />
-            <Add directory="/Volumes/xtools/vc/include/interface/vmcs_host/linux" />
+            <Add directory="/Users/kai/opt/xtools/raspi/boost/include" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux" />
          </Compiler>
          <MakeCommands>
             <Build command="/usr/bin/make -f &quot;/Users/kai/Developer/kxm/prj/Raspiator/Makefile&quot;  VERBOSE=1 raspiator" />
@@ -68,9 +69,10 @@
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/Vectoid/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/kxm/Core/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/src" />
-            <Add directory="/Volumes/xtools/vc/include" />
-            <Add directory="/Volumes/xtools/vc/include/interface/vcos/pthreads" />
-            <Add directory="/Volumes/xtools/vc/include/interface/vmcs_host/linux" />
+            <Add directory="/Users/kai/opt/xtools/raspi/boost/include" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads" />
+            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux" />
          </Compiler>
          <MakeCommands>
             <Build command="/usr/bin/make -f &quot;/Users/kai/Developer/kxm/prj/Raspiator/Makefile&quot;  VERBOSE=1 raspiator/fast" />
@@ -84,9 +86,15 @@
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Indicatower.cpp">
       </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/JenkinsAccess.cpp">
+      </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/TextConsole.cpp">
       </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/TextRing.cpp">
+      </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/VideoCoreDisplay.cpp">
+      </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Visualization.cpp">
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/main.cpp">
       </Unit>
@@ -128,9 +136,15 @@
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Indicatower.h">
       </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/JenkinsAccess.h">
+      </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/TextConsole.h">
       </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/TextRing.h">
+      </Unit>
       <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/VideoCoreDisplay.h">
+      </Unit>
+      <Unit filename="/Users/kai/Developer/kxm/prj/Raspiator/src/Visualization.h">
       </Unit>
       <Unit filename="/Users/kai/Developer/kxm/src/Vectoid/include/Vectoid/AgeColoredParticles.h">
       </Unit>

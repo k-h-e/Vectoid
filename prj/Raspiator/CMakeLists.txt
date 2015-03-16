@@ -1,5 +1,5 @@
-set(CMAKE_C_COMPILER /Volumes/xtools/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-gcc)
-set(CMAKE_CXX_COMPILER /Volumes/xtools/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-g++)
+set(CMAKE_C_COMPILER /Users/kai/opt/xtools/raspi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-gcc)
+set(CMAKE_CXX_COMPILER /Users/kai/opt/xtools/raspi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-g++)
 
 
 project(Raspiator)
@@ -42,8 +42,11 @@ add_executable(raspiator
                ../../src/Vectoid/include/Vectoid/Vector.h
                src/Glyphs.h
                src/Indicatower.h
+               src/JenkinsAccess.h
                src/VideoCoreDisplay.h
                src/TextConsole.h
+               src/TextRing.h
+               src/Visualization.h
 
                ../../src/kxm/Core/Buffer.cpp
                ../../src/kxm/Core/Interface.cpp
@@ -64,8 +67,11 @@ add_executable(raspiator
                ../../src/Vectoid/TestTriangle.cpp
                src/Glyphs.cpp
                src/Indicatower.cpp
+               src/JenkinsAccess.cpp
                src/VideoCoreDisplay.cpp
                src/TextConsole.cpp
+               src/TextRing.cpp
+               src/Visualization.cpp
                src/main.cpp
                )
 
@@ -76,13 +82,16 @@ target_include_directories(raspiator PUBLIC
                            ../../src/Vectoid/include
                            src
                            
-                           /Volumes/xtools/vc/include
-                           /Volumes/xtools/vc/include/interface/vcos/pthreads
-                           /Volumes/xtools/vc/include/interface/vmcs_host/linux
+                           /Users/kai/opt/xtools/raspi/boost/include
+                           
+                           /Users/kai/opt/xtools/raspi/vc/include
+                           /Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads
+                           /Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux
                            )
 
 target_link_libraries(raspiator PUBLIC
-                      -L/Volumes/xtools/vc/lib
+                      /Users/kai/opt/xtools/raspi/boost/lib/libboost_system.a
+                      -L/Users/kai/opt/xtools/raspi/vc/lib
                       -lGLESv2
                       -lEGL
                       -lbcm_host
@@ -92,5 +101,5 @@ target_link_libraries(raspiator PUBLIC
 
 
 set(CMAKE_C_FLAGS "")
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 --sysroot=/Users/kai/opt/xtools/raspi/sysroot")
 
