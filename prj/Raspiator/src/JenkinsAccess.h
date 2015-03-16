@@ -28,17 +28,20 @@ namespace Raspiator {
         JenkinsAccess &operator=(JenkinsAccess &&other)      = delete;
         ~JenkinsAccess();
 
-        void RequestJobDataUpdate(const std::string &id, const std::string &jenkinsJob);
+        void RequestJobDataUpdate(const std::string &id, const std::string &jenkinsJob,
+                                  bool buildJob);
         void GetJobData(std::vector<Data> *data);
 
       private:
         struct Request {
             std::string id;
             std::string jenkinsJob;
+            bool        buildJob;
+            Request() : buildJob(false) {}
         };
 
         void WorkerThread();
-        Data GetData(const std::string &id, const std::string &jenkinsJob);
+        Data GetData(const std::string &id, const std::string &jenkinsJob, bool buildJob);
 
         std::thread                 workerThread_;
         std::mutex                  lock_;

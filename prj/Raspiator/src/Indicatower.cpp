@@ -43,7 +43,10 @@ void Indicatower::SetCounts(int num, int numTotal, int progressPercent) {
 
     coverColor_ = redColor;
     if (numTotal) {
-        float t     = (float)num / (float)numTotal;
+        float t = (float)num / (float)numTotal;
+        if (num > 0)
+            t = .2f + .8f*t;
+        NumberTools::Clamp(&t, 0.0f, 1.0f);
         if (t < .5f) {
             t *= 2.0f;
             coverColor_ = (1.0f - t)*greenColor + t*yellowColor;
@@ -77,8 +80,9 @@ void Indicatower::Render(RenderContext *context) {
 
     int numSectors = numSectors_;
     if (progressPercent_ < 100) {
-        numSectors = (int)((float)progressPercent_/100.0f*numSectors_ + .5f);
-        NumberTools::Clamp(&numSectors, 0, numSectors_);
+        numSectors = (int)((float)progressPercent_/100.0f*(float)numSectors_ + .5f);
+        NumberTools::Clamp(&numSectors, 0, numSectors_ - 1);
+            // numSectors_ - 1: If progress is less than 100%, we must not appear complete.
     }
     int numSectorsMissing = numSectors_ - numSectors;
     glVertexPointer(3, GL_FLOAT, 0, &coverVertices_[0]);

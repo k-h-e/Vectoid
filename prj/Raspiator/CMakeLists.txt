@@ -90,7 +90,8 @@ target_include_directories(raspiator PUBLIC
                            )
 
 target_link_libraries(raspiator PUBLIC
-                      /Users/kai/opt/xtools/raspi/boost/lib/libboost_system.a
+                      -L/Users/kai/opt/xtools/raspi/boost/lib
+                      -lboost_system
                       -L/Users/kai/opt/xtools/raspi/vc/lib
                       -lGLESv2
                       -lEGL
@@ -101,5 +102,5 @@ target_link_libraries(raspiator PUBLIC
 
 
 set(CMAKE_C_FLAGS "")
-set(CMAKE_CXX_FLAGS "-std=c++11 --sysroot=/Users/kai/opt/xtools/raspi/sysroot")
+set(CMAKE_CXX_FLAGS "-std=c++11")
 

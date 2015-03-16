@@ -25,6 +25,7 @@ struct Visualization::JobInfo {
 
     std::string                             id,
                                             jenkinsJob;
+    bool                                    buildJob;
     int                                     numRed,
                                             numTotal;
     std::shared_ptr<Indicatower>            tower;
@@ -137,13 +138,13 @@ void Visualization::RenderFrame() {
 
         info.timeToUpdateS -= frameDeltaTimeS;
         if (info.timeToUpdateS < 0.0f) {
-            jenkinsAccess_.RequestJobDataUpdate(info.id, info.jenkinsJob);
+            jenkinsAccess_.RequestJobDataUpdate(info.id, info.jenkinsJob, info.buildJob);
             info.timeToUpdateS = info.updateIntervalS;
         }
     }
 
     timeSinceLastJobUpdateS_ += frameDeltaTimeS;
-    if (timeSinceLastJobUpdateS_ > 5.0f) {
+    if (timeSinceLastJobUpdateS_ > 1.0f) {
         jenkinsAccess_.GetJobData(&jobDataBuffer_);
         for (JenkinsAccess::Data &data : jobDataBuffer_)
             SetJobData(data.id, data.numRed, data.numTotal, data.progressPercent);
@@ -169,7 +170,7 @@ void Visualization::NewSubGroup(const std::string &name, float angle) {
 }
 
 void Visualization::NewJob(const std::string &id, const std::string &name, const string &jenkinsJob,
-                           float updateIntervalS) {
+                           bool buildJob, float updateIntervalS) {
     assert(currentSubGroup_);
     if (updateIntervalS < 1.0f)
         updateIntervalS = 600.0f;
@@ -179,6 +180,7 @@ void Visualization::NewJob(const std::string &id, const std::string &name, const
     auto info = make_shared<JobInfo>();
     info->id            = id;
     info->jenkinsJob    = jenkinsJob;
+    info->buildJob      = buildJob;
     info->stretch       = indicatowerStretch_;
     info->tower         = make_shared<Indicatower>(indicatowerRadius_, 30, indicatowerStretch_);
     auto geode          = make_shared<Geode>(info->tower);
@@ -202,7 +204,6 @@ void Visualization::NewJob(const std::string &id, const std::string &name, const
     info->innerTextRingCoordSys->SetTransform(Transform(XAxis, -90.0f));
     info->towerCoordSys->AddChild(info->innerTextRingCoordSys);
 
-    updateIntervalS /= 4.0f;
     info->updateIntervalS = updateIntervalS;
     uniform_int_distribution<int> distribution(0, (int)updateIntervalS);
     info->timeToUpdateS = (float)distribution(random_);
@@ -250,7 +251,8 @@ void Visualization::SetJobData(const std::string &id, int numRed, int numTotal,
     Vector ringPosition(0.0f, (float)numTotal*info.stretch + .01f, 0.0f);
     info.textRingCoordSys->SetPosition(ringPosition);
     info.innerTextRingCoordSys->SetPosition(ringPosition);
-    info.innerTextRing->SetText(to_string(numRed) + "/" + to_string(numTotal));
+    info.innerTextRing->SetText(  info.buildJob
+                                ? "Build" : to_string(numRed) + "/" + to_string(numTotal));
 }
 
 void Visualization::LayoutPositions(
@@ -292,7 +294,8 @@ void Visualization::LayoutPositions(
 }
 
 Visualization::JobInfo::JobInfo()
-    : numRed(0),
+    : buildJob(false),
+      numRed(0),
       numTotal(0),
       textRingAngle(0.0f),
       innerTextRingAngle(0.0f),

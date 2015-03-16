@@ -45,7 +45,7 @@ class Visualization {
     void NewSubGroup(const std::string &name, float angle);
     //! Adds a new job to the current sub group.
     void NewJob(const std::string &id, const std::string &name, const std::string &jenkinsJob,
-                float updateIntervalS);
+                bool buildJob, float updateIntervalS);
     //! Layouts the visualization.
     void UpdateLayout();
 
