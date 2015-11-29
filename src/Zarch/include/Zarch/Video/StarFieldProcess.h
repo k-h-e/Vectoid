@@ -33,7 +33,7 @@ class StarFieldProcess : public ZarchProcess {
   public:
     StarFieldProcess(std::shared_ptr<Video::Data> data,
                      std::shared_ptr<Vectoid::Particles> particles);
-    bool Execute(const Game::ExecutionContext &context);
+    bool Execute();
     
   private:
     StarFieldProcess(const StarFieldProcess &other);

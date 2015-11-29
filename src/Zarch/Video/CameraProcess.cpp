@@ -30,7 +30,7 @@ CameraProcess::CameraProcess(const shared_ptr<Video::Data> data)
         : data_(data) {
 }
 
-bool CameraProcess::Execute(const Game::ExecutionContext &context) {
+bool CameraProcess::Execute() {
     Vector position = data_->landerCoordSys->Position();
     if (position.y < data_->mapParameters->cameraMinHeight)
         position.y = data_->mapParameters->cameraMinHeight;

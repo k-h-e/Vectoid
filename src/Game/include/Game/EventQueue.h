@@ -47,9 +47,10 @@ class EventQueue {
     EventQueue &operator=(const EventQueue &&other) = delete;
     //! Registers the specified event.
     void RegisterEvent(std::unique_ptr<Event> protoType);
-    //! Adds a handler for the specified event.
-    void AddHandler(const Event::EventType &eventType,
-                    const std::shared_ptr<EventHandlerInterface> &handler);
+    //! Registers a handler for the specified event, as weak reference.
+    void RegisterHandler(const Event::EventType &eventType, EventHandlerInterface *handler);
+    //! Unregisters the specified event handler for whatever event it is registered.
+    void UnregisterHandler(EventHandlerInterface *handler);
     //! Enqueues the specified event on the schedule queue.
     /*!
      *  The event data gets copied, the client is free to dispose of the event object afterwards.
@@ -71,8 +72,8 @@ class EventQueue {
     
   private:
     struct EventInfo {
-        std::unique_ptr<Event>                              prototype;
-        std::vector<std::shared_ptr<EventHandlerInterface>> handlers;
+        std::unique_ptr<Event>               prototype;
+        std::vector<EventHandlerInterface *> handlers;
         EventInfo(std::unique_ptr<Event> proto) : prototype(std::move(proto)) {}
     };
     

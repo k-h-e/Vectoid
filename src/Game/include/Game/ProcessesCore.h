@@ -63,7 +63,7 @@ class ProcessesCore {
      *  Pooled processes that have finished are returned to their respective pools. For custom
      *  processes, the processes mechanism drops the respective references.
      */
-    void ExecuteProcesses(const ExecutionContext &context);
+    void ExecuteProcesses();
     //! Tells the current number of processes.
     int Count();
 

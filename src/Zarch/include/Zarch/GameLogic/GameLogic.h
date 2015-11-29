@@ -11,10 +11,19 @@
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 
 
+#include <memory>
+
 #include <Game/EventHandlerInterface.h>
+#include <Zarch/processes.h>
 
 
 namespace kxm {
+
+namespace Game {
+    class EventQueue;
+    template<class T> class Processes;
+}
+
 namespace Zarch {
 
 class ControlsStateEvent;
@@ -25,7 +34,9 @@ class ControlsStateEvent;
  */
 class GameLogic : public virtual Game::EventHandlerInterface {
   public:
-    GameLogic();
+    GameLogic(std::shared_ptr<Game::EventQueue> eventQueue,
+              std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
+    ~GameLogic();
     void HandleEvent(const Game::Event &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
     
@@ -33,8 +44,10 @@ class GameLogic : public virtual Game::EventHandlerInterface {
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
     
-    bool landerThrusterEnabled_,
-         landerFiringEnabled_;
+    std::shared_ptr<Game::EventQueue>                           eventQueue_;
+    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
+    bool                                                        landerThrusterEnabled_,
+                                                                landerFiringEnabled_;
 };
 
 }    // Namespace Zarch.

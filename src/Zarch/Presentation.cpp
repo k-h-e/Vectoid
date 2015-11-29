@@ -28,30 +28,24 @@ namespace kxm {
 namespace Zarch {
 
 Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
-        : eventQueue_(EventQueueHub::initialBufferSize),
-          eventQueueHub_(eventQueueHub),
+        : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize)),
           processes_(new Processes<ZarchProcess::ProcessType>()),
-          processContext_(*processes_, eventQueue_) {
-    Zarch::RegisterEvents(&eventQueue_);
-    
-    video_ = shared_ptr<Video>(new Video(processes_));
-    eventQueue_.AddHandler(FrameTimeEvent::type,      video_);
-    eventQueue_.AddHandler(LanderMoveEvent::type,     video_);
-    eventQueue_.AddHandler(LanderVelocityEvent::type, video_);
-    eventQueue_.AddHandler(LanderThrusterEvent::type, video_);
-    
+          eventQueueHub_(eventQueueHub) {
+    Zarch::RegisterEvents(eventQueue_.get());
     hubClientId_ = eventQueueHub_->AllocUniqueClientId();
+    
+    video_ = shared_ptr<Video>(new Video(eventQueue_, processes_));
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
     // We want the next simulation iteration to use the most current controls data, so we schedule
     // the respective event here...
-    eventQueue_.Schedule(ControlsStateEvent(controlsState));
+    eventQueue_->Schedule(ControlsStateEvent(controlsState));
     
-    eventQueue_.SyncWithHub(eventQueueHub_.get(), hubClientId_, false);
-    eventQueue_.ProcessEvents();
+    eventQueue_->SyncWithHub(eventQueueHub_.get(), hubClientId_, false);
+    eventQueue_->ProcessEvents();
     
-    processes_->ExecuteProcesses(processContext_);
+    processes_->ExecuteProcesses();
 }
 
 }

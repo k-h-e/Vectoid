@@ -10,7 +10,9 @@
 #include <Zarch/GameLogic/GameLogic.h>
 
 #include <kxm/Core/logging.h>
+#include <Game/EventQueue.h>
 #include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/Events/ControlsStateEvent.h>
 
 
 using namespace std;
@@ -21,9 +23,17 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-GameLogic::GameLogic()
-        : landerThrusterEnabled_(false),
+GameLogic::GameLogic(shared_ptr<EventQueue> eventQueue,
+                     shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+        : eventQueue_(eventQueue),
+          processes_(processes),
+          landerThrusterEnabled_(false),
           landerFiringEnabled_(false) {
+    eventQueue_->RegisterHandler(ControlsStateEvent::type, this);
+}
+
+GameLogic::~GameLogic() {
+    eventQueue_->UnregisterHandler(this);
 }
 
 void GameLogic::HandleEvent(const Game::Event &event) {

@@ -32,7 +32,7 @@ LanderProcess::LanderProcess(const shared_ptr<Physics::Data> &data)
           heading_(0.0f, 0.0f, -1.0f) {
 }
 
-bool LanderProcess::Execute(const ExecutionContext &context) {
+bool LanderProcess::Execute() {
     Physics::Data &data = *data_;
     
     bool oldThrusterEnabled = data.landerState.thrusterEnabled;
@@ -50,8 +50,9 @@ bool LanderProcess::Execute(const ExecutionContext &context) {
     NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
     Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
     float  speedLength = speed.Length();
-    if (speedLength > 0.0f)
+    if (speedLength > 0.0f) {
         heading_ = (1.0f/speedLength) * speed;
+    }
     NumberTools::Clamp(&speedLength, 0.0f, 1.0f);
     
     Vector up(0.0f, 1.0f, 0.0f);
@@ -81,11 +82,11 @@ bool LanderProcess::Execute(const ExecutionContext &context) {
     data.landerState.transform = newLanderTransform;
     
     // Generate events...
-    auto &eventQueue = static_cast<const ZarchProcess::Context &>(context).eventQueue;
-    eventQueue.Schedule(LanderMoveEvent(newLanderTransform));
-    eventQueue.Schedule(LanderVelocityEvent(data.landerState.velocity));
-    if (data.landerState.thrusterEnabled != oldThrusterEnabled)
-        eventQueue.Schedule(LanderThrusterEvent(data.landerState.thrusterEnabled));
+    data.eventQueue->Schedule(LanderMoveEvent(newLanderTransform));
+    data.eventQueue->Schedule(LanderVelocityEvent(data.landerState.velocity));
+    if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
+        data.eventQueue->Schedule(LanderThrusterEvent(data.landerState.thrusterEnabled));
+    }
     
     return true;
 }

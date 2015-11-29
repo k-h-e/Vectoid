@@ -112,6 +112,7 @@ using namespace kxm::Zarch;
     
     shared_ptr<ThreadingFactoryInterface> threadingFactory(new POSIXThreadingFactory());
     zarch = shared_ptr<Zarch>(new Zarch(threadingFactory));
+    
     [motionManager startDeviceMotionUpdates];
 }
 

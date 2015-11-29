@@ -17,8 +17,6 @@
 namespace kxm {
 namespace Game {
 
-class ExecutionContext;
-
 //! A process is an ongoing activity that periodically gets called, e.g. for each frame. It takes
 //! part in a co-operative scheduling scheme managed by \ref Processes.
 /*!
@@ -31,7 +29,7 @@ class Process : public virtual Core::Interface {
     /*!
      *  \return <c>false</c> in case the process has finished and does not want to be called again.
      */
-    virtual bool Execute(const ExecutionContext &context) = 0;
+    virtual bool Execute() = 0;
     
   private:
     Process(const Process &other);

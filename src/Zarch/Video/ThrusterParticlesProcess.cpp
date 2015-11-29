@@ -31,7 +31,7 @@ ThrusterParticlesProcess::ThrusterParticlesProcess(shared_ptr<Video::Data> data,
           particleTimeCarryOver_(0.0f) {
 }
 
-bool ThrusterParticlesProcess::Execute(const ExecutionContext &context) {
+bool ThrusterParticlesProcess::Execute() {
     Video::Data &data = *data_;
     
     // Move and age particles...

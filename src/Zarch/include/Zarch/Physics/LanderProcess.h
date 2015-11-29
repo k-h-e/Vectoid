@@ -32,7 +32,7 @@ class LanderProcess : public ZarchProcess {
     LanderProcess(const LanderProcess &other);
     LanderProcess &operator=(const LanderProcess &other);
     //! (Re)implemented.
-    bool Execute(const Game::ExecutionContext &context);
+    bool Execute();
     
     std::shared_ptr<Physics::Data> data_;
     Vectoid::Vector                heading_;

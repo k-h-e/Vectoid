@@ -19,10 +19,6 @@
 
 namespace kxm {
 
-namespace Game {
-    class ExecutionContext;
-}
-
 namespace Vectoid {
     class Particles;
 }
@@ -37,7 +33,7 @@ class ThrusterParticlesProcess : public ZarchProcess {
   public:
     ThrusterParticlesProcess(std::shared_ptr<Video::Data> data,
                              std::shared_ptr<Vectoid::Particles> particles);
-    bool Execute(const Game::ExecutionContext &context);
+    bool Execute();
     
   private:
     ThrusterParticlesProcess(const ThrusterParticlesProcess &other);

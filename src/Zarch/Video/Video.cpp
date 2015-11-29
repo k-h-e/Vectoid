@@ -18,6 +18,7 @@
 #include <Vectoid/AgeColoredParticles.h>
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
+#include <Game/EventQueue.h>
 #include <Game/Processes.h>
 #include <Zarch/Video/CameraProcess.h>
 #include <Zarch/Video/StarFieldProcess.h>
@@ -41,8 +42,10 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
-        : processes_(processes) {
+Video::Video(shared_ptr<EventQueue> eventQueue,
+             shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+        : eventQueue_(eventQueue),
+          processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
@@ -72,10 +75,19 @@ Video::Video(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
+    eventQueue_->RegisterHandler(FrameTimeEvent::type,      this);
+    eventQueue_->RegisterHandler(LanderMoveEvent::type,     this);
+    eventQueue_->RegisterHandler(LanderVelocityEvent::type, this);
+    eventQueue_->RegisterHandler(LanderThrusterEvent::type, this);
+    
     processes_->AddProcess(shared_ptr<Process>(new CameraProcess(data_)));
     processes_->AddProcess(shared_ptr<Process>(new StarFieldProcess(data_, starFieldParticles)));
     processes_->AddProcess(shared_ptr<Process>(new ThrusterParticlesProcess(data_,
                                                                             thrusterParticles)));
+}
+
+Video::~Video() {
+    eventQueue_->UnregisterHandler(this);
 }
 
 void Video::SetViewPort(int width, int height) {

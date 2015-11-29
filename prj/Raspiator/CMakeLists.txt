@@ -1,5 +1,5 @@
-set(CMAKE_C_COMPILER /Users/kai/opt/xtools/raspi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-gcc)
-set(CMAKE_CXX_COMPILER /Users/kai/opt/xtools/raspi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-g++)
+set(CMAKE_C_COMPILER /Users/kai/opt/xtools/rpi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-gcc)
+set(CMAKE_CXX_COMPILER /Users/kai/opt/xtools/rpi/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-g++)
 
 
 project(Raspiator)
@@ -82,17 +82,17 @@ target_include_directories(raspiator PUBLIC
                            ../../src/Vectoid/include
                            src
                            
-                           /Users/kai/opt/xtools/raspi/boost/include
+                           /Users/kai/opt/xtools/rpi/boost/include
                            
-                           /Users/kai/opt/xtools/raspi/vc/include
-                           /Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads
-                           /Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux
+                           /Users/kai/opt/xtools/rpi/vc/include
+                           /Users/kai/opt/xtools/rpi/vc/include/interface/vcos/pthreads
+                           /Users/kai/opt/xtools/rpi/vc/include/interface/vmcs_host/linux
                            )
 
 target_link_libraries(raspiator PUBLIC
-                      -L/Users/kai/opt/xtools/raspi/boost/lib
+                      -L/Users/kai/opt/xtools/rpi/boost/lib
                       -lboost_system
-                      -L/Users/kai/opt/xtools/raspi/vc/lib
+                      -L/Users/kai/opt/xtools/rpi/vc/lib
                       -lGLESv2
                       -lEGL
                       -lbcm_host

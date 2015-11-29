@@ -47,10 +47,10 @@
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/Vectoid/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/kxm/Core/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/src" />
-            <Add directory="/Users/kai/opt/xtools/raspi/boost/include" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux" />
+            <Add directory="/Users/kai/opt/xtools/rpi/boost/include" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include/interface/vcos/pthreads" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include/interface/vmcs_host/linux" />
          </Compiler>
          <MakeCommands>
             <Build command="/usr/bin/make -f &quot;/Users/kai/Developer/kxm/prj/Raspiator/Makefile&quot;  VERBOSE=1 raspiator" />
@@ -69,10 +69,10 @@
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/Vectoid/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/../../src/kxm/Core/include" />
             <Add directory="/Users/kai/Developer/kxm/prj/Raspiator/src" />
-            <Add directory="/Users/kai/opt/xtools/raspi/boost/include" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vcos/pthreads" />
-            <Add directory="/Users/kai/opt/xtools/raspi/vc/include/interface/vmcs_host/linux" />
+            <Add directory="/Users/kai/opt/xtools/rpi/boost/include" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include/interface/vcos/pthreads" />
+            <Add directory="/Users/kai/opt/xtools/rpi/vc/include/interface/vmcs_host/linux" />
          </Compiler>
          <MakeCommands>
             <Build command="/usr/bin/make -f &quot;/Users/kai/Developer/kxm/prj/Raspiator/Makefile&quot;  VERBOSE=1 raspiator/fast" />

@@ -29,6 +29,7 @@
 		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
 		2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */; };
 		2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A952015F4DEEA00E64389 /* Interface.cpp */; };
+		2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */; };
 		2A5E8AD41A114AAE0000617C /* ControlsStateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsStateEvent.cpp */; };
 		2A5E8AD61A114AD00000617C /* LanderMoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* LanderMoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* LanderVelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* LanderVelocityEvent.cpp */; };
@@ -69,7 +70,6 @@
 		2A1094FC1667FC9F001F298C /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = ../../../src/Game/include/Game/Pool.h; sourceTree = "<group>"; };
 		2A1094FD1668C38F001F298C /* PoolInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PoolInterface.h; path = ../../../src/Game/include/Game/PoolInterface.h; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = ../../../src/Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
-		2A1303F3157BC07900A89134 /* ParticlesRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ParticlesRenderer.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/ParticlesRenderer.h; sourceTree = "<group>"; };
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = ../../../src/Zarch/include/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = ../../../src/Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
 		2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLogic.cpp; path = ../../../src/Zarch/GameLogic/GameLogic.cpp; sourceTree = "<group>"; };
@@ -108,6 +108,7 @@
 		2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomProcessPool.h; path = ../../../src/Game/include/Game/CustomProcessPool.h; sourceTree = "<group>"; };
 		2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomProcessPool.cpp; path = ../../../src/Game/CustomProcessPool.cpp; sourceTree = "<group>"; };
 		2A4A952015F4DEEA00E64389 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Interface.cpp; path = ../../../src/kxm/Core/Interface.cpp; sourceTree = "<group>"; };
+		2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2A5E8ACE1A1147370000617C /* ControlsStateEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsStateEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ControlsStateEvent.h; sourceTree = "<group>"; };
 		2A5E8ACF1A1148A50000617C /* LanderMoveEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderMoveEvent.h; path = ../../../src/Zarch/include/Zarch/Events/LanderMoveEvent.h; sourceTree = "<group>"; };
 		2A5E8AD01A1149940000617C /* LanderVelocityEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderVelocityEvent.h; path = ../../../src/Zarch/include/Zarch/Events/LanderVelocityEvent.h; sourceTree = "<group>"; };
@@ -118,8 +119,7 @@
 		2A5E8AD91A114B0B0000617C /* LanderThrusterEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderThrusterEvent.cpp; path = ../../../src/Zarch/Events/LanderThrusterEvent.cpp; sourceTree = "<group>"; };
 		2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueHub.h; path = ../../../src/Game/include/Game/EventQueueHub.h; sourceTree = "<group>"; };
 		2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventQueueHub.cpp; path = ../../../src/Game/EventQueueHub.cpp; sourceTree = "<group>"; };
-		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transform.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Transform.h; sourceTree = "<group>"; };
-		2A63D014150CF5A50068E054 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Vector.h; sourceTree = "<group>"; };
+		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transform.h; path = ../../src/Vectoid/include/Vectoid/Transform.h; sourceTree = "<group>"; };
 		2A65AF4B15361E700054F8E9 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../../../src/Vectoid/Camera.cpp; sourceTree = "<group>"; };
 		2A65AF4C15361E700054F8E9 /* CoordSys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSys.cpp; path = ../../../src/Vectoid/CoordSys.cpp; sourceTree = "<group>"; };
 		2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSysCore.cpp; path = ../../../src/Vectoid/CoordSysCore.cpp; sourceTree = "<group>"; };
@@ -141,23 +141,27 @@
 		2A8AD4E2172F07A0007290C7 /* CameraProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraProcess.h; path = ../../../src/Zarch/include/Zarch/Video/CameraProcess.h; sourceTree = "<group>"; };
 		2A9067991A586FDB001154D8 /* GameLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameLogic.h; path = ../../../src/Zarch/include/Zarch/GameLogic/GameLogic.h; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SceneGraphNode.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/SceneGraphNode.h; sourceTree = "<group>"; };
-		2AA78C80152F46A300B3631A /* PerspectiveProjection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PerspectiveProjection.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/PerspectiveProjection.h; sourceTree = "<group>"; };
-		2AA78C83152F538900B3631A /* OpenGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenGL.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/OpenGL.h; sourceTree = "<group>"; };
-		2AA78C84152F573100B3631A /* CoordSysInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoordSysInterface.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/CoordSysInterface.h; sourceTree = "<group>"; };
-		2AA78C85152F5AEF00B3631A /* CoordSysCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoordSysCore.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/CoordSysCore.h; sourceTree = "<group>"; };
-		2AA78C88152F61AD00B3631A /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Camera.h; sourceTree = "<group>"; };
-		2AA78C8B152F677F00B3631A /* CoordSys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoordSys.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/CoordSys.h; sourceTree = "<group>"; };
-		2AA78C90152F690700B3631A /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Geode.h; sourceTree = "<group>"; };
-		2AA78C93152F6A7000B3631A /* GeometryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GeometryInterface.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/GeometryInterface.h; sourceTree = "<group>"; };
-		2AA78C94152F6E1700B3631A /* TestTriangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/TestTriangle.h; sourceTree = "<group>"; };
 		2AAC255E15810118004A37C6 /* ControlsState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsState.h; path = ../../../src/Zarch/include/Zarch/ControlsState.h; sourceTree = "<group>"; };
 		2AAC256015811661004A37C6 /* KXMGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KXMGLView.h; sourceTree = "<group>"; };
 		2AAC256115811661004A37C6 /* KXMGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KXMGLView.mm; sourceTree = "<group>"; };
-		2AAC25631584F3C4004A37C6 /* AgeColoredParticles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AgeColoredParticles.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/AgeColoredParticles.h; sourceTree = "<group>"; };
 		2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = ../../../src/Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
 		2AAC2566158D223D004A37C6 /* TerrainRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = ../../../src/Zarch/include/Zarch/Video/TerrainRenderer.h; sourceTree = "<group>"; };
 		2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainRenderer.cpp; path = ../../../src/Zarch/Video/TerrainRenderer.cpp; sourceTree = "<group>"; };
+		2AAD2FB51C0BA26900753BD6 /* AgeColoredParticles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AgeColoredParticles.h; path = ../../src/Vectoid/include/Vectoid/AgeColoredParticles.h; sourceTree = "<group>"; };
+		2AAD2FB61C0BA26900753BD6 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../../src/Vectoid/include/Vectoid/Camera.h; sourceTree = "<group>"; };
+		2AAD2FB71C0BA26900753BD6 /* CoordSys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoordSys.h; path = ../../src/Vectoid/include/Vectoid/CoordSys.h; sourceTree = "<group>"; };
+		2AAD2FB81C0BA26900753BD6 /* CoordSysCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoordSysCore.h; path = ../../src/Vectoid/include/Vectoid/CoordSysCore.h; sourceTree = "<group>"; };
+		2AAD2FB91C0BA26900753BD6 /* CoordSysInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoordSysInterface.h; path = ../../src/Vectoid/include/Vectoid/CoordSysInterface.h; sourceTree = "<group>"; };
+		2AAD2FBA1C0BA26900753BD6 /* Geode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../src/Vectoid/include/Vectoid/Geode.h; sourceTree = "<group>"; };
+		2AAD2FBB1C0BA26900753BD6 /* GeometryInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeometryInterface.h; path = ../../src/Vectoid/include/Vectoid/GeometryInterface.h; sourceTree = "<group>"; };
+		2AAD2FBC1C0BA26900753BD6 /* OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL.h; path = ../../src/Vectoid/include/Vectoid/OpenGL.h; sourceTree = "<group>"; };
+		2AAD2FBD1C0BA26900753BD6 /* Particles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Particles.h; path = ../../src/Vectoid/include/Vectoid/Particles.h; sourceTree = "<group>"; };
+		2AAD2FBE1C0BA26900753BD6 /* ParticlesRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticlesRenderer.h; path = ../../src/Vectoid/include/Vectoid/ParticlesRenderer.h; sourceTree = "<group>"; };
+		2AAD2FBF1C0BA26900753BD6 /* PerspectiveProjection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PerspectiveProjection.h; path = ../../src/Vectoid/include/Vectoid/PerspectiveProjection.h; sourceTree = "<group>"; };
+		2AAD2FC01C0BA26900753BD6 /* Range.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Range.h; path = ../../src/Vectoid/include/Vectoid/Range.h; sourceTree = "<group>"; };
+		2AAD2FC11C0BA26900753BD6 /* SceneGraphNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneGraphNode.h; path = ../../src/Vectoid/include/Vectoid/SceneGraphNode.h; sourceTree = "<group>"; };
+		2AAD2FC21C0BA26900753BD6 /* TestTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../src/Vectoid/include/Vectoid/TestTriangle.h; sourceTree = "<group>"; };
+		2AAD2FC31C0BA26900753BD6 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vectoid/include/Vectoid/Vector.h; sourceTree = "<group>"; };
 		2ABC807617064ABC00D909FA /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Buffer.h; path = ../../../src/kxm/Core/include/kxm/Core/Buffer.h; sourceTree = "<group>"; };
 		2ABC807717064AD600D909FA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = ../../../src/kxm/Core/Buffer.cpp; sourceTree = "<group>"; };
 		2ABC807D17066BA000D909FA /* LockInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LockInterface.h; path = ../../../src/kxm/Core/include/kxm/Core/LockInterface.h; sourceTree = "<group>"; };
@@ -175,7 +179,6 @@
 		2ABE9CDD17305F1F00F5251C /* StarFieldProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StarFieldProcess.h; path = ../../../src/Zarch/include/Zarch/Video/StarFieldProcess.h; sourceTree = "<group>"; };
 		2ABE9CDE173070AD00F5251C /* ThrusterParticlesProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesProcess.h; path = ../../../src/Zarch/include/Zarch/Video/ThrusterParticlesProcess.h; sourceTree = "<group>"; };
 		2ABE9CDF173071BF00F5251C /* ThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesProcess.cpp; path = ../../../src/Zarch/Video/ThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
-		2AC40A201556CEA900026789 /* Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Range.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Range.h; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = ../../../src/Vectoid/Range.cpp; sourceTree = "<group>"; };
 		2ADD5C201A017271006533B8 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../../../src/Game/include/Game/Event.h; sourceTree = "<group>"; };
 		2ADD5C211A0175F1006533B8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = ../../../src/Game/Event.cpp; sourceTree = "<group>"; };
@@ -191,7 +194,6 @@
 		2AE5BEE71580F091000B62D6 /* ShotsProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShotsProcess.h; path = ../../../src/Zarch/include/Zarch/Physics/ShotsProcess.h; sourceTree = "<group>"; };
 		2AECEF61154D6CAF00033D14 /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = ../../../src/Zarch/include/Zarch/Terrain.h; sourceTree = "<group>"; };
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../../../src/Zarch/Terrain.cpp; sourceTree = "<group>"; };
-		2AEECB34155EB8DF00AC21A2 /* Particles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Particles.h; path = ../../../../../../../src/Vectoid/include/kxm/Vectoid/Particles.h; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../../../src/Vectoid/Particles.cpp; sourceTree = "<group>"; };
 		2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExecutionContext.h; path = ../../../src/Game/include/Game/ExecutionContext.h; sourceTree = "<group>"; };
 		2AFDAED016C5A24C00C003DA /* ReusableItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReusableItems.h; path = ../../../src/kxm/Core/include/kxm/Core/ReusableItems.h; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 		2A3C13CD14F6ECC60091BD84 = {
 			isa = PBXGroup;
 			children = (
+				2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */,
 				2A3C13E614F6ECC70091BD84 /* kxm */,
 				2A3C13DB14F6ECC70091BD84 /* Frameworks */,
 				2A3C13D914F6ECC70091BD84 /* Products */,
@@ -357,41 +360,33 @@
 		2A3C140514F6F2A90091BD84 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				2A63D011150CF5A50068E054 /* kxm */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
-		2A63D011150CF5A50068E054 /* kxm */ = {
-			isa = PBXGroup;
-			children = (
 				2A63D012150CF5A50068E054 /* Vectoid */,
 			);
-			name = kxm;
-			path = Vectoid/include/kxm;
+			name = include;
 			sourceTree = "<group>";
 		};
 		2A63D012150CF5A50068E054 /* Vectoid */ = {
 			isa = PBXGroup;
 			children = (
+				2AAD2FB51C0BA26900753BD6 /* AgeColoredParticles.h */,
+				2AAD2FB61C0BA26900753BD6 /* Camera.h */,
+				2AAD2FB71C0BA26900753BD6 /* CoordSys.h */,
+				2AAD2FB81C0BA26900753BD6 /* CoordSysCore.h */,
+				2AAD2FB91C0BA26900753BD6 /* CoordSysInterface.h */,
+				2AAD2FBA1C0BA26900753BD6 /* Geode.h */,
+				2AAD2FBB1C0BA26900753BD6 /* GeometryInterface.h */,
+				2AAD2FBC1C0BA26900753BD6 /* OpenGL.h */,
+				2AAD2FBD1C0BA26900753BD6 /* Particles.h */,
+				2AAD2FBE1C0BA26900753BD6 /* ParticlesRenderer.h */,
+				2AAD2FBF1C0BA26900753BD6 /* PerspectiveProjection.h */,
+				2AAD2FC01C0BA26900753BD6 /* Range.h */,
+				2AAD2FC11C0BA26900753BD6 /* SceneGraphNode.h */,
+				2AAD2FC21C0BA26900753BD6 /* TestTriangle.h */,
+				2AAD2FC31C0BA26900753BD6 /* Vector.h */,
 				2A63D013150CF5A50068E054 /* Transform.h */,
-				2A63D014150CF5A50068E054 /* Vector.h */,
-				2AA78C7D152CFDD400B3631A /* SceneGraphNode.h */,
-				2AA78C80152F46A300B3631A /* PerspectiveProjection.h */,
-				2AA78C83152F538900B3631A /* OpenGL.h */,
-				2AA78C84152F573100B3631A /* CoordSysInterface.h */,
-				2AA78C85152F5AEF00B3631A /* CoordSysCore.h */,
-				2AA78C88152F61AD00B3631A /* Camera.h */,
-				2AA78C8B152F677F00B3631A /* CoordSys.h */,
-				2AA78C90152F690700B3631A /* Geode.h */,
-				2AA78C93152F6A7000B3631A /* GeometryInterface.h */,
-				2AA78C94152F6E1700B3631A /* TestTriangle.h */,
-				2AC40A201556CEA900026789 /* Range.h */,
-				2AEECB34155EB8DF00AC21A2 /* Particles.h */,
-				2A1303F3157BC07900A89134 /* ParticlesRenderer.h */,
-				2AAC25631584F3C4004A37C6 /* AgeColoredParticles.h */,
 			);
-			path = Vectoid;
+			name = Vectoid;
+			path = Vectoid/include/kxm/Vectoid;
 			sourceTree = "<group>";
 		};
 		2A65AF5915361EC60054F8E9 /* Core */ = {
@@ -534,17 +529,9 @@
 		2AECEF5B154D68D300033D14 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				2AECEF5C154D68DA00033D14 /* kxm */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
-		2AECEF5C154D68DA00033D14 /* kxm */ = {
-			isa = PBXGroup;
-			children = (
 				2AECEF5D154D68E700033D14 /* Zarch */,
 			);
-			name = kxm;
+			name = include;
 			sourceTree = "<group>";
 		};
 		2AECEF5D154D68E700033D14 /* Zarch */ = {
@@ -592,7 +579,12 @@
 		2A3C13CF14F6ECC60091BD84 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0710;
+				TargetAttributes = {
+					2A3C13D714F6ECC70091BD84 = {
+						DevelopmentTeam = X4UCCTPJJ3;
+					};
+				};
 			};
 			buildConfigurationList = 2A3C13D214F6ECC60091BD84 /* Build configuration list for PBXProject "kxm" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -617,6 +609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A3C13EB14F6ECC70091BD84 /* InfoPlist.strings in Resources */,
+				2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */,
 				2A3C13FB14F6ECC70091BD84 /* KXMViewController_iPhone.xib in Resources */,
 				2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */,
 			);
@@ -725,8 +718,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -741,7 +736,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -765,6 +760,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -773,7 +769,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -784,11 +780,15 @@
 		2A3C140214F6ECC70091BD84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "kxm/kxm-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kxm.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../src/kxm/Core/include ../../src/Vectoid/include ../../src/Game/include ../../src/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};
@@ -797,11 +797,15 @@
 		2A3C140314F6ECC70091BD84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "kxm/kxm-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				INFOPLIST_FILE = "kxm/kxm-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kxm.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "../../src/kxm/Core/include ../../src/Vectoid/include ../../src/Game/include ../../src/Zarch/include";
 				WRAPPER_EXTENSION = app;
 			};

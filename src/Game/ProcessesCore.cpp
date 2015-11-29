@@ -56,28 +56,30 @@ void ProcessesCore::AddProcess(const shared_ptr<Process> &process) {
     ++numProcesses_;
 }
 
-void ProcessesCore::ExecuteProcesses(const ExecutionContext &context) {
+void ProcessesCore::ExecuteProcesses() {
     ReusableItems<ProcessInfo>::Iterator iter = processes_.GetIterator(addedProcessesGroup);
     int num = 0;
     while (iter.Next()) {
         processes_.Move(iter.ItemId(), activeProcessesGroup);
         ++num;
     }
-    if (num)
-        printf("activated %d processes\n", num);
+    if (num) {
+        Log().Stream() << "activated " << num << " processes" << endl;
+    }
     
     iter = processes_.GetIterator(activeProcessesGroup);
     num  = 0;
     while (ProcessInfo *info = iter.Next()) {
-        if (!(pools_[info->pool]->Access(info->itemId).Execute(context))) {
+        if (!(pools_[info->pool]->Access(info->itemId).Execute())) {
             pools_[info->pool]->Put(info->itemId);
             processes_.Put(iter.ItemId());
             --numProcesses_;
             ++num;
         }
     }
-    if (num)
-        printf("deregistered %d processes\n", num);
+    if (num) {
+        Log().Stream() << "deregistered " << num << " processes" << endl;
+    }
 }
 
 int ProcessesCore::Count() {

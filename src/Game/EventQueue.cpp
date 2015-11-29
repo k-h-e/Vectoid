@@ -31,15 +31,27 @@ void EventQueue::RegisterEvent(std::unique_ptr<Event> protoType) {
     bool   alreadyPresent = (idToSlotMap_.find(id) != idToSlotMap_.end());
     if (alreadyPresent)
         Log().Stream() << "hash collision while registering event \"" << protoType->Type().name
-                       << "\"" << std::endl;
+                       << "\"" << endl;
     assert(!alreadyPresent);
     int slot = (int)events_.size();
     events_.push_back(EventInfo(std::move(protoType)));
     idToSlotMap_[id] = slot;
 }
 
-void EventQueue::AddHandler(const Event::EventType &eventType,
-                            const std::shared_ptr<EventHandlerInterface> &handler) {
+void EventQueue::UnregisterHandler(EventHandlerInterface *handlerToUnregister) {
+    for (auto &info : events_) {
+        vector<EventHandlerInterface *> handlers;
+        for (EventHandlerInterface *handler : info.handlers) {
+            if (handler != handlerToUnregister) {
+                handlers.push_back(handler);
+            }
+        }
+        info.handlers = handlers;
+    }
+}
+
+void EventQueue::RegisterHandler(const Event::EventType &eventType,
+                                 EventHandlerInterface *handler) {
     auto info = idToSlotMap_.find(eventType.id);
     assert(info != idToSlotMap_.end());
     events_[info->second].handlers.push_back(handler);

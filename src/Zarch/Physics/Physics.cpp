@@ -10,6 +10,7 @@
 #include <Zarch/Physics/Physics.h>
 
 #include <kxm/Core/logging.h>
+#include <Game/EventQueue.h>
 #include <Game/Processes.h>
 #include <Zarch/Physics/LanderProcess.h>
 #include <Zarch/MapParameters.h>
@@ -28,13 +29,23 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
-        : processes_(processes) {
+Physics::Physics(shared_ptr<EventQueue> eventQueue,
+                 shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+        : eventQueue_(eventQueue),
+          processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
+    data_->eventQueue    = eventQueue;
     
+    eventQueue_->RegisterHandler(FrameTimeEvent::type, this);
+    eventQueue_->RegisterHandler(ControlsStateEvent::type, this);
+
     processes_->AddProcess(shared_ptr<Process>(new LanderProcess(data_)));
+}
+
+Physics::~Physics() {
+    eventQueue_->UnregisterHandler(this);
 }
 
 void Physics::HandleEvent(const Game::Event &event) {
