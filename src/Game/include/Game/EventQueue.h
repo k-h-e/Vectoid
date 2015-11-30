@@ -28,19 +28,17 @@ namespace Core {
 namespace Game {
 
 class Event;
-class EventQueueHub;
 
 //! Event queue mechanism.
 /*!
  *  Internally, there are in fact two queues: the active queue and the schedule queue. New events
  *  get enqueued on the schedule queue using \ref Schedule(), and processing happens on the active
- *  queue using \ref ProcessEvents(). Before calling \ref ProcessEvents(), the events in the
- *  schedule queue will have to be moved to the active queue, for example by calling
- *  \ref SyncWithHub().
+ *  queue using \ref ProcessEvents(). Queue swapping happens automatically.
  */
 class EventQueue {
   public:
-    EventQueue(int initialBufferSize);
+    //! Hub may be 0-handle if no hub is used.
+    EventQueue(int initialBufferSize, std::shared_ptr<EventQueueHub> hub, bool hubSyncWaitEnabled);
     EventQueue(const EventQueue &other)             = delete;
     EventQueue &operator=(const EventQueue &other)  = delete;
     EventQueue(const EventQueue &&other)            = delete;
@@ -48,28 +46,30 @@ class EventQueue {
     //! Registers the specified event.
     void RegisterEvent(std::unique_ptr<Event> protoType);
     //! Registers a handler for the specified event, as weak reference.
+    /*!
+     *  A given handler must be registered for a given event only once.
+     */
     void RegisterHandler(const Event::EventType &eventType, EventHandlerInterface *handler);
-    //! Unregisters the specified event handler for whatever event it is registered.
+    //! Unregisters the specified event handler from whatever event it is registered for.
     void UnregisterHandler(EventHandlerInterface *handler);
     //! Enqueues the specified event on the schedule queue.
     /*!
      *  The event data gets copied, the client is free to dispose of the event object afterwards.
      */
     void Schedule(const Event &event);
-    //! Processes all events from the active queue.
+    //! Processes all events in the active queue by invoking the respective handlers.
     /*!
-     *  As a result of processing the events in the active queue, new events will get scheduled on
-     *  the schedule queue via \ref Schedule().
+     *  As a result of processing the events in the active queue and activating their event
+     *  handlers, methods of this object will most probably get called. Particularly, new events
+     *  will get scheduled on the schedule queue via \ref Schedule(). Any of this object's public
+     *  methods are safe to be called while processing events, with only ProcessEvents() itself
+     *  guarding against re-entry (on the same thread).
      *
-     *  When the method returns, the active queue will be empty.
+     *  \return
+     *  <c>false</c> in case a hub is used and shutdown has been requested.
      */
-    void ProcessEvents();
-    //! Syncs with the specified \ref EventQueueHub, activating the scheduled events in the process.
-    /*!
-     *  \return <c>false</c> in case shutdown has been requested.
-     */
-    bool SyncWithHub(EventQueueHub *hub, EventQueueHub::ClientId clientId, bool wait);
-    
+    bool ProcessEvents();
+        
   private:
     struct EventInfo {
         std::unique_ptr<Event>               prototype;
@@ -77,12 +77,18 @@ class EventQueue {
         EventInfo(std::unique_ptr<Event> proto) : prototype(std::move(proto)) {}
     };
     
-    std::vector<EventInfo>          events_;
-    std::unordered_map<size_t, int> idToSlotMap_;
-    Core::Buffer                    activeQueue_;
-    std::unique_ptr<Core::Buffer>   scheduleQueue_;
+    std::vector<EventInfo>               events_;    // Handlers might get removed, yet events only
+                                                     // get added.
+    std::unordered_map<size_t, int>      idToSlotMap_;
+    std::unique_ptr<Core::Buffer>        scheduleQueue_;
     
-    std::vector<std::string> eventTrace_;
+    // Only accessed in ProcessEvents() (except for constructor)...
+    std::unique_ptr<Core::Buffer>        activeQueue_;
+    std::vector<EventHandlerInterface *> handlersToCall_;
+    std::shared_ptr<EventQueueHub>       hub_;
+    EventQueueHub::ClientId              hubClientId_;
+    bool                                 processingEvents_,
+                                         hubSyncWaitEnabled_;
 };
 
 }    // Namespace Game.

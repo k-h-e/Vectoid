@@ -26,12 +26,10 @@ namespace kxm {
 namespace Zarch {
 
 Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
-        : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize)),
+        : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize, eventQueueHub, true)),
           processes_(new Processes<ZarchProcess::ProcessType>()),
-          eventQueueHub_(eventQueueHub),
           lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(eventQueue_.get());
-    hubClientId_ = eventQueueHub_->AllocUniqueClientId();
         
     physics_   = shared_ptr<Physics>(new Physics(eventQueue_, processes_));
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic(eventQueue_, processes_));
@@ -42,10 +40,8 @@ void Simulation::ExecuteAction() {
     
     bool shutdownRequested = false;
     while (!shutdownRequested) {
-        shutdownRequested = !eventQueue_->SyncWithHub(eventQueueHub_.get(), hubClientId_, true);
         GenerateTimeEvent();
-        eventQueue_->ProcessEvents();
-        
+        shutdownRequested = !eventQueue_->ProcessEvents();
         processes_->ExecuteProcesses();
     }
     

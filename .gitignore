@@ -1,5 +1,18 @@
+*.o
+
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt.user
+cmake_install.cmake
+
+moc_*.cpp
+moc_*.o
+*.pro.user
+.qmake.stash
+
 /doc/
 *.DS_Store
 
+*.app
 xcuserdata/
 #*.xcodeproj/project.xcworkspace/contents.xcworkspacedata

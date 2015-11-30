@@ -48,8 +48,6 @@ class Simulation : public Core::ActionInterface {
     
     std::shared_ptr<Game::EventQueue>                           eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    std::shared_ptr<Game::EventQueueHub>                        eventQueueHub_;
-    Game::EventQueueHub::ClientId                               hubClientId_;
     std::shared_ptr<GameLogic>                                  gameLogic_;
     std::shared_ptr<Physics>                                    physics_;
     std::chrono::time_point<std::chrono::steady_clock>          lastFrameTime_;
