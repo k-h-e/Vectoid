@@ -10,8 +10,6 @@
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
 		2A1AF9551A475DE9007D20A6 /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */; };
-		2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6119166A624E0073658E /* ProcessesCore.cpp */; };
-		2A2A611F166A700C0073658E /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A611D166A700B0073658E /* Process.cpp */; };
 		2A2A612A166D1E980073658E /* Zarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6128166D1E960073658E /* Zarch.cpp */; };
 		2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2BF0D51560556000F6A771 /* MapParameters.cpp */; };
 		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
@@ -27,7 +25,6 @@
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
 		2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1B171204E100A078CF /* Simulation.cpp */; };
 		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
-		2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */; };
 		2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A952015F4DEEA00E64389 /* Interface.cpp */; };
 		2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */; };
 		2A5E8AD41A114AAE0000617C /* ControlsStateEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsStateEvent.cpp */; };
@@ -51,6 +48,7 @@
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
 		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
+		2AAD2FC61C10E67E00753BD6 /* Processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAD2FC51C10E67E00753BD6 /* Processes.cpp */; };
 		2ABC807817064AD600D909FA /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC807717064AD600D909FA /* Buffer.cpp */; };
 		2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC80831706794000D909FA /* POSIXThreadingFactory.cpp */; };
 		2ABC808B17088B4800D909FA /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC808917088B4800D909FA /* Thread.cpp */; };
@@ -73,11 +71,8 @@
 		2A137B921550814F000EDEA7 /* LanderGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = ../../../src/Zarch/include/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = ../../../src/Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
 		2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLogic.cpp; path = ../../../src/Zarch/GameLogic/GameLogic.cpp; sourceTree = "<group>"; };
-		2A2A6117166A61350073658E /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Process.h; path = ../../../src/Game/include/Game/Process.h; sourceTree = "<group>"; };
-		2A2A6118166A623D0073658E /* ProcessesCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessesCore.h; path = ../../../src/Game/include/Game/ProcessesCore.h; sourceTree = "<group>"; };
-		2A2A6119166A624E0073658E /* ProcessesCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProcessesCore.cpp; path = ../../../src/Game/ProcessesCore.cpp; sourceTree = "<group>"; };
+		2A2A6117166A61350073658E /* ProcessInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessInterface.h; path = ../../../src/Game/include/Game/ProcessInterface.h; sourceTree = "<group>"; };
 		2A2A611C166A64690073658E /* Processes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Processes.h; path = ../../../src/Game/include/Game/Processes.h; sourceTree = "<group>"; };
-		2A2A611D166A700B0073658E /* Process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Process.cpp; path = ../../../src/Game/Process.cpp; sourceTree = "<group>"; };
 		2A2A6120166A85610073658E /* processes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processes.h; path = ../../../src/Zarch/include/Zarch/processes.h; sourceTree = "<group>"; };
 		2A2A6127166D1DF70073658E /* Zarch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Zarch.h; path = ../../../src/Zarch/include/Zarch/Zarch.h; sourceTree = "<group>"; };
 		2A2A6128166D1E960073658E /* Zarch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Zarch.cpp; path = ../../../src/Zarch/Zarch.cpp; sourceTree = "<group>"; };
@@ -105,8 +100,6 @@
 		2A41FB1A171204C200A078CF /* Presentation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Presentation.h; path = ../../../src/Zarch/include/Zarch/Presentation.h; sourceTree = "<group>"; };
 		2A41FB1B171204E100A078CF /* Simulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Simulation.cpp; path = ../../../src/Zarch/Simulation.cpp; sourceTree = "<group>"; };
 		2A41FB1E171204F900A078CF /* Presentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Presentation.cpp; path = ../../../src/Zarch/Presentation.cpp; sourceTree = "<group>"; };
-		2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomProcessPool.h; path = ../../../src/Game/include/Game/CustomProcessPool.h; sourceTree = "<group>"; };
-		2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CustomProcessPool.cpp; path = ../../../src/Game/CustomProcessPool.cpp; sourceTree = "<group>"; };
 		2A4A952015F4DEEA00E64389 /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Interface.cpp; path = ../../../src/kxm/Core/Interface.cpp; sourceTree = "<group>"; };
 		2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2A5E8ACE1A1147370000617C /* ControlsStateEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsStateEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ControlsStateEvent.h; sourceTree = "<group>"; };
@@ -162,6 +155,8 @@
 		2AAD2FC11C0BA26900753BD6 /* SceneGraphNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneGraphNode.h; path = ../../src/Vectoid/include/Vectoid/SceneGraphNode.h; sourceTree = "<group>"; };
 		2AAD2FC21C0BA26900753BD6 /* TestTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../src/Vectoid/include/Vectoid/TestTriangle.h; sourceTree = "<group>"; };
 		2AAD2FC31C0BA26900753BD6 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vectoid/include/Vectoid/Vector.h; sourceTree = "<group>"; };
+		2AAD2FC41C10DA7F00753BD6 /* EventQueueSchedulingInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueSchedulingInterface.h; path = ../../../src/Game/include/Game/EventQueueSchedulingInterface.h; sourceTree = "<group>"; };
+		2AAD2FC51C10E67E00753BD6 /* Processes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Processes.cpp; path = ../../../src/Game/Processes.cpp; sourceTree = "<group>"; };
 		2ABC807617064ABC00D909FA /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Buffer.h; path = ../../../src/kxm/Core/include/kxm/Core/Buffer.h; sourceTree = "<group>"; };
 		2ABC807717064AD600D909FA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = ../../../src/kxm/Core/Buffer.cpp; sourceTree = "<group>"; };
 		2ABC807D17066BA000D909FA /* LockInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LockInterface.h; path = ../../../src/kxm/Core/include/kxm/Core/LockInterface.h; sourceTree = "<group>"; };
@@ -195,7 +190,6 @@
 		2AECEF61154D6CAF00033D14 /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = ../../../src/Zarch/include/Zarch/Terrain.h; sourceTree = "<group>"; };
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../../../src/Zarch/Terrain.cpp; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../../../src/Vectoid/Particles.cpp; sourceTree = "<group>"; };
-		2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExecutionContext.h; path = ../../../src/Game/include/Game/ExecutionContext.h; sourceTree = "<group>"; };
 		2AFDAED016C5A24C00C003DA /* ReusableItems.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReusableItems.h; path = ../../../src/kxm/Core/include/kxm/Core/ReusableItems.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -472,12 +466,10 @@
 			isa = PBXGroup;
 			children = (
 				2AECEF51154D613000033D14 /* include */,
-				2A2A611D166A700B0073658E /* Process.cpp */,
-				2A4A24CA1702471A002FE8F3 /* CustomProcessPool.cpp */,
-				2A2A6119166A624E0073658E /* ProcessesCore.cpp */,
 				2ADD5C211A0175F1006533B8 /* Event.cpp */,
 				2ADD5C241A01802F006533B8 /* EventQueue.cpp */,
 				2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */,
+				2AAD2FC51C10E67E00753BD6 /* Processes.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -499,11 +491,9 @@
 				2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */,
 				2A1094FD1668C38F001F298C /* PoolInterface.h */,
 				2A1094FC1667FC9F001F298C /* Pool.h */,
-				2A4A24C9170246F6002FE8F3 /* CustomProcessPool.h */,
-				2A2A6117166A61350073658E /* Process.h */,
-				2A2A6118166A623D0073658E /* ProcessesCore.h */,
+				2A2A6117166A61350073658E /* ProcessInterface.h */,
 				2A2A611C166A64690073658E /* Processes.h */,
-				2AF69F2D173D3BC700DE6F1D /* ExecutionContext.h */,
+				2AAD2FC41C10DA7F00753BD6 /* EventQueueSchedulingInterface.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -642,6 +632,7 @@
 				2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */,
 				2AC40A221556CEC700026789 /* Range.cpp in Sources */,
 				2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */,
+				2AAD2FC61C10E67E00753BD6 /* Processes.cpp in Sources */,
 				2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */,
 				2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */,
 				2A1AF9551A475DE9007D20A6 /* GameLogic.cpp in Sources */,
@@ -651,11 +642,8 @@
 				2A4A952115F4DEEA00E64389 /* Interface.cpp in Sources */,
 				2AE1DD031621B69600306D89 /* logging.cpp in Sources */,
 				2ADD5C221A0175F1006533B8 /* Event.cpp in Sources */,
-				2A2A611B166A624E0073658E /* ProcessesCore.cpp in Sources */,
-				2A2A611F166A700C0073658E /* Process.cpp in Sources */,
 				2A2A612A166D1E980073658E /* Zarch.cpp in Sources */,
 				2A5E8ADE1A115E1B0000617C /* EventQueueHub.cpp in Sources */,
-				2A4A24CC1702471A002FE8F3 /* CustomProcessPool.cpp in Sources */,
 				2ABC807817064AD600D909FA /* Buffer.cpp in Sources */,
 				2ABC80851706794000D909FA /* POSIXThreadingFactory.cpp in Sources */,
 				2ABC808B17088B4800D909FA /* Thread.cpp in Sources */,

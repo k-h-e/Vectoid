@@ -37,6 +37,7 @@ class ControlsState;
 class Presentation {
   public:
     Presentation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
+    ~Presentation();
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height) { video_->SetViewPort(width, height); }
     void RenderFrame()                      { video_->RenderFrame();              }

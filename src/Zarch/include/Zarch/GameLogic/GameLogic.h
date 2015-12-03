@@ -20,7 +20,7 @@
 namespace kxm {
 
 namespace Game {
-    class EventQueue;
+    class EventQueueSchedulingInterface;
     template<class T> class Processes;
 }
 
@@ -34,9 +34,10 @@ class ControlsStateEvent;
  */
 class GameLogic : public virtual Game::EventHandlerInterface {
   public:
-    GameLogic(std::shared_ptr<Game::EventQueue> eventQueue,
+    GameLogic(std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue,
               std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
     ~GameLogic();
+    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleEvent(const Game::Event &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
     
@@ -44,7 +45,7 @@ class GameLogic : public virtual Game::EventHandlerInterface {
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
     
-    std::shared_ptr<Game::EventQueue>                           eventQueue_;
+    std::shared_ptr<Game::EventQueueSchedulingInterface>        eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     bool                                                        landerThrusterEnabled_,
                                                                 landerFiringEnabled_;

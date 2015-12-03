@@ -23,17 +23,21 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-GameLogic::GameLogic(shared_ptr<EventQueue> eventQueue,
+GameLogic::GameLogic(shared_ptr<EventQueueSchedulingInterface> eventQueue,
                      shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
         : eventQueue_(eventQueue),
           processes_(processes),
           landerThrusterEnabled_(false),
           landerFiringEnabled_(false) {
-    eventQueue_->RegisterHandler(ControlsStateEvent::type, this);
+    // Nop.
 }
 
 GameLogic::~GameLogic() {
-    eventQueue_->UnregisterHandler(this);
+    // Nop.
+}
+
+vector<Event::EventType> GameLogic::EnumerateHandledEvents() {
+    return vector<Event::EventType>{ ControlsStateEvent::type };
 }
 
 void GameLogic::HandleEvent(const Game::Event &event) {

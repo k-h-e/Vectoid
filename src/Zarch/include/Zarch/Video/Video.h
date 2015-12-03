@@ -21,6 +21,7 @@
 namespace kxm {
 
 namespace Game {
+    class EventQueueSchedulingInterface;
     template<class T> class Processes;
 }
 
@@ -60,13 +61,14 @@ class Video : public virtual Game::EventHandlerInterface {
         std::shared_ptr<MapParameters>                  mapParameters;
         std::shared_ptr<Terrain>                        terrain;
     };
-    Video(std::shared_ptr<Game::EventQueue> eventQueue,
+    Video(std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue,
           std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     //! Renders a frame using the current scene graph state.
     void RenderFrame();
+    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleLanderMoveEvent(const LanderMoveEvent &event);
@@ -77,7 +79,7 @@ class Video : public virtual Game::EventHandlerInterface {
     Video(const Video &other);
     Video &operator=(const Video &other);
     
-    std::shared_ptr<Game::EventQueue>                           eventQueue_;
+    std::shared_ptr<Game::EventQueueSchedulingInterface>        eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     std::shared_ptr<Data>                                       data_;
 };

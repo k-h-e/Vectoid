@@ -42,7 +42,7 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<EventQueue> eventQueue,
+Video::Video(shared_ptr<EventQueueSchedulingInterface> eventQueue,
              shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
         : eventQueue_(eventQueue),
           processes_(processes) {
@@ -75,11 +75,6 @@ Video::Video(shared_ptr<EventQueue> eventQueue,
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    eventQueue_->RegisterHandler(FrameTimeEvent::type,      this);
-    eventQueue_->RegisterHandler(LanderMoveEvent::type,     this);
-    eventQueue_->RegisterHandler(LanderVelocityEvent::type, this);
-    eventQueue_->RegisterHandler(LanderThrusterEvent::type, this);
-    
     processes_->AddProcess(shared_ptr<Process>(new CameraProcess(data_)));
     processes_->AddProcess(shared_ptr<Process>(new StarFieldProcess(data_, starFieldParticles)));
     processes_->AddProcess(shared_ptr<Process>(new ThrusterParticlesProcess(data_,
@@ -87,7 +82,7 @@ Video::Video(shared_ptr<EventQueue> eventQueue,
 }
 
 Video::~Video() {
-    eventQueue_->UnregisterHandler(this);
+    // Nop.
 }
 
 void Video::SetViewPort(int width, int height) {
@@ -96,6 +91,13 @@ void Video::SetViewPort(int width, int height) {
 
 void Video::RenderFrame() {
     data_->projection->Render(0);
+}
+
+vector<Event::EventType> Video::EnumerateHandledEvents() {
+    return vector<Event::EventType>{ FrameTimeEvent::type,
+                                     LanderMoveEvent::type,
+                                     LanderVelocityEvent::type,
+                                     LanderThrusterEvent::type  };
 }
 
 void Video::HandleEvent(const Game::Event &event) {

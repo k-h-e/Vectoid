@@ -1,12 +1,3 @@
-//
-//  EventQueue.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/29/14.
-//
-//
-
-
 #include <Game/EventQueue.h>
 
 #include <cassert>
@@ -31,6 +22,7 @@ EventQueue::EventQueue(int initialBufferSize, shared_ptr<EventQueueHub> hub,
 }
 
 void EventQueue::RegisterEvent(std::unique_ptr<Event> protoType) {
+    assert(!processingEvents_);
     assert(protoType.get() != nullptr);
     size_t id             = protoType->Type().id;
     bool   alreadyPresent = (idToSlotMap_.find(id) != idToSlotMap_.end());
@@ -45,6 +37,7 @@ void EventQueue::RegisterEvent(std::unique_ptr<Event> protoType) {
 
 void EventQueue::RegisterHandler(const Event::EventType &eventType,
                                  EventHandlerInterface *handlerToRegister) {
+    assert(!processingEvents_);
     auto infoIter = idToSlotMap_.find(eventType.id);
     assert(infoIter != idToSlotMap_.end());
     for (EventHandlerInterface *handler : events_[infoIter->second].handlers) {
@@ -54,6 +47,7 @@ void EventQueue::RegisterHandler(const Event::EventType &eventType,
 }
 
 void EventQueue::UnregisterHandler(EventHandlerInterface *handlerToUnregister) {
+    assert(!processingEvents_);
     for (auto &info : events_) {
         vector<EventHandlerInterface *> handlers;
         for (EventHandlerInterface *handler : info.handlers) {
@@ -65,6 +59,7 @@ void EventQueue::UnregisterHandler(EventHandlerInterface *handlerToUnregister) {
     }
 }
 
+// Might get called while ProcessEvents() executes.
 void EventQueue::Schedule(const Event &event) {
     int slot = idToSlotMap_[event.Type().id];
     scheduleQueue_->Append(&slot, sizeof(slot));
@@ -72,51 +67,31 @@ void EventQueue::Schedule(const Event &event) {
 }
 
 bool EventQueue::ProcessEvents() {
+    assert(!processingEvents_);
+    processingEvents_ = true;
+    
     bool terminationRequested = false;
-    
-    if (!processingEvents_) {
-        processingEvents_ = true;
-        
-        if (!hub_) {
-            activeQueue_->Clear();
-            activeQueue_.swap(scheduleQueue_);
-        }
-        else {
-            terminationRequested = !hub_->Sync(hubClientId_, &scheduleQueue_, activeQueue_.get(),
-                                               hubSyncWaitEnabled_);
-        }
-        
-        Buffer::Reader reader = activeQueue_->GetReader();
-        int slot;
-        while (reader.ReadBlock(&slot, sizeof(slot))) {
-                // The active queue as well as the reader have not been touched as a result of
-                // handler calls in earlier iterations. The handler registration on the other hand
-                // might have changed, yet the data is valid again.
-            EventInfo &info  = events_[slot];
-            Event     &event = *(info.prototype);
-            event.Deserialize(&reader);
-            for (EventHandlerInterface *handler : info.handlers) {
-                handlersToCall_.push_back(handler);
-            }
-            
-            // While processing the handlers for this event, the registration for its handlers might
-            // change.
-            for (EventHandlerInterface *handler : handlersToCall_) {
-                handler->HandleEvent(event);
-                    // Activating the handlers will probably cause this class instance's methods to
-                    // be called. This is okay: This method is protected against re-entry (same
-                    // thread) and all other methods are safe to be called while we run to
-                    // completion. State we need to remain untouched will not get modified by other
-                    // methods, including the prepared event prototypes. Likewise, when we call out
-                    // to a handler, state needed by other methods of this class is valid.
-            }
-            
-            handlersToCall_.clear();
-        }
-        
-        processingEvents_ = false;
+    if (!hub_) {
+        activeQueue_->Clear();
+        activeQueue_.swap(scheduleQueue_);
     }
-    
+    else {
+        terminationRequested = !hub_->Sync(hubClientId_, &scheduleQueue_, activeQueue_.get(),
+                                           hubSyncWaitEnabled_);
+    }
+        
+    int slot;
+    Buffer::Reader reader = activeQueue_->GetReader();
+    while (reader.ReadBlock(&slot, sizeof(slot))) {
+        EventInfo &info  = events_[slot];
+        Event     &event = *(info.prototype);
+        event.Deserialize(&reader);
+        for (EventHandlerInterface *handler : info.handlers) {
+            handler->HandleEvent(event);
+        }
+    }
+        
+    processingEvents_ = false;
     return !terminationRequested;
 }
 

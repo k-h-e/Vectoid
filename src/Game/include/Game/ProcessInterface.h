@@ -17,23 +17,20 @@
 namespace kxm {
 namespace Game {
 
-//! A process is an ongoing activity that periodically gets called, e.g. for each frame. It takes
-//! part in a co-operative scheduling scheme managed by \ref Processes.
+//! Interface to processes.
 /*!
+ *  A process is an ongoing activity that periodically gets called, e.g. for each frame. It takes
+ *  part in a co-operative scheduling scheme managed by \ref Processes.
+ *
  *  \ingroup Game
  */
-class Process : public virtual Core::Interface {
+class ProcessInterface : public virtual Core::Interface {
   public:
-    Process();
     //! Executes the process until it co-operatively yields (by returning).
     /*!
      *  \return <c>false</c> in case the process has finished and does not want to be called again.
      */
     virtual bool Execute() = 0;
-    
-  private:
-    Process(const Process &other);
-    Process &operator=(const Process &other);
 };
 
 }    // Namespace Game.

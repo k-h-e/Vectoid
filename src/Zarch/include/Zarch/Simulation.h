@@ -39,6 +39,7 @@ class Physics;
 class Simulation : public Core::ActionInterface {
   public:
     Simulation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
+    ~Simulation();
     void ExecuteAction();
     
   private:

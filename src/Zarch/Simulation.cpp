@@ -32,7 +32,18 @@ Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
     Zarch::RegisterEvents(eventQueue_.get());
         
     physics_   = shared_ptr<Physics>(new Physics(eventQueue_, processes_));
+    for (Event::EventType eventType : physics_->EnumerateHandledEvents()) {
+        eventQueue_->RegisterHandler(eventType, physics_.get());
+    }
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic(eventQueue_, processes_));
+    for (Event::EventType eventType : gameLogic_->EnumerateHandledEvents()) {
+        eventQueue_->RegisterHandler(eventType, gameLogic_.get());
+    }
+}
+
+Simulation::~Simulation() {
+    eventQueue_->UnregisterHandler(physics_.get());
+    eventQueue_->UnregisterHandler(gameLogic_.get());
 }
 
 void Simulation::ExecuteAction() {

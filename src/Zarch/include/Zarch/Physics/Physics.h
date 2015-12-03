@@ -22,7 +22,7 @@
 namespace kxm {
 
 namespace Game {
-    class EventQueue;
+    class EventQueueSchedulingInterface;
     template<class T> class Processes;
 }
 
@@ -48,17 +48,18 @@ class Physics : public virtual Game::EventHandlerInterface {
     };
     struct Data {
         Data() : frameDeltaTimeS(0.0f) {}
-        float                             frameDeltaTimeS;
-        ControlsState                     controlsState;
-        LanderState                       landerState;
-        std::shared_ptr<MapParameters>    mapParameters;
-        std::shared_ptr<Terrain>          terrain;
-        std::shared_ptr<Game::EventQueue> eventQueue;
+        float                                                frameDeltaTimeS;
+        ControlsState                                        controlsState;
+        LanderState                                          landerState;
+        std::shared_ptr<MapParameters>                       mapParameters;
+        std::shared_ptr<Terrain>                             terrain;
+        std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue;
     };
     
-    Physics(std::shared_ptr<Game::EventQueue> eventQueue,
+    Physics(std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue,
             std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
     ~Physics();
+    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
@@ -67,7 +68,7 @@ class Physics : public virtual Game::EventHandlerInterface {
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Game::EventQueue>                           eventQueue_;
+    std::shared_ptr<Game::EventQueueSchedulingInterface>        eventQueue_;
     std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
     std::shared_ptr<Data>                                       data_;
 };

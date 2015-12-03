@@ -33,6 +33,13 @@ Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
     Zarch::RegisterEvents(eventQueue_.get());
     
     video_ = shared_ptr<Video>(new Video(eventQueue_, processes_));
+    for (Event::EventType eventType : video_->EnumerateHandledEvents()) {
+        eventQueue_->RegisterHandler(eventType, video_.get());
+    }
+}
+
+Presentation::~Presentation() {
+    eventQueue_->UnregisterHandler(video_.get());
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {

@@ -1,12 +1,3 @@
-//
-//  EventQueue.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/29/14.
-//
-//
-
-
 #ifndef KXM_GAME_EVENTQUEUE_H_
 #define KXM_GAME_EVENTQUEUE_H_
 
@@ -16,6 +7,7 @@
 #include <unordered_map>
 
 #include <Game/Event.h>
+#include <Game/EventQueueSchedulingInterface.h>
 #include <Game/EventHandlerInterface.h>
 #include <Game/EventQueueHub.h>
 
@@ -35,7 +27,7 @@ class Event;
  *  get enqueued on the schedule queue using \ref Schedule(), and processing happens on the active
  *  queue using \ref ProcessEvents(). Queue swapping happens automatically.
  */
-class EventQueue {
+class EventQueue : public EventQueueSchedulingInterface {
   public:
     //! Hub may be 0-handle if no hub is used.
     EventQueue(int initialBufferSize, std::shared_ptr<EventQueueHub> hub, bool hubSyncWaitEnabled);
@@ -52,23 +44,19 @@ class EventQueue {
     void RegisterHandler(const Event::EventType &eventType, EventHandlerInterface *handler);
     //! Unregisters the specified event handler from whatever event it is registered for.
     void UnregisterHandler(EventHandlerInterface *handler);
-    //! Enqueues the specified event on the schedule queue.
-    /*!
-     *  The event data gets copied, the client is free to dispose of the event object afterwards.
-     */
-    void Schedule(const Event &event);
     //! Processes all events in the active queue by invoking the respective handlers.
     /*!
-     *  As a result of processing the events in the active queue and activating their event
-     *  handlers, methods of this object will most probably get called. Particularly, new events
-     *  will get scheduled on the schedule queue via \ref Schedule(). Any of this object's public
-     *  methods are safe to be called while processing events, with only ProcessEvents() itself
-     *  guarding against re-entry (on the same thread).
+     *  While processing the events in the active queue and activating their event
+     *  handlers, the event queue is prepared to get all methods called that it exposes via the
+     *  EventQueueSchedulingInterface. All other public methods on the other hand must not get
+     *  called while ProcessEvents() executes.
      *
      *  \return
      *  <c>false</c> in case a hub is used and shutdown has been requested.
      */
     bool ProcessEvents();
+    
+    void Schedule(const Event &event);
         
   private:
     struct EventInfo {
@@ -77,14 +65,10 @@ class EventQueue {
         EventInfo(std::unique_ptr<Event> proto) : prototype(std::move(proto)) {}
     };
     
-    std::vector<EventInfo>               events_;    // Handlers might get removed, yet events only
-                                                     // get added.
+    std::vector<EventInfo>               events_;
     std::unordered_map<size_t, int>      idToSlotMap_;
-    std::unique_ptr<Core::Buffer>        scheduleQueue_;
-    
-    // Only accessed in ProcessEvents() (except for constructor)...
-    std::unique_ptr<Core::Buffer>        activeQueue_;
-    std::vector<EventHandlerInterface *> handlersToCall_;
+    std::unique_ptr<Core::Buffer>        scheduleQueue_,
+                                         activeQueue_;
     std::shared_ptr<EventQueueHub>       hub_;
     EventQueueHub::ClientId              hubClientId_;
     bool                                 processingEvents_,
