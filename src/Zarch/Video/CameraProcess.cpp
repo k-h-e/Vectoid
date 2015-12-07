@@ -30,12 +30,15 @@ CameraProcess::CameraProcess(const shared_ptr<Video::Data> data)
         : data_(data) {
 }
 
-bool CameraProcess::Execute() {
+void CameraProcess::Execute() {
     Vector position = data_->landerCoordSys->Position();
     if (position.y < data_->mapParameters->cameraMinHeight)
         position.y = data_->mapParameters->cameraMinHeight;
     data_->camera->SetPosition(Vector(position.x, position.y, position.z + 5.0f));
-    return true;
+}
+
+bool CameraProcess::Finished() {
+    return false;
 }
 
 }    // Namespace Zarch.

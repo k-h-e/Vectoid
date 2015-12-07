@@ -10,7 +10,7 @@
 #include <Zarch/Zarch.h>
 
 #include <kxm/Core/Thread.h>
-#include <Game/Pool.h>
+#include <Game/EventQueue.h>
 #include <Game/EventQueueHub.h>
 #include <Zarch/Simulation.h>
 #include <Zarch/Presentation.h>

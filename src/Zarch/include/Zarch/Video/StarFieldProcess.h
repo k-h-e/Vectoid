@@ -13,8 +13,8 @@
 
 #include <memory>
 
+#include <Game/ProcessInterface.h>
 #include <Zarch/Video/Video.h>
-#include <Zarch/processes.h>
 
 
 namespace kxm {
@@ -29,11 +29,14 @@ namespace Zarch {
 /*!
  *  \ingroup Zarch
  */
-class StarFieldProcess : public ZarchProcess {
+class StarFieldProcess : public virtual Game::ProcessInterface {
   public:
     StarFieldProcess(std::shared_ptr<Video::Data> data,
                      std::shared_ptr<Vectoid::Particles> particles);
-    bool Execute();
+    //! (Re)implemented.
+    void Execute();
+    //! (Re)implemented.
+    bool Finished();
     
   private:
     StarFieldProcess(const StarFieldProcess &other);

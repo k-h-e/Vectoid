@@ -13,8 +13,8 @@
 
 #include <memory>
 
+#include <Game/ProcessInterface.h>
 #include <Zarch/Physics/Physics.h>
-#include <Zarch/Processes.h>
 
 
 namespace kxm {
@@ -24,7 +24,7 @@ namespace Zarch {
 /*!
  *  \ingroup Zarch
  */
-class LanderProcess : public ZarchProcess {
+class LanderProcess : public virtual Game::ProcessInterface {
   public:
     LanderProcess(const std::shared_ptr<Physics::Data> &data);
     
@@ -32,7 +32,9 @@ class LanderProcess : public ZarchProcess {
     LanderProcess(const LanderProcess &other);
     LanderProcess &operator=(const LanderProcess &other);
     //! (Re)implemented.
-    bool Execute();
+    void Execute();
+    //! (Re)implemented.
+    bool Finished();
     
     std::shared_ptr<Physics::Data> data_;
     Vectoid::Vector                heading_;

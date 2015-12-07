@@ -10,7 +10,8 @@
 #include <Zarch/GameLogic/GameLogic.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventQueue.h>
+#include <Game/EventQueueClientInterface.h>
+#include <Game/ProcessesClientInterface.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 
@@ -23,8 +24,8 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-GameLogic::GameLogic(shared_ptr<EventQueueSchedulingInterface> eventQueue,
-                     shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+GameLogic::GameLogic(shared_ptr<EventQueueClientInterface> eventQueue,
+                     shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes),
           landerThrusterEnabled_(false),
@@ -40,7 +41,11 @@ vector<Event::EventType> GameLogic::EnumerateHandledEvents() {
     return vector<Event::EventType>{ ControlsStateEvent::type };
 }
 
-void GameLogic::HandleEvent(const Game::Event &event) {
+void GameLogic::HandleProcessFinished(ProcessInterface *process) {
+    // Nop.
+}
+
+void GameLogic::HandleEvent(const Event &event) {
     static_cast<const ZarchEvent &>(event).DispatchToGameLogic(this);
 }
 

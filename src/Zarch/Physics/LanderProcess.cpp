@@ -32,7 +32,7 @@ LanderProcess::LanderProcess(const shared_ptr<Physics::Data> &data)
           heading_(0.0f, 0.0f, -1.0f) {
 }
 
-bool LanderProcess::Execute() {
+void LanderProcess::Execute() {
     Physics::Data &data = *data_;
     
     bool oldThrusterEnabled = data.landerState.thrusterEnabled;
@@ -87,8 +87,10 @@ bool LanderProcess::Execute() {
     if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
         data.eventQueue->Schedule(LanderThrusterEvent(data.landerState.thrusterEnabled));
     }
-    
-    return true;
+}
+
+bool LanderProcess::Finished() {
+    return false;
 }
 
 }    // Namespace Zarch.

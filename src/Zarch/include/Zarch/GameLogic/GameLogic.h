@@ -14,14 +14,14 @@
 #include <memory>
 
 #include <Game/EventHandlerInterface.h>
-#include <Zarch/processes.h>
+#include <Game/ProcessOwnerInterface.h>
 
 
 namespace kxm {
 
 namespace Game {
-    class EventQueueSchedulingInterface;
-    template<class T> class Processes;
+    class EventQueueClientInterface;
+    class ProcessesClientInterface;
 }
 
 namespace Zarch {
@@ -32,12 +32,14 @@ class ControlsStateEvent;
 /*!
  *  \ingroup Zarch
  */
-class GameLogic : public virtual Game::EventHandlerInterface {
+class GameLogic : public virtual Game::EventHandlerInterface,
+                  public virtual Game::ProcessOwnerInterface {
   public:
-    GameLogic(std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue,
-              std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
+    GameLogic(std::shared_ptr<Game::EventQueueClientInterface> eventQueue,
+              std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~GameLogic();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
+    void HandleProcessFinished(Game::ProcessInterface *process);
     void HandleEvent(const Game::Event &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
     
@@ -45,10 +47,10 @@ class GameLogic : public virtual Game::EventHandlerInterface {
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
     
-    std::shared_ptr<Game::EventQueueSchedulingInterface>        eventQueue_;
-    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    bool                                                        landerThrusterEnabled_,
-                                                                landerFiringEnabled_;
+    std::shared_ptr<Game::EventQueueClientInterface> eventQueue_;
+    std::shared_ptr<Game::ProcessesClientInterface>  processes_;
+    bool                                             landerThrusterEnabled_,
+                                                     landerFiringEnabled_;
 };
 
 }    // Namespace Zarch.

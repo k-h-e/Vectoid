@@ -14,15 +14,15 @@
 #include <memory>
 
 #include <Game/EventHandlerInterface.h>
+#include <Game/ProcessOwnerInterface.h>
 #include <Vectoid/Vector.h>
-#include <Zarch/processes.h>
 
 
 namespace kxm {
 
 namespace Game {
-    class EventQueueSchedulingInterface;
-    template<class T> class Processes;
+    class EventQueueClientInterface;
+    class ProcessesClientInterface;
 }
 
 namespace Vectoid {
@@ -40,13 +40,17 @@ class FrameTimeEvent;
 class LanderMoveEvent;
 class LanderVelocityEvent;
 class LanderThrusterEvent;
+class CameraProcess;
+class StarFieldProcess;
+class ThrusterParticlesProcess;
 
 
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
  *  \ingroup Zarch
  */
-class Video : public virtual Game::EventHandlerInterface {
+class Video : public virtual Game::EventHandlerInterface,
+              public virtual Game::ProcessOwnerInterface {
   public:
     struct Data {
         Data() : frameDeltaTimeS(0.0f),
@@ -61,14 +65,15 @@ class Video : public virtual Game::EventHandlerInterface {
         std::shared_ptr<MapParameters>                  mapParameters;
         std::shared_ptr<Terrain>                        terrain;
     };
-    Video(std::shared_ptr<Game::EventQueueSchedulingInterface> eventQueue,
-          std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes);
+    Video(std::shared_ptr<Game::EventQueueClientInterface> eventQueue,
+          std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     //! Renders a frame using the current scene graph state.
     void RenderFrame();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
+    void HandleProcessFinished(Game::ProcessInterface *process);
     void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleLanderMoveEvent(const LanderMoveEvent &event);
@@ -79,9 +84,12 @@ class Video : public virtual Game::EventHandlerInterface {
     Video(const Video &other);
     Video &operator=(const Video &other);
     
-    std::shared_ptr<Game::EventQueueSchedulingInterface>        eventQueue_;
-    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    std::shared_ptr<Data>                                       data_;
+    std::shared_ptr<Game::EventQueueClientInterface> eventQueue_;
+    std::shared_ptr<Game::ProcessesClientInterface>  processes_;
+    std::shared_ptr<Data>                            data_;
+    std::unique_ptr<CameraProcess>                   cameraProcess_;
+    std::unique_ptr<StarFieldProcess>                starFieldProcess_;
+    std::unique_ptr<ThrusterParticlesProcess>        thrusterParticlesProcess_;
 };
 
 }    // Namespace Zarch.

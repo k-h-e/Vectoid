@@ -13,17 +13,15 @@
 
 #include <memory>
 
-#include <Game/EventQueue.h>
-#include <Game/Processes.h>
 #include <Zarch/Video/Video.h>
-#include <Zarch/processes.h>
 
 
 namespace kxm {
 
 namespace Game {
+    class EventQueue;
+    class Processes;
     class EventQueueHub;
-    class ThreadCouplingBuffer;
 }
 
 namespace Zarch {
@@ -46,9 +44,9 @@ class Presentation {
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
     
-    std::shared_ptr<Game::EventQueue>                           eventQueue_;
-    std::shared_ptr<Game::Processes<ZarchProcess::ProcessType>> processes_;
-    std::shared_ptr<Video>                                      video_;
+    std::shared_ptr<Game::EventQueue> eventQueue_;
+    std::shared_ptr<Game::Processes>  processes_;
+    std::shared_ptr<Video>            video_;
 };
 
 }

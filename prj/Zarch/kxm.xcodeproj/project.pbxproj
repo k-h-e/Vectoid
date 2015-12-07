@@ -73,7 +73,6 @@
 		2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLogic.cpp; path = ../../../src/Zarch/GameLogic/GameLogic.cpp; sourceTree = "<group>"; };
 		2A2A6117166A61350073658E /* ProcessInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessInterface.h; path = ../../../src/Game/include/Game/ProcessInterface.h; sourceTree = "<group>"; };
 		2A2A611C166A64690073658E /* Processes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Processes.h; path = ../../../src/Game/include/Game/Processes.h; sourceTree = "<group>"; };
-		2A2A6120166A85610073658E /* processes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processes.h; path = ../../../src/Zarch/include/Zarch/processes.h; sourceTree = "<group>"; };
 		2A2A6127166D1DF70073658E /* Zarch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Zarch.h; path = ../../../src/Zarch/include/Zarch/Zarch.h; sourceTree = "<group>"; };
 		2A2A6128166D1E960073658E /* Zarch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Zarch.cpp; path = ../../../src/Zarch/Zarch.cpp; sourceTree = "<group>"; };
 		2A2A6137166D3A190073658E /* EventHandlerInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventHandlerInterface.h; path = ../../../src/Game/include/Game/EventHandlerInterface.h; sourceTree = "<group>"; };
@@ -155,7 +154,7 @@
 		2AAD2FC11C0BA26900753BD6 /* SceneGraphNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneGraphNode.h; path = ../../src/Vectoid/include/Vectoid/SceneGraphNode.h; sourceTree = "<group>"; };
 		2AAD2FC21C0BA26900753BD6 /* TestTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../src/Vectoid/include/Vectoid/TestTriangle.h; sourceTree = "<group>"; };
 		2AAD2FC31C0BA26900753BD6 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = ../../src/Vectoid/include/Vectoid/Vector.h; sourceTree = "<group>"; };
-		2AAD2FC41C10DA7F00753BD6 /* EventQueueSchedulingInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueSchedulingInterface.h; path = ../../../src/Game/include/Game/EventQueueSchedulingInterface.h; sourceTree = "<group>"; };
+		2AAD2FC41C10DA7F00753BD6 /* EventQueueClientInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueueClientInterface.h; path = ../../../src/Game/include/Game/EventQueueClientInterface.h; sourceTree = "<group>"; };
 		2AAD2FC51C10E67E00753BD6 /* Processes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Processes.cpp; path = ../../../src/Game/Processes.cpp; sourceTree = "<group>"; };
 		2ABC807617064ABC00D909FA /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Buffer.h; path = ../../../src/kxm/Core/include/kxm/Core/Buffer.h; sourceTree = "<group>"; };
 		2ABC807717064AD600D909FA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = ../../../src/kxm/Core/Buffer.cpp; sourceTree = "<group>"; };
@@ -175,6 +174,8 @@
 		2ABE9CDE173070AD00F5251C /* ThrusterParticlesProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterParticlesProcess.h; path = ../../../src/Zarch/include/Zarch/Video/ThrusterParticlesProcess.h; sourceTree = "<group>"; };
 		2ABE9CDF173071BF00F5251C /* ThrusterParticlesProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterParticlesProcess.cpp; path = ../../../src/Zarch/Video/ThrusterParticlesProcess.cpp; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = ../../../src/Vectoid/Range.cpp; sourceTree = "<group>"; };
+		2AD694DB1C16259E00BAFACE /* ProcessOwnerInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessOwnerInterface.h; path = ../../../src/Game/include/Game/ProcessOwnerInterface.h; sourceTree = "<group>"; };
+		2AD694DC1C162D1400BAFACE /* ProcessesClientInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProcessesClientInterface.h; path = ../../../src/Game/include/Game/ProcessesClientInterface.h; sourceTree = "<group>"; };
 		2ADD5C201A017271006533B8 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../../../src/Game/include/Game/Event.h; sourceTree = "<group>"; };
 		2ADD5C211A0175F1006533B8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = ../../../src/Game/Event.cpp; sourceTree = "<group>"; };
 		2ADD5C231A017EDF006533B8 /* EventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventQueue.h; path = ../../../src/Game/include/Game/EventQueue.h; sourceTree = "<group>"; };
@@ -487,13 +488,15 @@
 			children = (
 				2ADD5C201A017271006533B8 /* Event.h */,
 				2A2A6137166D3A190073658E /* EventHandlerInterface.h */,
+				2AAD2FC41C10DA7F00753BD6 /* EventQueueClientInterface.h */,
 				2ADD5C231A017EDF006533B8 /* EventQueue.h */,
 				2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */,
+				2A2A6117166A61350073658E /* ProcessInterface.h */,
+				2AD694DB1C16259E00BAFACE /* ProcessOwnerInterface.h */,
+				2AD694DC1C162D1400BAFACE /* ProcessesClientInterface.h */,
+				2A2A611C166A64690073658E /* Processes.h */,
 				2A1094FD1668C38F001F298C /* PoolInterface.h */,
 				2A1094FC1667FC9F001F298C /* Pool.h */,
-				2A2A6117166A61350073658E /* ProcessInterface.h */,
-				2A2A611C166A64690073658E /* Processes.h */,
-				2AAD2FC41C10DA7F00753BD6 /* EventQueueSchedulingInterface.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -538,7 +541,6 @@
 				2A2BF0D31560554700F6A771 /* MapParameters.h */,
 				2AECEF61154D6CAF00033D14 /* Terrain.h */,
 				2AAC255E15810118004A37C6 /* ControlsState.h */,
-				2A2A6120166A85610073658E /* processes.h */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";

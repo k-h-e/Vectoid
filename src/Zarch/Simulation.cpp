@@ -10,6 +10,8 @@
 #include <Zarch/Simulation.h>
 
 #include <kxm/Core/logging.h>
+#include <Game/EventQueue.h>
+#include <Game/Processes.h>
 #include <Zarch/Zarch.h>
 #include <Zarch/GameLogic/GameLogic.h>
 #include <Zarch/Physics/Physics.h>
@@ -27,7 +29,7 @@ namespace Zarch {
 
 Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
         : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize, eventQueueHub, true)),
-          processes_(new Processes<ZarchProcess::ProcessType>()),
+          processes_(new Processes()),
           lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(eventQueue_.get());
         
@@ -43,7 +45,10 @@ Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
 
 Simulation::~Simulation() {
     eventQueue_->UnregisterHandler(physics_.get());
+    processes_->UnregisterProcesses(physics_.get());
+    
     eventQueue_->UnregisterHandler(gameLogic_.get());
+    processes_->UnregisterProcesses(gameLogic_.get());
 }
 
 void Simulation::ExecuteAction() {

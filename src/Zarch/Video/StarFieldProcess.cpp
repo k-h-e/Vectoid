@@ -47,7 +47,7 @@ StarFieldProcess::StarFieldProcess(shared_ptr<Video::Data> videoData,
     }
 }
 
-bool StarFieldProcess::Execute() {
+void StarFieldProcess::Execute() {
     Video::Data &data = *data_;
     Vector       base = data.camera->Position();
     ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
@@ -62,7 +62,10 @@ bool StarFieldProcess::Execute() {
         particle->position = position;
         particle->hidden   = (position.y < data.mapParameters->starFieldMinHeight);
     }
-    return true;
+}
+
+bool StarFieldProcess::Finished() {
+    return false;
 }
 
 }    // Namespace Zarch.

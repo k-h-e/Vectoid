@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 #include <Game/Event.h>
-#include <Game/EventQueueSchedulingInterface.h>
+#include <Game/EventQueueClientInterface.h>
 #include <Game/EventHandlerInterface.h>
 #include <Game/EventQueueHub.h>
 
@@ -26,8 +26,10 @@ class Event;
  *  Internally, there are in fact two queues: the active queue and the schedule queue. New events
  *  get enqueued on the schedule queue using \ref Schedule(), and processing happens on the active
  *  queue using \ref ProcessEvents(). Queue swapping happens automatically.
+ *
+ *  \ingroup Game
  */
-class EventQueue : public EventQueueSchedulingInterface {
+class EventQueue : public virtual EventQueueClientInterface {
   public:
     //! Hub may be 0-handle if no hub is used.
     EventQueue(int initialBufferSize, std::shared_ptr<EventQueueHub> hub, bool hubSyncWaitEnabled);
@@ -46,9 +48,11 @@ class EventQueue : public EventQueueSchedulingInterface {
     void UnregisterHandler(EventHandlerInterface *handler);
     //! Processes all events in the active queue by invoking the respective handlers.
     /*!
+     *  Only while this method is executing will event handlers get called.
+     *
      *  While processing the events in the active queue and activating their event
      *  handlers, the event queue is prepared to get all methods called that it exposes via the
-     *  EventQueueSchedulingInterface. All other public methods on the other hand must not get
+     *  EventQueueClientInterface. All other public methods on the other hand must not get
      *  called while ProcessEvents() executes.
      *
      *  \return

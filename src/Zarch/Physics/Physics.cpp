@@ -10,8 +10,7 @@
 #include <Zarch/Physics/Physics.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventQueue.h>
-#include <Game/Processes.h>
+#include <Game/ProcessesClientInterface.h>
 #include <Zarch/Physics/LanderProcess.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
@@ -29,8 +28,8 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<EventQueueSchedulingInterface> eventQueue,
-                 shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+Physics::Physics(shared_ptr<EventQueueClientInterface> eventQueue,
+                 shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
@@ -38,7 +37,8 @@ Physics::Physics(shared_ptr<EventQueueSchedulingInterface> eventQueue,
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
     data_->eventQueue    = eventQueue;
     
-    processes_->AddProcess(shared_ptr<Process>(new LanderProcess(data_)));
+    landerProcess_ = unique_ptr<LanderProcess>(new LanderProcess(data_));
+    processes_->RegisterProcess(landerProcess_.get(), this);
 }
 
 Physics::~Physics() {
@@ -48,6 +48,10 @@ Physics::~Physics() {
 vector<Event::EventType> Physics::EnumerateHandledEvents() {
     return vector<Event::EventType>{ FrameTimeEvent::type,
                                      ControlsStateEvent::type };
+}
+
+void Physics::HandleProcessFinished(ProcessInterface *process) {
+    // Nop.
 }
 
 void Physics::HandleEvent(const Game::Event &event) {

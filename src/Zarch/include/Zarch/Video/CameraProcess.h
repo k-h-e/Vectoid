@@ -13,8 +13,8 @@
 
 #include <memory>
 
+#include <Game/ProcessInterface.h>
 #include <Zarch/Video/Video.h>
-#include <Zarch/processes.h>
 
 
 namespace kxm {
@@ -24,7 +24,7 @@ namespace Zarch {
 /*!
  *  \ingroup Zarch
  */
-class CameraProcess : public ZarchProcess {
+class CameraProcess : public virtual Game::ProcessInterface {
   public:
     CameraProcess(const std::shared_ptr<Video::Data> data);
     
@@ -32,7 +32,9 @@ class CameraProcess : public ZarchProcess {
     CameraProcess(const CameraProcess &other);
     CameraProcess &operator=(const CameraProcess &other);
     //! (Re)implemented.
-    bool Execute();
+    void Execute();
+    //! (Re)implemented.
+    bool Finished();
     
     std::shared_ptr<Video::Data> data_;
 };

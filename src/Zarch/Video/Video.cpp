@@ -1,12 +1,3 @@
-//
-//  NewVideo.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/28/13.
-//
-//
-
-
 #include <Zarch/Video/Video.h>
 
 #include <kxm/Core/logging.h>
@@ -18,8 +9,8 @@
 #include <Vectoid/AgeColoredParticles.h>
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
-#include <Game/EventQueue.h>
-#include <Game/Processes.h>
+#include <Game/EventQueueClientInterface.h>
+#include <Game/ProcessesClientInterface.h>
 #include <Zarch/Video/CameraProcess.h>
 #include <Zarch/Video/StarFieldProcess.h>
 #include <Zarch/Video/ThrusterParticlesProcess.h>
@@ -42,8 +33,8 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<EventQueueSchedulingInterface> eventQueue,
-             shared_ptr<Processes<ZarchProcess::ProcessType>> processes)
+Video::Video(shared_ptr<EventQueueClientInterface> eventQueue,
+             shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
@@ -75,10 +66,17 @@ Video::Video(shared_ptr<EventQueueSchedulingInterface> eventQueue,
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    processes_->AddProcess(shared_ptr<Process>(new CameraProcess(data_)));
-    processes_->AddProcess(shared_ptr<Process>(new StarFieldProcess(data_, starFieldParticles)));
-    processes_->AddProcess(shared_ptr<Process>(new ThrusterParticlesProcess(data_,
-                                                                            thrusterParticles)));
+    cameraProcess_ = unique_ptr<CameraProcess>(new CameraProcess(data_));
+    processes_->RegisterProcess(cameraProcess_.get(), this);
+    
+    starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_,
+                                                                          starFieldParticles));
+    processes_->RegisterProcess(starFieldProcess_.get(), this);
+    
+    thrusterParticlesProcess_ = unique_ptr<ThrusterParticlesProcess>(new ThrusterParticlesProcess(
+                                                                         data_,
+                                                                         thrusterParticles));
+    processes_->RegisterProcess(thrusterParticlesProcess_.get(), this);
 }
 
 Video::~Video() {
@@ -98,6 +96,10 @@ vector<Event::EventType> Video::EnumerateHandledEvents() {
                                      LanderMoveEvent::type,
                                      LanderVelocityEvent::type,
                                      LanderThrusterEvent::type  };
+}
+
+void Video::HandleProcessFinished(Game::ProcessInterface *process) {
+    // Nop.
 }
 
 void Video::HandleEvent(const Game::Event &event) {

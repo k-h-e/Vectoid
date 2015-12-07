@@ -1,5 +1,5 @@
-#ifndef KXM_GAME_EVENTQUEUESCHEDULINGINTERFACE_H_
-#define KXM_GAME_EVENTQUEUESCHEDULINGINTERFACE_H_
+#ifndef KXM_GAME_EVENTQUEUECLIENTINTERFACE_H_
+#define KXM_GAME_EVENTQUEUECLIENTINTERFACE_H_
 
 
 #include <kxm/Core/Interface.h>
@@ -10,12 +10,11 @@ namespace Game {
 
 class Event;
 
-//! Reduced interface to the event queue mechanism, exclusively allowing for scheduling of new
-//! events.
+//! Reduced interface to the event queue mechanism, intended to be handed out to client sub systems.
 /*!
  *  \ingroup Game
  */
-class EventQueueSchedulingInterface : public virtual Core::Interface {
+class EventQueueClientInterface : public virtual Core::Interface {
   public:
     //! Enqueues the specified event on the schedule queue.
     /*!
@@ -28,4 +27,4 @@ class EventQueueSchedulingInterface : public virtual Core::Interface {
 }    // Namespace kxm.
 
 
-#endif    // KXM_GAME_EVENTQUEUESCHEDULINGINTERFACE_H_
+#endif    // KXM_GAME_EVENTQUEUECLIENTINTERFACE_H_

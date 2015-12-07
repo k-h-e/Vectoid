@@ -10,6 +10,8 @@
 #include <Zarch/Presentation.h>
 
 #include <kxm/Core/logging.h>
+#include <Game/EventQueue.h>
+#include <Game/Processes.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>
 #include <Zarch/Events/FrameTimeEvent.h>
@@ -29,7 +31,7 @@ namespace Zarch {
 
 Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
         : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize, eventQueueHub, false)),
-          processes_(new Processes<ZarchProcess::ProcessType>()) {
+          processes_(new Processes()) {
     Zarch::RegisterEvents(eventQueue_.get());
     
     video_ = shared_ptr<Video>(new Video(eventQueue_, processes_));
@@ -40,6 +42,7 @@ Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
 
 Presentation::~Presentation() {
     eventQueue_->UnregisterHandler(video_.get());
+    processes_->UnregisterProcesses(video_.get());
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {

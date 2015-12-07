@@ -31,7 +31,7 @@ ThrusterParticlesProcess::ThrusterParticlesProcess(shared_ptr<Video::Data> data,
           particleTimeCarryOver_(0.0f) {
 }
 
-bool ThrusterParticlesProcess::Execute() {
+void ThrusterParticlesProcess::Execute() {
     Video::Data &data = *data_;
     
     // Move and age particles...
@@ -77,7 +77,10 @@ bool ThrusterParticlesProcess::Execute() {
     }
     
     lastLanderPosition_ = landerPosition;
-    return true;
+}
+
+bool ThrusterParticlesProcess::Finished() {
+    return false;
 }
 
 }    // Namespace Zarch.
