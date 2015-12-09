@@ -87,6 +87,8 @@ class Buffer {
     /*!
      *  If <c>data</c> is <c>0</c>, the buffer will still be grown, but no data will actually get
      *  filled into the new space. Instead, the contents of that buffer region will be undefined.
+     *
+     *  If <c>dataSize</c> is <c>0</c>, nothing will happen.
      */
 	void Append(const void *data, int dataSize);
 	//! Makes the current content (as reported by \ref DataSize()) cover the whole of the buffer's

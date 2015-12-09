@@ -69,14 +69,15 @@ class EventQueue : public virtual EventQueueClientInterface {
         EventInfo(std::unique_ptr<Event> proto) : prototype(std::move(proto)) {}
     };
     
-    std::vector<EventInfo>               events_;
-    std::unordered_map<size_t, int>      idToSlotMap_;
-    std::unique_ptr<Core::Buffer>        scheduleQueue_,
-                                         activeQueue_;
-    std::shared_ptr<EventQueueHub>       hub_;
-    EventQueueHub::ClientId              hubClientId_;
-    bool                                 processingEvents_,
-                                         hubSyncWaitEnabled_;
+    std::vector<EventInfo>           events_;
+    std::unordered_map<size_t, int>  idToSlotMap_;
+    std::unique_ptr<Core::Buffer>    scheduleQueue_,
+                                     activeQueue_;
+    std::shared_ptr<EventQueueHub>   hub_;
+    int                              hubClientId_,
+                                     hubWaitSeqNo_;
+    bool                             processingEvents_,
+                                     hubSyncWaitEnabled_;
 };
 
 }    // Namespace Game.

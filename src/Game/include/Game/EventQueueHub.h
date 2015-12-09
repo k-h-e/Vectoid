@@ -31,7 +31,6 @@ namespace Game {
  */
 class EventQueueHub {
   public:
-    typedef unsigned int ClientId;
     static const int initialBufferSize = 128;
     
     EventQueueHub();
@@ -40,24 +39,25 @@ class EventQueueHub {
     EventQueueHub(EventQueueHub &&other)                 = delete;
     EventQueueHub &operator=(EventQueueHub &&other)      = delete;
     
-    //! <b>[Thread-safe]</b> Allocates a unique client id to be used with a specific event queue.
-    ClientId AllocUniqueClientId();
+    //! <b>[Thread-safe]</b> Allocates the resources for another hub client and returns a unique
+    //! client id for it.
+    int AddClient();
     
     //! <b>[Thread-safe]</b> Allows an \ref EventQueue to sync with the hub.
     /*!
-     *  \param toHubBuffer
-     *  Buffer holding the event data going into the hub. The client's buffer will be swapped with
-     *  another, empty one from a pool managed by the hub. Can be <c>nullptr</c>, in which case
-     *  no data is sent to the hub, but an empty buffer is provided to the client nonetheless.
+     *  \param buffer
+     *  Buffer holding the event data D going into the hub. It will be swapped with another buffer
+     *  containing all event data the hub currently has for the calling client, including the event
+     *  data D just passed in.
      *
-     *  \param toQueueBuffer
-     *  This buffer will accept the event data going from the hub into the queue. It will get
-     *  cleared by the hub before new data is written.
+     *  \param inOutWaitSeqNo
+     *  If <c>nullptr</c>, the method increments the hub's sequence number and signals a state
+     *  change when done. Otherwise it waits until the hub's current sequence number is no longer as
+     *  specified by the parameter, and returns the updated sequence number in it.
      *
      *  \return <c>false</c> in case shutdown has been requested.
      */
-    bool Sync(ClientId id, std::unique_ptr<Core::Buffer> *toHubBuffer, Core::Buffer *toQueueBuffer,
-              bool wait);
+    bool Sync(int id, std::unique_ptr<Core::Buffer> *buffer, int *inOutWaitSeqNo);
     //! <b>[Thread-safe]</b> Asks all participating threads to shut down (but does not wait for
     //! them to terminate).
     /*!
@@ -67,21 +67,13 @@ class EventQueueHub {
     void RequestShutdown();
     
   private:
-    struct BufferInfo {
-        std::unique_ptr<Core::Buffer> buffer;
-        unsigned int                  unreadBits;
-        BufferInfo(std::unique_ptr<Core::Buffer> &&aBuffer, unsigned int someUnreadBits);
-    };
-    
-    std::mutex                                    lock_;
+    std::mutex                                lock_;
     struct {
-        std::condition_variable                       stateChanged;
-        std::deque<BufferInfo>                        activeBuffers;
-        std::queue<std::unique_ptr<Core::Buffer>>     bufferPool;
-        unsigned int                                  nextId,
-                                                      toReadMask;
-        bool                                          shutdownRequested;
-    }                                             shared_;    // Protected by lock_.
+        std::vector<std::unique_ptr<Core::Buffer>> buffers;
+        int                                        seqNo;
+        std::condition_variable                    stateChanged;
+        bool                                       shutdownRequested;
+    }                                         shared_;    // Protected by lock_.
 };
 
 }    // Namespace Game.

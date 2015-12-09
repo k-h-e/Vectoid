@@ -15,7 +15,8 @@ EventQueue::EventQueue(int initialBufferSize, shared_ptr<EventQueueHub> hub,
     : activeQueue_(new Buffer(initialBufferSize >= 16 ? initialBufferSize : 16)),
       scheduleQueue_(new Buffer(initialBufferSize >= 16 ? initialBufferSize : 16)),
       hub_(hub),
-      hubClientId_(!hub ? 0 : hub->AllocUniqueClientId()),
+      hubClientId_(!hub ? 0 : hub->AddClient()),
+      hubWaitSeqNo_(0),
       processingEvents_(false),
       hubSyncWaitEnabled_(hubSyncWaitEnabled) {
     // Nop.
@@ -71,14 +72,12 @@ bool EventQueue::ProcessEvents() {
     processingEvents_ = true;
     
     bool terminationRequested = false;
-    if (!hub_) {
-        activeQueue_->Clear();
-        activeQueue_.swap(scheduleQueue_);
+    if (hub_.get()) {
+        terminationRequested = !hub_->Sync(hubClientId_, &scheduleQueue_,
+                                           hubSyncWaitEnabled_ ? &hubWaitSeqNo_ : nullptr);
     }
-    else {
-        terminationRequested = !hub_->Sync(hubClientId_, &scheduleQueue_, activeQueue_.get(),
-                                           hubSyncWaitEnabled_);
-    }
+    activeQueue_->Clear();
+    activeQueue_.swap(scheduleQueue_);
         
     int slot;
     Buffer::Reader reader = activeQueue_->GetReader();
@@ -90,7 +89,7 @@ bool EventQueue::ProcessEvents() {
             handler->HandleEvent(event);
         }
     }
-        
+    
     processingEvents_ = false;
     return !terminationRequested;
 }

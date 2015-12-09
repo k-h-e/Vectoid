@@ -39,17 +39,18 @@ void Buffer::Shrink(int size) {
 }
 
 void Buffer::Append(const void *data, int dataSize) {
-    assert(dataSize > 0);
-	int newFill = bufferFill_ + dataSize;
-	if (newFill > (int)buffer_.size()) {
-	    int newSize = 2 * (int)buffer_.size();
-		if (newFill > newSize)
-			newSize = newFill;
-		buffer_.resize(newSize);
-	}
-	if (data)
-        memcpy(&buffer_.front() + bufferFill_, data, dataSize);
-	bufferFill_ += dataSize;
+    if (dataSize > 0) {
+        int newFill = bufferFill_ + dataSize;
+        if (newFill > (int)buffer_.size()) {
+            int newSize = 2 * (int)buffer_.size();
+            if (newFill > newSize)
+                newSize = newFill;
+            buffer_.resize(newSize);
+        }
+        if (data)
+            memcpy(&buffer_.front() + bufferFill_, data, dataSize);
+        bufferFill_ += dataSize;
+    }
 }
 
 void Buffer::RestoreToCurrentCapacity() {
