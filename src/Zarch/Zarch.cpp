@@ -44,12 +44,12 @@ Zarch::~Zarch() {
     eventQueueHub_->RequestShutdown();
 }
 
-void Zarch::RegisterEvents(Game::EventQueue *eventQueue) {
-    eventQueue->RegisterEvent(unique_ptr<Event>(new FrameTimeEvent));
-    eventQueue->RegisterEvent(unique_ptr<Event>(new ControlsStateEvent));
-    eventQueue->RegisterEvent(unique_ptr<Event>(new LanderMoveEvent));
-    eventQueue->RegisterEvent(unique_ptr<Event>(new LanderVelocityEvent));
-    eventQueue->RegisterEvent(unique_ptr<Event>(new LanderThrusterEvent));
+void Zarch::RegisterEvents(Game::EventQueue<ZarchEvent, EventHandlerCore> *eventQueue) {
+    eventQueue->RegisterEvent(unique_ptr<ZarchEvent>(new FrameTimeEvent));
+    eventQueue->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsStateEvent));
+    eventQueue->RegisterEvent(unique_ptr<ZarchEvent>(new LanderMoveEvent));
+    eventQueue->RegisterEvent(unique_ptr<ZarchEvent>(new LanderVelocityEvent));
+    eventQueue->RegisterEvent(unique_ptr<ZarchEvent>(new LanderThrusterEvent));
 }
 
 }    // Namespace Zarch.

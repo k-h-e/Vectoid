@@ -33,7 +33,7 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<EventQueueClientInterface> eventQueue,
+Video::Video(shared_ptr<EventQueueClientInterface<ZarchEvent>> eventQueue,
              shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes) {
@@ -100,10 +100,6 @@ vector<Event::EventType> Video::EnumerateHandledEvents() {
 
 void Video::HandleProcessFinished(Game::ProcessInterface *process) {
     // Nop.
-}
-
-void Video::HandleEvent(const Game::Event &event) {
-    static_cast<const Zarch::ZarchEvent &>(event).DispatchToVideo(this);
 }
 
 void Video::HandleFrameTimeEvent(const FrameTimeEvent &event) {

@@ -24,7 +24,7 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-GameLogic::GameLogic(shared_ptr<EventQueueClientInterface> eventQueue,
+GameLogic::GameLogic(shared_ptr<EventQueueClientInterface<ZarchEvent>> eventQueue,
                      shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes),
@@ -43,10 +43,6 @@ vector<Event::EventType> GameLogic::EnumerateHandledEvents() {
 
 void GameLogic::HandleProcessFinished(ProcessInterface *process) {
     // Nop.
-}
-
-void GameLogic::HandleEvent(const Event &event) {
-    static_cast<const ZarchEvent &>(event).DispatchToGameLogic(this);
 }
 
 void GameLogic::HandleControlsStateEvent(const ControlsStateEvent &event) {

@@ -28,7 +28,8 @@ namespace kxm {
 namespace Zarch {
 
 Simulation::Simulation(const shared_ptr<EventQueueHub> &eventQueueHub)
-        : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize, eventQueueHub, true)),
+        : eventQueue_(new EventQueue<ZarchEvent, EventHandlerCore>(EventQueueHub::initialBufferSize,
+                                                                   eventQueueHub, true)),
           processes_(new Processes()),
           lastFrameTime_(steady_clock::now()) {
     Zarch::RegisterEvents(eventQueue_.get());

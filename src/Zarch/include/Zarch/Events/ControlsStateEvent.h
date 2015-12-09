@@ -28,8 +28,7 @@ class ControlsStateEvent : public ZarchEvent {
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
-    void DispatchToPhysics(Physics *physics) const;
-    void DispatchToGameLogic(GameLogic *gameLogic) const;
+    void Dispatch(EventHandlerCore *handler) const;
     
     static const EventType type;
     

@@ -8,8 +8,7 @@
 
 
 #include <Zarch/Events/LanderMoveEvent.h>
-
-#include <Zarch/Video/Video.h>
+#include <Zarch/EventHandlerCore.h>
 
 
 namespace kxm {
@@ -33,8 +32,8 @@ void LanderMoveEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
     bufferReader->ReadBlock(&newLanderTransform, sizeof(newLanderTransform)); // Sufficiently POD.
 }
 
-void LanderMoveEvent::DispatchToVideo(Video *video) const {
-    video->HandleLanderMoveEvent(*this);
+void LanderMoveEvent::Dispatch(EventHandlerCore *handler) const {
+    handler->HandleLanderMoveEvent(*this);
 }
 
 }    // Namespace Zarch.

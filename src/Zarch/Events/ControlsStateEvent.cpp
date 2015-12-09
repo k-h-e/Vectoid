@@ -8,9 +8,7 @@
 
 
 #include <Zarch/Events/ControlsStateEvent.h>
-
-#include <Zarch/Physics/Physics.h>
-#include <Zarch/GameLogic/GameLogic.h>
+#include <Zarch/EventHandlerCore.h>
 
 
 namespace kxm {
@@ -34,12 +32,8 @@ void ControlsStateEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
     bufferReader->ReadBlock(&controlsState, sizeof(controlsState));   // Sufficiently POD.
 }
 
-void ControlsStateEvent::DispatchToPhysics(Physics *physics) const {
-    physics->HandleControlsStateEvent(*this);
-}
-
-void ControlsStateEvent::DispatchToGameLogic(GameLogic *gameLogic) const {
-    gameLogic->HandleControlsStateEvent(*this);
+void ControlsStateEvent::Dispatch(EventHandlerCore *handler) const {
+    handler->HandleControlsStateEvent(*this);
 }
 
 }    // Namespace Zarch.

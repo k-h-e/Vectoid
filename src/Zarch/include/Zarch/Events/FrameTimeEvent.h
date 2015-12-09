@@ -27,8 +27,7 @@ class FrameTimeEvent : public ZarchEvent {
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
-    void DispatchToVideo(Video *video) const;
-    void DispatchToPhysics(Physics *physics) const;
+    void Dispatch(EventHandlerCore *handler) const;
     
     static const EventType type;
     

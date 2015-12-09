@@ -17,15 +17,12 @@
 namespace kxm {
 namespace Zarch {
 
-class Video;
-class Physics;
-class GameLogic;
+class EventHandlerCore;
 
 class ZarchEvent : public Game::Event {
   public:
-    virtual void DispatchToVideo(Video *video) const;
-    virtual void DispatchToPhysics(Physics *physics) const;
-    virtual void DispatchToGameLogic(GameLogic *gameLogic) const;
+    //! Makes the event dispatch itself to the specified handler.
+    virtual void Dispatch(EventHandlerCore *handler) const = 0;
 };
 
 }    // Namespace Zarch.

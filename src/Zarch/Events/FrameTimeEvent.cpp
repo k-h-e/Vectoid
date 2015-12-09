@@ -34,12 +34,8 @@ void FrameTimeEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
     bufferReader->ReadBlock(&timeS, sizeof(timeS));
 }
 
-void FrameTimeEvent::DispatchToVideo(Video *video) const {
-    video->HandleFrameTimeEvent(*this);
-}
-
-void FrameTimeEvent::DispatchToPhysics(Physics *physics) const {
-    physics->HandleFrameTimeEvent(*this);
+void FrameTimeEvent::Dispatch(EventHandlerCore *handler) const {
+    handler->HandleFrameTimeEvent(*this);
 }
 
 }    // Namespace Zarch.

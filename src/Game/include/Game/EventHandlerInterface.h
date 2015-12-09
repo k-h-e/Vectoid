@@ -26,8 +26,6 @@ namespace Game {
  */
 class EventHandlerInterface : public virtual Core::Interface {
   public:
-    //! Makes the handler handle the specified event.
-    virtual void HandleEvent(const Event &event) = 0;
     //! Informs about the events handled by the event handler.
     virtual std::vector<Event::EventType> EnumerateHandledEvents() = 0;
 };

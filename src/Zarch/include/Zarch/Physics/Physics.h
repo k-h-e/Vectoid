@@ -14,21 +14,21 @@
 #include <memory>
 
 #include <Vectoid/Transform.h>
-#include <Game/EventHandlerInterface.h>
 #include <Game/ProcessOwnerInterface.h>
 #include <Zarch/ControlsState.h>
+#include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/EventHandlerCore.h>
 
 
 namespace kxm {
 
 namespace Game {
-    class EventQueueClientInterface;
+    template<class EventClass> class EventQueueClientInterface;
     class ProcessesClientInterface;
 }
 
 namespace Zarch {
 
-class VariantEvent;
 class MapParameters;
 class Terrain;
 class FrameTimeEvent;
@@ -39,7 +39,7 @@ class LanderProcess;
 /*!
  *  \ingroup Zarch
  */
-class Physics : public virtual Game::EventHandlerInterface,
+class Physics : public EventHandlerCore,
                 public virtual Game::ProcessOwnerInterface {
   public:
     struct LanderState {
@@ -50,20 +50,19 @@ class Physics : public virtual Game::EventHandlerInterface,
     };
     struct Data {
         Data() : frameDeltaTimeS(0.0f) {}
-        float                                            frameDeltaTimeS;
-        ControlsState                                    controlsState;
-        LanderState                                      landerState;
-        std::shared_ptr<MapParameters>                   mapParameters;
-        std::shared_ptr<Terrain>                         terrain;
-        std::shared_ptr<Game::EventQueueClientInterface> eventQueue;
+        float                                                        frameDeltaTimeS;
+        ControlsState                                                controlsState;
+        LanderState                                                  landerState;
+        std::shared_ptr<MapParameters>                               mapParameters;
+        std::shared_ptr<Terrain>                                     terrain;
+        std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue;
     };
     
-    Physics(std::shared_ptr<Game::EventQueueClientInterface> eventQueue,
+    Physics(std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue,
             std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~Physics();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
-    void HandleEvent(const Game::Event &event);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
     
@@ -71,10 +70,10 @@ class Physics : public virtual Game::EventHandlerInterface,
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Game::EventQueueClientInterface> eventQueue_;
-    std::shared_ptr<Game::ProcessesClientInterface>  processes_;
-    std::shared_ptr<Data>                            data_;
-    std::unique_ptr<LanderProcess>                   landerProcess_;
+    std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue_;
+    std::shared_ptr<Game::ProcessesClientInterface>              processes_;
+    std::shared_ptr<Data>                                        data_;
+    std::unique_ptr<LanderProcess>                               landerProcess_;
 };
 
 

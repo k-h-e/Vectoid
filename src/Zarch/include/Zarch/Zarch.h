@@ -28,6 +28,7 @@ namespace Core {
     class Thread;
 }
 namespace Game {
+    template<class EventClass, class EventHandlerClass> class EventQueue;
     class EventQueueHub;
 }
 
@@ -55,7 +56,7 @@ class Zarch {
     }
     
     //! Registers all <c>Zarch</c> game events with the specified event queue.
-    static void RegisterEvents(Game::EventQueue *eventQueue);
+    static void RegisterEvents(Game::EventQueue<ZarchEvent, EventHandlerCore> *eventQueue);
     
   private:
     Zarch(const Zarch &other);

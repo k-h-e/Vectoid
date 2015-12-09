@@ -8,8 +8,7 @@
 
 
 #include <Zarch/Events/LanderThrusterEvent.h>
-
-#include <Zarch/Video/Video.h>
+#include <Zarch/EventHandlerCore.h>
 
 
 namespace kxm {
@@ -33,8 +32,8 @@ void LanderThrusterEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
     bufferReader->ReadBlock(&thrusterEnabled, sizeof(thrusterEnabled));
 }
 
-void LanderThrusterEvent::DispatchToVideo(Video *video) const {
-    video->HandleLanderThrusterEvent(*this);
+void LanderThrusterEvent::Dispatch(EventHandlerCore *handler) const {
+    handler->HandleLanderThrusterEvent(*this);
 }
 
 }    // Namespace Zarch.

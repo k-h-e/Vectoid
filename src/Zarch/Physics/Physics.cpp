@@ -28,7 +28,7 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<EventQueueClientInterface> eventQueue,
+Physics::Physics(shared_ptr<EventQueueClientInterface<ZarchEvent>> eventQueue,
                  shared_ptr<ProcessesClientInterface> processes)
         : eventQueue_(eventQueue),
           processes_(processes) {
@@ -52,10 +52,6 @@ vector<Event::EventType> Physics::EnumerateHandledEvents() {
 
 void Physics::HandleProcessFinished(ProcessInterface *process) {
     // Nop.
-}
-
-void Physics::HandleEvent(const Game::Event &event) {
-    static_cast<const ZarchEvent &>(event).DispatchToPhysics(this);
 }
 
 void Physics::HandleFrameTimeEvent(const FrameTimeEvent &event) {

@@ -30,7 +30,8 @@ namespace kxm {
 namespace Zarch {
 
 Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
-        : eventQueue_(new EventQueue(EventQueueHub::initialBufferSize, eventQueueHub, false)),
+        : eventQueue_(new EventQueue<ZarchEvent, EventHandlerCore>(EventQueueHub::initialBufferSize,
+                                                                   eventQueueHub, false)),
           processes_(new Processes()) {
     Zarch::RegisterEvents(eventQueue_.get());
     

@@ -15,12 +15,14 @@
 #include <chrono>
 
 #include <kxm/Core/ActionInterface.h>
+#include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/EventHandlerCore.h>
 
 
 namespace kxm {
 
 namespace Game {
-    class EventQueue;
+    template<class EventClass, class EventHandlerClass> class EventQueue;
     class Processes;
     class EventQueueHub;
 }
@@ -46,11 +48,11 @@ class Simulation : public virtual Core::ActionInterface {
     Simulation &operator=(const Simulation &other);
     void GenerateTimeEvent();
     
-    std::shared_ptr<Game::EventQueue>                  eventQueue_;
-    std::shared_ptr<Game::Processes>                   processes_;
-    std::shared_ptr<GameLogic>                         gameLogic_;
-    std::shared_ptr<Physics>                           physics_;
-    std::chrono::time_point<std::chrono::steady_clock> lastFrameTime_;
+    std::shared_ptr<Game::EventQueue<ZarchEvent, EventHandlerCore>> eventQueue_;
+    std::shared_ptr<Game::Processes>                                processes_;
+    std::shared_ptr<GameLogic>                                      gameLogic_;
+    std::shared_ptr<Physics>                                        physics_;
+    std::chrono::time_point<std::chrono::steady_clock>              lastFrameTime_;
 };
 
 }

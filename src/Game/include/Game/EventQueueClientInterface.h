@@ -8,19 +8,18 @@
 namespace kxm {
 namespace Game {
 
-class Event;
-
 //! Reduced interface to the event queue mechanism, intended to be handed out to client sub systems.
 /*!
  *  \ingroup Game
  */
+template<class EventClass>
 class EventQueueClientInterface : public virtual Core::Interface {
   public:
     //! Enqueues the specified event on the schedule queue.
     /*!
      *  The event data gets copied, the client is free to dispose of the event object afterwards.
      */
-    virtual void Schedule(const Event &event) = 0;
+    virtual void Schedule(const EventClass &event) = 0;
 };
 
 }    // Namespace Game.
