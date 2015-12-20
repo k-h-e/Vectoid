@@ -12,3 +12,5 @@ General
 - Switch Log().Stream() to moving.
 - Add locking to Log().Stream().
 - Switch to C++11 threading primitives.
+
+blah...
