@@ -30,8 +30,9 @@ TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHei
 }
 
 void TextConsole::WriteLine(const string &line) {
-    uint8_t *ptr = &buffer_[rowCursor_ * width_];
-    int     num  = 0;
+    uint8_t *ptr      = &buffer_[rowCursor_ * width_];
+    int     num       = 0;
+    bool    firstLine = true;
     for (const char &c : line) {
         *ptr++ = (uint8_t)c;
         ++num;
@@ -42,9 +43,10 @@ void TextConsole::WriteLine(const string &line) {
                 rowCursor_ = 0;
                 ptr = &buffer_[0];
             }
+            firstLine = false;
         }
     }
-    if (num) {
+    if (firstLine || num) {
         while (num != width_) {
             *ptr++ = (uint8_t)' ';
             ++num;

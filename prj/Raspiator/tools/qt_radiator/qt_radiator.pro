@@ -42,6 +42,7 @@ HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
           ../../../../src/Vectoid/include/Vectoid/TestTriangle.h \
           ../../../../src/Vectoid/include/Vectoid/Transform.h \
           ../../../../src/Vectoid/include/Vectoid/Vector.h \
+          ../../src/Cuboid.h \
           ../../src/Glyphs.h \
           ../../src/Indicatower.h \
           ../../src/JenkinsAccess.h \
@@ -69,6 +70,7 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           ../../../../src/Vectoid/Range.cpp \
           ../../../../src/Vectoid/SceneGraphNode.cpp \
           ../../../../src/Vectoid/TestTriangle.cpp \
+          ../../src/Cuboid.cpp \
           ../../src/Glyphs.cpp \
           ../../src/Indicatower.cpp \
           ../../src/JenkinsAccess.cpp \
@@ -79,4 +81,5 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           src/QtGLDisplay.cpp \
           src/main.cpp
 
+QMAKE_MAC_SDK = macosx10.11
 

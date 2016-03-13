@@ -10,10 +10,10 @@
 #ifndef KXM_VECTOID_OPENGL_H_
 #define KXM_VECTOID_OPENGL_H_
 
-#define VECTOID_GLES
+//#define VECTOID_GLES
 
-//#include <OpenGL/gl.h>
-#include <OpenGLES/ES1/gl.h>
+#include <OpenGL/gl.h>
+//#include <OpenGLES/ES1/gl.h>
 //#include <GLES/gl.h>
 
 
