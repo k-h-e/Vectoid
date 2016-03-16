@@ -22,6 +22,7 @@ namespace Vectoid {
 namespace Raspiator {
 
 class Glyphs;
+class JobPanel;
 
 class Visualization {
   public:
@@ -34,14 +35,17 @@ class Visualization {
     void RenderFrame();
 
   private:
-    std::shared_ptr<kxm::Vectoid::PerspectiveProjection>      projection_;
-    std::shared_ptr<kxm::Vectoid::Camera>                     camera_;
-    std::shared_ptr<Glyphs>                                   glyphs_;
-    float                                                     glyphWidth_, glyphHeight_;
-    std::shared_ptr<kxm::Vectoid::CoordSys>                   coordSys_;
+    std::shared_ptr<kxm::Vectoid::PerspectiveProjection>  projection_;
+    std::shared_ptr<kxm::Vectoid::Camera>                 camera_;
+    std::shared_ptr<Glyphs>                               glyphs_;
+    float                                                 glyphWidth_, glyphHeight_;
+    std::shared_ptr<JobPanel>                             jobPanel_;
+    std::shared_ptr<kxm::Vectoid::CoordSys>               coordSys_;
 
-    std::chrono::time_point<std::chrono::steady_clock>        lastFrameTime_;
-    std::default_random_engine                                random_;
+    std::chrono::time_point<std::chrono::steady_clock>    lastFrameTime_;
+    float                                                 time_s_;
+    bool                                                  alternateText_;
+    std::default_random_engine                            random_;
 };
 
 }    // Namespace Raspiator.

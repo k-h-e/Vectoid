@@ -27,6 +27,9 @@ class TextConsole : public virtual kxm::Vectoid::GeometryInterface {
      *  \note Encoding is ASCII for now.
      */
     void WriteLine(const std::string &line);
+    //! Resizes the text console as specified, clearing it in the process.
+    void Resize(int width, int height);
+
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:

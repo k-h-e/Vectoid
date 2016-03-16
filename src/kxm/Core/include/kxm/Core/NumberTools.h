@@ -30,6 +30,15 @@ inline void Clamp(float *numba, float min, float max) {
         *numba = max;
 }
 
+inline void ClampMin(int *numba, int min) {
+    if (*numba < min)
+        *numba = min;
+}
+
+inline void ClampMin(float *numba, float min) {
+    if (*numba < min)
+        *numba = min;
+}
 
 }    // Namespace NumberTools.
 }    // Namespace Core.

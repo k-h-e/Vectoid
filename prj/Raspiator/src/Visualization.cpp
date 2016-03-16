@@ -6,10 +6,8 @@
 #include <Vectoid/PerspectiveProjection.h>
 #include <Vectoid/Camera.h>
 #include <Vectoid/CoordSys.h>
-#include <Vectoid/Geode.h>
 #include "Glyphs.h"
-#include "Cuboid.h"
-#include "TextConsole.h"
+#include "JobPanel.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -22,7 +20,8 @@ namespace Raspiator {
 Visualization::Visualization(float glyphWidth, float glyphHeight)
         : glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
-          lastFrameTime_(steady_clock::now()) {
+          lastFrameTime_(steady_clock::now()),
+          time_s_(0.0f) {
     auto projection = make_shared<PerspectiveProjection>();
     projection->SetWindowSize(1.0f);
     projection->SetViewingDepth(11.0f);
@@ -34,32 +33,16 @@ Visualization::Visualization(float glyphWidth, float glyphHeight)
     camera_      = camera;
     glyphs_      = make_shared<Glyphs>();
 
-    const int   widthCharacters  = 32,
-                heightCharacters =  4;
+    const int   widthCharacters  = 32;
     const float margin           = .5f * glyphWidth,
-                cuboidDepth      = glyphWidth;
-    auto cuboid      = make_shared<Cuboid>((float)widthCharacters*glyphWidth + 2.0f*margin,
-                                           (float)heightCharacters*glyphHeight + 2.0f*margin,
-                                           cuboidDepth,
-                                           Vector(.8f, .2f, .2f));
-    auto cuboidGeode = make_shared<Geode>(cuboid);
-    auto coordSys    = make_shared<CoordSys>();
-    coordSys->AddChild(cuboidGeode);
+                panelDepth       = glyphWidth;
+    jobPanel_ = make_shared<JobPanel>(widthCharacters, glyphWidth, glyphHeight, margin, panelDepth, glyphs_);
 
-    auto textConsole  = make_shared<TextConsole>(widthCharacters, heightCharacters, glyphWidth, glyphHeight, glyphs_);
-    auto textGeode    = make_shared<Geode>(textConsole);
-    auto textCoordSys = make_shared<CoordSys>();
-    textCoordSys->AddChild(textGeode);
-    textCoordSys->SetPosition(Vector(0.0f, 0.0f, .5f*cuboidDepth + .001f));
-    coordSys->AddChild(textCoordSys);
+    coordSys_ = make_shared<CoordSys>();
+    coordSys_->AddChild(jobPanel_->Root());
+    camera->AddChild(coordSys_);
 
-    camera->AddChild(coordSys);
-
-    textConsole->WriteLine("msside_src_infix_parser");
-    textConsole->WriteLine("Implemented infix expression parsing for StopRuleCondition inspector.");
-    coordSys->SetPosition(Vector(0.0f, 0.0f, -5.0f));
-
-    coordSys_ = coordSys;
+    coordSys_->SetPosition(Vector(0.0f, 0.0f, -5.0f));
 }
 
 void Visualization::SetViewPort(int width, int height) {
@@ -70,11 +53,20 @@ void Visualization::RenderFrame() {
     auto now = steady_clock::now();
     int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
     lastFrameTime_ = now;
-    float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+    float frameDeltaTime_s = (float)milliSeconds / 1000.0f;
+
+    time_s_ += frameDeltaTime_s;
+    if (time_s_ > 5.0f) {
+        alternateText_ = !alternateText_;
+        time_s_ = 0.0f;
+
+        jobPanel_->SetText(alternateText_ ? "This is a long text probably spanning multiple lines in the panel."
+                                          : "");
+    }
 
     // Animate...
-    coordSys_->PrependTransform(Transform(YAxis, frameDeltaTimeS * 90.0f));
-    coordSys_->PrependTransform(Transform(XAxis, frameDeltaTimeS * 40.0f));
+    coordSys_->PrependTransform(Transform(YAxis, frameDeltaTime_s * 90.0f));
+    coordSys_->PrependTransform(Transform(XAxis, frameDeltaTime_s * 40.0f));
 
     // Render...
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

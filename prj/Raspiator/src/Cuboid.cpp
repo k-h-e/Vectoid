@@ -12,7 +12,7 @@ namespace Raspiator {
 
 Cuboid::Cuboid(float width, float height, float depth, const kxm::Vectoid::Vector &color)
         : color_(color) {
-    Compute(width, height, depth);
+    Resize(width, height, depth);
 }
 
 void Cuboid::Render(RenderContext *context) {
@@ -32,7 +32,11 @@ void Cuboid::Render(RenderContext *context) {
     glDisable(GL_LIGHTING);
 }
 
-void Cuboid::Compute(float width, float height, float depth) {
+void Cuboid::Resize(float width, float height, float depth) {
+    assert(width  > 0.0f);
+    assert(height > 0.0f);
+    assert(depth  > 0.0f);
+
     width  *= .5f;
     height *= .5f;
     depth  *= .5f;
@@ -129,7 +133,6 @@ void Cuboid::Compute(float width, float height, float depth) {
     *nptr++ =  0.0f;     *nptr++ = -1.0f;      *nptr++ =  0.0f;
     *ptr++  =  width;    *ptr++  = -height;    *ptr++  =  depth;
     *nptr++ =  0.0f;     *nptr++ = -1.0f;      *nptr++ =  0.0f;
-
 }
 
 }    // Namespace Raspiator.

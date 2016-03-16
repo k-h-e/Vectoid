@@ -19,11 +19,12 @@ class Cuboid : public virtual kxm::Vectoid::GeometryInterface {
     Cuboid(Cuboid &&other)                 = delete;
     Cuboid &operator=(Cuboid &&other)      = delete;
 
+    //! Resizes the cuboid as specified.
+    void Resize(float width, float height, float depth);
+
     void Render(kxm::Vectoid::RenderContext *context);
     
   private:
-    void Compute(float width, float height, float depth);
-
     kxm::Vectoid::Vector color_;
     std::vector<GLfloat> vertices_,
                          normals_;

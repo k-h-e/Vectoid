@@ -46,7 +46,9 @@ HEADERS = ../../../../src/kxm/Core/include/kxm/Core/ActionInterface.h \
           ../../src/Glyphs.h \
           ../../src/Indicatower.h \
           ../../src/JenkinsAccess.h \
+          ../../src/JobPanel.h \
           ../../src/TextConsole.h \
+          ../../src/TextPanel.h \
           ../../src/TextRing.h \
           ../../src/Visualization.h \
           src/QtController.h \
@@ -74,7 +76,9 @@ SOURCES = ../../../../src/kxm/Core/Buffer.cpp \
           ../../src/Glyphs.cpp \
           ../../src/Indicatower.cpp \
           ../../src/JenkinsAccess.cpp \
+          ../../src/JobPanel.cpp\
           ../../src/TextConsole.cpp \
+          ../../src/TextPanel.cpp\
           ../../src/TextRing.cpp \
           ../../src/Visualization.cpp \
           src/QtController.cpp \

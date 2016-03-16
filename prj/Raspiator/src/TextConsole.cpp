@@ -14,19 +14,10 @@ namespace Raspiator {
 
 TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
                          shared_ptr<Glyphs> glyphs)
-        : width_(width),
-          height_(height),
-          rowCursor_(0),
-          glyphWidth_(glyphWidth),
+        : glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
           glyphs_(glyphs) {
-    assert(width  > 0);
-    assert(height > 0);
-
-    int num = width * height;
-    buffer_.resize(num);
-    for (int i = 0; i < num; ++i)
-        buffer_[i] = 65;
+    Resize(width, height);
 }
 
 void TextConsole::WriteLine(const string &line) {
@@ -54,6 +45,20 @@ void TextConsole::WriteLine(const string &line) {
         ++rowCursor_;
         if (rowCursor_ == height_)
             rowCursor_ = 0;
+    }
+}
+
+void TextConsole::Resize(int width, int height) {
+    assert(width  > 0);
+    assert(height > 0);
+    width_     = width;
+    height_    = height;
+    rowCursor_ = 0;
+
+    int num = width * height;
+    buffer_.resize(num);
+    for (int i = 0; i < num; ++i) {
+        buffer_[i] = 65;
     }
 }
 
