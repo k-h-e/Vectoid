@@ -61,7 +61,7 @@ void Visualization::RenderFrame() {
         time_s_ = 0.0f;
 
         jobPanel_->SetText(alternateText_ ? "This is a long text probably spanning multiple lines in the panel."
-                                          : "");
+                                          : "Short text.");
     }
 
     // Animate...
