@@ -54,7 +54,7 @@ class Processes : public virtual ProcessesClientInterface {
               owner(anOwner) {}
         ProcessInfo()
             : process(nullptr),
-              owner(nullptr) {}\
+              owner(nullptr) {}
         // Default-copyable.
     };
   

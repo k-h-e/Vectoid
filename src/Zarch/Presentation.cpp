@@ -11,6 +11,7 @@
 
 #include <kxm/Core/logging.h>
 #include <Game/EventQueue.h>
+#include <Game/EventLoop.h>
 #include <Game/Processes.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>

@@ -45,6 +45,7 @@
 		2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4DC172D8527007290C7 /* Video.cpp */; };
 		2A8AD4E1172F068C007290C7 /* CameraProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4E0172F068C007290C7 /* CameraProcess.cpp */; };
 		2A9D7C1E154D9DF700D7DE2F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */; };
+		2AA9C65A1D67BD29003FD5D7 /* EventLoopHub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9C6591D67BD29003FD5D7 /* EventLoopHub.cpp */; };
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
 		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
@@ -130,6 +131,9 @@
 		2A8AD4E2172F07A0007290C7 /* CameraProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraProcess.h; path = ../../../src/Zarch/include/Zarch/Video/CameraProcess.h; sourceTree = "<group>"; };
 		2A9067991A586FDB001154D8 /* GameLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameLogic.h; path = ../../../src/Zarch/include/Zarch/GameLogic/GameLogic.h; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		2AA9C6581D67B8DA003FD5D7 /* EventLoopHub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventLoopHub.h; path = ../../../src/Game/include/Game/EventLoopHub.h; sourceTree = "<group>"; };
+		2AA9C6591D67BD29003FD5D7 /* EventLoopHub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventLoopHub.cpp; path = ../../../src/Game/EventLoopHub.cpp; sourceTree = "<group>"; };
+		2AA9C65B1D6A51F9003FD5D7 /* EventLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventLoop.h; path = ../../../src/Game/include/Game/EventLoop.h; sourceTree = "<group>"; };
 		2AAC255E15810118004A37C6 /* ControlsState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsState.h; path = ../../../src/Zarch/include/Zarch/ControlsState.h; sourceTree = "<group>"; };
 		2AAC256015811661004A37C6 /* KXMGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KXMGLView.h; sourceTree = "<group>"; };
 		2AAC256115811661004A37C6 /* KXMGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KXMGLView.mm; sourceTree = "<group>"; };
@@ -465,6 +469,7 @@
 				2AECEF51154D613000033D14 /* include */,
 				2ADD5C211A0175F1006533B8 /* Event.cpp */,
 				2A5E8ADD1A115E1B0000617C /* EventQueueHub.cpp */,
+				2AA9C6591D67BD29003FD5D7 /* EventLoopHub.cpp */,
 				2AAD2FC51C10E67E00753BD6 /* Processes.cpp */,
 			);
 			name = Game;
@@ -486,6 +491,8 @@
 				2AAD2FC41C10DA7F00753BD6 /* EventQueueClientInterface.h */,
 				2ADD5C231A017EDF006533B8 /* EventQueue.h */,
 				2A5E8ADC1A115A0C0000617C /* EventQueueHub.h */,
+				2AA9C65B1D6A51F9003FD5D7 /* EventLoop.h */,
+				2AA9C6581D67B8DA003FD5D7 /* EventLoopHub.h */,
 				2A2A6117166A61350073658E /* ProcessInterface.h */,
 				2AD694DB1C16259E00BAFACE /* ProcessOwnerInterface.h */,
 				2AD694DC1C162D1400BAFACE /* ProcessesClientInterface.h */,
@@ -619,6 +626,7 @@
 				2A5E8AD41A114AAE0000617C /* ControlsStateEvent.cpp in Sources */,
 				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
+				2AA9C65A1D67BD29003FD5D7 /* EventLoopHub.cpp in Sources */,
 				2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */,
 				2A65AF5815361E710054F8E9 /* TestTriangle.cpp in Sources */,
 				2A5E8AD81A114AEA0000617C /* LanderVelocityEvent.cpp in Sources */,
