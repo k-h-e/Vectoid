@@ -12,6 +12,7 @@
 
 
 #include <memory>
+#include <chrono>
 
 #include <Game/ProcessOwnerInterface.h>
 #include <Zarch/Events/ZarchEvent.h>
@@ -21,7 +22,7 @@
 namespace kxm {
 
 namespace Game {
-    template<class EventClass> class EventQueueClientInterface;
+    template<class EventClass, class EventHandlerClass> class EventLoop;
     class ProcessesClientInterface;
 }
 
@@ -36,21 +37,23 @@ class ControlsStateEvent;
 class GameLogic : public EventHandlerCore,
                   public virtual Game::ProcessOwnerInterface {
   public:
-    GameLogic(std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue,
+    GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
               std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~GameLogic();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
+    void HandleFrameGeneratedEvent(const FrameGeneratedEvent &event);
     void HandleControlsStateEvent(const ControlsStateEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
     
-    std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue_;
-    std::shared_ptr<Game::ProcessesClientInterface>              processes_;
-    bool                                                         landerThrusterEnabled_,
-                                                                 landerFiringEnabled_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
+    bool                                                           landerThrusterEnabled_,
+                                                                   landerFiringEnabled_;
+    std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };
 
 }    // Namespace Zarch.

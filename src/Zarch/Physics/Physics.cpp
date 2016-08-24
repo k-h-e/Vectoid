@@ -28,14 +28,14 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<EventQueueClientInterface<ZarchEvent>> eventQueue,
+Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
                  shared_ptr<ProcessesClientInterface> processes)
-        : eventQueue_(eventQueue),
+        : eventLoop_(eventLoop),
           processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
-    data_->eventQueue    = eventQueue;
+    data_->eventLoop     = eventLoop;
     
     landerProcess_ = unique_ptr<LanderProcess>(new LanderProcess(data_));
     processes_->RegisterProcess(landerProcess_.get(), this);

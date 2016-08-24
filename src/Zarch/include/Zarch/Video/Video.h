@@ -22,7 +22,7 @@
 namespace kxm {
 
 namespace Game {
-    template<class EventClass> class EventQueueClientInterface;
+    template<class EventClass, class EventHandleClass> class EventLoop;
     class ProcessesClientInterface;
 }
 
@@ -66,16 +66,15 @@ class Video : public EventHandlerCore,
         std::shared_ptr<MapParameters>                  mapParameters;
         std::shared_ptr<Terrain>                        terrain;
     };
-    Video(std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue,
+    Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
           std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
-    //! Renders a frame using the current scene graph state.
-    void RenderFrame();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
     void HandleFrameTimeEvent(const FrameTimeEvent &event);
+    void HandleFrameGeneratedEvent(const FrameGeneratedEvent &event);
     void HandleLanderMoveEvent(const LanderMoveEvent &event);
     void HandleLanderVelocityEvent(const LanderVelocityEvent &event);
     void HandleLanderThrusterEvent(const LanderThrusterEvent &event);
@@ -84,12 +83,12 @@ class Video : public EventHandlerCore,
     Video(const Video &other);
     Video &operator=(const Video &other);
     
-    std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue_;
-    std::shared_ptr<Game::ProcessesClientInterface>              processes_;
-    std::shared_ptr<Data>                                        data_;
-    std::unique_ptr<CameraProcess>                               cameraProcess_;
-    std::unique_ptr<StarFieldProcess>                            starFieldProcess_;
-    std::unique_ptr<ThrusterParticlesProcess>                    thrusterParticlesProcess_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
+    std::shared_ptr<Data>                                          data_;
+    std::unique_ptr<CameraProcess>                                 cameraProcess_;
+    std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
+    std::unique_ptr<ThrusterParticlesProcess>                      thrusterParticlesProcess_;
 };
 
 }    // Namespace Zarch.

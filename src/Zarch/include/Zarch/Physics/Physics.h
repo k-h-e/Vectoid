@@ -23,7 +23,7 @@
 namespace kxm {
 
 namespace Game {
-    template<class EventClass> class EventQueueClientInterface;
+    template<class EventClass, class EventHandlerClass> class EventLoop;
     class ProcessesClientInterface;
 }
 
@@ -50,15 +50,15 @@ class Physics : public EventHandlerCore,
     };
     struct Data {
         Data() : frameDeltaTimeS(0.0f) {}
-        float                                                        frameDeltaTimeS;
-        ControlsState                                                controlsState;
-        LanderState                                                  landerState;
-        std::shared_ptr<MapParameters>                               mapParameters;
-        std::shared_ptr<Terrain>                                     terrain;
-        std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue;
+        float                                                          frameDeltaTimeS;
+        ControlsState                                                  controlsState;
+        LanderState                                                    landerState;
+        std::shared_ptr<MapParameters>                                 mapParameters;
+        std::shared_ptr<Terrain>                                       terrain;
+        std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop;
     };
     
-    Physics(std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue,
+    Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
             std::shared_ptr<Game::ProcessesClientInterface> processes);
     ~Physics();
     std::vector<Game::Event::EventType> EnumerateHandledEvents();
@@ -70,10 +70,10 @@ class Physics : public EventHandlerCore,
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Game::EventQueueClientInterface<ZarchEvent>> eventQueue_;
-    std::shared_ptr<Game::ProcessesClientInterface>              processes_;
-    std::shared_ptr<Data>                                        data_;
-    std::unique_ptr<LanderProcess>                               landerProcess_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
+    std::shared_ptr<Data>                                          data_;
+    std::unique_ptr<LanderProcess>                                 landerProcess_;
 };
 
 

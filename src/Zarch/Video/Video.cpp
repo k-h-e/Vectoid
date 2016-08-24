@@ -9,7 +9,7 @@
 #include <Vectoid/AgeColoredParticles.h>
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
-#include <Game/EventQueueClientInterface.h>
+#include <Game/EventLoop.h>
 #include <Game/ProcessesClientInterface.h>
 #include <Zarch/Video/CameraProcess.h>
 #include <Zarch/Video/StarFieldProcess.h>
@@ -20,22 +20,21 @@
 #include <Zarch/Terrain.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
+#include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/LanderMoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
 #include <Zarch/Events/LanderThrusterEvent.h>
-
 
 using namespace std;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
-
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<EventQueueClientInterface<ZarchEvent>> eventQueue,
+Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
              shared_ptr<ProcessesClientInterface> processes)
-        : eventQueue_(eventQueue),
+        : eventLoop_(eventLoop),
           processes_(processes) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
@@ -87,12 +86,9 @@ void Video::SetViewPort(int width, int height) {
     data_->projection->SetViewPort((float)width, (float)height);
 }
 
-void Video::RenderFrame() {
-    data_->projection->Render(0);
-}
-
 vector<Event::EventType> Video::EnumerateHandledEvents() {
     return vector<Event::EventType>{ FrameTimeEvent::type,
+                                     FrameGeneratedEvent::type,
                                      LanderMoveEvent::type,
                                      LanderVelocityEvent::type,
                                      LanderThrusterEvent::type  };
@@ -104,6 +100,11 @@ void Video::HandleProcessFinished(Game::ProcessInterface *process) {
 
 void Video::HandleFrameTimeEvent(const FrameTimeEvent &event) {
     data_->frameDeltaTimeS = event.timeS;
+}
+
+void Video::HandleFrameGeneratedEvent(const FrameGeneratedEvent &event) {
+    data_->projection->Render(0);
+    eventLoop_->Schedule(FrameGeneratedEvent());
 }
 
 void Video::HandleLanderMoveEvent(const LanderMoveEvent &event) {

@@ -28,8 +28,8 @@ namespace Core {
     class Thread;
 }
 namespace Game {
-    template<class EventClass, class EventHandlerClass> class EventQueue;
-    class EventQueueHub;
+    template<class EventClass, class EventHandlerClass> class EventLoop;
+    class EventLoopHub;
 }
 
 namespace Zarch {
@@ -56,7 +56,7 @@ class Zarch {
     }
     
     //! Registers all <c>Zarch</c> game events with the specified event queue.
-    static void RegisterEvents(Game::EventQueue<ZarchEvent, EventHandlerCore> *eventQueue);
+    static void RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop);
     
   private:
     Zarch(const Zarch &other);
@@ -64,7 +64,7 @@ class Zarch {
     
     std::shared_ptr<Simulation>                      simulation_;
     std::shared_ptr<Presentation>                    presentation_;
-    std::shared_ptr<Game::EventQueueHub>             eventQueueHub_;
+    std::shared_ptr<Game::EventLoopHub>              eventLoopHub_;
     std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
     std::shared_ptr<Core::Thread>                    simulationThread_;
 };

@@ -6,22 +6,20 @@
 //
 //
 
-
 #ifndef KXM_ZARCH_PRESENTATION_H_
 #define KXM_ZARCH_PRESENTATION_H_
-
 
 #include <memory>
 
 #include <Zarch/Video/Video.h>
-
+#include <Zarch/Events/FrameGeneratedEvent.h>
 
 namespace kxm {
 
 namespace Game {
-    template<class EventClass, class EventHandlerClass> class EventQueue;
+    template<class EventClass, class EventHandlerClass> class EventLoop;
     class Processes;
-    class EventQueueHub;
+    class EventLoopHub;
 }
 
 namespace Zarch {
@@ -34,23 +32,23 @@ class ControlsState;
  */
 class Presentation {
   public:
-    Presentation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
+    Presentation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub);
     ~Presentation();
     void PrepareFrame(const ControlsState &controlsState);
-    void SetViewPort(int width, int height) { video_->SetViewPort(width, height); }
-    void RenderFrame()                      { video_->RenderFrame();              }
+    void SetViewPort(int width, int height);
+    void RenderFrame();
     
   private:
     Presentation(const Presentation &other);
     Presentation &operator=(const Presentation &other);
     
-    std::shared_ptr<Game::EventQueue<ZarchEvent, EventHandlerCore>> eventQueue_;
-    std::shared_ptr<Game::Processes>  processes_;
-    std::shared_ptr<Video>            video_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    std::shared_ptr<Game::Processes>                               processes_;
+    std::shared_ptr<Video>                                         video_;
+    FrameGeneratedEvent                                            frameGeneratedEvent_;
 };
 
 }
 }
-
 
 #endif    // KXM_ZARCH_PRESENTATION_H_

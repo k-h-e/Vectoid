@@ -12,7 +12,6 @@
 
 
 #include <memory>
-#include <chrono>
 
 #include <kxm/Core/ActionInterface.h>
 #include <Zarch/Events/ZarchEvent.h>
@@ -22,9 +21,9 @@
 namespace kxm {
 
 namespace Game {
-    template<class EventClass, class EventHandlerClass> class EventQueue;
+    template<class EventClass, class EventHandlerClass> class EventLoop;
     class Processes;
-    class EventQueueHub;
+    class EventLoopHub;
 }
 
 namespace Zarch {
@@ -39,20 +38,18 @@ class Physics;
  */
 class Simulation : public virtual Core::ActionInterface {
   public:
-    Simulation(const std::shared_ptr<Game::EventQueueHub> &eventQueueHub);
+    Simulation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub);
     ~Simulation();
     void ExecuteAction();
     
   private:
     Simulation(const Simulation &other);
     Simulation &operator=(const Simulation &other);
-    void GenerateTimeEvent();
     
-    std::shared_ptr<Game::EventQueue<ZarchEvent, EventHandlerCore>> eventQueue_;
-    std::shared_ptr<Game::Processes>                                processes_;
-    std::shared_ptr<GameLogic>                                      gameLogic_;
-    std::shared_ptr<Physics>                                        physics_;
-    std::chrono::time_point<std::chrono::steady_clock>              lastFrameTime_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    std::shared_ptr<Game::Processes>                               processes_;
+    std::shared_ptr<GameLogic>                                     gameLogic_;
+    std::shared_ptr<Physics>                                       physics_;
 };
 
 }

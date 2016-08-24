@@ -1,16 +1,6 @@
-//
-//  Presentation.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/7/13.
-//
-//
-
-
 #include <Zarch/Presentation.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventQueue.h>
 #include <Game/EventLoop.h>
 #include <Game/Processes.h>
 #include <Zarch/ControlsState.h>
@@ -21,38 +11,42 @@
 #include <Zarch/Events/LanderThrusterEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 
-
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Game;
 
-
 namespace kxm {
 namespace Zarch {
 
-Presentation::Presentation(const shared_ptr<EventQueueHub> &eventQueueHub)
-        : eventQueue_(new EventQueue<ZarchEvent, EventHandlerCore>(EventQueueHub::initialBufferSize,
-                                                                   eventQueueHub, false)),
+Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub)
+        : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)),
           processes_(new Processes()) {
-    Zarch::RegisterEvents(eventQueue_.get());
+    Zarch::RegisterEvents(eventLoop_.get());
     
-    video_ = shared_ptr<Video>(new Video(eventQueue_, processes_));
+    video_ = shared_ptr<Video>(new Video(eventLoop_, processes_));
     for (Event::EventType eventType : video_->EnumerateHandledEvents()) {
-        eventQueue_->RegisterHandler(eventType, video_.get());
+        eventLoop_->RegisterHandler(eventType, video_.get());
     }
+              
+    eventLoop_->Schedule(FrameGeneratedEvent());
 }
 
 Presentation::~Presentation() {
-    eventQueue_->UnregisterHandler(video_.get());
+    eventLoop_->UnregisterHandler(video_.get());
     processes_->UnregisterProcesses(video_.get());
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
-    // We want the next simulation iteration to use the most current controls data, so we schedule
-    // the respective event here...
-    eventQueue_->Schedule(ControlsStateEvent(controlsState));
-    eventQueue_->ProcessEvents();
+    eventLoop_->Schedule(ControlsStateEvent(controlsState));
     processes_->ExecuteProcesses();
+}
+
+void Presentation::SetViewPort(int width, int height) {
+    video_->SetViewPort(width, height);
+}
+
+void Presentation::RenderFrame() {
+    eventLoop_->RunUntilEventOfType(&frameGeneratedEvent_.Type());
 }
 
 }

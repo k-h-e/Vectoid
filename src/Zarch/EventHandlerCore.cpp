@@ -10,6 +10,10 @@ using namespace kxm::Core;
 namespace kxm {
 namespace Zarch {
 
+void EventHandlerCore::HandleFrameGeneratedEvent(const FrameGeneratedEvent &event) {
+    Log(this).Stream() << "Unhandled FrameGeneratedEvent!" << endl;
+}
+    
 void EventHandlerCore::HandleFrameTimeEvent(const FrameTimeEvent &event) {
     Log(this).Stream() << "Unhandled FrameTimeEvent!" << endl;
 }

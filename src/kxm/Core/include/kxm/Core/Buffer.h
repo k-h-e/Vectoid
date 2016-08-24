@@ -51,12 +51,12 @@ class Buffer {
         bool ReadBlock(void *targetBuffer, int targetBufferSize) {
             return (Read(targetBuffer, targetBufferSize) == targetBufferSize);
         }
-
+        
 	  private:
 		friend class Buffer;
-		Reader(const Buffer &buffer);
-		const Buffer &buffer_;
-		int           cursor_;
+		Reader(const Buffer *buffer);
+		const Buffer *buffer_;
+		int          cursor_;
 	};
 
     //! Creates an empty buffer.

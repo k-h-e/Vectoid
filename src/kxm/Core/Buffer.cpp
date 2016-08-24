@@ -58,24 +58,24 @@ void Buffer::RestoreToCurrentCapacity() {
 }
 
 Buffer::Reader Buffer::GetReader() const {
-    return Reader(*this);
+    return Reader(this);
 }
 
-Buffer::Reader::Reader(const Buffer &buffer)
+Buffer::Reader::Reader(const Buffer *buffer)
 	: buffer_(buffer),
 	  cursor_(0) {
 }
 
 int Buffer::Reader::Read(void *targetBuffer, int targetBufferSize) {
-    int numToDeliver = buffer_.bufferFill_ - cursor_;
+    int numToDeliver = buffer_->bufferFill_ - cursor_;
     if (numToDeliver < 1)
         return 0;
     if (numToDeliver > targetBufferSize)
         numToDeliver = targetBufferSize;
-    memcpy(targetBuffer, &buffer_.buffer_[cursor_], numToDeliver);
+    memcpy(targetBuffer, &buffer_->buffer_[cursor_], numToDeliver);
     cursor_ += numToDeliver;
     return numToDeliver;
 }
-
+    
 }    // Namespace Core.
 }    // Namespace kxm.

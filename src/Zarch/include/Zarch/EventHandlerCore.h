@@ -1,14 +1,13 @@
 #ifndef KXM_ZARCH_EVENTHANDLERCORE_H_
 #define KXM_ZARCH_EVENTHANDLERCORE_H_
 
-
 #include <Game/EventHandlerInterface.h>
-
 
 namespace kxm {
 namespace Zarch {
 
 class FrameTimeEvent;
+class FrameGeneratedEvent;
 class ControlsStateEvent;
 class LanderMoveEvent;
 class LanderVelocityEvent;
@@ -21,6 +20,7 @@ class LanderThrusterEvent;
 class EventHandlerCore : public virtual Game::EventHandlerInterface {
   public:
     virtual void HandleFrameTimeEvent(const FrameTimeEvent &event);
+    virtual void HandleFrameGeneratedEvent(const FrameGeneratedEvent &event);
     virtual void HandleControlsStateEvent(const ControlsStateEvent &event);
     virtual void HandleLanderMoveEvent(const LanderMoveEvent &event);
     virtual void HandleLanderVelocityEvent(const LanderVelocityEvent &event);
@@ -29,6 +29,5 @@ class EventHandlerCore : public virtual Game::EventHandlerInterface {
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_EVENTHANDLERCORE_H_

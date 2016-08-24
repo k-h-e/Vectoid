@@ -42,10 +42,17 @@ class EventLoop {
     void UnregisterHandler(EventHandlerClass *handler);
     //! Runs the event loop, invoking handlers for events as they arrive.
     void Run();
+    //! Runs the event loop until the next event of the specified type has been dispatched.
+    /*!
+     *  Pass <c>nullptr</c> to run until shutdown is requested.
+     *
+     *  \return <c>false</c> in case shutdown has been requested.
+     */
+    bool RunUntilEventOfType(const Event::EventType *eventType);
     //! Schedules the specified event for execution on the loop.
     /*!
-     *  This is the only method that may be called while \ref Run() executes, that is: from event handlers invoked by
-     *  the loop.
+     *  This is the only method that may be called while any \ref Run() method executes, that is: from event handlers
+     *  invoked by the loop.
      */
     void Schedule(const EventClass &event);
         
@@ -58,7 +65,9 @@ class EventLoop {
     
     std::vector<EventInfo>          events_;
     std::unordered_map<size_t, int> idToSlotMap_;
-    std::unique_ptr<Core::Buffer>   eventsToSchedule_;
+    std::unique_ptr<Core::Buffer>   eventsToDispatch_,
+                                    eventsToSchedule_;
+    kxm::Core::Buffer::Reader       reader_;
     std::shared_ptr<EventLoopHub>   hub_;
     int                             hubClientId_;
     bool                            running_;
@@ -66,7 +75,9 @@ class EventLoop {
 
 template<class EventClass, class EventHandlerClass>
 EventLoop<EventClass, EventHandlerClass>::EventLoop(std::shared_ptr<EventLoopHub> hub)
-    : eventsToSchedule_(new kxm::Core::Buffer()),
+    : eventsToDispatch_(new kxm::Core::Buffer()),
+      eventsToSchedule_(new kxm::Core::Buffer()),
+      reader_(eventsToDispatch_->GetReader()),
       hub_(hub),
       hubClientId_(hub->AddEventLoop()),
       running_(false) {
@@ -116,24 +127,35 @@ void EventLoop<EventClass, EventHandlerClass>::UnregisterHandler(EventHandlerCla
 
 template<class EventClass, class EventHandlerClass>
 void EventLoop<EventClass, EventHandlerClass>::Run() {
+    RunUntilEventOfType(nullptr);
+}
+    
+template<class EventClass, class EventHandlerClass>
+bool EventLoop<EventClass, EventHandlerClass>::RunUntilEventOfType(const kxm::Game::Event::EventType *eventType) {
     assert(!running_);
     running_ = true;
     
-    std::unique_ptr<kxm::Core::Buffer> buffer(new kxm::Core::Buffer());
-    while (!hub_->GetEvents(hubClientId_, &buffer)) {
-        kxm::Core::Buffer::Reader reader = buffer->GetReader();
+    for (;;) {
         int slot;
-        while (reader.ReadBlock(&slot, sizeof(slot))) {
+        while (reader_.ReadBlock(&slot, sizeof(slot))) {
             EventInfo  &info  = events_[slot];
             EventClass &event = *(info.prototype);
-            event.Deserialize(&reader);
+            event.Deserialize(&reader_);
             for (EventHandlerClass *handler : info.handlers) {
                 event.Dispatch(handler);
             }
+            if (eventType && (event.Type().id == eventType->id)) {
+                running_ = false;
+                return true;
+            }
         }
+        
+        if (!hub_->GetEvents(hubClientId_, &eventsToDispatch_)) {
+            running_ = false;
+            return false;
+        }
+        reader_ = eventsToDispatch_->GetReader();
     }
-    
-    running_ = false;
 }
 
 template<class EventClass, class EventHandlerClass>
@@ -143,6 +165,8 @@ void EventLoop<EventClass, EventHandlerClass>::Schedule(const EventClass &event)
     event.Serialize(eventsToSchedule_.get());
     hub_->ScheduleEvents(eventsToSchedule_);
     eventsToSchedule_->Clear();
+    
+    std::printf(">%s\n", event.Type().name);
 }
     
 }    // Namespace Game.

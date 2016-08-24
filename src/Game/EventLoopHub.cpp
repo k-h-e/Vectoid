@@ -9,6 +9,7 @@
 #include <Game/EventLoopHub.h>
 
 #include <cassert>
+#include <cstdio>
 #include <kxm/Core/Buffer.h>
 
 using namespace std;
