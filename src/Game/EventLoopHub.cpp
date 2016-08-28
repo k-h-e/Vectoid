@@ -30,7 +30,7 @@ int EventLoopHub::AddEventLoop() {
     return id;
 }    // ... critical section, end.
 
-void EventLoopHub::ScheduleEvents(const unique_ptr<Buffer> &buffer) {
+void EventLoopHub::Post(const unique_ptr<Buffer> &buffer) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     
     Buffer *toHub = buffer.get();

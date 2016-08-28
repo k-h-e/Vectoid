@@ -33,7 +33,7 @@ void LanderThrusterEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
 }
 
 void LanderThrusterEvent::Dispatch(EventHandlerCore *handler) const {
-    handler->HandleLanderThrusterEvent(*this);
+    handler->Handle(*this);
 }
 
 }    // Namespace Zarch.

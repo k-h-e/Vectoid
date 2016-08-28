@@ -2,7 +2,6 @@
 
 #include <kxm/Core/logging.h>
 #include <Game/EventLoop.h>
-#include <Game/Processes.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>
 #include <Zarch/Events/FrameTimeEvent.h>
@@ -19,26 +18,17 @@ namespace kxm {
 namespace Zarch {
 
 Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub)
-        : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)),
-          processes_(new Processes()) {
+        : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)) {
     Zarch::RegisterEvents(eventLoop_.get());
-    
-    video_ = shared_ptr<Video>(new Video(eventLoop_, processes_));
-    for (Event::EventType eventType : video_->EnumerateHandledEvents()) {
-        eventLoop_->RegisterHandler(eventType, video_.get());
-    }
-              
-    eventLoop_->Schedule(FrameGeneratedEvent());
+    video_ = shared_ptr<Video>(new Video(eventLoop_));
 }
 
 Presentation::~Presentation() {
-    eventLoop_->UnregisterHandler(video_.get());
-    processes_->UnregisterProcesses(video_.get());
+    eventLoop_->UnregisterHandlers();
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
-    eventLoop_->Schedule(ControlsStateEvent(controlsState));
-    processes_->ExecuteProcesses();
+    eventLoop_->Post(ControlsStateEvent(controlsState));
 }
 
 void Presentation::SetViewPort(int width, int height) {

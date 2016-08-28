@@ -1,18 +1,7 @@
-//
-//  config.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/7/13.
-//
-//
-
-
 #ifndef KXM_CORE_CONFIG_H_
 #define KXM_CORE_CONFIG_H_
 
-
 #include <stdint.h>
-
 
 namespace kxm {
 namespace Core {

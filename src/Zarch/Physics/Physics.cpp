@@ -10,12 +10,14 @@
 #include <Zarch/Physics/Physics.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/ProcessesClientInterface.h>
+#include <Game/EventLoop.h>
 #include <Zarch/Physics/LanderProcess.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/Events/UpdatePhysicsEvent.h>
+#include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 
@@ -28,37 +30,39 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
-                 shared_ptr<ProcessesClientInterface> processes)
-        : eventLoop_(eventLoop),
-          processes_(processes) {
+Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
+        : eventLoop_(eventLoop) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
     data_->eventLoop     = eventLoop;
     
+    eventLoop_->RegisterHandler(UpdatePhysicsEvent::type, this);
+    eventLoop_->RegisterHandler(FrameTimeEvent::type,     this);
+    eventLoop_->RegisterHandler(ControlsStateEvent::type, this);
+    
     landerProcess_ = unique_ptr<LanderProcess>(new LanderProcess(data_));
-    processes_->RegisterProcess(landerProcess_.get(), this);
 }
 
 Physics::~Physics() {
     // Nop.
 }
 
-vector<Event::EventType> Physics::EnumerateHandledEvents() {
-    return vector<Event::EventType>{ FrameTimeEvent::type,
-                                     ControlsStateEvent::type };
-}
-
 void Physics::HandleProcessFinished(ProcessInterface *process) {
     // Nop.
 }
 
-void Physics::HandleFrameTimeEvent(const FrameTimeEvent &event) {
+void Physics::Handle(const UpdatePhysicsEvent &event) {
+    // Hack, for now...
+    landerProcess_->Execute();
+    eventLoop_->Post(PhysicsUpdatedEvent());
+}
+
+void Physics::Handle(const FrameTimeEvent &event) {
     data_->frameDeltaTimeS = event.timeS;
 }
 
-void Physics::HandleControlsStateEvent(const ControlsStateEvent &event) {
+void Physics::Handle(const ControlsStateEvent &event) {
     data_->controlsState = event.controlsState;
 }
 

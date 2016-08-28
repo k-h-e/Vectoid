@@ -33,7 +33,7 @@ void ControlsStateEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
 }
 
 void ControlsStateEvent::Dispatch(EventHandlerCore *handler) const {
-    handler->HandleControlsStateEvent(*this);
+    handler->Handle(*this);
 }
 
 }    // Namespace Zarch.

@@ -8,6 +8,8 @@
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
+#include <Zarch/Events/UpdatePhysicsEvent.h>
+#include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 #include <Zarch/Events/LanderMoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
@@ -36,6 +38,8 @@ Zarch::~Zarch() {
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameTimeEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsStateEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new LanderMoveEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new LanderVelocityEvent));

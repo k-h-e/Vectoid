@@ -1,6 +1,5 @@
 Zarch
-- Enhance thread interleaving.
-- Enhance generation of time event.
+- Implement EventLoop::UnregisterHandlers().
 
 Raspiator
 - fix header dependencies

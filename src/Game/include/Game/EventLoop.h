@@ -38,8 +38,8 @@ class EventLoop {
      *  A given handler must be registered for a given event only once.
      */
     void RegisterHandler(const Event::EventType &eventType, EventHandlerClass *handler);
-    //! Unregisters the specified event handler from whatever event it is registered for.
-    void UnregisterHandler(EventHandlerClass *handler);
+    //! Unregisters all event handlers.
+    void UnregisterHandlers();
     //! Runs the event loop, invoking handlers for events as they arrive.
     void Run();
     //! Runs the event loop until the next event of the specified type has been dispatched.
@@ -49,12 +49,12 @@ class EventLoop {
      *  \return <c>false</c> in case shutdown has been requested.
      */
     bool RunUntilEventOfType(const Event::EventType *eventType);
-    //! Schedules the specified event for execution on the loop.
+    //! Posts the specified event for execution on the loop.
     /*!
      *  This is the only method that may be called while any \ref Run() method executes, that is: from event handlers
      *  invoked by the loop.
      */
-    void Schedule(const EventClass &event);
+    void Post(const EventClass &event);
         
   private:
     struct EventInfo {
@@ -112,16 +112,10 @@ void EventLoop<EventClass, EventHandlerClass>::RegisterHandler(const Event::Even
 }
 
 template<class EventClass, class EventHandlerClass>
-void EventLoop<EventClass, EventHandlerClass>::UnregisterHandler(EventHandlerClass *handlerToUnregister) {
+void EventLoop<EventClass, EventHandlerClass>::UnregisterHandlers() {
     assert(!running_);
-    for (auto &info : events_) {
-        std::vector<EventHandlerClass *> handlers;
-        for (EventHandlerClass *handler : info.handlers) {
-            if (handler != handlerToUnregister) {
-                handlers.push_back(handler);
-            }
-        }
-        info.handlers = handlers;
+    for (EventInfo &info : events_) {
+        info.handlers.clear();
     }
 }
 
@@ -159,14 +153,12 @@ bool EventLoop<EventClass, EventHandlerClass>::RunUntilEventOfType(const kxm::Ga
 }
 
 template<class EventClass, class EventHandlerClass>
-void EventLoop<EventClass, EventHandlerClass>::Schedule(const EventClass &event) {
+void EventLoop<EventClass, EventHandlerClass>::Post(const EventClass &event) {
     int slot = idToSlotMap_[event.Type().id];
     eventsToSchedule_->Append(&slot, sizeof(slot));
     event.Serialize(eventsToSchedule_.get());
-    hub_->ScheduleEvents(eventsToSchedule_);
+    hub_->Post(eventsToSchedule_);
     eventsToSchedule_->Clear();
-    
-    std::printf(">%s\n", event.Type().name);
 }
     
 }    // Namespace Game.

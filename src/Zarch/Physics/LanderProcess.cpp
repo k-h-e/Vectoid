@@ -82,10 +82,10 @@ void LanderProcess::Execute() {
     data.landerState.transform = newLanderTransform;
     
     // Generate events...
-    data.eventLoop->Schedule(LanderMoveEvent(newLanderTransform));
-    data.eventLoop->Schedule(LanderVelocityEvent(data.landerState.velocity));
+    data.eventLoop->Post(LanderMoveEvent(newLanderTransform));
+    data.eventLoop->Post(LanderVelocityEvent(data.landerState.velocity));
     if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
-        data.eventLoop->Schedule(LanderThrusterEvent(data.landerState.thrusterEnabled));
+        data.eventLoop->Post(LanderThrusterEvent(data.landerState.thrusterEnabled));
     }
 }
 

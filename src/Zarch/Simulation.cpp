@@ -11,10 +11,11 @@
 
 #include <kxm/Core/logging.h>
 #include <Game/EventLoop.h>
-#include <Game/Processes.h>
 #include <Zarch/Zarch.h>
 #include <Zarch/GameLogic/GameLogic.h>
 #include <Zarch/Physics/Physics.h>
+#include <Zarch/Events/UpdatePhysicsEvent.h>
+#include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 
 
@@ -28,31 +29,46 @@ namespace Zarch {
 
 Simulation::Simulation(const shared_ptr<EventLoopHub> &eventLoopHub)
         : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)),
-          processes_(new Processes()) {
+          physicsUpdated_(false),
+          frameGenerated_(false) {
     Zarch::RegisterEvents(eventLoop_.get());
-        
-    physics_   = shared_ptr<Physics>(new Physics(eventLoop_, processes_));
-    for (Event::EventType eventType : physics_->EnumerateHandledEvents()) {
-        eventLoop_->RegisterHandler(eventType, physics_.get());
-    }
-    gameLogic_ = shared_ptr<GameLogic>(new GameLogic(eventLoop_, processes_));
-    for (Event::EventType eventType : gameLogic_->EnumerateHandledEvents()) {
-        eventLoop_->RegisterHandler(eventType, gameLogic_.get());
-    }
+    physics_   = shared_ptr<Physics>(new Physics(eventLoop_));
+    gameLogic_ = shared_ptr<GameLogic>(new GameLogic(eventLoop_));
+    
+    eventLoop_->RegisterHandler(PhysicsUpdatedEvent::type, this);
+    eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
 }
 
 Simulation::~Simulation() {
-    eventLoop_->UnregisterHandler(physics_.get());
-    processes_->UnregisterProcesses(physics_.get());
-    
-    eventLoop_->UnregisterHandler(gameLogic_.get());
-    processes_->UnregisterProcesses(gameLogic_.get());
+    eventLoop_->UnregisterHandlers();
 }
 
 void Simulation::ExecuteAction() {
     puts("simulation thread spawned");
+    
+    // Post initial events...
+    eventLoop_->Post(PhysicsUpdatedEvent());
+    eventLoop_->Post(FrameGeneratedEvent());
+    
     eventLoop_->Run();
+    
     puts("simulation thread terminating");
+}
+
+void Simulation::Handle(const PhysicsUpdatedEvent &event) {
+    physicsUpdated_ = true;
+    DoPhysicsTrigger();
+}
+void Simulation::Handle(const FrameGeneratedEvent &event) {
+    frameGenerated_ = true;
+    DoPhysicsTrigger();
+}
+void Simulation::DoPhysicsTrigger() {
+    if (physicsUpdated_ && frameGenerated_) {
+        physicsUpdated_ = false;
+        frameGenerated_ = false;
+        eventLoop_->Post(UpdatePhysicsEvent());
+    }
 }
 
 }

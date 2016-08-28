@@ -35,7 +35,7 @@ void FrameTimeEvent::Deserialize(Core::Buffer::Reader *bufferReader) {
 }
 
 void FrameTimeEvent::Dispatch(EventHandlerCore *handler) const {
-    handler->HandleFrameTimeEvent(*this);
+    handler->Handle(*this);
 }
 
 }    // Namespace Zarch.

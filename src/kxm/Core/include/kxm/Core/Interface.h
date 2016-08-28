@@ -14,7 +14,6 @@
  *  \defgroup Core Platform Core
  */
 
-
 namespace kxm {
 namespace Core {
 

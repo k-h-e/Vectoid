@@ -23,7 +23,6 @@ namespace kxm {
 
 namespace Game {
     template<class EventClass, class EventHandlerClass> class EventLoop;
-    class ProcessesClientInterface;
 }
 
 namespace Zarch {
@@ -37,20 +36,17 @@ class ControlsStateEvent;
 class GameLogic : public EventHandlerCore,
                   public virtual Game::ProcessOwnerInterface {
   public:
-    GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
-              std::shared_ptr<Game::ProcessesClientInterface> processes);
+    GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~GameLogic();
-    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
-    void HandleFrameGeneratedEvent(const FrameGeneratedEvent &event);
-    void HandleControlsStateEvent(const ControlsStateEvent &event);
+    void Handle(const FrameGeneratedEvent &event);
+    void Handle(const ControlsStateEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
     bool                                                           landerThrusterEnabled_,
                                                                    landerFiringEnabled_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;

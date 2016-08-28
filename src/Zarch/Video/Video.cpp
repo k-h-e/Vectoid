@@ -10,7 +10,6 @@
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
 #include <Game/EventLoop.h>
-#include <Game/ProcessesClientInterface.h>
 #include <Zarch/Video/CameraProcess.h>
 #include <Zarch/Video/StarFieldProcess.h>
 #include <Zarch/Video/ThrusterParticlesProcess.h>
@@ -32,10 +31,14 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
-             shared_ptr<ProcessesClientInterface> processes)
-        : eventLoop_(eventLoop),
-          processes_(processes) {
+Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
+        : eventLoop_(eventLoop) {
+    eventLoop_->RegisterHandler(FrameTimeEvent::type,      this);
+    eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
+    eventLoop_->RegisterHandler(LanderMoveEvent::type,     this);
+    eventLoop_->RegisterHandler(LanderVelocityEvent::type, this);
+    eventLoop_->RegisterHandler(LanderThrusterEvent::type, this);
+    
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
@@ -66,16 +69,11 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
         new ParticlesRenderer(starFieldParticles)))));
     
     cameraProcess_ = unique_ptr<CameraProcess>(new CameraProcess(data_));
-    processes_->RegisterProcess(cameraProcess_.get(), this);
-    
     starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_,
                                                                           starFieldParticles));
-    processes_->RegisterProcess(starFieldProcess_.get(), this);
-    
     thrusterParticlesProcess_ = unique_ptr<ThrusterParticlesProcess>(new ThrusterParticlesProcess(
                                                                          data_,
                                                                          thrusterParticles));
-    processes_->RegisterProcess(thrusterParticlesProcess_.get(), this);
 }
 
 Video::~Video() {
@@ -86,39 +84,34 @@ void Video::SetViewPort(int width, int height) {
     data_->projection->SetViewPort((float)width, (float)height);
 }
 
-vector<Event::EventType> Video::EnumerateHandledEvents() {
-    return vector<Event::EventType>{ FrameTimeEvent::type,
-                                     FrameGeneratedEvent::type,
-                                     LanderMoveEvent::type,
-                                     LanderVelocityEvent::type,
-                                     LanderThrusterEvent::type  };
-}
-
 void Video::HandleProcessFinished(Game::ProcessInterface *process) {
     // Nop.
 }
 
-void Video::HandleFrameTimeEvent(const FrameTimeEvent &event) {
+void Video::Handle(const FrameTimeEvent &event) {
     data_->frameDeltaTimeS = event.timeS;
 }
 
-void Video::HandleFrameGeneratedEvent(const FrameGeneratedEvent &event) {
+void Video::Handle(const FrameGeneratedEvent &event) {
+    cameraProcess_->Execute();
+    starFieldProcess_->Execute();
+    thrusterParticlesProcess_->Execute();
     data_->projection->Render(0);
-    eventLoop_->Schedule(FrameGeneratedEvent());
+    eventLoop_->Post(FrameGeneratedEvent());
 }
 
-void Video::HandleLanderMoveEvent(const LanderMoveEvent &event) {
+void Video::Handle(const LanderMoveEvent &event) {
     data_->landerCoordSys->SetTransform(event.newLanderTransform);
     
     Vector landerPosition = data_->landerCoordSys->Position();
     data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
 }
 
-void Video::HandleLanderVelocityEvent(const LanderVelocityEvent &event) {
+void Video::Handle(const LanderVelocityEvent &event) {
     data_->landerVelocity = event.velocity;
 }
 
-void Video::HandleLanderThrusterEvent(const LanderThrusterEvent &event) {
+void Video::Handle(const LanderThrusterEvent &event) {
     data_->landerThrusterEnabled = event.thrusterEnabled;
 }
 

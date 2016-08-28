@@ -34,8 +34,8 @@ class EventLoopHub {
     //! for it.
     int AddEventLoop();
     
-    //! <b>[Thread-safe]</b> Schedules the events represented by the serialized event data in the specified buffer.
-    void ScheduleEvents(const std::unique_ptr<Core::Buffer> &buffer);
+    //! <b>[Thread-safe]</b> Posts the events represented by the serialized event data in the specified buffer.
+    void Post(const std::unique_ptr<Core::Buffer> &buffer);
     
     //! <b>[Thread-safe]</b> Allows a client \ref EventLoop (thread) to retrieve all events currently scheduled for it.
     /*!

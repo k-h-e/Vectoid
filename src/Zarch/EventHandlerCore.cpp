@@ -10,27 +10,35 @@ using namespace kxm::Core;
 namespace kxm {
 namespace Zarch {
 
-void EventHandlerCore::HandleFrameGeneratedEvent(const FrameGeneratedEvent &event) {
+void EventHandlerCore::Handle(const FrameGeneratedEvent &event) {
     Log(this).Stream() << "Unhandled FrameGeneratedEvent!" << endl;
 }
     
-void EventHandlerCore::HandleFrameTimeEvent(const FrameTimeEvent &event) {
+void EventHandlerCore::Handle(const FrameTimeEvent &event) {
     Log(this).Stream() << "Unhandled FrameTimeEvent!" << endl;
 }
 
-void EventHandlerCore::HandleControlsStateEvent(const ControlsStateEvent &event) {
+void EventHandlerCore::Handle(const UpdatePhysicsEvent &event) {
+    Log(this).Stream() << "Unhandled UpdatePhysicsEvent!" << endl;
+}
+
+void EventHandlerCore::Handle(const PhysicsUpdatedEvent &event) {
+    Log(this).Stream() << "Unhandled PhysicsUpdatedEvent!" << endl;
+}
+
+void EventHandlerCore::Handle(const ControlsStateEvent &event) {
     Log(this).Stream() << "Unhandled ControlsStateEvent!" << endl;
 }
 
-void EventHandlerCore::HandleLanderMoveEvent(const LanderMoveEvent &event) {
+void EventHandlerCore::Handle(const LanderMoveEvent &event) {
     Log(this).Stream() << "Unhandled LanderMoveEvent!" << endl;
 }
 
-void EventHandlerCore::HandleLanderVelocityEvent(const LanderVelocityEvent &event) {
+void EventHandlerCore::Handle(const LanderVelocityEvent &event) {
     Log(this).Stream() << "Unhandled LanderVelocityEvent!" << endl;
 }
 
-void EventHandlerCore::HandleLanderThrusterEvent(const LanderThrusterEvent &event) {
+void EventHandlerCore::Handle(const LanderThrusterEvent &event) {
     Log(this).Stream() << "Unhandled LanderThrusterEvent!" << endl;
 }
 

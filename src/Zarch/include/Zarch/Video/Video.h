@@ -6,10 +6,8 @@
 //
 //
 
-
 #ifndef KXM_ZARCH_VIDEO_H_
 #define KXM_ZARCH_VIDEO_H_
-
 
 #include <memory>
 
@@ -18,12 +16,10 @@
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
 
-
 namespace kxm {
 
 namespace Game {
     template<class EventClass, class EventHandleClass> class EventLoop;
-    class ProcessesClientInterface;
 }
 
 namespace Vectoid {
@@ -45,7 +41,6 @@ class CameraProcess;
 class StarFieldProcess;
 class ThrusterParticlesProcess;
 
-
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
  *  \ingroup Zarch
@@ -66,25 +61,22 @@ class Video : public EventHandlerCore,
         std::shared_ptr<MapParameters>                  mapParameters;
         std::shared_ptr<Terrain>                        terrain;
     };
-    Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
-          std::shared_ptr<Game::ProcessesClientInterface> processes);
+    Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
-    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
-    void HandleFrameTimeEvent(const FrameTimeEvent &event);
-    void HandleFrameGeneratedEvent(const FrameGeneratedEvent &event);
-    void HandleLanderMoveEvent(const LanderMoveEvent &event);
-    void HandleLanderVelocityEvent(const LanderVelocityEvent &event);
-    void HandleLanderThrusterEvent(const LanderThrusterEvent &event);
+    void Handle(const FrameTimeEvent &event);
+    void Handle(const FrameGeneratedEvent &event);
+    void Handle(const LanderMoveEvent &event);
+    void Handle(const LanderVelocityEvent &event);
+    void Handle(const LanderThrusterEvent &event);
   
   private:
     Video(const Video &other);
     Video &operator=(const Video &other);
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
     std::shared_ptr<Data>                                          data_;
     std::unique_ptr<CameraProcess>                                 cameraProcess_;
     std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
@@ -93,6 +85,5 @@ class Video : public EventHandlerCore,
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_VIDEO_H_

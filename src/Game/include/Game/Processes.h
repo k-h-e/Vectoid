@@ -6,26 +6,26 @@
 //
 //
 
-
 #ifndef KXM_GAME_PROCESSES_H_
 #define KXM_GAME_PROCESSES_H_
 
-
 #include <vector>
 
+#include <kxm/Core/Interface.h>
 #include <kxm/Core/ReusableItems.h>
-#include <Game/ProcessesClientInterface.h>
-
 
 namespace kxm {
 namespace Game {
+
+class ProcessInterface;
+class ProcessOwnerInterface;
 
 //! Orchestrates a set of processes (i.e. instances of \ref ProcessInterface) into a cooperative
 //! multitasking scheme.
 /*!
  *  \ingroup Game
  */
-class Processes : public virtual ProcessesClientInterface {
+class Processes : public virtual Core::Interface {
   public:
     Processes();
     //! Executes the registered processes, and then unregisters those that have indicated that they
@@ -72,6 +72,5 @@ class Processes : public virtual ProcessesClientInterface {
 
 }    // Namespace Game.
 }    // Namespace kxm.
-
 
 #endif    // KXM_GAME_PROCESSES_H_

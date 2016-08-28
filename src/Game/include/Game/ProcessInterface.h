@@ -10,10 +10,9 @@ namespace Game {
 
 //! Interface to processes.
 /*!
- *  A process is an ongoing activity that periodically gets called, e.g. once for each frame. It
- *  takes part in a co-operative scheduling scheme managed by \ref Processes.
- *
  *  \ingroup Game
+ *
+ *  A process is an ongoing activity that periodically gets called, e.g. once for each frame.
  */
 class ProcessInterface : public virtual Core::Interface {
   public:

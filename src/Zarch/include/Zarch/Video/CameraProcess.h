@@ -27,14 +27,14 @@ namespace Zarch {
 class CameraProcess : public virtual Game::ProcessInterface {
   public:
     CameraProcess(const std::shared_ptr<Video::Data> data);
-    
-  private:
-    CameraProcess(const CameraProcess &other);
-    CameraProcess &operator=(const CameraProcess &other);
     //! (Re)implemented.
     void Execute();
     //! (Re)implemented.
     bool Finished();
+    
+  private:
+    CameraProcess(const CameraProcess &other);
+    CameraProcess &operator=(const CameraProcess &other);
     
     std::shared_ptr<Video::Data> data_;
 };

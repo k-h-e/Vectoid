@@ -27,14 +27,14 @@ namespace Zarch {
 class LanderProcess : public virtual Game::ProcessInterface {
   public:
     LanderProcess(const std::shared_ptr<Physics::Data> &data);
-    
-  private:
-    LanderProcess(const LanderProcess &other);
-    LanderProcess &operator=(const LanderProcess &other);
     //! (Re)implemented.
     void Execute();
     //! (Re)implemented.
     bool Finished();
+    
+  private:
+    LanderProcess(const LanderProcess &other);
+    LanderProcess &operator=(const LanderProcess &other);
     
     std::shared_ptr<Physics::Data> data_;
     Vectoid::Vector                heading_;

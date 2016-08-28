@@ -7,7 +7,7 @@ namespace Zarch {
 const Game::Event::EventType FrameGeneratedEvent::type("FrameGeneratedEvent");
 
 void FrameGeneratedEvent::Dispatch(EventHandlerCore *handler) const {
-    handler->HandleFrameGeneratedEvent(*this);
+    handler->Handle(*this);
 }
     
 }    // Namespace Zarch.

@@ -1,15 +1,11 @@
-//
-//  NewPhysics.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/28/13.
-//
-//
-
+/*!
+ * \ingroup ZarchPresentation
+ *
+ * \defgroup ZarchPhysics Physics
+ */
 
 #ifndef KXM_ZARCH_PHYSICS_H_
 #define KXM_ZARCH_PHYSICS_H_
-
 
 #include <memory>
 
@@ -19,12 +15,10 @@
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
 
-
 namespace kxm {
 
 namespace Game {
     template<class EventClass, class EventHandlerClass> class EventLoop;
-    class ProcessesClientInterface;
 }
 
 namespace Zarch {
@@ -58,27 +52,23 @@ class Physics : public EventHandlerCore,
         std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop;
     };
     
-    Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
-            std::shared_ptr<Game::ProcessesClientInterface> processes);
+    Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Physics();
-    std::vector<Game::Event::EventType> EnumerateHandledEvents();
     void HandleProcessFinished(Game::ProcessInterface *process);
-    void HandleFrameTimeEvent(const FrameTimeEvent &event);
-    void HandleControlsStateEvent(const ControlsStateEvent &event);
+    void Handle(const UpdatePhysicsEvent &event);
+    void Handle(const FrameTimeEvent &event);
+    void Handle(const ControlsStateEvent &event);
     
   private:
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<Game::ProcessesClientInterface>                processes_;
     std::shared_ptr<Data>                                          data_;
     std::unique_ptr<LanderProcess>                                 landerProcess_;
 };
 
-
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_PHYSICS_H_

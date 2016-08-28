@@ -1,10 +1,8 @@
-//
-//  Presentation.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/7/13.
-//
-//
+/*!
+ * \ingroup Zarch
+ *
+ * \defgroup ZarchPresentation Presentation
+ */
 
 #ifndef KXM_ZARCH_PRESENTATION_H_
 #define KXM_ZARCH_PRESENTATION_H_
@@ -18,7 +16,6 @@ namespace kxm {
 
 namespace Game {
     template<class EventClass, class EventHandlerClass> class EventLoop;
-    class Processes;
     class EventLoopHub;
 }
 
@@ -28,7 +25,7 @@ class ControlsState;
 
 //! Ties together the presentation subsystems, that together run on the main UI thread.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchPresentation
  */
 class Presentation {
   public:
@@ -43,7 +40,6 @@ class Presentation {
     Presentation &operator=(const Presentation &other);
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<Game::Processes>                               processes_;
     std::shared_ptr<Video>                                         video_;
     FrameGeneratedEvent                                            frameGeneratedEvent_;
 };
