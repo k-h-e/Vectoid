@@ -26,6 +26,7 @@ namespace Zarch {
 
 class GameLogic;
 class Physics;
+class InitializationEvent;
 class PhysicsUpdatedEvent;
 class FrameGeneratedEvent;
 
@@ -39,6 +40,7 @@ class Simulation : public EventHandlerCore, public virtual Core::ActionInterface
     Simulation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub);
     ~Simulation();
     void ExecuteAction();
+    void Handle(const InitializationEvent &event);
     void Handle(const PhysicsUpdatedEvent &event);
     void Handle(const FrameGeneratedEvent &event);
 

@@ -15,6 +15,7 @@
 #include <chrono>
 
 #include <Game/ProcessOwnerInterface.h>
+#include <Game/ActorNaming.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
 
@@ -27,7 +28,8 @@ namespace Game {
 
 namespace Zarch {
 
-class ControlsStateEvent;
+class InitializationEvent;
+class FrameGeneratedEvent;
 
 //! Game logic for the <c>Zarch</c> game.
 /*!
@@ -39,14 +41,16 @@ class GameLogic : public EventHandlerCore,
     GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~GameLogic();
     void HandleProcessFinished(Game::ProcessInterface *process);
+    void Handle(const InitializationEvent &event);
     void Handle(const FrameGeneratedEvent &event);
-    void Handle(const ControlsStateEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
+    void PrepareMap();
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
+    Game::ActorNaming                                              actorNaming_;
     bool                                                           landerThrusterEnabled_,
                                                                    landerFiringEnabled_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;

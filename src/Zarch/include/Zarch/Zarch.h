@@ -17,16 +17,13 @@
 
 
 #include <memory>
+#include <thread>
 
 #include <Zarch/Presentation.h>
 
 
 namespace kxm {
 
-namespace Core {
-    class ThreadingFactoryInterface;
-    class Thread;
-}
 namespace Game {
     template<class EventClass, class EventHandlerClass> class EventLoop;
     class EventLoopHub;
@@ -43,7 +40,7 @@ class ControlsState;
  */
 class Zarch {
   public:
-    Zarch(std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory);
+    Zarch();
     ~Zarch();
     void PrepareFrame(const ControlsState &controlsState) {
         presentation_->PrepareFrame(controlsState);
@@ -62,11 +59,10 @@ class Zarch {
     Zarch(const Zarch &other);
     Zarch &operator=(const Zarch &other);
     
-    std::shared_ptr<Simulation>                      simulation_;
-    std::shared_ptr<Presentation>                    presentation_;
-    std::shared_ptr<Game::EventLoopHub>              eventLoopHub_;
-    std::shared_ptr<Core::ThreadingFactoryInterface> threadingFactory_;
-    std::shared_ptr<Core::Thread>                    simulationThread_;
+    std::shared_ptr<Simulation>         simulation_;
+    std::shared_ptr<Presentation>       presentation_;
+    std::shared_ptr<Game::EventLoopHub> eventLoopHub_;
+    std::shared_ptr<std::thread>        simulationThread_;
 };
 
 }    // Namespace Zarch.

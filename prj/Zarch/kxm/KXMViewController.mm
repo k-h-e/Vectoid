@@ -16,7 +16,6 @@
 #import <CoreMotion/CMMotionManager.h>
 
 #include <kxm/Core/logging.h>
-#include <kxm/Core/POSIXThreadingFactory.h>
 #include <Vectoid/Transform.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>
@@ -110,8 +109,7 @@ using namespace kxm::Zarch;
     [EAGLContext setCurrentContext: glContext];
     glEnable(GL_DEPTH_TEST);
     
-    shared_ptr<ThreadingFactoryInterface> threadingFactory(new POSIXThreadingFactory());
-    zarch = shared_ptr<Zarch>(new Zarch(threadingFactory));
+    zarch = shared_ptr<Zarch>(new Zarch());
     
     [motionManager startDeviceMotionUpdates];
 }

@@ -27,10 +27,10 @@ template<class EventClass, class EventHandlerClass>
 class EventLoop {
   public:
     EventLoop(std::shared_ptr<EventLoopHub> hub);
-    EventLoop(const EventLoop &other)             = delete;
-    EventLoop &operator=(const EventLoop &other)  = delete;
-    EventLoop(const EventLoop &&other)            = delete;
-    EventLoop &operator=(const EventLoop &&other) = delete;
+    EventLoop(const EventLoop &other)            = delete;
+    EventLoop &operator=(const EventLoop &other) = delete;
+    EventLoop(EventLoop &&other)                 = delete;
+    EventLoop &operator=(EventLoop &&other)      = delete;
     //! Registers the specified event.
     void RegisterEvent(std::unique_ptr<EventClass> protoType);
     //! Registers a handler for the specified event, as a weak reference.

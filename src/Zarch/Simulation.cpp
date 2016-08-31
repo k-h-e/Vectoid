@@ -14,6 +14,7 @@
 #include <Zarch/Zarch.h>
 #include <Zarch/GameLogic/GameLogic.h>
 #include <Zarch/Physics/Physics.h>
+#include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
@@ -35,6 +36,7 @@ Simulation::Simulation(const shared_ptr<EventLoopHub> &eventLoopHub)
     physics_   = shared_ptr<Physics>(new Physics(eventLoop_));
     gameLogic_ = shared_ptr<GameLogic>(new GameLogic(eventLoop_));
     
+    eventLoop_->RegisterHandler(InitializationEvent::type, this);
     eventLoop_->RegisterHandler(PhysicsUpdatedEvent::type, this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
 }
@@ -45,14 +47,14 @@ Simulation::~Simulation() {
 
 void Simulation::ExecuteAction() {
     puts("simulation thread spawned");
-    
-    // Post initial events...
+    eventLoop_->Post(InitializationEvent());
+    eventLoop_->Run();
+    puts("simulation thread terminating");
+}
+
+void Simulation::Handle(const InitializationEvent &event) {
     eventLoop_->Post(PhysicsUpdatedEvent());
     eventLoop_->Post(FrameGeneratedEvent());
-    
-    eventLoop_->Run();
-    
-    puts("simulation thread terminating");
 }
 
 void Simulation::Handle(const PhysicsUpdatedEvent &event) {

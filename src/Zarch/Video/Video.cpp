@@ -18,6 +18,7 @@
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
 #include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/LanderMoveEvent.h>
@@ -33,6 +34,7 @@ namespace Zarch {
 
 Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop) {
+    eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
     eventLoop_->RegisterHandler(FrameTimeEvent::type,      this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
     eventLoop_->RegisterHandler(LanderMoveEvent::type,     this);
@@ -86,6 +88,10 @@ void Video::SetViewPort(int width, int height) {
 
 void Video::HandleProcessFinished(Game::ProcessInterface *process) {
     // Nop.
+}
+
+void Video::Handle(const ActorCreatedEvent &event) {
+    std::printf("actor created: id=%d, type=%d\n", event.actor.id, (int)event.actorType);
 }
 
 void Video::Handle(const FrameTimeEvent &event) {

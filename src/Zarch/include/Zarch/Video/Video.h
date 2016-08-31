@@ -33,6 +33,7 @@ namespace Zarch {
 class TerrainRenderer;
 class MapParameters;
 class Terrain;
+class ActorCreatedEvent;
 class FrameTimeEvent;
 class LanderMoveEvent;
 class LanderVelocityEvent;
@@ -66,6 +67,7 @@ class Video : public EventHandlerCore,
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     void HandleProcessFinished(Game::ProcessInterface *process);
+    void Handle(const ActorCreatedEvent &event);
     void Handle(const FrameTimeEvent &event);
     void Handle(const FrameGeneratedEvent &event);
     void Handle(const LanderMoveEvent &event);

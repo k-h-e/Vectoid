@@ -1,19 +1,12 @@
-//
-//  Event.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/29/14.
-//
-//
-
+/*!
+ *  \defgroup Game Game Infrastructure
+ */
 
 #ifndef KXM_GAME_EVENT_H_
 #define KXM_GAME_EVENT_H_
 
-
 #include <kxm/Core/Interface.h>
 #include <kxm/Core/Buffer.h>
-
 
 namespace kxm {
 namespace Game {
