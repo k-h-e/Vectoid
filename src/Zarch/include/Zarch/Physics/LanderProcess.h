@@ -19,10 +19,11 @@
 
 namespace kxm {
 namespace Zarch {
+namespace Physics {
 
 //! Controls the lander (the vehicle controlled by the player).
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchPhysics
  */
 class LanderProcess : public virtual Game::ProcessInterface {
   public:
@@ -40,6 +41,7 @@ class LanderProcess : public virtual Game::ProcessInterface {
     Vectoid::Vector                heading_;
 };
 
+}    // Namespace Physics.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

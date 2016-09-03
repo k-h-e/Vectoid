@@ -24,6 +24,7 @@ using namespace kxm::Vectoid;
 
 namespace kxm {
 namespace Zarch {
+namespace Video {
 
 StarFieldProcess::StarFieldProcess(shared_ptr<Video::Data> videoData,
                                    shared_ptr<Vectoid::Particles> particles)
@@ -68,5 +69,6 @@ bool StarFieldProcess::Finished() {
     return false;
 }
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.

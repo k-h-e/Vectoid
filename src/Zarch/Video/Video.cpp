@@ -31,9 +31,11 @@ using namespace kxm::Game;
 
 namespace kxm {
 namespace Zarch {
+namespace Video {
 
 Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
-        : eventLoop_(eventLoop) {
+        : eventLoop_(eventLoop),
+          landerInUse_(false) {
     eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
     eventLoop_->RegisterHandler(FrameTimeEvent::type,      this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
@@ -73,9 +75,8 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     cameraProcess_ = unique_ptr<CameraProcess>(new CameraProcess(data_));
     starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_,
                                                                           starFieldParticles));
-    thrusterParticlesProcess_ = unique_ptr<ThrusterParticlesProcess>(new ThrusterParticlesProcess(
-                                                                         data_,
-                                                                         thrusterParticles));
+    thrusterParticlesProcess_ = unique_ptr<ThrusterParticlesProcess>(new ThrusterParticlesProcess(data_,
+                                                                                                  thrusterParticles));
 }
 
 Video::~Video() {
@@ -92,6 +93,13 @@ void Video::HandleProcessFinished(Game::ProcessInterface *process) {
 
 void Video::Handle(const ActorCreatedEvent &event) {
     std::printf("actor created: id=%d, type=%d\n", event.actor.id, (int)event.actorType);
+    
+    if (event.actorType == LanderActor) {
+        assert(!landerInUse_);
+        actors_.Register(event.actor, &lander_);
+        data_->camera->AddChild(lander_.RootNode());
+        landerInUse_ = true;
+    }
 }
 
 void Video::Handle(const FrameTimeEvent &event) {
@@ -121,6 +129,7 @@ void Video::Handle(const LanderThrusterEvent &event) {
     data_->landerThrusterEnabled = event.thrusterEnabled;
 }
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

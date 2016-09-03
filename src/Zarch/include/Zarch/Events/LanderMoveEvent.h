@@ -18,8 +18,10 @@
 namespace kxm {
 namespace Zarch {
 
-class Video;
-
+//! Lander move event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class LanderMoveEvent : public ZarchEvent {
   public:
     LanderMoveEvent();

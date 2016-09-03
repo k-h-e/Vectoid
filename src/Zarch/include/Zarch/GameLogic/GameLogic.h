@@ -1,15 +1,11 @@
-//
-//  GameLogic.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 12/3/12.
-//
-//
-
+/*!
+ * \ingroup Zarch
+ *
+ * \defgroup ZarchGameLogic Game Logic
+ */
 
 #ifndef KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
-
 
 #include <memory>
 #include <chrono>
@@ -18,7 +14,6 @@
 #include <Game/ActorNaming.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
-
 
 namespace kxm {
 
@@ -31,9 +26,11 @@ namespace Zarch {
 class InitializationEvent;
 class FrameGeneratedEvent;
 
+namespace GameLogic {
+
 //! Game logic for the <c>Zarch</c> game.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchGameLogic
  */
 class GameLogic : public EventHandlerCore,
                   public virtual Game::ProcessOwnerInterface {
@@ -56,8 +53,8 @@ class GameLogic : public EventHandlerCore,
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };
 
+}    // Namespace GameLogic.
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_

@@ -7,7 +7,11 @@
 
 namespace kxm {
 namespace Zarch {
-    
+
+//! Actor created event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class ActorCreatedEvent : public ZarchEvent {
   public:
     ActorCreatedEvent();

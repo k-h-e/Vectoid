@@ -15,6 +15,7 @@ using namespace kxm::Game;
 
 namespace kxm {
 namespace Zarch {
+namespace GameLogic {
 
 GameLogic::GameLogic(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop),
@@ -48,17 +49,9 @@ void GameLogic::Handle(const FrameGeneratedEvent &event) {
 void GameLogic::PrepareMap() {
     ActorId landerActor = actorNaming_.Get();
     eventLoop_->Post(ActorCreatedEvent(landerActor, LanderActor));
-    
-    actorNaming_.Put(landerActor);
-    actorNaming_.Put(landerActor);
-    
-    landerActor = actorNaming_.Get();
-    eventLoop_->Post(ActorCreatedEvent(landerActor, LanderActor));
-    
-    landerActor = actorNaming_.Get();
-    eventLoop_->Post(ActorCreatedEvent(landerActor, LanderActor));
 }
 
+}    // Namespace GameLogic.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

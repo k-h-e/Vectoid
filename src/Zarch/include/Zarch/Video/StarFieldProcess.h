@@ -24,10 +24,11 @@ namespace Vectoid {
 }
 
 namespace Zarch {
+namespace Video {
 
 //! Controls the star field particles.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchVideo
  */
 class StarFieldProcess : public virtual Game::ProcessInterface {
   public:
@@ -46,6 +47,7 @@ class StarFieldProcess : public virtual Game::ProcessInterface {
     std::shared_ptr<Vectoid::Particles> particles_;
 };
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

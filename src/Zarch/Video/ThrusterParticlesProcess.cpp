@@ -23,6 +23,7 @@ using namespace kxm::Game;
 
 namespace kxm {
 namespace Zarch {
+namespace Video {
 
 ThrusterParticlesProcess::ThrusterParticlesProcess(shared_ptr<Video::Data> data,
                                                    shared_ptr<Vectoid::Particles> particles)
@@ -83,5 +84,6 @@ bool ThrusterParticlesProcess::Finished() {
     return false;
 }
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.

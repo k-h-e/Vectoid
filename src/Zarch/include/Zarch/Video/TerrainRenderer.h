@@ -27,9 +27,11 @@ namespace Zarch {
 class Terrain;
 class MapParameters;
 
+namespace Video {
+
 //! Renders the terrain.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchVideo
  */
 class TerrainRenderer : public virtual Vectoid::GeometryInterface {
   public:
@@ -51,6 +53,7 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
 };
 
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

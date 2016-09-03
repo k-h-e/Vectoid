@@ -1,11 +1,8 @@
-//
-//  ZarchEvent.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/29/14.
-//
-//
-
+/*!
+ * \ingroup Zarch
+ *
+ * \defgroup ZarchEvents Events
+ */
 
 #ifndef KXM_ZARCH_ZARCHEVENT_H_
 #define KXM_ZARCH_ZARCHEVENT_H_
@@ -19,6 +16,10 @@ namespace Zarch {
 
 class EventHandlerCore;
 
+//! Base class to Zarch events.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class ZarchEvent : public Game::Event {
   public:
     //! Makes the event dispatch itself to the specified handler.

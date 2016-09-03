@@ -19,10 +19,11 @@
 
 namespace kxm {
 namespace Zarch {
+namespace Video {
 
 //! Keeps the camera position in sync with the lander position.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchVideo
  */
 class CameraProcess : public virtual Game::ProcessInterface {
   public:
@@ -39,6 +40,7 @@ class CameraProcess : public virtual Game::ProcessInterface {
     std::shared_ptr<Video::Data> data_;
 };
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

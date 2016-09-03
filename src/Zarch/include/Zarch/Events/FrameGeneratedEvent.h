@@ -6,6 +6,10 @@
 namespace kxm {
 namespace Zarch {
 
+//! Frame generated event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class FrameGeneratedEvent : public ZarchEvent {
   public:
     const EventType &Type() const { return type; }

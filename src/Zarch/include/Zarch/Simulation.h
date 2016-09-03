@@ -1,9 +1,3 @@
-/*!
- * \ingroup Zarch
- *
- * \defgroup ZarchSimulation Simulation
- */
-
 #ifndef KXM_ZARCH_SIMULATION_H_
 #define KXM_ZARCH_SIMULATION_H_
 
@@ -24,16 +18,22 @@ namespace Game {
 
 namespace Zarch {
 
-class GameLogic;
-class Physics;
 class InitializationEvent;
 class PhysicsUpdatedEvent;
 class FrameGeneratedEvent;
 
+namespace GameLogic {
+    class GameLogic;
+}
+
+namespace Physics {
+    class Physics;
+}
+
 //! Ties together the simulation subsytems, that together run on the dedicated simulation thread (as
 //! opposed to the main UI thread).
 /*!
- *  \ingroup ZarchSimulation
+ *  \ingroup Zarch
  */
 class Simulation : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
@@ -50,8 +50,8 @@ class Simulation : public EventHandlerCore, public virtual Core::ActionInterface
     void DoPhysicsTrigger();
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<GameLogic>                                     gameLogic_;
-    std::shared_ptr<Physics>                                       physics_;
+    std::shared_ptr<GameLogic::GameLogic>                          gameLogic_;
+    std::shared_ptr<Physics::Physics>                              physics_;
     bool                                                           physicsUpdated_,
                                                                    frameGenerated_;
 };

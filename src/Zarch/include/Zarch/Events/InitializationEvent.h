@@ -5,7 +5,11 @@
 
 namespace kxm {
 namespace Zarch {
-    
+
+//! Initialization event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class InitializationEvent : public ZarchEvent {
   public:
     const EventType &Type() const { return type; }

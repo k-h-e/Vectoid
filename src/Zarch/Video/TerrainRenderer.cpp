@@ -20,6 +20,7 @@ using namespace kxm::Vectoid;
 
 namespace kxm {
 namespace Zarch {
+namespace Video {
 
 TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
                                  shared_ptr<MapParameters> mapParameters)
@@ -143,5 +144,6 @@ void TerrainRenderer::Render(RenderContext *context) {
 }
 
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.

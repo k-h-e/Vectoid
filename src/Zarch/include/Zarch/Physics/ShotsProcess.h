@@ -29,9 +29,11 @@ namespace Zarch {
 
 class MapParameters;
 
+namespace Physics {
+
 //! Controls the lander's shots.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchPhysics
  */
 class ShotsProcess : public ZarchProcess {
   public:
@@ -53,6 +55,7 @@ class ShotsProcess : public ZarchProcess {
 };
 
 
+}    // Namespace Physics.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

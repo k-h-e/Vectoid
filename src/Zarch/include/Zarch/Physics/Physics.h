@@ -1,5 +1,5 @@
 /*!
- * \ingroup ZarchPresentation
+ * \ingroup Zarch
  *
  * \defgroup ZarchPhysics Physics
  */
@@ -27,11 +27,14 @@ class MapParameters;
 class Terrain;
 class FrameTimeEvent;
 class ControlsStateEvent;
+
+namespace Physics {
+
 class LanderProcess;
 
 //! Physics subsystem for the <c>Zarch</c> game.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchPhysics
  */
 class Physics : public EventHandlerCore,
                 public virtual Game::ProcessOwnerInterface {
@@ -68,6 +71,7 @@ class Physics : public EventHandlerCore,
     std::unique_ptr<LanderProcess>                                 landerProcess_;
 };
 
+}    // Namespace Physics.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

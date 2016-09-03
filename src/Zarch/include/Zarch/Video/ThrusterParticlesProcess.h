@@ -24,10 +24,11 @@ namespace Vectoid {
 }
 
 namespace Zarch {
+namespace Video {
 
 //! Controls the lander's thruster particles.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchVideo
  */
 class ThrusterParticlesProcess : public virtual Game::ProcessInterface {
   public:
@@ -48,7 +49,7 @@ class ThrusterParticlesProcess : public virtual Game::ProcessInterface {
     float                               particleTimeCarryOver_;
 };
 
-
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

@@ -12,7 +12,7 @@
 
 
 /*!
- *  \defgroup Zarch Zarch-like Game
+ *  \defgroup Zarch Zarch
  */
 
 

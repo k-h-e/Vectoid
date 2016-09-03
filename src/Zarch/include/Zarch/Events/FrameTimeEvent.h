@@ -17,9 +17,18 @@
 namespace kxm {
 namespace Zarch {
 
-class Video;
-class Physics;
+namespace Physics {
+    class Physics;
+}
 
+namespace Video {
+    class Video;
+}
+
+//! Frame time event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class FrameTimeEvent : public ZarchEvent {
   public:
     FrameTimeEvent();

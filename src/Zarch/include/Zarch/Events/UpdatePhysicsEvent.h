@@ -5,7 +5,11 @@
 
 namespace kxm {
 namespace Zarch {
-    
+
+//! Update physics event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class UpdatePhysicsEvent : public ZarchEvent {
 public:
     const EventType &Type() const { return type; }

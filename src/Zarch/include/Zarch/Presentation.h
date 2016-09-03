@@ -1,9 +1,3 @@
-/*!
- * \ingroup Zarch
- *
- * \defgroup ZarchPresentation Presentation
- */
-
 #ifndef KXM_ZARCH_PRESENTATION_H_
 #define KXM_ZARCH_PRESENTATION_H_
 
@@ -25,7 +19,7 @@ class ControlsState;
 
 //! Ties together the presentation subsystems, that together run on the main UI thread.
 /*!
- *  \ingroup ZarchPresentation
+ *  \ingroup Zarch
  */
 class Presentation {
   public:
@@ -40,7 +34,7 @@ class Presentation {
     Presentation &operator=(const Presentation &other);
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
-    std::shared_ptr<Video>                                         video_;
+    std::shared_ptr<Video::Video>                                  video_;
     FrameGeneratedEvent                                            frameGeneratedEvent_;
 };
 

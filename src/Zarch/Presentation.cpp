@@ -20,7 +20,7 @@ namespace Zarch {
 Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub)
         : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)) {
     Zarch::RegisterEvents(eventLoop_.get());
-    video_ = shared_ptr<Video>(new Video(eventLoop_));
+    video_ = shared_ptr<Video::Video>(new Video::Video(eventLoop_));
 }
 
 Presentation::~Presentation() {

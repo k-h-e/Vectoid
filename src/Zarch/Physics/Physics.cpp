@@ -29,6 +29,7 @@ using namespace kxm::Game;
 
 namespace kxm {
 namespace Zarch {
+namespace Physics {
 
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop) {
@@ -66,5 +67,6 @@ void Physics::Handle(const ControlsStateEvent &event) {
     data_->controlsState = event.controlsState;
 }
 
+}    // Namespace Physics.
 }    // Namespace Zarch.
 }    // Namespace kxm.

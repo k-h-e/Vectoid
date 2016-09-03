@@ -22,9 +22,6 @@ class ActorNaming {
     ActorNaming &operator=(ActorNaming &&other)      = delete;
     
     //! Creates and hands out a new actor id.
-    /*!
-     *  The returned id's incarnation number will never be <c>0</c>.
-     */
     ActorId Get();
     //! Tells the naming authority that the specified id is no longer needed.
     void Put(const ActorId &id);

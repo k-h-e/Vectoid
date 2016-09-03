@@ -18,9 +18,14 @@
 namespace kxm {
 namespace Zarch {
 
-class Physics;
-class GameLogic;
+namespace Physics {
+    class Physics;
+}
 
+//! Controls state event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class ControlsStateEvent : public ZarchEvent {
   public:
     ControlsStateEvent();

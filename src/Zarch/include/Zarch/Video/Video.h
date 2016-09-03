@@ -1,10 +1,8 @@
-//
-//  NewVideo.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/28/13.
-//
-//
+/*!
+ * \ingroup Zarch
+ *
+ * \defgroup ZarchVideo Video
+ */
 
 #ifndef KXM_ZARCH_VIDEO_H_
 #define KXM_ZARCH_VIDEO_H_
@@ -12,9 +10,11 @@
 #include <memory>
 
 #include <Game/ProcessOwnerInterface.h>
+#include <Game/Actors.h>
 #include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
+#include <Zarch/Video/Lander.h>
 
 namespace kxm {
 
@@ -30,7 +30,6 @@ namespace Vectoid {
 
 namespace Zarch {
 
-class TerrainRenderer;
 class MapParameters;
 class Terrain;
 class ActorCreatedEvent;
@@ -38,13 +37,17 @@ class FrameTimeEvent;
 class LanderMoveEvent;
 class LanderVelocityEvent;
 class LanderThrusterEvent;
+
+namespace Video {
+
+class TerrainRenderer;
 class CameraProcess;
 class StarFieldProcess;
 class ThrusterParticlesProcess;
 
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
- *  \ingroup Zarch
+ *  \ingroup ZarchVideo
  */
 class Video : public EventHandlerCore,
               public virtual Game::ProcessOwnerInterface {
@@ -83,8 +86,12 @@ class Video : public EventHandlerCore,
     std::unique_ptr<CameraProcess>                                 cameraProcess_;
     std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
     std::unique_ptr<ThrusterParticlesProcess>                      thrusterParticlesProcess_;
+    Game::Actors<void>                                             actors_;
+    Lander                                                         lander_;
+    bool                                                           landerInUse_;
 };
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 

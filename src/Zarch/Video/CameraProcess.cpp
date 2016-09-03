@@ -25,6 +25,7 @@ namespace Game {
 }
 
 namespace Zarch {
+namespace Video {
 
 CameraProcess::CameraProcess(const shared_ptr<Video::Data> data)
         : data_(data) {
@@ -41,5 +42,6 @@ bool CameraProcess::Finished() {
     return false;
 }
 
+}    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.

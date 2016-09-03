@@ -26,6 +26,7 @@ using namespace kxm::Game;
 
 namespace kxm {
 namespace Zarch {
+namespace Physics {
 
 LanderProcess::LanderProcess(const shared_ptr<Physics::Data> &data)
         : data_(data),
@@ -93,5 +94,6 @@ bool LanderProcess::Finished() {
     return false;
 }
 
+}    // Namespace Physics.
 }    // Namespace Zarch.
 }    // Namespace kxm.

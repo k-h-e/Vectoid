@@ -17,8 +17,11 @@
 namespace kxm {
 namespace Zarch {
 
-class Video;
 
+//! Lander velocity event.
+/*!
+ *  \ingroup ZarchEvents
+ */
 class LanderVelocityEvent : public ZarchEvent {
   public:
     LanderVelocityEvent();
