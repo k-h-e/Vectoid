@@ -38,8 +38,8 @@ void EventHandlerCore::Handle(const ControlsStateEvent &event) {
     Log(this).Stream() << "Unhandled ControlsStateEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const LanderMoveEvent &event) {
-    Log(this).Stream() << "Unhandled LanderMoveEvent!" << endl;
+void EventHandlerCore::Handle(const MoveEvent &event) {
+    Log(this).Stream() << "Unhandled MoveEvent!" << endl;
 }
 
 void EventHandlerCore::Handle(const LanderVelocityEvent &event) {

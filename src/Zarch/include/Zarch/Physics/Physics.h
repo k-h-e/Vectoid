@@ -11,6 +11,7 @@
 
 #include <Vectoid/Transform.h>
 #include <Game/ProcessOwnerInterface.h>
+#include <Game/ActorName.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
@@ -25,6 +26,7 @@ namespace Zarch {
 
 class MapParameters;
 class Terrain;
+class ActorCreatedEvent;
 class FrameTimeEvent;
 class ControlsStateEvent;
 
@@ -49,6 +51,7 @@ class Physics : public EventHandlerCore,
         Data() : frameDeltaTimeS(0.0f) {}
         float                                                          frameDeltaTimeS;
         ControlsState                                                  controlsState;
+        Game::ActorName                                                landerActor;
         LanderState                                                    landerState;
         std::shared_ptr<MapParameters>                                 mapParameters;
         std::shared_ptr<Terrain>                                       terrain;
@@ -59,6 +62,7 @@ class Physics : public EventHandlerCore,
     ~Physics();
     void HandleProcessFinished(Game::ProcessInterface *process);
     void Handle(const UpdatePhysicsEvent &event);
+    void Handle(const ActorCreatedEvent &event);
     void Handle(const FrameTimeEvent &event);
     void Handle(const ControlsStateEvent &event);
     

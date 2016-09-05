@@ -13,7 +13,7 @@
 #include <Game/EventLoop.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
-#include <Zarch/Events/LanderMoveEvent.h>
+#include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
 #include <Zarch/Events/LanderThrusterEvent.h>
 
@@ -83,7 +83,10 @@ void LanderProcess::Execute() {
     data.landerState.transform = newLanderTransform;
     
     // Generate events...
-    data.eventLoop->Post(LanderMoveEvent(newLanderTransform));
+    if (!data.landerActor.IsNone()) {
+        std::printf("sending move, id=%d\n", data.landerActor.Id());
+        data.eventLoop->Post(MoveEvent(data.landerActor, newLanderTransform));
+    }
     data.eventLoop->Post(LanderVelocityEvent(data.landerState.velocity));
     if (data.landerState.thrusterEnabled != oldThrusterEnabled) {
         data.eventLoop->Post(LanderThrusterEvent(data.landerState.thrusterEnabled));

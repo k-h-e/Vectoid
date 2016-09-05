@@ -1,14 +1,14 @@
 #ifndef KXM_GAME_ACTORS_
 #define KXM_GAME_ACTORS_
 
-#include <assert.h>
+#include <cassert>
 #include <vector>
-#include <Game/ActorId.h>
+#include <Game/ActorName.h>
 
 namespace kxm {
 namespace Game {
 
-//! Maps actor ids to actor objects.
+//! Maps actor names to actor objects.
 /*!
  *  \ingroup Game
  */
@@ -20,22 +20,22 @@ class Actors {
     Actors &operator=(const Actors &other) = delete;
     Actors(Actors &&other)                 = delete;
     Actors &operator=(Actors &&other)      = delete;
-    //! Registers the specified actor under the given actor id.
+    //! Registers the specified actor under the given actor name.
     /*!
      *  Only a weak reference is kept to the actor - no ownership is assumed!
      *
-     *  No actor must already be registered for the actor id's actual id component.
+     *  No actor must already be registered for the actor name's id component.
      */
-    void Register(const ActorId &id, ActorType *actor);
-    //! Unregisters the actor registered for the specified actor id, if such an actor is present.
+    void Register(const ActorName &name, ActorType *actor);
+    //! Unregisters the actor registered for the specified actor name, if such an actor is present.
     /*!
-     *  The actor id's incarnation number must match for an unregistration to occur!
+     *  The actor name's incarnation number must match for an unregistration to occur!
      *
      *  \return The actor if one was unregistered, or <c>nullptr</c> otherwise.
      */
-    ActorType *Unregister(const ActorId &id);
-    //! Returns the actor registered for the specified actor id, or <c>nullptr</c> if such an actor is not present.
-    ActorType *Get(const ActorId &id);
+    ActorType *Unregister(const ActorName &name);
+    //! Returns the actor registered for the specified actor name, or <c>nullptr</c> if such an actor is not present.
+    ActorType *Get(const ActorName &name);
     
   private:
     struct ActorInfo {
@@ -47,32 +47,32 @@ class Actors {
 };
 
 template<class ActorType>
-void Actors<ActorType>::Register(const ActorId &id, ActorType *actor) {
-    assert(id.id >= 0);
+void Actors<ActorType>::Register(const ActorName &name, ActorType *actor) {
+    assert(!name.IsNone());
     assert(actor);
-    while ((int)actors_.size() <= id.id) {
+    while ((int)actors_.size() <= name.Id()) {
         actors_.push_back(ActorInfo());
     }
-    ActorInfo &info = actors_[id.id];
+    ActorInfo &info = actors_[name.Id()];
     assert(!info.actor);
-    info.incarnation = id.incarnation;
+    info.incarnation = name.Incarnation();
     info.actor       = actor;
 }
 
 template<class ActorType>
-ActorType *Actors<ActorType>::Unregister(const ActorId &id) {
-    ActorType *actor = Get(id);
+ActorType *Actors<ActorType>::Unregister(const ActorName &name) {
+    ActorType *actor = Get(name);
     if (actor) {
-        actors_[id.id].actor = nullptr;
+        actors_[name.Id()].actor = nullptr;
     }
     return actor;
 }
 
 template<class ActorType>
-ActorType *Actors<ActorType>::Get(const ActorId &id) {
-    if ((id.id >= 0) && (id.id < (int)actors_.size())) {
-        ActorInfo &info = actors_[id.id];
-        if (info.actor && (info.incarnation == id.incarnation)) {
+ActorType *Actors<ActorType>::Get(const ActorName &name) {
+    if (!name.IsNone() && (name.Id() < (int)actors_.size())) {
+        ActorInfo &info = actors_[name.Id()];
+        if (info.actor && (info.incarnation == name.Incarnation())) {
             return info.actor;
         }
     }

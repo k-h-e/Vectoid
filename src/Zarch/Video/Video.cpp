@@ -21,7 +21,7 @@
 #include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
-#include <Zarch/Events/LanderMoveEvent.h>
+#include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
 #include <Zarch/Events/LanderThrusterEvent.h>
 
@@ -39,7 +39,7 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
     eventLoop_->RegisterHandler(FrameTimeEvent::type,      this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
-    eventLoop_->RegisterHandler(LanderMoveEvent::type,     this);
+    eventLoop_->RegisterHandler(MoveEvent::type,           this);
     eventLoop_->RegisterHandler(LanderVelocityEvent::type, this);
     eventLoop_->RegisterHandler(LanderThrusterEvent::type, this);
     
@@ -72,6 +72,8 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
+    lander_ = unique_ptr<Lander>(new Lander(data_->camera));
+    
     cameraProcess_ = unique_ptr<CameraProcess>(new CameraProcess(data_));
     starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_,
                                                                           starFieldParticles));
@@ -92,13 +94,16 @@ void Video::HandleProcessFinished(Game::ProcessInterface *process) {
 }
 
 void Video::Handle(const ActorCreatedEvent &event) {
-    std::printf("actor created: id=%d, type=%d\n", event.actor.id, (int)event.actorType);
-    
-    if (event.actorType == LanderActor) {
-        assert(!landerInUse_);
-        actors_.Register(event.actor, &lander_);
-        data_->camera->AddChild(lander_.RootNode());
-        landerInUse_ = true;
+    switch (event.actorType) {
+        case LanderActor:
+            assert(!landerInUse_);
+            actors_.Register(event.actor, lander_.get());
+            data_->camera->AddChild(lander_->RootNode());
+            landerInUse_ = true;
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -114,8 +119,11 @@ void Video::Handle(const FrameGeneratedEvent &event) {
     eventLoop_->Post(FrameGeneratedEvent());
 }
 
-void Video::Handle(const LanderMoveEvent &event) {
-    data_->landerCoordSys->SetTransform(event.newLanderTransform);
+void Video::Handle(const MoveEvent &event) {
+    EventHandlerCore *actor = actors_.Get(event.actor);
+    if (actor) {
+        actor->Handle(event);
+    }
     
     Vector landerPosition = data_->landerCoordSys->Position();
     data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);

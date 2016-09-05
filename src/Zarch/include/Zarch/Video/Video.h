@@ -34,9 +34,10 @@ class MapParameters;
 class Terrain;
 class ActorCreatedEvent;
 class FrameTimeEvent;
-class LanderMoveEvent;
+class MoveEvent;
 class LanderVelocityEvent;
 class LanderThrusterEvent;
+class EventHandlerCore;
 
 namespace Video {
 
@@ -73,7 +74,7 @@ class Video : public EventHandlerCore,
     void Handle(const ActorCreatedEvent &event);
     void Handle(const FrameTimeEvent &event);
     void Handle(const FrameGeneratedEvent &event);
-    void Handle(const LanderMoveEvent &event);
+    void Handle(const MoveEvent &event);
     void Handle(const LanderVelocityEvent &event);
     void Handle(const LanderThrusterEvent &event);
   
@@ -86,8 +87,8 @@ class Video : public EventHandlerCore,
     std::unique_ptr<CameraProcess>                                 cameraProcess_;
     std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
     std::unique_ptr<ThrusterParticlesProcess>                      thrusterParticlesProcess_;
-    Game::Actors<void>                                             actors_;
-    Lander                                                         lander_;
+    Game::Actors<EventHandlerCore>                                 actors_;
+    std::unique_ptr<Lander>                                        lander_;
     bool                                                           landerInUse_;
 };
 

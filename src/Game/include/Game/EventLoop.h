@@ -1,7 +1,7 @@
 #ifndef KXM_GAME_EVENTLOOP_H_
 #define KXM_GAME_EVENTLOOP_H_
 
-#include <assert.h>
+#include <cassert>
 #include <vector>
 #include <memory>
 #include <unordered_map>

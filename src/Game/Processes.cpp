@@ -1,5 +1,4 @@
-#include <assert.h>
-
+#include <cassert>
 #include <Game/Processes.h>
 #include <Game/ProcessInterface.h>
 #include <Game/ProcessOwnerInterface.h>

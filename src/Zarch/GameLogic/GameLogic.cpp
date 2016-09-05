@@ -47,7 +47,7 @@ void GameLogic::Handle(const FrameGeneratedEvent &event) {
 }
 
 void GameLogic::PrepareMap() {
-    ActorId landerActor = actorNaming_.Get();
+    ActorName landerActor = actorNaming_.Get();
     eventLoop_->Post(ActorCreatedEvent(landerActor, LanderActor));
 }
 

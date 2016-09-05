@@ -12,7 +12,7 @@ ActorCreatedEvent::ActorCreatedEvent()
     // Nop.
 }
 
-ActorCreatedEvent::ActorCreatedEvent(Game::ActorId anActor, ActorType anActorType)
+ActorCreatedEvent::ActorCreatedEvent(Game::ActorName anActor, ActorType anActorType)
         : actor(anActor),
           actorType(anActorType) {
     // Nop.

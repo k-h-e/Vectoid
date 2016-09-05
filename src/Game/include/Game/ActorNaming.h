@@ -1,7 +1,7 @@
 #ifndef KXM_GAME_ACTORNAMING_
 #define KXM_GAME_ACTORNAMING_
 
-#include <Game/ActorId.h>
+#include <Game/ActorName.h>
 
 #include <vector>
 #include <unordered_set>
@@ -21,10 +21,10 @@ class ActorNaming {
     ActorNaming(ActorNaming &&other)                 = delete;
     ActorNaming &operator=(ActorNaming &&other)      = delete;
     
-    //! Creates and hands out a new actor id.
-    ActorId Get();
-    //! Tells the naming authority that the specified id is no longer needed.
-    void Put(const ActorId &id);
+    //! Creates and hands out a new actor name.
+    ActorName Get();
+    //! Tells the naming authority that the specified name is no longer needed.
+    void Put(const ActorName &name);
     
   private:
     std::vector<uint32_t>   incarnations_;

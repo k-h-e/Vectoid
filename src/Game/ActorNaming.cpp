@@ -1,5 +1,6 @@
 #include <Game/ActorNaming.h>
 
+#include <cassert>
 #include <cstdio>
 
 using namespace std;
@@ -11,7 +12,7 @@ ActorNaming::ActorNaming() {
     // Nop.
 }
 
-ActorId ActorNaming::Get() {
+ActorName ActorNaming::Get() {
     int id;
     if (freeIds_.size()) {
         id = *freeIds_.begin();
@@ -20,15 +21,17 @@ ActorId ActorNaming::Get() {
     }
     else {
         id = (int)incarnations_.size();
+        assert(id < INT_MAX);
         incarnations_.push_back(0u);
     }
     printf("handing out id (%d, %u)\n", id, (unsigned int)incarnations_[id]);
-    return ActorId(id, incarnations_[id]);
+    return ActorName(id, incarnations_[id]);
 }
 
-void ActorNaming::Put(const ActorId &id) {
-    if ((id.id >= 0) && (id.id < (int)incarnations_.size())) {
-        freeIds_.insert(id.id);
+void ActorNaming::Put(const ActorName &name) {
+    if (!name.IsNone() && (name.Id() < (int)incarnations_.size())) {
+        assert(incarnations_[name.Id()] == name.Incarnation());
+        freeIds_.insert(name.Id());
     }
 }
 

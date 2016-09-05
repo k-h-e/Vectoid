@@ -6,7 +6,6 @@
 //
 //
 
-
 #include <Zarch/Physics/Physics.h>
 
 #include <kxm/Core/logging.h>
@@ -17,15 +16,14 @@
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
+#include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 
-
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Game;
-
 
 namespace kxm {
 namespace Zarch {
@@ -39,6 +37,7 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->eventLoop     = eventLoop;
     
     eventLoop_->RegisterHandler(UpdatePhysicsEvent::type, this);
+    eventLoop_->RegisterHandler(ActorCreatedEvent::type, this);
     eventLoop_->RegisterHandler(FrameTimeEvent::type,     this);
     eventLoop_->RegisterHandler(ControlsStateEvent::type, this);
     
@@ -57,6 +56,18 @@ void Physics::Handle(const UpdatePhysicsEvent &event) {
     // Hack, for now...
     landerProcess_->Execute();
     eventLoop_->Post(PhysicsUpdatedEvent());
+}
+
+void Physics::Handle(const ActorCreatedEvent &event) {
+    switch (event.actorType) {
+        case LanderActor:
+            assert(data_->landerActor.IsNone());
+            data_->landerActor = event.actor;
+            break;
+        
+        default:
+            break;
+    }
 }
 
 void Physics::Handle(const FrameTimeEvent &event) {

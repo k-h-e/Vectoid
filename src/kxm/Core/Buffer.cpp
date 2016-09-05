@@ -1,9 +1,7 @@
 #include <kxm/Core/Buffer.h>
 
-#include <assert.h>
-
+#include <cassert>
 #include <cstring>
-
 #include <kxm/Core/NumberTools.h>
 
 

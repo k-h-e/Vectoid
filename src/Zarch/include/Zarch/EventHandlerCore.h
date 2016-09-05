@@ -13,7 +13,7 @@ class FrameGeneratedEvent;
 class UpdatePhysicsEvent;
 class PhysicsUpdatedEvent;
 class ControlsStateEvent;
-class LanderMoveEvent;
+class MoveEvent;
 class LanderVelocityEvent;
 class LanderThrusterEvent;
 
@@ -30,7 +30,7 @@ class EventHandlerCore : public virtual Core::Interface {
     virtual void Handle(const UpdatePhysicsEvent &event);
     virtual void Handle(const PhysicsUpdatedEvent &event);
     virtual void Handle(const ControlsStateEvent &event);
-    virtual void Handle(const LanderMoveEvent &event);
+    virtual void Handle(const MoveEvent &event);
     virtual void Handle(const LanderVelocityEvent &event);
     virtual void Handle(const LanderThrusterEvent &event);
 };

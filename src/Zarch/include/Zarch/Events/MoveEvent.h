@@ -1,31 +1,21 @@
-//
-//  LanderMoveEvent.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
-
-
-#ifndef KXM_ZARCH_LANDERMOVEEVENT_H_
-#define KXM_ZARCH_LANDERMOVEEVENT_H_
-
+#ifndef KXM_ZARCH_MOVEEVENT_H_
+#define KXM_ZARCH_MOVEEVENT_H_
 
 #include <Vectoid/Transform.h>
+#include <Game/ActorName.h>
 #include <Zarch/Events/ZarchEvent.h>
-
 
 namespace kxm {
 namespace Zarch {
 
-//! Lander move event.
+//! Move event, including new position and new orientation.
 /*!
  *  \ingroup ZarchEvents
  */
-class LanderMoveEvent : public ZarchEvent {
+class MoveEvent : public ZarchEvent {
   public:
-    LanderMoveEvent();
-    LanderMoveEvent(const Vectoid::Transform &newLanderTransform);
+    MoveEvent();
+    MoveEvent(const Game::ActorName &actor, const Vectoid::Transform &aTransform);
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
@@ -33,11 +23,11 @@ class LanderMoveEvent : public ZarchEvent {
     
     static const EventType type;
     
-    Vectoid::Transform newLanderTransform;
+    Game::ActorName    actor;
+    Vectoid::Transform transform;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_LANDERMOVEEVENT_H_
-
+#endif    // KXM_ZARCH_MOVEEVENT_H_
