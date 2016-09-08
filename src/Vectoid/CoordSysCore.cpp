@@ -41,6 +41,10 @@ void CoordSysCore::SetPosition(const Vector &pos) {
     transformChanged_ = true;
 }
 
+void CoordSysCore::GetPosition(Vector *outPos) {
+    transform_.GetTranslationPart(outPos);
+}
+
 Vector CoordSysCore::Position() {
     return transform_.TranslationPart();
 }

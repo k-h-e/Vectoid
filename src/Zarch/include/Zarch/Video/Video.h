@@ -8,13 +8,14 @@
 #define KXM_ZARCH_VIDEO_H_
 
 #include <memory>
+#include <chrono>
 
 #include <Game/ProcessOwnerInterface.h>
 #include <Game/Actors.h>
 #include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
-#include <Zarch/Video/Lander.h>
+#include <Zarch/Video/Data.h>
 
 namespace kxm {
 
@@ -22,18 +23,9 @@ namespace Game {
     template<class EventClass, class EventHandleClass> class EventLoop;
 }
 
-namespace Vectoid {
-    class PerspectiveProjection;
-    class Camera;
-    class CoordSys;
-}
-
 namespace Zarch {
 
-class MapParameters;
-class Terrain;
 class ActorCreatedEvent;
-class FrameTimeEvent;
 class MoveEvent;
 class LanderVelocityEvent;
 class LanderThrusterEvent;
@@ -41,10 +33,8 @@ class EventHandlerCore;
 
 namespace Video {
 
-class TerrainRenderer;
-class CameraProcess;
+class Lander;
 class StarFieldProcess;
-class ThrusterParticlesProcess;
 
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
@@ -53,26 +43,12 @@ class ThrusterParticlesProcess;
 class Video : public EventHandlerCore,
               public virtual Game::ProcessOwnerInterface {
   public:
-    struct Data {
-        Data() : frameDeltaTimeS(0.0f),
-                 landerThrusterEnabled(false) {}
-        float                                           frameDeltaTimeS;
-        std::shared_ptr<Vectoid::PerspectiveProjection> projection;
-        std::shared_ptr<Vectoid::Camera>                camera;
-        std::shared_ptr<Vectoid::CoordSys>              landerCoordSys;
-        Vectoid::Vector                                 landerVelocity;
-        bool                                            landerThrusterEnabled;
-        std::shared_ptr<TerrainRenderer>                terrainRenderer;
-        std::shared_ptr<MapParameters>                  mapParameters;
-        std::shared_ptr<Terrain>                        terrain;
-    };
     Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     void HandleProcessFinished(Game::ProcessInterface *process);
     void Handle(const ActorCreatedEvent &event);
-    void Handle(const FrameTimeEvent &event);
     void Handle(const FrameGeneratedEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const LanderVelocityEvent &event);
@@ -84,12 +60,11 @@ class Video : public EventHandlerCore,
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
-    std::unique_ptr<CameraProcess>                                 cameraProcess_;
     std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
-    std::unique_ptr<ThrusterParticlesProcess>                      thrusterParticlesProcess_;
     Game::Actors<EventHandlerCore>                                 actors_;
     std::unique_ptr<Lander>                                        lander_;
     bool                                                           landerInUse_;
+    std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };
 
 }    // Namespace Video.

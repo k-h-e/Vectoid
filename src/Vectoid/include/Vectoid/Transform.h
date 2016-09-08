@@ -53,6 +53,8 @@ class Transform {
     inline Transform(const Transform &t1, const Transform &t2);
     //! Only updates the transform's translation part as specified.
     inline void SetTranslationPart(const Vector &translation);
+    //! Retrieves the transform's translation part.
+    inline void GetTranslationPart(Vector *outTranslation);
     //! Returns the transform's translation part.
     inline Vector TranslationPart() const;
     //! Only updates the transform's rotation part as given by the (normalized) images of the
@@ -276,7 +278,15 @@ Transform::Transform(const Transform &t1, const Transform &t2) {
 }
 
 void Transform::SetTranslationPart(const Vector &translation) {
-    matrix_[3][0] = translation.x;  matrix_[3][1] = translation.y;  matrix_[3][2] = translation.z;
+    matrix_[3][0] = translation.x;
+    matrix_[3][1] = translation.y;
+    matrix_[3][2] = translation.z;
+}
+
+void Transform::GetTranslationPart(Vector *outTranslation) {
+    outTranslation->x = matrix_[3][0];
+    outTranslation->y = matrix_[3][1];
+    outTranslation->z = matrix_[3][2];
 }
 
 Vector Transform::TranslationPart() const {

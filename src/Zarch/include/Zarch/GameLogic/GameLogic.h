@@ -8,8 +8,6 @@
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 
 #include <memory>
-#include <chrono>
-
 #include <Game/ProcessOwnerInterface.h>
 #include <Game/ActorNaming.h>
 #include <Zarch/Events/ZarchEvent.h>
@@ -24,7 +22,6 @@ namespace Game {
 namespace Zarch {
 
 class InitializationEvent;
-class FrameGeneratedEvent;
 
 namespace GameLogic {
 
@@ -39,7 +36,6 @@ class GameLogic : public EventHandlerCore,
     ~GameLogic();
     void HandleProcessFinished(Game::ProcessInterface *process);
     void Handle(const InitializationEvent &event);
-    void Handle(const FrameGeneratedEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
@@ -50,7 +46,6 @@ class GameLogic : public EventHandlerCore,
     Game::ActorNaming                                              actorNaming_;
     bool                                                           landerThrusterEnabled_,
                                                                    landerFiringEnabled_;
-    std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };
 
 }    // Namespace GameLogic.

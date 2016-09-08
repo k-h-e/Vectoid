@@ -5,8 +5,6 @@
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
-#include <Zarch/Events/FrameTimeEvent.h>
-#include <Zarch/Events/FrameGeneratedEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -20,10 +18,8 @@ namespace GameLogic {
 GameLogic::GameLogic(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop),
           landerThrusterEnabled_(false),
-          landerFiringEnabled_(false),
-          lastFrameTime_(steady_clock::now()) {
+          landerFiringEnabled_(false) {
     eventLoop_->RegisterHandler(InitializationEvent::type,  this);
-    eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
 }
 
 GameLogic::~GameLogic() {
@@ -36,14 +32,6 @@ void GameLogic::HandleProcessFinished(ProcessInterface *process) {
 
 void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
-}
-
-void GameLogic::Handle(const FrameGeneratedEvent &event) {
-    auto now = steady_clock::now();
-    int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
-    lastFrameTime_ = now;
-    float frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    eventLoop_->Post(FrameTimeEvent(frameDeltaTimeS));
 }
 
 void GameLogic::PrepareMap() {

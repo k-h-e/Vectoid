@@ -26,13 +26,15 @@ namespace Vectoid {
 namespace Zarch {
 namespace Video {
 
+struct Data;
+
 //! Controls the star field particles.
 /*!
  *  \ingroup ZarchVideo
  */
 class StarFieldProcess : public virtual Game::ProcessInterface {
   public:
-    StarFieldProcess(std::shared_ptr<Video::Data> data,
+    StarFieldProcess(std::shared_ptr<Data> data,
                      std::shared_ptr<Vectoid::Particles> particles);
     //! (Re)implemented.
     void Execute();
@@ -43,7 +45,7 @@ class StarFieldProcess : public virtual Game::ProcessInterface {
     StarFieldProcess(const StarFieldProcess &other);
     StarFieldProcess &operator=(const StarFieldProcess &other);
     
-    std::shared_ptr<Video::Data>        data_;
+    std::shared_ptr<Data>               data_;
     std::shared_ptr<Vectoid::Particles> particles_;
 };
 

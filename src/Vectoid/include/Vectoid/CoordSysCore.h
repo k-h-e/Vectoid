@@ -32,6 +32,7 @@ class CoordSysCore : public SceneGraphNode,
     void SetTransform(const Transform &other);
     void GetTransform(Transform *outTransform) const;
     void SetPosition(const Vector &pos);
+    void GetPosition(Vector *outPos);
     Vector Position();
     
   protected:

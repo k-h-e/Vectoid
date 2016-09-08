@@ -6,7 +6,6 @@
 //
 //
 
-
 #include <Zarch/Simulation.h>
 
 #include <kxm/Core/logging.h>
@@ -17,13 +16,10 @@
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
-#include <Zarch/Events/FrameTimeEvent.h>
-
 
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Game;
-
 
 namespace kxm {
 namespace Zarch {

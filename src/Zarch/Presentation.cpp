@@ -4,7 +4,6 @@
 #include <Game/EventLoop.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>
-#include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
 #include <Zarch/Events/LanderThrusterEvent.h>

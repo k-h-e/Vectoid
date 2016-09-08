@@ -18,10 +18,10 @@
 #include <Zarch/Events/UpdatePhysicsEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
-#include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/ControlsStateEvent.h>
 
 using namespace std;
+using namespace std::chrono;
 using namespace kxm::Core;
 using namespace kxm::Game;
 
@@ -30,7 +30,8 @@ namespace Zarch {
 namespace Physics {
 
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
-        : eventLoop_(eventLoop) {
+        : eventLoop_(eventLoop),
+          lastUpdateTime_(steady_clock::now()) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
@@ -38,7 +39,6 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     
     eventLoop_->RegisterHandler(UpdatePhysicsEvent::type, this);
     eventLoop_->RegisterHandler(ActorCreatedEvent::type, this);
-    eventLoop_->RegisterHandler(FrameTimeEvent::type,     this);
     eventLoop_->RegisterHandler(ControlsStateEvent::type, this);
     
     landerProcess_ = unique_ptr<LanderProcess>(new LanderProcess(data_));
@@ -53,7 +53,11 @@ void Physics::HandleProcessFinished(ProcessInterface *process) {
 }
 
 void Physics::Handle(const UpdatePhysicsEvent &event) {
-    // Hack, for now...
+    auto now = steady_clock::now();
+    int milliSeconds = (int)duration_cast<milliseconds>(now - lastUpdateTime_).count();
+    lastUpdateTime_ = now;
+    data_->updateDeltaTimeS = (float)milliSeconds / 1000.0f;
+    
     landerProcess_->Execute();
     eventLoop_->Post(PhysicsUpdatedEvent());
 }
@@ -68,10 +72,6 @@ void Physics::Handle(const ActorCreatedEvent &event) {
         default:
             break;
     }
-}
-
-void Physics::Handle(const FrameTimeEvent &event) {
-    data_->frameDeltaTimeS = event.timeS;
 }
 
 void Physics::Handle(const ControlsStateEvent &event) {

@@ -8,6 +8,7 @@
 #define KXM_ZARCH_PHYSICS_H_
 
 #include <memory>
+#include <chrono>
 
 #include <Vectoid/Transform.h>
 #include <Game/ProcessOwnerInterface.h>
@@ -27,7 +28,6 @@ namespace Zarch {
 class MapParameters;
 class Terrain;
 class ActorCreatedEvent;
-class FrameTimeEvent;
 class ControlsStateEvent;
 
 namespace Physics {
@@ -48,8 +48,8 @@ class Physics : public EventHandlerCore,
         bool               thrusterEnabled, firingEnabled;
     };
     struct Data {
-        Data() : frameDeltaTimeS(0.0f) {}
-        float                                                          frameDeltaTimeS;
+        Data() : updateDeltaTimeS(0.0f) {}
+        float                                                          updateDeltaTimeS;
         ControlsState                                                  controlsState;
         Game::ActorName                                                landerActor;
         LanderState                                                    landerState;
@@ -63,7 +63,6 @@ class Physics : public EventHandlerCore,
     void HandleProcessFinished(Game::ProcessInterface *process);
     void Handle(const UpdatePhysicsEvent &event);
     void Handle(const ActorCreatedEvent &event);
-    void Handle(const FrameTimeEvent &event);
     void Handle(const ControlsStateEvent &event);
     
   private:
@@ -73,6 +72,7 @@ class Physics : public EventHandlerCore,
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
     std::unique_ptr<LanderProcess>                                 landerProcess_;
+    std::chrono::time_point<std::chrono::steady_clock>             lastUpdateTime_;
 };
 
 }    // Namespace Physics.

@@ -6,26 +6,23 @@
 #include <Vectoid/CoordSys.h>
 #include <Vectoid/Geode.h>
 #include <Vectoid/Particles.h>
-#include <Vectoid/AgeColoredParticles.h>
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
 #include <Game/EventLoop.h>
-#include <Zarch/Video/CameraProcess.h>
 #include <Zarch/Video/StarFieldProcess.h>
-#include <Zarch/Video/ThrusterParticlesProcess.h>
 #include <Zarch/Video/TerrainRenderer.h>
 #include <Zarch/LanderGeometry.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
-#include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/LanderVelocityEvent.h>
 #include <Zarch/Events/LanderThrusterEvent.h>
 
 using namespace std;
+using namespace std::chrono;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
@@ -35,9 +32,9 @@ namespace Video {
 
 Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop),
-          landerInUse_(false) {
+          landerInUse_(false),
+          lastFrameTime_(steady_clock::now()) {
     eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
-    eventLoop_->RegisterHandler(FrameTimeEvent::type,      this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
     eventLoop_->RegisterHandler(MoveEvent::type,           this);
     eventLoop_->RegisterHandler(LanderVelocityEvent::type, this);
@@ -54,31 +51,21 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->projection->SetEyepointDistance(11.0f);
     data_->camera = shared_ptr<Camera>(new Camera());
     data_->projection->AddChild(data_->camera);
-    data_->landerCoordSys = shared_ptr<CoordSys>(new CoordSys());
-    data_->camera->AddChild(data_->landerCoordSys);
-    shared_ptr<LanderGeometry> landerGeometry(new LanderGeometry());
-    data_->landerCoordSys->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
+    
     data_->terrainRenderer = shared_ptr<TerrainRenderer>(new TerrainRenderer(data_->terrain,
                                                                              data_->mapParameters));
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(data_->terrainRenderer)));
     
-    shared_ptr<Particles> thrusterParticles(new Particles()),
-                          shotsParticles(new Particles()),
+    shared_ptr<Particles> shotsParticles(new Particles()),
                           starFieldParticles(new Particles());
-    data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<AgeColoredParticles>(
-        new AgeColoredParticles(thrusterParticles)))));
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(shotsParticles)))));
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    lander_ = unique_ptr<Lander>(new Lander(data_->camera));
     
-    cameraProcess_ = unique_ptr<CameraProcess>(new CameraProcess(data_));
-    starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_,
-                                                                          starFieldParticles));
-    thrusterParticlesProcess_ = unique_ptr<ThrusterParticlesProcess>(new ThrusterParticlesProcess(data_,
-                                                                                                  thrusterParticles));
+    lander_ = unique_ptr<Lander>(new Lander(data_));
+    starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_, starFieldParticles));
 }
 
 Video::~Video() {
@@ -98,7 +85,7 @@ void Video::Handle(const ActorCreatedEvent &event) {
         case LanderActor:
             assert(!landerInUse_);
             actors_.Register(event.actor, lander_.get());
-            data_->camera->AddChild(lander_->RootNode());
+            lander_->AttachToCamera(data_->camera);
             landerInUse_ = true;
             break;
             
@@ -107,14 +94,29 @@ void Video::Handle(const ActorCreatedEvent &event) {
     }
 }
 
-void Video::Handle(const FrameTimeEvent &event) {
-    data_->frameDeltaTimeS = event.timeS;
-}
-
 void Video::Handle(const FrameGeneratedEvent &event) {
-    cameraProcess_->Execute();
+    auto now = steady_clock::now();
+    int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
+    lastFrameTime_ = now;
+    data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+    
+    if (landerInUse_) {
+        lander_->Execute();
+        
+        Vector landerPosition;
+        lander_->GetPosition(&landerPosition);
+        
+        Vector cameraPosition = landerPosition;
+        if (cameraPosition.y < data_->mapParameters->cameraMinHeight) {
+            cameraPosition.y = data_->mapParameters->cameraMinHeight;
+        }
+        data_->camera->SetPosition(Vector(cameraPosition.x, cameraPosition.y, cameraPosition.z + 5.0f));
+    
+        data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
+    }
+    
     starFieldProcess_->Execute();
-    thrusterParticlesProcess_->Execute();
+    
     data_->projection->Render(0);
     eventLoop_->Post(FrameGeneratedEvent());
 }
@@ -124,9 +126,6 @@ void Video::Handle(const MoveEvent &event) {
     if (actor) {
         actor->Handle(event);
     }
-    
-    Vector landerPosition = data_->landerCoordSys->Position();
-    data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
 }
 
 void Video::Handle(const LanderVelocityEvent &event) {

@@ -26,11 +26,13 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-StarFieldProcess::StarFieldProcess(shared_ptr<Video::Data> videoData,
+struct Data;
+
+StarFieldProcess::StarFieldProcess(shared_ptr<Data> videoData,
                                    shared_ptr<Vectoid::Particles> particles)
         : data_(videoData),
           particles_(particles) {
-    Video::Data                 &data     = *data_;
+    Data                        &data     = *data_;
     const int                   randomMax = 10000;
     default_random_engine       randomEngine;
     uniform_int_distribution<>  randomDistribution(0, randomMax);
@@ -49,8 +51,8 @@ StarFieldProcess::StarFieldProcess(shared_ptr<Video::Data> videoData,
 }
 
 void StarFieldProcess::Execute() {
-    Video::Data &data = *data_;
-    Vector       base = data.camera->Position();
+    Data   &data = *data_;
+    Vector base = data.camera->Position();
     ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
     while (Particles::ParticleInfo *particle = iter.Next()) {
         Vector position = particle->position;

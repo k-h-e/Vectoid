@@ -62,16 +62,16 @@ void LanderProcess::Execute() {
     newLanderTransform.Prepend(Transform(YAxis, 180.0));
     
     // Apply gravity...
-    data.landerState.velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
+    data.landerState.velocity.y += data.updateDeltaTimeS * -data.mapParameters->gravity;
     // Apply thrust...?
     if (data.landerState.thrusterEnabled) {
         Vector thrustDirection(0.0f, 1.0f, 0.0f);
         newLanderTransform.ApplyTo(&thrustDirection);
-        data.landerState.velocity += (  data.frameDeltaTimeS
+        data.landerState.velocity += (  data.updateDeltaTimeS
                                         * data.mapParameters->landerThrust) * thrustDirection;
     }
     Vector position = data.landerState.transform.TranslationPart();
-    position += data.frameDeltaTimeS * data.landerState.velocity;
+    position += data.updateDeltaTimeS * data.landerState.velocity;
     data.mapParameters->xRange.ClampModulo(&position.x);
     data.mapParameters->zRange.ClampModulo(&position.z);
     float terrainHeight = data.terrain->Height(position.x, position.z);

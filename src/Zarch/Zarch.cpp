@@ -7,7 +7,6 @@
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
-#include <Zarch/Events/FrameTimeEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
@@ -42,7 +41,6 @@ Zarch::~Zarch() {
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new InitializationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorCreatedEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameTimeEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));
