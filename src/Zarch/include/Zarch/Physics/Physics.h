@@ -15,6 +15,7 @@
 #include <Game/ActorMap.h>
 #include <Game/Actions.h>
 #include <Game/ReusableActors.h>
+#include <Zarch/ActorInfo.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Physics/Data.h>
@@ -44,11 +45,11 @@ class Physics : public EventHandlerCore {
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Data>                                          data_;
-    Game::ActorMap<EventHandlerCore>                               actorMap_;
-    std::shared_ptr<Game::Actions>                                 actions_;
-    Game::ReusableActors<Lander>                                   landers_;
-    std::chrono::time_point<std::chrono::steady_clock>             lastUpdateTime_;
+    std::shared_ptr<Data>                              data_;
+    Game::ActorMap<ActorInfo>                          actorMap_;
+    std::shared_ptr<Game::Actions>                     actions_;
+    Game::ReusableActors<Lander>                       landers_;
+    std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime_;
 };
 
 }    // Namespace Physics.

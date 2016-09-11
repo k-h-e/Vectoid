@@ -43,8 +43,6 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     void Handle(const ThrusterEvent &event);
     void ExecuteAction();
     
-    int reusableActorsStorageId;
-    
   private:
     std::shared_ptr<Data>               data_;    // Null when default-initialized!
     std::shared_ptr<Vectoid::CoordSys>  coordSys_;

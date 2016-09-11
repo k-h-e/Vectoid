@@ -7,13 +7,14 @@
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
-#include <Zarch/Events/FrameGeneratedEvent.h>
-#include <Zarch/Events/UpdatePhysicsEvent.h>
-#include <Zarch/Events/PhysicsUpdatedEvent.h>
-#include <Zarch/Events/ControlsEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
 #include <Zarch/Events/ThrusterEvent.h>
+#include <Zarch/Events/ShotFiredEvent.h>
+#include <Zarch/Events/ControlsEvent.h>
+#include <Zarch/Events/FrameGeneratedEvent.h>
+#include <Zarch/Events/UpdatePhysicsEvent.h>
+#include <Zarch/Events/PhysicsUpdatedEvent.h>
 
 using namespace std;
 using namespace kxm::Core;
@@ -41,13 +42,14 @@ Zarch::~Zarch() {
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new InitializationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorCreatedEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new MoveEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new VelocityEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ThrusterEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ShotFiredEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));
 }
 
 }    // Namespace Zarch.

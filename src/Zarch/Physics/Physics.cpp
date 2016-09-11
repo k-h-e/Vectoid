@@ -1,11 +1,3 @@
-//
-//  NewPhysics.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/28/13.
-//
-//
-
 #include <Zarch/Physics/Physics.h>
 
 #include <kxm/Core/logging.h>
@@ -58,24 +50,27 @@ void Physics::Handle(const UpdatePhysicsEvent &event) {
 }
 
 void Physics::Handle(const ActorCreatedEvent &event) {
+    int              storageId;
+    EventHandlerCore *newActor = nullptr;
     switch (event.actorType) {
         case LanderActor:
-            {
-                Lander *newLander = landers_.Get();
-                newLander->Reset(event.actor, data_);
-                actorMap_.Register(event.actor, newLander);
-            }
+            newActor = landers_.Get(&storageId);
+            static_cast<Lander *>(newActor)->Reset(event.actor, data_);
             break;
         
         default:
             break;
     }
+    
+    if (newActor) {
+        actorMap_.Register(event.actor, ActorInfo(event.actorType, storageId, newActor));
+    }
 }
 
 void Physics::Handle(const ControlsEvent &event) {
-    EventHandlerCore *actor = actorMap_.Get(event.actor);
-    if (actor) {
-        actor->Handle(event);
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 

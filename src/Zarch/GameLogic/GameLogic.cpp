@@ -5,6 +5,7 @@
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
+#include <Zarch/Events/ShotFiredEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -20,6 +21,7 @@ GameLogic::GameLogic(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLo
           landerThrusterEnabled_(false),
           landerFiringEnabled_(false) {
     eventLoop_->RegisterHandler(InitializationEvent::type,  this);
+    eventLoop_->RegisterHandler(ShotFiredEvent::type,  this);
 }
 
 GameLogic::~GameLogic() {

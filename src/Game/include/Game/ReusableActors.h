@@ -14,8 +14,6 @@ namespace Game {
  *
  *  The in-use actors are automatically registered as actions with the <c>Actions</c> object that was passed to the
  *  actor collection upon construction. Likewise, they get automatically unregistered when they are put back.
- *
- *  The actor type must have a public field <c>int reusableActorStorageId</c>.
  */
 template<class ActorType>
 class ReusableActors {
@@ -30,13 +28,13 @@ class ReusableActors {
      *  The new actor gets registered as action with the <c>Actions</c> object that was passed to the actor collection
      *  upon construction.
      */
-    ActorType *Get();
+    ActorType *Get(int *outStorageId);
     //! Puts back the specified actor for re-use.
     /*!
      *  The actor gets unregistered as action from the <c>Actions</c> object that was passed to the actor collection
      *  upon construction.
      */
-    void Put(ActorType *actor);
+    void Put(int storageId);
     
   private:
     struct ActorInfo {
@@ -50,22 +48,20 @@ class ReusableActors {
 };
 
 template<class ActorType>
-ActorType *ReusableActors<ActorType>::Get() {
-    int storageId;
-    ActorInfo &info = actors_.Get(0, &storageId);
+ActorType *ReusableActors<ActorType>::Get(int *outStorageId) {
+    ActorInfo &info = actors_.Get(0, outStorageId);
     if (!info.actor) {
         info.actor = std::shared_ptr<ActorType>(new ActorType());
     }
-    info.actor->reusableActorsStorageId = storageId;
     info.actionStorageId = actions_->Register(info.actor.get());
     return info.actor.get();
 }
 
 template<class ActorType>
-void ReusableActors<ActorType>::Put(ActorType *actor) {
-    ActorInfo &info = actors_.Item(actor->reusableActorsStorageId);
+void ReusableActors<ActorType>::Put(int storageId) {
+    ActorInfo &info = actors_.Item(storageId);
     actions_->Unregister(info.actionStorageId);
-    actors_.Put(actor->reusableActorsStorageId);
+    actors_.Put(storageId);
 }
 
 }    // Namespace Game.

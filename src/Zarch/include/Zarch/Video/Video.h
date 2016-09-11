@@ -14,6 +14,7 @@
 #include <Game/ActorMap.h>
 #include <Game/ReusableActors.h>
 #include <Vectoid/Vector.h>
+#include <Zarch/ActorInfo.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Video/Data.h>
@@ -62,7 +63,7 @@ class Video : public EventHandlerCore {
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
-    Game::ActorMap<EventHandlerCore>                               actorMap_;
+    Game::ActorMap<ActorInfo>                                      actorMap_;
     std::shared_ptr<Game::Actions>                                 actions_;
     Game::ReusableActors<Lander>                                   landers_;
     Game::ActorName                                                landerName_;

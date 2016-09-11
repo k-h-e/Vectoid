@@ -22,8 +22,7 @@ namespace Zarch {
 namespace Video {
 
 Lander::Lander()
-        : reusableActorsStorageId(0),
-          thrusterParticles_(new Particles()) {
+        : thrusterParticles_(new Particles()) {
     coordSys_ = make_shared<CoordSys>();
     coordSys_->AddChild(make_shared<Geode>(make_shared<LanderGeometry>()));
     

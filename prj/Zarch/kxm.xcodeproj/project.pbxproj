@@ -36,6 +36,7 @@
 		2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* MoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* VelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */; };
 		2A5E8ADB1A114B0B0000617C /* ThrusterEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */; };
+		2A5F063E1D85E68A00D50D2E /* ShotFiredEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F063D1D85E68A00D50D2E /* ShotFiredEvent.cpp */; };
 		2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4B15361E700054F8E9 /* Camera.cpp */; };
 		2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4C15361E700054F8E9 /* CoordSys.cpp */; };
 		2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */; };
@@ -118,6 +119,9 @@
 		2A5E8AD51A114AD00000617C /* MoveEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveEvent.cpp; path = ../../../src/Zarch/Events/MoveEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VelocityEvent.cpp; path = ../../../src/Zarch/Events/VelocityEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterEvent.cpp; path = ../../../src/Zarch/Events/ThrusterEvent.cpp; sourceTree = "<group>"; };
+		2A5F063B1D85D30900D50D2E /* ActorInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActorInfo.h; path = ../../../src/Zarch/include/Zarch/ActorInfo.h; sourceTree = "<group>"; };
+		2A5F063C1D85E67200D50D2E /* ShotFiredEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShotFiredEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ShotFiredEvent.h; sourceTree = "<group>"; };
+		2A5F063D1D85E68A00D50D2E /* ShotFiredEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShotFiredEvent.cpp; path = ../../../src/Zarch/Events/ShotFiredEvent.cpp; sourceTree = "<group>"; };
 		2A63D013150CF5A50068E054 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transform.h; path = ../../src/Vectoid/include/Vectoid/Transform.h; sourceTree = "<group>"; };
 		2A65AF4B15361E700054F8E9 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../../../src/Vectoid/Camera.cpp; sourceTree = "<group>"; };
 		2A65AF4C15361E700054F8E9 /* CoordSys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSys.cpp; path = ../../../src/Vectoid/CoordSys.cpp; sourceTree = "<group>"; };
@@ -437,6 +441,7 @@
 				2A5E8AD01A1149940000617C /* VelocityEvent.h */,
 				2A5E8ACE1A1147370000617C /* ControlsEvent.h */,
 				2A5E8AD11A114A2C0000617C /* ThrusterEvent.h */,
+				2A5F063C1D85E67200D50D2E /* ShotFiredEvent.h */,
 				2A3046441D6D06F9007ED737 /* FrameGeneratedEvent.h */,
 				2A3046471D734143007ED737 /* UpdatePhysicsEvent.h */,
 				2A3046481D734168007ED737 /* PhysicsUpdatedEvent.h */,
@@ -447,15 +452,16 @@
 		2ADD5C281A019B68006533B8 /* Events */ = {
 			isa = PBXGroup;
 			children = (
-				2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */,
+				2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */,
+				2ADF9AF81D778F6E006C0B67 /* ActorCreatedEvent.cpp */,
 				2A5E8AD51A114AD00000617C /* MoveEvent.cpp */,
 				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
+				2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */,
 				2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */,
+				2A5F063D1D85E68A00D50D2E /* ShotFiredEvent.cpp */,
 				2A3046451D6D07CC007ED737 /* FrameGeneratedEvent.cpp */,
 				2A3046491D734210007ED737 /* UpdatePhysicsEvent.cpp */,
 				2A30464B1D734246007ED737 /* PhysicsUpdatedEvent.cpp */,
-				2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */,
-				2ADF9AF81D778F6E006C0B67 /* ActorCreatedEvent.cpp */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -530,6 +536,7 @@
 				2A2A6123166B7FBF0073658E /* Physics */,
 				2A2A6121166B7FAB0073658E /* Video */,
 				2ADF9AFA1D7794ED006C0B67 /* ActorType.h */,
+				2A5F063B1D85D30900D50D2E /* ActorInfo.h */,
 				2A2A6127166D1DF70073658E /* Zarch.h */,
 				2A41FB19171204A000A078CF /* Simulation.h */,
 				2A41FB1A171204C200A078CF /* Presentation.h */,
@@ -651,6 +658,7 @@
 				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
 				2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */,
+				2A5F063E1D85E68A00D50D2E /* ShotFiredEvent.cpp in Sources */,
 				2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */,
 				2A8AD4DA172D7738007290C7 /* Lander.cpp in Sources */,
 				2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */,

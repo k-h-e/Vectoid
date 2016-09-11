@@ -8,11 +8,13 @@
 namespace kxm {
 namespace Game {
 
-//! Maps actor names to actor objects.
+//! Maps actor names to user-definable data.
 /*!
  *  \ingroup Game
+ *
+ *  The <c>ActorData</c> type must be copyable and default-constructible.
  */
-template<class ActorType>
+template<class ActorData>
 class ActorMap {
   public:
     ActorMap() {};
@@ -20,60 +22,67 @@ class ActorMap {
     ActorMap &operator=(const ActorMap &other) = delete;
     ActorMap(ActorMap &&other)                 = delete;
     ActorMap &operator=(ActorMap &&other)      = delete;
-    //! Registers the specified actor under the given actor name.
+    //! Registers the specified data for the given actor name.
     /*!
-     *  Only a weak reference is kept to the actor - no ownership is assumed!
+     *  No data must already be registered for the actor name's id component.
      *
-     *  No actor must already be registered for the actor name's id component.
+     *  The data gets copied.
      */
-    void Register(const ActorName &name, ActorType *actor);
-    //! Unregisters the actor registered for the specified actor name, if such an actor is present.
+    void Register(const ActorName &name, const ActorData &data);
+    //! Unregisters the specified actor and its associated data, if such an actor is present.
     /*!
      *  The actor name's incarnation number must match for an unregistration to occur!
      *
-     *  \return The actor if one was unregistered, or <c>nullptr</c> otherwise.
+     *  If unregistration occurs, the respective data slot's content is replaced with a default-constructed data
+     *  instance.
      */
-    ActorType *Unregister(const ActorName &name);
-    //! Returns the actor registered for the specified actor name, or <c>nullptr</c> if such an actor is not present.
-    ActorType *Get(const ActorName &name);
+    void Unregister(const ActorName &name);
+    //! Returns the data associated with the specified actor name, or <c>nullptr</c> if such an actor is not present.
+    /*!
+     *  The data remains owned by the <c>ActorMap</c>. The pointer may get invalidated by further operations on the
+     *  <c>ActorMap</c>.
+     */
+    ActorData *Get(const ActorName &name);
     
   private:
     struct ActorInfo {
         uint32_t  incarnation;
-        ActorType *actor;
-        ActorInfo() : incarnation(0u), actor(nullptr) {}
+        bool      dataValid;
+        ActorData data;
+        ActorInfo() : incarnation(0u), dataValid(false) {}
     };
     std::vector<ActorInfo> actors_;
 };
 
-template<class ActorType>
-void ActorMap<ActorType>::Register(const ActorName &name, ActorType *actor) {
+template<class ActorData>
+void ActorMap<ActorData>::Register(const ActorName &name, const ActorData &data) {
     assert(!name.IsNone());
-    assert(actor);
     while ((int)actors_.size() <= name.Id()) {
         actors_.push_back(ActorInfo());
     }
-    ActorInfo &info = actors_[name.Id()];
-    assert(!info.actor);
+    ActorInfo &info  = actors_[name.Id()];
+    assert(!info.dataValid);
     info.incarnation = name.Incarnation();
-    info.actor       = actor;
+    info.dataValid   = true;
+    info.data        = data;
 }
 
-template<class ActorType>
-ActorType *ActorMap<ActorType>::Unregister(const ActorName &name) {
-    ActorType *actor = Get(name);
-    if (actor) {
-        actors_[name.Id()].actor = nullptr;
+template<class ActorData>
+void ActorMap<ActorData>::Unregister(const ActorName &name) {
+    ActorData *data = Get(name);
+    if (data) {
+        ActorInfo &info = actors_[name.Id()];
+        info.data       = ActorData();
+        info.dataValid  = false;
     }
-    return actor;
 }
 
-template<class ActorType>
-ActorType *ActorMap<ActorType>::Get(const ActorName &name) {
+template<class ActorData>
+ActorData *ActorMap<ActorData>::Get(const ActorName &name) {
     if (!name.IsNone() && (name.Id() < (int)actors_.size())) {
         ActorInfo &info = actors_[name.Id()];
-        if (info.actor && (info.incarnation == name.Incarnation())) {
-            return info.actor;
+        if (info.dataValid && (info.incarnation == name.Incarnation())) {
+            return &info.data;
         }
     }
     return nullptr;

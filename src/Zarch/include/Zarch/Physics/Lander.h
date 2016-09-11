@@ -30,8 +30,6 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     void ExecuteAction();
     void Handle(const ControlsEvent &event);
     
-    int reusableActorsStorageId;
-    
   private:
     Game::ActorName       name_;
     Vectoid::Transform    transform_;
@@ -39,6 +37,7 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
                           velocity_;
     ControlsState         controls_;
     bool                  oldThrusterActive_;
+    float                 shotsParticleTimeCarryOver_;
     std::shared_ptr<Data> data_;       // Null after default construction!
 };
 

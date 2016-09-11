@@ -85,13 +85,14 @@ void Video::PrepareFrame(const ControlsState &controlsState) {
 }
 
 void Video::Handle(const ActorCreatedEvent &event) {
+    int              storageId;
+    EventHandlerCore *newActor = nullptr;
     switch (event.actorType) {
         case LanderActor:
-            {
-                Lander *newLander = landers_.Get();
-                newLander->Reset(landerName_.IsNone(), data_);
-                newLander->AttachToCamera(data_->camera);
-                actorMap_.Register(event.actor, newLander);
+            newActor = landers_.Get(&storageId);
+            static_cast<Lander *>(newActor)->Reset(landerName_.IsNone(), data_);
+            static_cast<Lander *>(newActor)->AttachToCamera(data_->camera);
+            if (landerName_.IsNone()) {
                 landerName_ = event.actor;
             }
             break;
@@ -99,26 +100,30 @@ void Video::Handle(const ActorCreatedEvent &event) {
         default:
             break;
     }
+    
+    if (newActor) {
+        actorMap_.Register(event.actor, ActorInfo(event.actorType, storageId, newActor));
+    }
 }
 
 void Video::Handle(const MoveEvent &event) {
-    EventHandlerCore *actor = actorMap_.Get(event.actor);
-    if (actor) {
-        actor->Handle(event);
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const VelocityEvent &event) {
-    EventHandlerCore *actor = actorMap_.Get(event.actor);
-    if (actor) {
-        actor->Handle(event);
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const ThrusterEvent &event) {
-    EventHandlerCore *actor = actorMap_.Get(event.actor);
-    if (actor) {
-        actor->Handle(event);
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 
