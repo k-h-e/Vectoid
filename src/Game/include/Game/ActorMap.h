@@ -1,5 +1,5 @@
-#ifndef KXM_GAME_ACTORS_
-#define KXM_GAME_ACTORS_
+#ifndef KXM_GAME_ACTORMAP_
+#define KXM_GAME_ACTORMAP_
 
 #include <cassert>
 #include <vector>
@@ -13,13 +13,13 @@ namespace Game {
  *  \ingroup Game
  */
 template<class ActorType>
-class Actors {
+class ActorMap {
   public:
-    Actors() {};
-    Actors(const Actors &other)            = delete;
-    Actors &operator=(const Actors &other) = delete;
-    Actors(Actors &&other)                 = delete;
-    Actors &operator=(Actors &&other)      = delete;
+    ActorMap() {};
+    ActorMap(const ActorMap &other)            = delete;
+    ActorMap &operator=(const ActorMap &other) = delete;
+    ActorMap(ActorMap &&other)                 = delete;
+    ActorMap &operator=(ActorMap &&other)      = delete;
     //! Registers the specified actor under the given actor name.
     /*!
      *  Only a weak reference is kept to the actor - no ownership is assumed!
@@ -47,7 +47,7 @@ class Actors {
 };
 
 template<class ActorType>
-void Actors<ActorType>::Register(const ActorName &name, ActorType *actor) {
+void ActorMap<ActorType>::Register(const ActorName &name, ActorType *actor) {
     assert(!name.IsNone());
     assert(actor);
     while ((int)actors_.size() <= name.Id()) {
@@ -60,7 +60,7 @@ void Actors<ActorType>::Register(const ActorName &name, ActorType *actor) {
 }
 
 template<class ActorType>
-ActorType *Actors<ActorType>::Unregister(const ActorName &name) {
+ActorType *ActorMap<ActorType>::Unregister(const ActorName &name) {
     ActorType *actor = Get(name);
     if (actor) {
         actors_[name.Id()].actor = nullptr;
@@ -69,7 +69,7 @@ ActorType *Actors<ActorType>::Unregister(const ActorName &name) {
 }
 
 template<class ActorType>
-ActorType *Actors<ActorType>::Get(const ActorName &name) {
+ActorType *ActorMap<ActorType>::Get(const ActorName &name) {
     if (!name.IsNone() && (name.Id() < (int)actors_.size())) {
         ActorInfo &info = actors_[name.Id()];
         if (info.actor && (info.incarnation == name.Incarnation())) {
@@ -82,4 +82,4 @@ ActorType *Actors<ActorType>::Get(const ActorName &name) {
 }    // NamespaceGame.
 }    // Namespace kxm.
 
-#endif    // KXM_GAME_ACTORS_
+#endif    // KXM_GAME_ACTORMAP_

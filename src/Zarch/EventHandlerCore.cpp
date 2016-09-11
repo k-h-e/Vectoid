@@ -34,20 +34,20 @@ void EventHandlerCore::Handle(const PhysicsUpdatedEvent &event) {
     Log(this).Stream() << "Unhandled PhysicsUpdatedEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const ControlsStateEvent &event) {
-    Log(this).Stream() << "Unhandled ControlsStateEvent!" << endl;
+void EventHandlerCore::Handle(const ControlsEvent &event) {
+    Log(this).Stream() << "Unhandled ControlsEvent!" << endl;
 }
 
 void EventHandlerCore::Handle(const MoveEvent &event) {
     Log(this).Stream() << "Unhandled MoveEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const LanderVelocityEvent &event) {
-    Log(this).Stream() << "Unhandled LanderVelocityEvent!" << endl;
+void EventHandlerCore::Handle(const VelocityEvent &event) {
+    Log(this).Stream() << "Unhandled VelocityEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const LanderThrusterEvent &event) {
-    Log(this).Stream() << "Unhandled LanderThrusterEvent!" << endl;
+void EventHandlerCore::Handle(const ThrusterEvent &event) {
+    Log(this).Stream() << "Unhandled ThrusterEvent!" << endl;
 }
 
 }    // Namespace Zarch.

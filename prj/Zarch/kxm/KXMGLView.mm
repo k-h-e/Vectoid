@@ -35,13 +35,13 @@ using namespace kxm::Zarch;
         if (position.x < self.frame.size.width / 2.0f) {
             if (!leftTouch) {
                 leftTouch = touch;
-                controlsState->firingRequested = true;
+                controlsState->trigger = true;
             }
         }
         else {
             if (!rightTouch) {
                 rightTouch = touch;
-                controlsState->thrusterRequested = true;
+                controlsState->thruster = true;
             }
         }
     } 
@@ -55,11 +55,11 @@ using namespace kxm::Zarch;
     for (UITouch *touch in touches) {
         if (touch == leftTouch) {
             leftTouch = nil;
-            controlsState->firingRequested = false;
+            controlsState->trigger = false;
         }
         else if (touch == rightTouch) {
             rightTouch = nil;
-            controlsState->thrusterRequested = false;
+            controlsState->thruster = false;
         }
     }
 }

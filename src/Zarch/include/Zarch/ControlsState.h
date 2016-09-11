@@ -22,10 +22,10 @@ namespace Zarch {
  *  \ingroup Zarch
  */
 struct ControlsState {
-    ControlsState() : thrusterRequested(false), firingRequested(false) {}
-    Vectoid::Vector orientationInput;
-    bool            thrusterRequested,
-                    firingRequested;
+    ControlsState() : thruster(false), trigger(false) {}
+    Vectoid::Vector orientation;
+    bool            thruster,
+                    trigger;
 };
 
 

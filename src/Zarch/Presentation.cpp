@@ -2,12 +2,7 @@
 
 #include <kxm/Core/logging.h>
 #include <Game/EventLoop.h>
-#include <Zarch/ControlsState.h>
 #include <Zarch/Zarch.h>
-#include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Events/LanderVelocityEvent.h>
-#include <Zarch/Events/LanderThrusterEvent.h>
-#include <Zarch/Events/ControlsStateEvent.h>
 
 using namespace std;
 using namespace kxm::Core;
@@ -27,7 +22,7 @@ Presentation::~Presentation() {
 }
 
 void Presentation::PrepareFrame(const ControlsState &controlsState) {
-    eventLoop_->Post(ControlsStateEvent(controlsState));
+    video_->PrepareFrame(controlsState);
 }
 
 void Presentation::SetViewPort(int width, int height) {

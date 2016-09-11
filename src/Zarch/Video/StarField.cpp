@@ -1,13 +1,4 @@
-//
-//  NewStarFieldProcess.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/30/13.
-//
-//
-
-
-#include <Zarch/Video/StarFieldProcess.h>
+#include <Zarch/Video/StarField.h>
 
 #include <random>
 
@@ -16,11 +7,9 @@
 #include <Vectoid/Particles.h>
 #include <Zarch/MapParameters.h>
 
-
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
-
 
 namespace kxm {
 namespace Zarch {
@@ -28,14 +17,13 @@ namespace Video {
 
 struct Data;
 
-StarFieldProcess::StarFieldProcess(shared_ptr<Data> videoData,
-                                   shared_ptr<Vectoid::Particles> particles)
+StarField::StarField(shared_ptr<Data> videoData, shared_ptr<Vectoid::Particles> particles)
         : data_(videoData),
           particles_(particles) {
-    Data                        &data     = *data_;
-    const int                   randomMax = 10000;
-    default_random_engine       randomEngine;
-    uniform_int_distribution<>  randomDistribution(0, randomMax);
+    Data                       &data     = *data_;
+    const int                  randomMax = 10000;
+    default_random_engine      randomEngine;
+    uniform_int_distribution<> randomDistribution(0, randomMax);
     for (int i = 0; i < data.mapParameters->numStars; i++) {
         float t = (float)randomDistribution(randomEngine) / (float)randomMax;
         float x = data.mapParameters->starFieldCoordRange.AffineCombination(t);
@@ -50,7 +38,7 @@ StarFieldProcess::StarFieldProcess(shared_ptr<Data> videoData,
     }
 }
 
-void StarFieldProcess::Execute() {
+void StarField::ExecuteAction() {
     Data   &data = *data_;
     Vector base = data.camera->Position();
     ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
@@ -65,10 +53,6 @@ void StarFieldProcess::Execute() {
         particle->position = position;
         particle->hidden   = (position.y < data.mapParameters->starFieldMinHeight);
     }
-}
-
-bool StarFieldProcess::Finished() {
-    return false;
 }
 
 }    // Namespace Video.

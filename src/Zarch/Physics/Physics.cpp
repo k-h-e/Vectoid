@@ -10,7 +10,7 @@
 
 #include <kxm/Core/logging.h>
 #include <Game/EventLoop.h>
-#include <Zarch/Physics/LanderProcess.h>
+#include <Zarch/Physics/Lander.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
 #include <Zarch/ControlsState.h>
@@ -18,7 +18,7 @@
 #include <Zarch/Events/UpdatePhysicsEvent.h>
 #include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
-#include <Zarch/Events/ControlsStateEvent.h>
+#include <Zarch/Events/ControlsEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -30,25 +30,20 @@ namespace Zarch {
 namespace Physics {
 
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
-        : eventLoop_(eventLoop),
+        : actions_(new Actions()),
+          landers_(actions_),
           lastUpdateTime_(steady_clock::now()) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
     data_->eventLoop     = eventLoop;
     
-    eventLoop_->RegisterHandler(UpdatePhysicsEvent::type, this);
-    eventLoop_->RegisterHandler(ActorCreatedEvent::type, this);
-    eventLoop_->RegisterHandler(ControlsStateEvent::type, this);
-    
-    landerProcess_ = unique_ptr<LanderProcess>(new LanderProcess(data_));
+    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type, this);
+    data_->eventLoop->RegisterHandler(ActorCreatedEvent::type, this);
+    data_->eventLoop->RegisterHandler(ControlsEvent::type, this);
 }
 
 Physics::~Physics() {
-    // Nop.
-}
-
-void Physics::HandleProcessFinished(ProcessInterface *process) {
     // Nop.
 }
 
@@ -58,15 +53,18 @@ void Physics::Handle(const UpdatePhysicsEvent &event) {
     lastUpdateTime_ = now;
     data_->updateDeltaTimeS = (float)milliSeconds / 1000.0f;
     
-    landerProcess_->Execute();
-    eventLoop_->Post(PhysicsUpdatedEvent());
+    actions_->Execute();
+    data_->eventLoop->Post(PhysicsUpdatedEvent());
 }
 
 void Physics::Handle(const ActorCreatedEvent &event) {
     switch (event.actorType) {
         case LanderActor:
-            assert(data_->landerActor.IsNone());
-            data_->landerActor = event.actor;
+            {
+                Lander *newLander = landers_.Get();
+                newLander->Reset(event.actor, data_);
+                actorMap_.Register(event.actor, newLander);
+            }
             break;
         
         default:
@@ -74,8 +72,11 @@ void Physics::Handle(const ActorCreatedEvent &event) {
     }
 }
 
-void Physics::Handle(const ControlsStateEvent &event) {
-    data_->controlsState = event.controlsState;
+void Physics::Handle(const ControlsEvent &event) {
+    EventHandlerCore *actor = actorMap_.Get(event.actor);
+    if (actor) {
+        actor->Handle(event);
+    }
 }
 
 }    // Namespace Physics.

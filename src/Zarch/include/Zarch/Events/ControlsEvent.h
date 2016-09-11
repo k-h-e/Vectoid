@@ -1,19 +1,9 @@
-//
-//  ControlsStateEvent.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
+#ifndef KXM_ZARCH_CONTROLSEVENT_H_
+#define KXM_ZARCH_CONTROLSEVENT_H_
 
-
-#ifndef KXM_ZARCH_CONTROLSSTATEEVENT_H_
-#define KXM_ZARCH_CONTROLSSTATEEVENT_H_
-
-
+#include <Game/ActorName.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/ZarchEvent.h>
-
 
 namespace kxm {
 namespace Zarch {
@@ -22,14 +12,14 @@ namespace Physics {
     class Physics;
 }
 
-//! Controls state event.
+//! Controls event.
 /*!
  *  \ingroup ZarchEvents
  */
-class ControlsStateEvent : public ZarchEvent {
+class ControlsEvent : public ZarchEvent {
   public:
-    ControlsStateEvent();
-    ControlsStateEvent(const ControlsState &controlsState);
+    ControlsEvent();
+    ControlsEvent(const Game::ActorName &anActor, const ControlsState &controlsState);
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
@@ -37,11 +27,12 @@ class ControlsStateEvent : public ZarchEvent {
     
     static const EventType type;
     
-    ControlsState controlsState;
+    Game::ActorName actor;
+    ControlsState   controlsState;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_CONTROLSSTATEEVENT_H_
+#endif    // KXM_ZARCH_CONTROLSEVENT_H_
 

@@ -10,8 +10,9 @@
 #include <memory>
 #include <chrono>
 
-#include <Game/ProcessOwnerInterface.h>
-#include <Game/Actors.h>
+#include <Game/ActorName.h>
+#include <Game/ActorMap.h>
+#include <Game/ReusableActors.h>
 #include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
@@ -21,38 +22,39 @@ namespace kxm {
 
 namespace Game {
     template<class EventClass, class EventHandleClass> class EventLoop;
+    class Actions;
 }
 
 namespace Zarch {
 
 class ActorCreatedEvent;
 class MoveEvent;
-class LanderVelocityEvent;
-class LanderThrusterEvent;
+class VelocityEvent;
+class ThrusterEvent;
 class EventHandlerCore;
+class ControlsState;
 
 namespace Video {
 
 class Lander;
-class StarFieldProcess;
+class StarField;
 
 //! Video subsystem for the <c>Zarch</c> game.
 /*!
  *  \ingroup ZarchVideo
  */
-class Video : public EventHandlerCore,
-              public virtual Game::ProcessOwnerInterface {
+class Video : public EventHandlerCore {
   public:
     Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
-    void HandleProcessFinished(Game::ProcessInterface *process);
+    void PrepareFrame(const ControlsState &controlsState);
     void Handle(const ActorCreatedEvent &event);
-    void Handle(const FrameGeneratedEvent &event);
     void Handle(const MoveEvent &event);
-    void Handle(const LanderVelocityEvent &event);
-    void Handle(const LanderThrusterEvent &event);
+    void Handle(const VelocityEvent &event);
+    void Handle(const ThrusterEvent &event);
+    void Handle(const FrameGeneratedEvent &event);
   
   private:
     Video(const Video &other);
@@ -60,10 +62,11 @@ class Video : public EventHandlerCore,
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
-    std::unique_ptr<StarFieldProcess>                              starFieldProcess_;
-    Game::Actors<EventHandlerCore>                                 actors_;
-    std::unique_ptr<Lander>                                        lander_;
-    bool                                                           landerInUse_;
+    Game::ActorMap<EventHandlerCore>                               actorMap_;
+    std::shared_ptr<Game::Actions>                                 actions_;
+    Game::ReusableActors<Lander>                                   landers_;
+    Game::ActorName                                                landerName_;
+    std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };
 

@@ -1,29 +1,20 @@
-//
-//  LanderThrusterEvent.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
+#ifndef KXM_ZARCH_THRUSTEREVENT_H_
+#define KXM_ZARCH_THRUSTEREVENT_H_
 
-#ifndef KXM_ZARCH_LANDERTHRUSTEREVENT_H_
-#define KXM_ZARCH_LANDERTHRUSTEREVENT_H_
-
-
+#include <Game/ActorName.h>
 #include <Zarch/Events/ZarchEvent.h>
-
 
 namespace kxm {
 namespace Zarch {
 
-//! Lander thruster event.
+//! Thruster event.
 /*!
  *  \ingroup ZarchEvents
  */
-class LanderThrusterEvent : public ZarchEvent {
+class ThrusterEvent : public ZarchEvent {
   public:
-    LanderThrusterEvent();
-    LanderThrusterEvent(bool thrusterEnabled);
+    ThrusterEvent();
+    ThrusterEvent(const Game::ActorName &anActor, bool aThrusterActive);
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
@@ -31,11 +22,12 @@ class LanderThrusterEvent : public ZarchEvent {
     
     static const EventType type;
     
-    bool thrusterEnabled;
+    Game::ActorName actor;
+    bool            thrusterActive;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_LANDERTHRUSTEREVENT_H_
+#endif    // KXM_ZARCH_THRUSTEREVENT_H_
 

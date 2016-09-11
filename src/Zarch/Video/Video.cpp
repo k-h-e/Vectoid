@@ -9,7 +9,8 @@
 #include <Vectoid/ParticlesRenderer.h>
 #include <Vectoid/Transform.h>
 #include <Game/EventLoop.h>
-#include <Zarch/Video/StarFieldProcess.h>
+#include <Game/Actions.h>
+#include <Zarch/Video/StarField.h>
 #include <Zarch/Video/TerrainRenderer.h>
 #include <Zarch/LanderGeometry.h>
 #include <Zarch/MapParameters.h>
@@ -18,8 +19,9 @@
 #include <Zarch/Events/ActorCreatedEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Events/LanderVelocityEvent.h>
-#include <Zarch/Events/LanderThrusterEvent.h>
+#include <Zarch/Events/VelocityEvent.h>
+#include <Zarch/Events/ThrusterEvent.h>
+#include <Zarch/Events/ControlsEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -32,13 +34,14 @@ namespace Video {
 
 Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop),
-          landerInUse_(false),
+          actions_(new Actions()),
+          landers_(actions_),
           lastFrameTime_(steady_clock::now()) {
     eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
     eventLoop_->RegisterHandler(MoveEvent::type,           this);
-    eventLoop_->RegisterHandler(LanderVelocityEvent::type, this);
-    eventLoop_->RegisterHandler(LanderThrusterEvent::type, this);
+    eventLoop_->RegisterHandler(VelocityEvent::type,       this);
+    eventLoop_->RegisterHandler(ThrusterEvent::type,       this);
     
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
@@ -63,9 +66,8 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
         new ParticlesRenderer(starFieldParticles)))));
     
-    
-    lander_ = unique_ptr<Lander>(new Lander(data_));
-    starFieldProcess_ = unique_ptr<StarFieldProcess>(new StarFieldProcess(data_, starFieldParticles));
+    starField_ = unique_ptr<StarField>(new StarField(data_, starFieldParticles));
+    actions_->Register(starField_.get());
 }
 
 Video::~Video() {
@@ -76,21 +78,47 @@ void Video::SetViewPort(int width, int height) {
     data_->projection->SetViewPort((float)width, (float)height);
 }
 
-void Video::HandleProcessFinished(Game::ProcessInterface *process) {
-    // Nop.
+void Video::PrepareFrame(const ControlsState &controlsState) {
+    if (!landerName_.IsNone()) {
+        eventLoop_->Post(ControlsEvent(landerName_, controlsState));
+    }
 }
 
 void Video::Handle(const ActorCreatedEvent &event) {
     switch (event.actorType) {
         case LanderActor:
-            assert(!landerInUse_);
-            actors_.Register(event.actor, lander_.get());
-            lander_->AttachToCamera(data_->camera);
-            landerInUse_ = true;
+            {
+                Lander *newLander = landers_.Get();
+                newLander->Reset(landerName_.IsNone(), data_);
+                newLander->AttachToCamera(data_->camera);
+                actorMap_.Register(event.actor, newLander);
+                landerName_ = event.actor;
+            }
             break;
             
         default:
             break;
+    }
+}
+
+void Video::Handle(const MoveEvent &event) {
+    EventHandlerCore *actor = actorMap_.Get(event.actor);
+    if (actor) {
+        actor->Handle(event);
+    }
+}
+
+void Video::Handle(const VelocityEvent &event) {
+    EventHandlerCore *actor = actorMap_.Get(event.actor);
+    if (actor) {
+        actor->Handle(event);
+    }
+}
+
+void Video::Handle(const ThrusterEvent &event) {
+    EventHandlerCore *actor = actorMap_.Get(event.actor);
+    if (actor) {
+        actor->Handle(event);
     }
 }
 
@@ -100,40 +128,10 @@ void Video::Handle(const FrameGeneratedEvent &event) {
     lastFrameTime_ = now;
     data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
     
-    if (landerInUse_) {
-        lander_->Execute();
-        
-        Vector landerPosition;
-        lander_->GetPosition(&landerPosition);
-        
-        Vector cameraPosition = landerPosition;
-        if (cameraPosition.y < data_->mapParameters->cameraMinHeight) {
-            cameraPosition.y = data_->mapParameters->cameraMinHeight;
-        }
-        data_->camera->SetPosition(Vector(cameraPosition.x, cameraPosition.y, cameraPosition.z + 5.0f));
-    
-        data_->terrainRenderer->SetObserverPosition(landerPosition.x, landerPosition.z);
-    }
-    
-    starFieldProcess_->Execute();
+    actions_->Execute();
     
     data_->projection->Render(0);
     eventLoop_->Post(FrameGeneratedEvent());
-}
-
-void Video::Handle(const MoveEvent &event) {
-    EventHandlerCore *actor = actors_.Get(event.actor);
-    if (actor) {
-        actor->Handle(event);
-    }
-}
-
-void Video::Handle(const LanderVelocityEvent &event) {
-    data_->landerVelocity = event.velocity;
-}
-
-void Video::Handle(const LanderThrusterEvent &event) {
-    data_->landerThrusterEnabled = event.thrusterEnabled;
 }
 
 }    // Namespace Video.

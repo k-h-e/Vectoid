@@ -8,6 +8,8 @@
 #include <Zarch/LanderGeometry.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Events/MoveEvent.h>
+#include <Zarch/Events/VelocityEvent.h>
+#include <Zarch/Events/ThrusterEvent.h>
 #include <Zarch/Video/Data.h>
 #include <Zarch/Video/TerrainRenderer.h>
 
@@ -19,16 +21,24 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Lander::Lander(const shared_ptr<Data> &data)
-        : data_(data),
-          thrusterParticles_(new Particles()),
-          particleTimeCarryOver_(0.0f) {
-    coordSys_ = shared_ptr<CoordSys>(new CoordSys());
-    shared_ptr<LanderGeometry> landerGeometry(new LanderGeometry());
-    coordSys_->AddChild(shared_ptr<Geode>(new Geode(landerGeometry)));
+Lander::Lander()
+        : reusableActorsStorageId(0),
+          thrusterParticles_(new Particles()) {
+    coordSys_ = make_shared<CoordSys>();
+    coordSys_->AddChild(make_shared<Geode>(make_shared<LanderGeometry>()));
     
-    thrusterParticlesGeode_ = shared_ptr<Geode>(new Geode(shared_ptr<AgeColoredParticles>(
-                                  new AgeColoredParticles(thrusterParticles_))));
+    thrusterParticlesGeode_ = make_shared<Geode>(make_shared<AgeColoredParticles>(thrusterParticles_));
+              
+    Reset(false, std::shared_ptr<Data>());
+}
+
+void Lander::Reset(bool hasFocus, const std::shared_ptr<Data> &data) {
+    if (data.get() != data_.get()) {    // Performance optimization.
+        data_ = data;
+    }
+    thrusterActive_        = false;
+    particleTimeCarryOver_ = 0.0f;
+    hasFocus_              = hasFocus;
 }
 
 void Lander::AttachToCamera(const shared_ptr<Camera> &camera) {
@@ -36,15 +46,31 @@ void Lander::AttachToCamera(const shared_ptr<Camera> &camera) {
     camera->AddChild(thrusterParticlesGeode_);
 }
 
-void Lander::GetPosition(Vectoid::Vector *outPosition) {
-    coordSys_->GetPosition(outPosition);
-}
-
 void Lander::Handle(const MoveEvent &event) {
     coordSys_->SetTransform(event.transform);
+    if (hasFocus_) {
+        Vector position;
+        event.transform.GetTranslationPart(&position);
+            
+        Vector cameraPosition = position;
+        if (cameraPosition.y < data_->mapParameters->cameraMinHeight) {
+            cameraPosition.y = data_->mapParameters->cameraMinHeight;
+        }
+        data_->camera->SetPosition(Vector(cameraPosition.x, cameraPosition.y, cameraPosition.z + 5.0f));
+
+        data_->terrainRenderer->SetObserverPosition(position.x, position.z);
+    }
 }
 
-void Lander::Execute() {
+void Lander::Handle(const VelocityEvent &event) {
+    velocity_ = event.velocity;
+}
+
+void Lander::Handle(const ThrusterEvent &event) {
+    thrusterActive_ = event.thrusterActive;
+}
+
+void Lander::ExecuteAction() {
     Data &data = *data_;
     
     // Move and age particles...
@@ -64,7 +90,7 @@ void Lander::Execute() {
     }
     
     // Add new particles...?
-    if (data.landerThrusterEnabled && (data.frameDeltaTimeS > 0.0f)) {
+    if (thrusterActive_ && (data.frameDeltaTimeS > 0.0f)) {
         Transform transform;
         coordSys_->GetTransform(&transform);
         transform.SetTranslationPart(Vector());
@@ -77,11 +103,10 @@ void Lander::Execute() {
                    ejectDisplacement(particle.random0, 0.0f, particle.random1);
             transform.ApplyTo(&ejectDirection);
             transform.ApplyTo(&ejectDisplacement);
-            particle.velocity =   data.landerVelocity
-                                + data.mapParameters->thrusterExhaustVelocity*ejectDirection;
+            particle.velocity = velocity_ + data.mapParameters->thrusterExhaustVelocity*ejectDirection;
             
             float t = 1.0f - timeLeft/data.frameDeltaTimeS;
-            particle.position =   (1.0f - t)*lastLanderPosition_ + t*landerPosition
+            particle.position =   (1.0f - t)*lastPosition_ + t*landerPosition
                                 + data.mapParameters->thrusterJetSize*ejectDisplacement
                                 + timeLeft*particle.velocity;
             timeLeft -= data.mapParameters->thrusterExhaustInterval;
@@ -89,11 +114,7 @@ void Lander::Execute() {
         particleTimeCarryOver_ = -timeLeft;
     }
     
-    lastLanderPosition_ = landerPosition;
-}
-
-bool Lander::Finished() {
-    return false;
+    lastPosition_ = landerPosition;
 }
 
 }    // Namespace Video.

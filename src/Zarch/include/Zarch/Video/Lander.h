@@ -2,7 +2,7 @@
 #define KXM_ZARCH_VIDEO_LANDER_H_
 
 #include <memory>
-#include <Game/ProcessInterface.h>
+#include <kxm/Core/ActionInterface.h>
 #include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 
@@ -18,6 +18,7 @@ namespace Vectoid {
 namespace Zarch {
 
 class MoveEvent;
+class VelocityEvent;
 
 namespace Video {
 
@@ -27,28 +28,33 @@ struct Data;
 /*!
  *  \ingroup ZarchVideo
  */
-class Lander : public EventHandlerCore, public virtual Game::ProcessInterface {
+class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
-    Lander(const std::shared_ptr<Data> &data);
+    Lander();
     Lander(const Lander &other)            = delete;
     Lander &operator=(const Lander &other) = delete;
     Lander(const Lander &&other)           = delete;
     Lander &operator=(Lander &&other)      = delete;
     
-    
+    void Reset(bool hasFocus, const std::shared_ptr<Data> &data);
     void AttachToCamera(const std::shared_ptr<Vectoid::Camera> &camera);
-    void GetPosition(Vectoid::Vector *outPosition);
     void Handle(const MoveEvent &event);
-    void Execute();
-    bool Finished();
+    void Handle(const VelocityEvent &event);
+    void Handle(const ThrusterEvent &event);
+    void ExecuteAction();
+    
+    int reusableActorsStorageId;
     
   private:
-    std::shared_ptr<Data>               data_;
+    std::shared_ptr<Data>               data_;    // Null when default-initialized!
     std::shared_ptr<Vectoid::CoordSys>  coordSys_;
     std::shared_ptr<Vectoid::Particles> thrusterParticles_;
     std::shared_ptr<Vectoid::Geode>     thrusterParticlesGeode_;
-    Vectoid::Vector                     lastLanderPosition_;
+    Vectoid::Vector                     lastPosition_,
+                                        velocity_;
+    bool                                thrusterActive_;
     float                               particleTimeCarryOver_;
+    bool                                hasFocus_;
 };
 
 }    // Namespace Video.

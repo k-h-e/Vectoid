@@ -26,10 +26,6 @@ GameLogic::~GameLogic() {
     // Nop.
 }
 
-void GameLogic::HandleProcessFinished(ProcessInterface *process) {
-    // Nop.
-}
-
 void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
 }

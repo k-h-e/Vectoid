@@ -1,31 +1,21 @@
-//
-//  LanderVelocityEvent.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
-
-#ifndef KXM_ZARCH_LANDERVELOCITYEVENT_H_
-#define KXM_ZARCH_LANDERVELOCITYEVENT_H_
-
+#ifndef KXM_ZARCH_VELOCITYEVENT_H_
+#define KXM_ZARCH_VELOCITYEVENT_H_
 
 #include <Vectoid/Vector.h>
+#include <Game/ActorName.h>
 #include <Zarch/Events/ZarchEvent.h>
-
 
 namespace kxm {
 namespace Zarch {
 
-
-//! Lander velocity event.
+//! Velocity event.
 /*!
  *  \ingroup ZarchEvents
  */
-class LanderVelocityEvent : public ZarchEvent {
+class VelocityEvent : public ZarchEvent {
   public:
-    LanderVelocityEvent();
-    LanderVelocityEvent(const Vectoid::Vector &velocity);
+    VelocityEvent();
+    VelocityEvent(const Game::ActorName &anActor, const Vectoid::Vector &velocity);
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
@@ -33,11 +23,12 @@ class LanderVelocityEvent : public ZarchEvent {
     
     static const EventType type;
     
+    Game::ActorName actor;
     Vectoid::Vector velocity;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_LANDERVELOCITYEVENT_H_
+#endif    // KXM_ZARCH_VELOCITYEVENT_H_
 

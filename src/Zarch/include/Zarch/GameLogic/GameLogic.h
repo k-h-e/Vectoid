@@ -8,7 +8,6 @@
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 
 #include <memory>
-#include <Game/ProcessOwnerInterface.h>
 #include <Game/ActorNaming.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
@@ -29,12 +28,10 @@ namespace GameLogic {
 /*!
  *  \ingroup ZarchGameLogic
  */
-class GameLogic : public EventHandlerCore,
-                  public virtual Game::ProcessOwnerInterface {
+class GameLogic : public EventHandlerCore {
   public:
     GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~GameLogic();
-    void HandleProcessFinished(Game::ProcessInterface *process);
     void Handle(const InitializationEvent &event);
     
   private:

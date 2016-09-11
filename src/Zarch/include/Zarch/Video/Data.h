@@ -9,8 +9,6 @@
 
 #include <memory>
 
-#include <Game/ProcessOwnerInterface.h>
-#include <Game/Actors.h>
 #include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 #include <Zarch/Events/ZarchEvent.h>
@@ -38,13 +36,10 @@ class TerrainRenderer;
  *  \ingroup ZarchVideo
  */
 struct Data {
-    Data() : frameDeltaTimeS(0.0f),
-             landerThrusterEnabled(false) {}
+    Data() : frameDeltaTimeS(0.0f) {}
     float                                           frameDeltaTimeS;
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
     std::shared_ptr<Vectoid::Camera>                camera;
-    Vectoid::Vector                                 landerVelocity;
-    bool                                            landerThrusterEnabled;
     std::shared_ptr<TerrainRenderer>                terrainRenderer;
     std::shared_ptr<MapParameters>                  mapParameters;
     std::shared_ptr<Terrain>                        terrain;

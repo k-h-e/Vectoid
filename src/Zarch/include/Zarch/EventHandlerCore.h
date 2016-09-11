@@ -12,10 +12,10 @@ class FrameTimeEvent;
 class FrameGeneratedEvent;
 class UpdatePhysicsEvent;
 class PhysicsUpdatedEvent;
-class ControlsStateEvent;
+class ControlsEvent;
 class MoveEvent;
-class LanderVelocityEvent;
-class LanderThrusterEvent;
+class VelocityEvent;
+class ThrusterEvent;
 
 //! Base class to Zarch event handlers.
 /*!
@@ -29,10 +29,10 @@ class EventHandlerCore : public virtual Core::Interface {
     virtual void Handle(const FrameGeneratedEvent &event);
     virtual void Handle(const UpdatePhysicsEvent &event);
     virtual void Handle(const PhysicsUpdatedEvent &event);
-    virtual void Handle(const ControlsStateEvent &event);
+    virtual void Handle(const ControlsEvent &event);
     virtual void Handle(const MoveEvent &event);
-    virtual void Handle(const LanderVelocityEvent &event);
-    virtual void Handle(const LanderThrusterEvent &event);
+    virtual void Handle(const VelocityEvent &event);
+    virtual void Handle(const ThrusterEvent &event);
 };
 
 }    // Namespace Zarch.

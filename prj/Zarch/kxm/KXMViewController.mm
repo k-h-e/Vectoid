@@ -127,9 +127,9 @@ using namespace kxm::Zarch;
 - (void)update {
     if (!accelerometerOverride) {
         CMAcceleration gravity = motionManager.deviceMotion.gravity;
-        Vector orientationInput(gravity.x, gravity.y, gravity.z);
-        calibrationTransform.ApplyTo(&orientationInput);
-        controlsState->orientationInput = orientationInput;
+        Vector orientation(gravity.x, gravity.y, gravity.z);
+        calibrationTransform.ApplyTo(&orientation);
+        controlsState->orientation = orientation;
     }
     
     zarch->PrepareFrame(*controlsState);
@@ -153,27 +153,26 @@ using namespace kxm::Zarch;
     UIGestureRecognizerState state = pressRecognizer.state;
     switch (state) {
         case UIGestureRecognizerStateBegan:
-            controlsState->thrusterRequested = true;
+            controlsState->thruster = true;
             if (accelerometerOverride) {
                 CGPoint position = [pressRecognizer locationInView: self.view];
                 accelerometerOverrideStartX = (float)position.x;
                 accelerometerOverrideStartY = (float)position.y;
-                controlsState->orientationInput = Vector(0.0f, 0.0f, -1.0f);
+                controlsState->orientation = Vector(0.0f, 0.0f, -1.0f);
             }
             break;
         case UIGestureRecognizerStateChanged:
             if (accelerometerOverride) {
                 CGPoint position = [pressRecognizer locationInView: self.view];
-                controlsState->orientationInput = Vector(
-                    (float)position.x - accelerometerOverrideStartX,
-                    -((float)position.y - accelerometerOverrideStartY),
-                    -200.0f);
-                controlsState->orientationInput.TryNormalize();
+                controlsState->orientation = Vector(  (float)position.x - accelerometerOverrideStartX,
+                                                    -((float)position.y - accelerometerOverrideStartY),
+                                                    -200.0f);
+                controlsState->orientation.TryNormalize();
             }
             break;
         case UIGestureRecognizerStateEnded:
         default:
-            controlsState->thrusterRequested = false;
+            controlsState->thruster = false;
             break;
     }
 }
