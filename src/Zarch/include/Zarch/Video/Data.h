@@ -20,6 +20,7 @@ namespace Vectoid {
     class PerspectiveProjection;
     class Camera;
     class CoordSys;
+    class Particles;
 }
 
 namespace Zarch {
@@ -40,6 +41,7 @@ struct Data {
     float                                           frameDeltaTimeS;
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
     std::shared_ptr<Vectoid::Camera>                camera;
+    std::shared_ptr<Vectoid::Particles>             shotParticles;
     std::shared_ptr<TerrainRenderer>                terrainRenderer;
     std::shared_ptr<MapParameters>                  mapParameters;
     std::shared_ptr<Terrain>                        terrain;

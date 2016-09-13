@@ -1,21 +1,20 @@
-#ifndef KXM_ZARCH_ACTORCREATEDEVENT_H_
-#define KXM_ZARCH_ACTORCREATEDEVENT_H_
+#ifndef KXM_ZARCH_ACTORTERMINATIONEVENT_H_
+#define KXM_ZARCH_ACTORTERMINATIONEVENT_H_
 
 #include <Game/ActorName.h>
-#include <Zarch/ActorType.h>
 #include <Zarch/Events/ZarchEvent.h>
 
 namespace kxm {
 namespace Zarch {
 
-//! Actor created event.
+//! Actor termination event.
 /*!
  *  \ingroup ZarchEvents
  */
-class ActorCreatedEvent : public ZarchEvent {
+class ActorTerminationEvent : public ZarchEvent {
   public:
-    ActorCreatedEvent();
-    ActorCreatedEvent(Game::ActorName anActor, ActorType anActorType);
+    ActorTerminationEvent();
+    ActorTerminationEvent(const Game::ActorName &anActor);
     const EventType &Type() const { return type; }
     void Dispatch(EventHandlerCore *handler) const;
     void Serialize(Core::Buffer *targetBuffer) const;
@@ -24,10 +23,9 @@ class ActorCreatedEvent : public ZarchEvent {
     static const EventType type;
     
     Game::ActorName actor;
-    ActorType       actorType;
 };
         
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_ACTORCREATEDEVENT_H_
+#endif    // KXM_ZARCH_ACTORTERMINATIONEVENT_H_

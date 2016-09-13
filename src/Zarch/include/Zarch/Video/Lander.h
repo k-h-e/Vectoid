@@ -17,6 +17,7 @@ namespace Vectoid {
 
 namespace Zarch {
 
+class ActorCreationEvent;
 class MoveEvent;
 class VelocityEvent;
 
@@ -37,7 +38,7 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     Lander &operator=(Lander &&other)      = delete;
     
     void Reset(bool hasFocus, const std::shared_ptr<Data> &data);
-    void AttachToCamera(const std::shared_ptr<Vectoid::Camera> &camera);
+    void Handle(const ActorCreationEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
     void Handle(const ThrusterEvent &event);

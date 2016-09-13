@@ -49,9 +49,11 @@ class Particles {
     Particles();
     //! Adds a new particle with specified starting position and velocity, and provides access to
     //! it.
-    ParticleInfo &Add(const Vector &position, const Vector &velocity);
+    ParticleInfo &Add(const Vector &position, const Vector &velocity, int *outStorageId = nullptr);
     //! Removes the specified particle.
     void Remove(int id);
+    //! Provides access to the specified particle.
+    ParticleInfo &Get(int id);
     //! Tells the number of particles.
     int Count();
     //! Returns an iterator for the particles.

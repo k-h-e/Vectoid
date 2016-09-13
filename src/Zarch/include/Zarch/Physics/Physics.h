@@ -18,16 +18,24 @@
 #include <Zarch/ActorInfo.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/EventHandlerCore.h>
-#include <Zarch/Physics/Data.h>
-#include <Zarch/Physics/Lander.h>
 
 namespace kxm {
+
+namespace Game {
+    template<class EventClass, class EventHandlerClass> class EventLoop;
+}
+
 namespace Zarch {
 
-class ActorCreatedEvent;
+class ActorCreationEvent;
+class ActorTerminationEvent;
 class ControlsEvent;
 
 namespace Physics {
+
+class Data;
+class Lander;
+class Shot;
 
 //! Physics subsystem for the <c>Zarch</c> game.
 /*!
@@ -38,7 +46,8 @@ class Physics : public EventHandlerCore {
     Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Physics();
     void Handle(const UpdatePhysicsEvent &event);
-    void Handle(const ActorCreatedEvent &event);
+    void Handle(const ActorCreationEvent &event);
+    void Handle(const ActorTerminationEvent &event);
     void Handle(const ControlsEvent &event);
     
   private:
@@ -49,6 +58,7 @@ class Physics : public EventHandlerCore {
     Game::ActorMap<ActorInfo>                          actorMap_;
     std::shared_ptr<Game::Actions>                     actions_;
     Game::ReusableActors<Lander>                       landers_;
+    Game::ReusableActors<Shot>                         shots_;
     std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime_;
 };
 

@@ -10,13 +10,15 @@
 #include <Vectoid/Transform.h>
 #include <Game/EventLoop.h>
 #include <Game/Actions.h>
-#include <Zarch/Video/StarField.h>
-#include <Zarch/Video/TerrainRenderer.h>
 #include <Zarch/LanderGeometry.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
+#include <Zarch/Video/Shot.h>
+#include <Zarch/Video/StarField.h>
+#include <Zarch/Video/TerrainRenderer.h>
 #include <Zarch/Events/ZarchEvent.h>
-#include <Zarch/Events/ActorCreatedEvent.h>
+#include <Zarch/Events/ActorCreationEvent.h>
+#include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
@@ -36,35 +38,35 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : eventLoop_(eventLoop),
           actions_(new Actions()),
           landers_(actions_),
+          shots_(actions_),
           lastFrameTime_(steady_clock::now()) {
-    eventLoop_->RegisterHandler(ActorCreatedEvent::type,   this);
-    eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
-    eventLoop_->RegisterHandler(MoveEvent::type,           this);
-    eventLoop_->RegisterHandler(VelocityEvent::type,       this);
-    eventLoop_->RegisterHandler(ThrusterEvent::type,       this);
+    eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
+    eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
+    eventLoop_->RegisterHandler(FrameGeneratedEvent::type,   this);
+    eventLoop_->RegisterHandler(MoveEvent::type,             this);
+    eventLoop_->RegisterHandler(VelocityEvent::type,         this);
+    eventLoop_->RegisterHandler(ThrusterEvent::type,         this);
     
     data_ = shared_ptr<Data>(new Data());
-    data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
-    data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
+    data_->mapParameters = make_shared<MapParameters>();
+    data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
     // Install scene graph...
-    data_->projection = shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
+    data_->projection = make_shared<PerspectiveProjection>();
     data_->projection->SetWindowSize(11.0f);
     data_->projection->SetViewingDepth(11.0f);
     data_->projection->SetEyepointDistance(11.0f);
-    data_->camera = shared_ptr<Camera>(new Camera());
+    data_->camera = make_shared<Camera>();
     data_->projection->AddChild(data_->camera);
     
-    data_->terrainRenderer = shared_ptr<TerrainRenderer>(new TerrainRenderer(data_->terrain,
-                                                                             data_->mapParameters));
-    data_->camera->AddChild(shared_ptr<Geode>(new Geode(data_->terrainRenderer)));
+    data_->terrainRenderer = make_shared<TerrainRenderer>(data_->terrain, data_->mapParameters);
+    data_->camera->AddChild(make_shared<Geode>(data_->terrainRenderer));
     
-    shared_ptr<Particles> shotsParticles(new Particles()),
+    shared_ptr<Particles> shotParticles(new Particles()),
                           starFieldParticles(new Particles());
-    data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
-        new ParticlesRenderer(shotsParticles)))));
-    data_->camera->AddChild(shared_ptr<Geode>(new Geode(shared_ptr<ParticlesRenderer>(
-        new ParticlesRenderer(starFieldParticles)))));
+    data_->shotParticles = shotParticles;
+    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(shotParticles)));
+    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(starFieldParticles)));
     
     starField_ = unique_ptr<StarField>(new StarField(data_, starFieldParticles));
     actions_->Register(starField_.get());
@@ -84,17 +86,21 @@ void Video::PrepareFrame(const ControlsState &controlsState) {
     }
 }
 
-void Video::Handle(const ActorCreatedEvent &event) {
+void Video::Handle(const ActorCreationEvent &event) {
     int              storageId;
     EventHandlerCore *newActor = nullptr;
     switch (event.actorType) {
         case LanderActor:
             newActor = landers_.Get(&storageId);
             static_cast<Lander *>(newActor)->Reset(landerName_.IsNone(), data_);
-            static_cast<Lander *>(newActor)->AttachToCamera(data_->camera);
             if (landerName_.IsNone()) {
                 landerName_ = event.actor;
             }
+            break;
+            
+        case ShotActor:
+            newActor = shots_.Get(&storageId);
+            static_cast<Shot *>(newActor)->Reset(data_);
             break;
             
         default:
@@ -102,7 +108,33 @@ void Video::Handle(const ActorCreatedEvent &event) {
     }
     
     if (newActor) {
+        newActor->Handle(event);
         actorMap_.Register(event.actor, ActorInfo(event.actorType, storageId, newActor));
+    }
+}
+
+void Video::Handle(const ActorTerminationEvent &event) {
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
+        
+        switch (info->type()) {
+            case LanderActor:
+                landers_.Put(info->storageId());
+                if (landerName_ == event.actor) {
+                    landerName_ = ActorName();
+                }
+                break;
+            case ShotActor:
+                shots_.Put(info->storageId());
+                break;
+            default:
+                assert(false);
+                break;
+        }
+        // Don't use info->actor() below.
+        
+        actorMap_.Unregister(event.actor);
     }
 }
 
@@ -134,6 +166,14 @@ void Video::Handle(const FrameGeneratedEvent &event) {
     data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
     
     actions_->Execute();
+    
+    float observerX, observerZ;
+    data_->terrainRenderer->GetObserverPosition(&observerX, &observerZ);
+    auto iter = data_->shotParticles->GetIterator();
+    while (Particles::ParticleInfo *particle = iter.Next()) {
+        data_->mapParameters->xRange.ExpandModuloForObserver(observerX, &particle->position.x);
+        data_->mapParameters->zRange.ExpandModuloForObserver(observerZ, &particle->position.z);
+    }
     
     data_->projection->Render(0);
     eventLoop_->Post(FrameGeneratedEvent());

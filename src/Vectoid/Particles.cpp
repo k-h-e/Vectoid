@@ -23,8 +23,9 @@ Particles::Particles()
           random1000_(uniform_int_distribution<>(0, 1000)) {
 }
 
-Particles::ParticleInfo &Particles::Add(const Vector &position, const Vector &velocity) {
-    ParticleInfo &particle = particles_.Get(0);
+Particles::ParticleInfo &Particles::Add(const Vector &position, const Vector &velocity, int *outStorageId) {
+    int storageId;
+    ParticleInfo &particle = particles_.Get(0, &storageId);
     particle.position = position;
     particle.velocity = velocity;
     particle.age      = 0.0f;
@@ -37,11 +38,18 @@ Particles::ParticleInfo &Particles::Add(const Vector &position, const Vector &ve
         NumberTools::Clamp(&particle.random1, -1.0f, 1.0f);
 
     }
+    if (outStorageId) {
+        *outStorageId = storageId;
+    }
     return particle;
 }
 
 void Particles::Remove(int id) {
     particles_.Put(id);
+}
+
+Particles::ParticleInfo &Particles::Get(int id) {
+    return particles_.Item(id);
 }
 
 int Particles::Count() {

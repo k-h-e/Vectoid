@@ -40,6 +40,8 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
     
     //! Sets the observer's position in the <c>xz</c>-plane.
     void SetObserverPosition(float x, float z);
+    //! Gets the observer's position in the <c>xz</c>-plane.
+    void GetObserverPosition(float *outX, float *outZ);
     void Render(Vectoid::RenderContext *context);
     
   private:

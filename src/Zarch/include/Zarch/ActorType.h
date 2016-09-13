@@ -5,7 +5,8 @@ namespace kxm {
 namespace Zarch {
 
 enum ActorType { InvalidActor,
-                 LanderActor   };
+                 LanderActor,
+                 ShotActor };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

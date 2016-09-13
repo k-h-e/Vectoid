@@ -8,7 +8,7 @@
 #include <Zarch/Events/ControlsEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
 #include <Zarch/Events/ThrusterEvent.h>
-#include <Zarch/Events/ShotFiredEvent.h>
+#include <Zarch/Events/ShotEvent.h>
 #include <Zarch/Physics/Data.h>
 
 using namespace std;
@@ -115,7 +115,7 @@ void Lander::ExecuteAction() {
             float t = 1.0f - timeLeft/data_->updateDeltaTimeS;
             Vector shotStartPosition =   (1.0f - t)*lastLanderPosition + t*landerPosition
                                        + startPoint + timeLeft*shotStartVelocity;
-            data.eventLoop->Post(ShotFiredEvent(name_, shotStartPosition, shotStartVelocity));
+            data.eventLoop->Post(ShotEvent(name_, shotStartPosition, shotStartVelocity, false));
             timeLeft -= data_->mapParameters->shotFiringInterval;
         }
         shotsParticleTimeCarryOver_ = -timeLeft;

@@ -7,11 +7,12 @@ namespace kxm {
 namespace Zarch {
 
 class InitializationEvent;
-class ActorCreatedEvent;
+class ActorCreationEvent;
+class ActorTerminationEvent;
 class MoveEvent;
 class VelocityEvent;
 class ThrusterEvent;
-class ShotFiredEvent;
+class ShotEvent;
 class ControlsEvent;
 class FrameGeneratedEvent;
 class UpdatePhysicsEvent;
@@ -24,11 +25,12 @@ class PhysicsUpdatedEvent;
 class EventHandlerCore : public virtual Core::Interface {
   public:
     virtual void Handle(const InitializationEvent &event);
-    virtual void Handle(const ActorCreatedEvent &event);
+    virtual void Handle(const ActorCreationEvent &event);
+    virtual void Handle(const ActorTerminationEvent &event);
     virtual void Handle(const MoveEvent &event);
     virtual void Handle(const VelocityEvent &event);
     virtual void Handle(const ThrusterEvent &event);
-    virtual void Handle(const ShotFiredEvent &event);
+    virtual void Handle(const ShotEvent &event);
     virtual void Handle(const ControlsEvent &event);
     virtual void Handle(const FrameGeneratedEvent &event);
     virtual void Handle(const UpdatePhysicsEvent &event);

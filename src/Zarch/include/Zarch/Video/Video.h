@@ -28,7 +28,8 @@ namespace Game {
 
 namespace Zarch {
 
-class ActorCreatedEvent;
+class ActorCreationEvent;
+class ActorTerminationEvent;
 class MoveEvent;
 class VelocityEvent;
 class ThrusterEvent;
@@ -38,6 +39,7 @@ class ControlsState;
 namespace Video {
 
 class Lander;
+class Shot;
 class StarField;
 
 //! Video subsystem for the <c>Zarch</c> game.
@@ -51,7 +53,8 @@ class Video : public EventHandlerCore {
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
     void PrepareFrame(const ControlsState &controlsState);
-    void Handle(const ActorCreatedEvent &event);
+    void Handle(const ActorCreationEvent &event);
+    void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
     void Handle(const ThrusterEvent &event);
@@ -67,6 +70,7 @@ class Video : public EventHandlerCore {
     std::shared_ptr<Game::Actions>                                 actions_;
     Game::ReusableActors<Lander>                                   landers_;
     Game::ActorName                                                landerName_;
+    Game::ReusableActors<Shot>                                     shots_;
     std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };

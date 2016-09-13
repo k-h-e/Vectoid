@@ -8,9 +8,12 @@
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/ZarchEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
-#include <Zarch/Events/ActorCreatedEvent.h>
+#include <Zarch/Events/ActorCreationEvent.h>
+#include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/ControlsEvent.h>
+#include <Zarch/Physics/Data.h>
+#include <Zarch/Physics/Shot.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -24,15 +27,17 @@ namespace Physics {
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
         : actions_(new Actions()),
           landers_(actions_),
+          shots_(actions_),
           lastUpdateTime_(steady_clock::now()) {
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
     data_->eventLoop     = eventLoop;
     
-    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type, this);
-    data_->eventLoop->RegisterHandler(ActorCreatedEvent::type, this);
-    data_->eventLoop->RegisterHandler(ControlsEvent::type, this);
+    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
+    data_->eventLoop->RegisterHandler(ActorCreationEvent::type,    this);
+    data_->eventLoop->RegisterHandler(ActorTerminationEvent::type, this);
+    data_->eventLoop->RegisterHandler(ControlsEvent::type,         this);
 }
 
 Physics::~Physics() {
@@ -49,7 +54,7 @@ void Physics::Handle(const UpdatePhysicsEvent &event) {
     data_->eventLoop->Post(PhysicsUpdatedEvent());
 }
 
-void Physics::Handle(const ActorCreatedEvent &event) {
+void Physics::Handle(const ActorCreationEvent &event) {
     int              storageId;
     EventHandlerCore *newActor = nullptr;
     switch (event.actorType) {
@@ -57,13 +62,41 @@ void Physics::Handle(const ActorCreatedEvent &event) {
             newActor = landers_.Get(&storageId);
             static_cast<Lander *>(newActor)->Reset(event.actor, data_);
             break;
+            
+        case ShotActor:
+            newActor = shots_.Get(&storageId);
+            static_cast<Shot *>(newActor)->Reset(data_);
+            break;
         
         default:
             break;
     }
     
     if (newActor) {
+        newActor->Handle(event);
         actorMap_.Register(event.actor, ActorInfo(event.actorType, storageId, newActor));
+    }
+}
+
+void Physics::Handle(const ActorTerminationEvent &event) {
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
+        
+        switch (info->type()) {
+            case LanderActor:
+                landers_.Put(info->storageId());
+                break;
+            case ShotActor:
+                shots_.Put(info->storageId());
+                break;
+            default:
+                assert(false);
+                break;
+        }
+        // Don't use info->actor() below.
+        
+        actorMap_.Unregister(event.actor);
     }
 }
 

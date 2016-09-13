@@ -14,8 +14,12 @@ void EventHandlerCore::Handle(const InitializationEvent &event) {
     Log(this).Stream() << "Unhandled InitializationEvent!" << endl;
 }
     
-void EventHandlerCore::Handle(const ActorCreatedEvent &event) {
-    Log(this).Stream() << "Unhandled ActorCreatedEvent!" << endl;
+void EventHandlerCore::Handle(const ActorCreationEvent &event) {
+    Log(this).Stream() << "Unhandled ActorCreationEvent!" << endl;
+}
+
+void EventHandlerCore::Handle(const ActorTerminationEvent &event) {
+    Log(this).Stream() << "Unhandled ActorTerminationEvent!" << endl;
 }
 
 void EventHandlerCore::Handle(const MoveEvent &event) {
@@ -30,8 +34,8 @@ void EventHandlerCore::Handle(const ThrusterEvent &event) {
     Log(this).Stream() << "Unhandled ThrusterEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const ShotFiredEvent &event) {
-    Log(this).Stream() << "Unhandled ShotFiredEvent!" << endl;
+void EventHandlerCore::Handle(const ShotEvent &event) {
+    Log(this).Stream() << "Unhandled ShotEvent!" << endl;
 }
 
 void EventHandlerCore::Handle(const ControlsEvent &event) {

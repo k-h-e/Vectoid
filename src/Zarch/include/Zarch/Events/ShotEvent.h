@@ -1,5 +1,5 @@
-#ifndef KXM_ZARCH_SHOTFIREDEVENT_H_
-#define KXM_ZARCH_SHOTFIREDEVENT_H_
+#ifndef KXM_ZARCH_SHOTEVENT_H_
+#define KXM_ZARCH_SHOTEVENT_H_
 
 #include <Game/ActorName.h>
 #include <Vectoid/Vector.h>
@@ -8,15 +8,15 @@
 namespace kxm {
 namespace Zarch {
 
-//! Shot fired event.
+//! Shot event.
 /*!
  *  \ingroup ZarchEvents
  */
-class ShotFiredEvent : public ZarchEvent {
+class ShotEvent : public ZarchEvent {
   public:
-    ShotFiredEvent();
-    ShotFiredEvent(const Game::ActorName &anActor, const Vectoid::Vector &aShotStartPosition,
-                   const Vectoid::Vector &aShotStartVelocity);
+    ShotEvent();
+    ShotEvent(const Game::ActorName &anActor, const Vectoid::Vector &aShotPosition,
+              const Vectoid::Vector &aShotVelocity, bool aShotExpired);
     const EventType &Type() const { return type; }
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
@@ -25,12 +25,13 @@ class ShotFiredEvent : public ZarchEvent {
     static const EventType type;
     
     Game::ActorName actor;
-    Vectoid::Vector shotStartPosition,
-                    shotStartVelocity;
+    Vectoid::Vector shotPosition,
+                    shotVelocity;
+    bool            shotExpired;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_SHOTFIREDEVENT_H_
+#endif    // KXM_ZARCH_SHOTEVENT_H_
 

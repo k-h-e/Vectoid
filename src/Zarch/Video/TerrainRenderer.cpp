@@ -36,6 +36,11 @@ void TerrainRenderer::SetObserverPosition(float x, float z) {
     observerZ_ = z;
 }
 
+void TerrainRenderer::GetObserverPosition(float *outX, float *outZ) {
+    *outX = observerX_;
+    *outZ = observerZ_;
+}
+
 void TerrainRenderer::Render(RenderContext *context) {
     glVertexPointer(3, GL_FLOAT, 0, &vertices_[0]);
     glEnableClientState(GL_VERTEX_ARRAY);

@@ -51,7 +51,7 @@ class ReusableItems {
      *  Iterators for groups other than the one specified will not get invalidated.
      */
     inline T &Get(int groupId);
-    //! Same as \ref Get(), but also provides the id of the item returned.
+    //! Same as \ref Get(), but also provides the id of the item returned. Item ids are never negative.
     T &Get(int groupId, int *itemId);
     //! Puts back the specified item into the idle pool for future re-use.
     /*!

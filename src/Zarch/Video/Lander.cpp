@@ -7,6 +7,7 @@
 #include <Vectoid/AgeColoredParticles.h>
 #include <Zarch/LanderGeometry.h>
 #include <Zarch/MapParameters.h>
+#include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
 #include <Zarch/Events/ThrusterEvent.h>
@@ -40,9 +41,9 @@ void Lander::Reset(bool hasFocus, const std::shared_ptr<Data> &data) {
     hasFocus_              = hasFocus;
 }
 
-void Lander::AttachToCamera(const shared_ptr<Camera> &camera) {
-    camera->AddChild(coordSys_);
-    camera->AddChild(thrusterParticlesGeode_);
+void Lander::Handle(const ActorCreationEvent &event) {
+    data_->camera->AddChild(coordSys_);
+    data_->camera->AddChild(thrusterParticlesGeode_);
 }
 
 void Lander::Handle(const MoveEvent &event) {
@@ -50,14 +51,13 @@ void Lander::Handle(const MoveEvent &event) {
     if (hasFocus_) {
         Vector position;
         event.transform.GetTranslationPart(&position);
-            
-        Vector cameraPosition = position;
-        if (cameraPosition.y < data_->mapParameters->cameraMinHeight) {
-            cameraPosition.y = data_->mapParameters->cameraMinHeight;
-        }
-        data_->camera->SetPosition(Vector(cameraPosition.x, cameraPosition.y, cameraPosition.z + 5.0f));
-
         data_->terrainRenderer->SetObserverPosition(position.x, position.z);
+        
+        if (position.y < data_->mapParameters->cameraMinHeight) {
+            position.y = data_->mapParameters->cameraMinHeight;
+        }
+        position.z += 5.0f;
+        data_->camera->SetPosition(position);
     }
 }
 

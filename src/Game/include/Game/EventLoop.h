@@ -154,7 +154,9 @@ bool EventLoop<EventClass, EventHandlerClass>::RunUntilEventOfType(const kxm::Ga
 
 template<class EventClass, class EventHandlerClass>
 void EventLoop<EventClass, EventHandlerClass>::Post(const EventClass &event) {
-    int slot = idToSlotMap_[event.Type().id];
+    auto iter = idToSlotMap_.find(event.Type().id);
+    assert(iter != idToSlotMap_.end());
+    int slot = iter->second;
     eventsToSchedule_->Append(&slot, sizeof(slot));
     event.Serialize(eventsToSchedule_.get());
     hub_->Post(eventsToSchedule_);

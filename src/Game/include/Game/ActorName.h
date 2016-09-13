@@ -24,6 +24,14 @@ class ActorName {
     uint32_t Incarnation() const { return incarnation_; }
     //! Tells whether the name is the "none" name.
     bool IsNone() const { return (id_ == INT_MAX); }
+    bool operator==(const ActorName &other) {
+        if (IsNone() && other.IsNone()) {
+            return true;
+        }
+        else {
+            return (id_ == other.id_) && (incarnation_ == other.incarnation_);
+        }
+    }
     
   private:
     int      id_;

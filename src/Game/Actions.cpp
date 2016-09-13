@@ -24,7 +24,7 @@ void Actions::Execute() {
         (*action)->ExecuteAction();
         ++num;
     }
-    std::printf("executed %d actions\n", num);
+    //std::printf("executed %d actions\n", num);
 }
 
 }    // Namespace Game.
