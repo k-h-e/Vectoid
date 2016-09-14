@@ -1,12 +1,20 @@
 #ifndef KXM_ZARCH_GAMELOGIC_LANDER_H_
 #define KXM_ZARCH_GAMELOGIC_LANDER_H_
 
+#include <memory>
 #include <kxm/Core/ActionInterface.h>
+#include <Game/ActorName.h>
+#include <Vectoid/Vector.h>
 #include <Zarch/EventHandlerCore.h>
 
 namespace kxm {
 namespace Zarch {
+
+class ControlsEvent;
+
 namespace GameLogic {
+
+class Data;
 
 //! Represents a lander inside the game logic.
 /*!
@@ -19,10 +27,14 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     Lander &operator=(const Lander &other) = delete;
     Lander(Lander &&other)                 = delete;
     Lander &operator=(Lander &&other)      = delete;
-    void Reset();
+    void Reset(const Game::ActorName &name, const std::shared_ptr<Data> &data);
+    void Handle(const ControlsEvent &event);
     void ExecuteAction();
     
   private:
+    Game::ActorName       name_;
+    Vectoid::Vector       heading_;
+    std::shared_ptr<Data> data_;
 };
 
 }    // Namespace GameLogic.

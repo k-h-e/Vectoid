@@ -4,7 +4,6 @@
 #include <Zarch/MapParameters.h>
 #include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Events/ShotEvent.h>
 #include <Zarch/Physics/Data.h>
 
 namespace kxm {
@@ -39,7 +38,7 @@ void Shot::ExecuteAction() {
     if (active_) {
         age_s_ += data_->updateDeltaTimeS;
         if (age_s_ >= data_->mapParameters->maxShotParticleAge) {
-            data_->eventLoop->Post(ShotEvent(name_, position_, velocity_, true));
+            //data_->eventLoop->Post(ShotEvent(name_, position_, velocity_, true));
             active_ = false;
         }
         else {

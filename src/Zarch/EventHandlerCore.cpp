@@ -34,8 +34,8 @@ void EventHandlerCore::Handle(const ThrusterEvent &event) {
     Log(this).Stream() << "Unhandled ThrusterEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const ShotEvent &event) {
-    Log(this).Stream() << "Unhandled ShotEvent!" << endl;
+void EventHandlerCore::Handle(const PhysicsOverrideEvent &event) {
+    Log(this).Stream() << "Unhandled PhysicsOverrideEvent!" << endl;
 }
 
 void EventHandlerCore::Handle(const ControlsEvent &event) {

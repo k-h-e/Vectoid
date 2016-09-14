@@ -36,7 +36,7 @@
 		2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* MoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* VelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */; };
 		2A5E8ADB1A114B0B0000617C /* ThrusterEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */; };
-		2A5F063E1D85E68A00D50D2E /* ShotEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F063D1D85E68A00D50D2E /* ShotEvent.cpp */; };
+		2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */; };
 		2A5F06411D8730FA00D50D2E /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F06401D8730FA00D50D2E /* Lander.cpp */; };
 		2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F06431D87371A00D50D2E /* Shot.cpp */; };
 		2A5F06471D873CCF00D50D2E /* Shot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F06461D873CCF00D50D2E /* Shot.cpp */; };
@@ -125,8 +125,8 @@
 		2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VelocityEvent.cpp; path = ../../../src/Zarch/Events/VelocityEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterEvent.cpp; path = ../../../src/Zarch/Events/ThrusterEvent.cpp; sourceTree = "<group>"; };
 		2A5F063B1D85D30900D50D2E /* ActorInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActorInfo.h; path = ../../../src/Zarch/include/Zarch/ActorInfo.h; sourceTree = "<group>"; };
-		2A5F063C1D85E67200D50D2E /* ShotEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShotEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ShotEvent.h; sourceTree = "<group>"; };
-		2A5F063D1D85E68A00D50D2E /* ShotEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShotEvent.cpp; path = ../../../src/Zarch/Events/ShotEvent.cpp; sourceTree = "<group>"; };
+		2A5F063C1D85E67200D50D2E /* PhysicsOverrideEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PhysicsOverrideEvent.h; path = ../../../src/Zarch/include/Zarch/Events/PhysicsOverrideEvent.h; sourceTree = "<group>"; };
+		2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PhysicsOverrideEvent.cpp; path = ../../../src/Zarch/Events/PhysicsOverrideEvent.cpp; sourceTree = "<group>"; };
 		2A5F063F1D8730E400D50D2E /* Lander.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lander.h; path = ../../../src/Zarch/include/Zarch/GameLogic/Lander.h; sourceTree = "<group>"; };
 		2A5F06401D8730FA00D50D2E /* Lander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lander.cpp; path = ../../../src/Zarch/GameLogic/Lander.cpp; sourceTree = "<group>"; };
 		2A5F06421D87370500D50D2E /* Shot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Shot.h; path = ../../../src/Zarch/include/Zarch/GameLogic/Shot.h; sourceTree = "<group>"; };
@@ -190,6 +190,7 @@
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = ../../../src/Vectoid/Range.cpp; sourceTree = "<group>"; };
 		2AD5C13E1C18D94800B2CD92 /* EventHandlerCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventHandlerCore.h; path = ../../../src/Zarch/include/Zarch/EventHandlerCore.h; sourceTree = "<group>"; };
 		2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandlerCore.cpp; path = ../../../src/Zarch/EventHandlerCore.cpp; sourceTree = "<group>"; };
+		2AD67A5B1D8A05E800498734 /* Data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../../src/Zarch/include/Zarch/GameLogic/Data.h; sourceTree = "<group>"; };
 		2ADD5C201A017271006533B8 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../../../src/Game/include/Game/Event.h; sourceTree = "<group>"; };
 		2ADD5C211A0175F1006533B8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = ../../../src/Game/Event.cpp; sourceTree = "<group>"; };
 		2ADD5C291A019BBD006533B8 /* ZarchEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZarchEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ZarchEvent.h; sourceTree = "<group>"; };
@@ -204,8 +205,6 @@
 		2ADF9AFA1D7794ED006C0B67 /* ActorType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActorType.h; path = ../../../src/Zarch/include/Zarch/ActorType.h; sourceTree = "<group>"; };
 		2AE1DD001621B5FA00306D89 /* logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = logging.h; path = ../../../src/kxm/Core/include/kxm/Core/logging.h; sourceTree = "<group>"; };
 		2AE1DD011621B69600306D89 /* logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logging.cpp; path = ../../../src/kxm/Core/logging.cpp; sourceTree = "<group>"; };
-		2AE5BEE41580F057000B62D6 /* ShotsProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShotsProcess.cpp; path = ../../../src/Zarch/Physics/ShotsProcess.cpp; sourceTree = "<group>"; };
-		2AE5BEE71580F091000B62D6 /* ShotsProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShotsProcess.h; path = ../../../src/Zarch/include/Zarch/Physics/ShotsProcess.h; sourceTree = "<group>"; };
 		2AECEF61154D6CAF00033D14 /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = ../../../src/Zarch/include/Zarch/Terrain.h; sourceTree = "<group>"; };
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../../../src/Zarch/Terrain.cpp; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../../../src/Vectoid/Particles.cpp; sourceTree = "<group>"; };
@@ -246,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				2A9067991A586FDB001154D8 /* GameLogic.h */,
+				2AD67A5B1D8A05E800498734 /* Data.h */,
 				2A5F063F1D8730E400D50D2E /* Lander.h */,
 				2A5F06421D87370500D50D2E /* Shot.h */,
 			);
@@ -259,7 +259,6 @@
 				2A1352041D84780000F0AADF /* Data.h */,
 				2A8AD4D7172D75F2007290C7 /* Lander.h */,
 				2A5F06491D8749D100D50D2E /* Shot.h */,
-				2AE5BEE71580F091000B62D6 /* ShotsProcess.h */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -270,7 +269,6 @@
 				2A8AD4D4172D51ED007290C7 /* Physics.cpp */,
 				2A8AD4D8172D7737007290C7 /* Lander.cpp */,
 				2A5F064B1D874A9D00D50D2E /* Shot.cpp */,
-				2AE5BEE41580F057000B62D6 /* ShotsProcess.cpp */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -465,7 +463,7 @@
 				2A5E8AD01A1149940000617C /* VelocityEvent.h */,
 				2A5E8ACE1A1147370000617C /* ControlsEvent.h */,
 				2A5E8AD11A114A2C0000617C /* ThrusterEvent.h */,
-				2A5F063C1D85E67200D50D2E /* ShotEvent.h */,
+				2A5F063C1D85E67200D50D2E /* PhysicsOverrideEvent.h */,
 				2A3046441D6D06F9007ED737 /* FrameGeneratedEvent.h */,
 				2A3046471D734143007ED737 /* UpdatePhysicsEvent.h */,
 				2A3046481D734168007ED737 /* PhysicsUpdatedEvent.h */,
@@ -483,7 +481,7 @@
 				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
 				2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */,
 				2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */,
-				2A5F063D1D85E68A00D50D2E /* ShotEvent.cpp */,
+				2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */,
 				2A3046451D6D07CC007ED737 /* FrameGeneratedEvent.cpp */,
 				2A3046491D734210007ED737 /* UpdatePhysicsEvent.cpp */,
 				2A30464B1D734246007ED737 /* PhysicsUpdatedEvent.cpp */,
@@ -688,7 +686,7 @@
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
 				2A5F064C1D874A9D00D50D2E /* Shot.cpp in Sources */,
 				2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */,
-				2A5F063E1D85E68A00D50D2E /* ShotEvent.cpp in Sources */,
+				2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */,
 				2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */,
 				2A8AD4DA172D7738007290C7 /* Lander.cpp in Sources */,
 				2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */,

@@ -7,7 +7,9 @@
 #include <Zarch/Events/InitializationEvent.h>
 #include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/ActorTerminationEvent.h>
-#include <Zarch/Events/ShotEvent.h>
+#include <Zarch/Events/PhysicsOverrideEvent.h>
+#include <Zarch/Events/ControlsEvent.h>
+#include <Zarch/GameLogic/Data.h>
 #include <Zarch/GameLogic/Lander.h>
 #include <Zarch/GameLogic/Shot.h>
 
@@ -21,13 +23,14 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-GameLogic::GameLogic(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
-        : eventLoop_(eventLoop),
-          actions_(new Actions()),
+GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop)
+        : actions_(new Actions()),
           landers_(actions_),
-          shots_(actions_) {
-    eventLoop_->RegisterHandler(InitializationEvent::type,  this);
-    eventLoop_->RegisterHandler(ShotEvent::type,  this);
+          shots_(actions_),
+          data_(new Data()) {
+    data_->eventLoop = eventLoop;
+    data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
+    data_->eventLoop->RegisterHandler(ControlsEvent::type,       this);
 }
 
 GameLogic::~GameLogic() {
@@ -38,12 +41,10 @@ void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
 }
 
-void GameLogic::Handle(const ShotEvent &event) {
-    if (event.shotExpired) {
-        TerminateShot(event);
-    }
-    else {
-        CreateShot(event);
+void GameLogic::Handle(const ControlsEvent &event) {
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 
@@ -52,14 +53,15 @@ void GameLogic::PrepareMap() {
 }
 
 void GameLogic::CreateLander() {
+    ActorName name = actorNaming_.Get();
     int storageId;
     Lander *lander = landers_.Get(&storageId);
-    lander->Reset();
-    ActorName name = actorNaming_.Get();
+    lander->Reset(name, data_);
     actorMap_.Register(name, ActorInfo(LanderActor, storageId, lander));
-    eventLoop_->Post(ActorCreationEvent(name, LanderActor));
+    data_->eventLoop->Post(ActorCreationEvent(name, LanderActor));
 }
 
+/*
 void GameLogic::CreateShot(const ShotEvent &event) {
     int storageId;
     Shot *shot = shots_.Get(&storageId);
@@ -77,11 +79,12 @@ void GameLogic::TerminateShot(const ShotEvent &event) {
         TerminateActor(event.actor);
     }
 }
+*/
 
 void GameLogic::TerminateActor(const ActorName &name) {
     actorMap_.Unregister(name);
     actorNaming_.Put(name);
-    eventLoop_->Post(ActorTerminationEvent(name));
+    data_->eventLoop->Post(ActorTerminationEvent(name));
 }
 
 }    // Namespace GameLogic.

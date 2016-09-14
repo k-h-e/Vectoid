@@ -24,10 +24,11 @@ namespace Game {
 namespace Zarch {
 
 class InitializationEvent;
-class ShotFiredEvent;
+class ControlsEvent;
 
 namespace GameLogic {
 
+class Data;
 class Lander;
 class Shot;
 
@@ -37,27 +38,27 @@ class Shot;
  */
 class GameLogic : public EventHandlerCore {
   public:
-    GameLogic(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
+    GameLogic(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop);
     ~GameLogic();
     void Handle(const InitializationEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
-    void Handle(const ShotEvent &event);
+    void Handle(const ControlsEvent &event);
     void PrepareMap();
     void CreateLander();
-    void CreateShot(const ShotEvent &event);
+    //void CreateShot(const ShotEvent &event);
     //! Terminates the shot if it exists.
-    void TerminateShot(const ShotEvent &event);
+    //void TerminateShot(const ShotEvent &event);
     void TerminateActor(const Game::ActorName &name);
     
-    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     Game::ActorNaming                                  actorNaming_;
     Game::ActorMap<ActorInfo>                          actorMap_;
     std::shared_ptr<Game::Actions>                     actions_;
     Game::ReusableActors<Lander>                       landers_;
     Game::ReusableActors<Shot>                         shots_;
+    std::shared_ptr<Data>                              data_;
 };
 
 }    // Namespace GameLogic.

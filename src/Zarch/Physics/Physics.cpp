@@ -11,7 +11,7 @@
 #include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
-#include <Zarch/Events/ControlsEvent.h>
+#include <Zarch/Events/PhysicsOverrideEvent.h>
 #include <Zarch/Physics/Data.h>
 #include <Zarch/Physics/Shot.h>
 
@@ -34,24 +34,14 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
     data_->eventLoop     = eventLoop;
     
-    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
     data_->eventLoop->RegisterHandler(ActorCreationEvent::type,    this);
     data_->eventLoop->RegisterHandler(ActorTerminationEvent::type, this);
-    data_->eventLoop->RegisterHandler(ControlsEvent::type,         this);
+    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
+    data_->eventLoop->RegisterHandler(PhysicsOverrideEvent::type,  this);
 }
 
 Physics::~Physics() {
     // Nop.
-}
-
-void Physics::Handle(const UpdatePhysicsEvent &event) {
-    auto now = steady_clock::now();
-    int milliSeconds = (int)duration_cast<milliseconds>(now - lastUpdateTime_).count();
-    lastUpdateTime_ = now;
-    data_->updateDeltaTimeS = (float)milliSeconds / 1000.0f;
-    
-    actions_->Execute();
-    data_->eventLoop->Post(PhysicsUpdatedEvent());
 }
 
 void Physics::Handle(const ActorCreationEvent &event) {
@@ -100,7 +90,17 @@ void Physics::Handle(const ActorTerminationEvent &event) {
     }
 }
 
-void Physics::Handle(const ControlsEvent &event) {
+void Physics::Handle(const UpdatePhysicsEvent &event) {
+    auto now = steady_clock::now();
+    int milliSeconds = (int)duration_cast<milliseconds>(now - lastUpdateTime_).count();
+    lastUpdateTime_ = now;
+    data_->updateDeltaTimeS = (float)milliSeconds / 1000.0f;
+    
+    actions_->Execute();
+    data_->eventLoop->Post(PhysicsUpdatedEvent());
+}
+
+void Physics::Handle(const PhysicsOverrideEvent &event) {
     ActorInfo *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);

@@ -29,7 +29,6 @@ namespace Zarch {
 
 class ActorCreationEvent;
 class ActorTerminationEvent;
-class ControlsEvent;
 
 namespace Physics {
 
@@ -45,10 +44,10 @@ class Physics : public EventHandlerCore {
   public:
     Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
     ~Physics();
-    void Handle(const UpdatePhysicsEvent &event);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
-    void Handle(const ControlsEvent &event);
+    void Handle(const UpdatePhysicsEvent &event);
+    void Handle(const PhysicsOverrideEvent &event);
     
   private:
     Physics(const Physics &other);
