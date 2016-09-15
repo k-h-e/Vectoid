@@ -10,8 +10,8 @@
 #include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
-#include <Zarch/Events/ThrusterEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/Events/ControlsEvent.h>
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/UpdatePhysicsEvent.h>
@@ -46,8 +46,8 @@ void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventL
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorTerminationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new MoveEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new VelocityEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ThrusterEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsOverrideEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new AccelerationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));

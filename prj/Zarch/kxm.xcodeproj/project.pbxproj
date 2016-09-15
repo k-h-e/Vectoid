@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A0C056B1D7B157F0018D865 /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0C056A1D7B157F0018D865 /* Lander.cpp */; };
+		2A0D28261D8B4856001AC162 /* AccelerationEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */; };
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A13520A1D84A20800F0AADF /* Actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1352091D84A20800F0AADF /* Actions.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
@@ -35,7 +36,6 @@
 		2A5E8AD41A114AAE0000617C /* ControlsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */; };
 		2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* MoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* VelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */; };
-		2A5E8ADB1A114B0B0000617C /* ThrusterEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */; };
 		2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */; };
 		2A5F06411D8730FA00D50D2E /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F06401D8730FA00D50D2E /* Lander.cpp */; };
 		2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F06431D87371A00D50D2E /* Shot.cpp */; };
@@ -74,6 +74,8 @@
 /* Begin PBXFileReference section */
 		2A0C05691D7B15620018D865 /* Lander.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lander.h; path = ../../../src/Zarch/include/Zarch/Video/Lander.h; sourceTree = "<group>"; };
 		2A0C056A1D7B157F0018D865 /* Lander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lander.cpp; path = ../../../src/Zarch/Video/Lander.cpp; sourceTree = "<group>"; };
+		2A0D28241D8B4830001AC162 /* AccelerationEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AccelerationEvent.h; path = ../../../src/Zarch/include/Zarch/Events/AccelerationEvent.h; sourceTree = "<group>"; };
+		2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccelerationEvent.cpp; path = ../../../src/Zarch/Events/AccelerationEvent.cpp; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = ../../../src/Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
 		2A1351FE1D8202EC00F0AADF /* Data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../../src/Zarch/include/Zarch/Video/Data.h; sourceTree = "<group>"; };
 		2A1352011D8472E300F0AADF /* ReusableActors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReusableActors.h; path = ../../../src/Game/include/Game/ReusableActors.h; sourceTree = "<group>"; };
@@ -119,11 +121,9 @@
 		2A5E8ACE1A1147370000617C /* ControlsEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlsEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ControlsEvent.h; sourceTree = "<group>"; };
 		2A5E8ACF1A1148A50000617C /* MoveEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MoveEvent.h; path = ../../../src/Zarch/include/Zarch/Events/MoveEvent.h; sourceTree = "<group>"; };
 		2A5E8AD01A1149940000617C /* VelocityEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VelocityEvent.h; path = ../../../src/Zarch/include/Zarch/Events/VelocityEvent.h; sourceTree = "<group>"; };
-		2A5E8AD11A114A2C0000617C /* ThrusterEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ThrusterEvent.h; path = ../../../src/Zarch/include/Zarch/Events/ThrusterEvent.h; sourceTree = "<group>"; };
 		2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsEvent.cpp; path = ../../../src/Zarch/Events/ControlsEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD51A114AD00000617C /* MoveEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveEvent.cpp; path = ../../../src/Zarch/Events/MoveEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VelocityEvent.cpp; path = ../../../src/Zarch/Events/VelocityEvent.cpp; sourceTree = "<group>"; };
-		2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThrusterEvent.cpp; path = ../../../src/Zarch/Events/ThrusterEvent.cpp; sourceTree = "<group>"; };
 		2A5F063B1D85D30900D50D2E /* ActorInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActorInfo.h; path = ../../../src/Zarch/include/Zarch/ActorInfo.h; sourceTree = "<group>"; };
 		2A5F063C1D85E67200D50D2E /* PhysicsOverrideEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PhysicsOverrideEvent.h; path = ../../../src/Zarch/include/Zarch/Events/PhysicsOverrideEvent.h; sourceTree = "<group>"; };
 		2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PhysicsOverrideEvent.cpp; path = ../../../src/Zarch/Events/PhysicsOverrideEvent.cpp; sourceTree = "<group>"; };
@@ -462,8 +462,8 @@
 				2A5E8ACF1A1148A50000617C /* MoveEvent.h */,
 				2A5E8AD01A1149940000617C /* VelocityEvent.h */,
 				2A5E8ACE1A1147370000617C /* ControlsEvent.h */,
-				2A5E8AD11A114A2C0000617C /* ThrusterEvent.h */,
 				2A5F063C1D85E67200D50D2E /* PhysicsOverrideEvent.h */,
+				2A0D28241D8B4830001AC162 /* AccelerationEvent.h */,
 				2A3046441D6D06F9007ED737 /* FrameGeneratedEvent.h */,
 				2A3046471D734143007ED737 /* UpdatePhysicsEvent.h */,
 				2A3046481D734168007ED737 /* PhysicsUpdatedEvent.h */,
@@ -480,8 +480,8 @@
 				2A5E8AD51A114AD00000617C /* MoveEvent.cpp */,
 				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
 				2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */,
-				2A5E8AD91A114B0B0000617C /* ThrusterEvent.cpp */,
 				2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */,
+				2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */,
 				2A3046451D6D07CC007ED737 /* FrameGeneratedEvent.cpp */,
 				2A3046491D734210007ED737 /* UpdatePhysicsEvent.cpp */,
 				2A30464B1D734246007ED737 /* PhysicsUpdatedEvent.cpp */,
@@ -644,7 +644,6 @@
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
 				2A3046461D6D07CC007ED737 /* FrameGeneratedEvent.cpp in Sources */,
 				2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */,
-				2A5E8ADB1A114B0B0000617C /* ThrusterEvent.cpp in Sources */,
 				2A30464A1D734210007ED737 /* UpdatePhysicsEvent.cpp in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */,
@@ -693,6 +692,7 @@
 				2ABE9CDC17305EC700F5251C /* StarField.cpp in Sources */,
 				2AD5C1401C18DD3600B2CD92 /* EventHandlerCore.cpp in Sources */,
 				2A13520A1D84A20800F0AADF /* Actions.cpp in Sources */,
+				2A0D28261D8B4856001AC162 /* AccelerationEvent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

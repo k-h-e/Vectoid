@@ -6,8 +6,8 @@
 #include <Zarch/Terrain.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
-#include <Zarch/Events/ThrusterEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/Physics/Data.h>
 
 using namespace std;
@@ -27,9 +27,12 @@ void Lander::Reset(const ActorName &name, const shared_ptr<Data> &data) {
     if (data.get() != data_.get()) {    // Performance optimization.
         data_ = data;
     }
-    name_      = name;
-    transform_ = Transform();
-    velocity_  = Vector();
+    name_                             = name;
+    transform_                        = Transform();
+    velocity_                         = Vector();
+    acceleration_                     = Vector();
+    accelerationEnabled_              = false;
+    applyAccelerationInLocalCoordSys_ = false;
 }
 
 void Lander::Handle(const PhysicsOverrideEvent &event) {
@@ -41,11 +44,28 @@ void Lander::Handle(const PhysicsOverrideEvent &event) {
     }
 }
 
+void Lander::Handle(const AccelerationEvent &event) {
+    acceleration_                     = event.acceleration;
+    accelerationEnabled_              = event.flags.enabled;
+    applyAccelerationInLocalCoordSys_ = event.flags.applyInLocalCoordSys;
+}
+
 void Lander::ExecuteAction() {
     Data &data = *data_;
     
     // Apply gravity...
     velocity_.y += data.updateDeltaTimeS * -data.mapParameters->gravity;
+    
+    // Apply acceleration...?
+    if (accelerationEnabled_) {
+        Vector acceleration = acceleration_;
+        if (applyAccelerationInLocalCoordSys_) {
+            Transform orientation = transform_;
+            orientation.SetTranslationPart(Vector());
+            orientation.ApplyTo(&acceleration);
+        }
+        velocity_ += data.updateDeltaTimeS * acceleration;
+    }
     
     Vector position = transform_.TranslationPart();
     position += data.updateDeltaTimeS * velocity_;

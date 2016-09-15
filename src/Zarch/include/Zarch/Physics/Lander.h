@@ -12,6 +12,7 @@ namespace kxm {
 namespace Zarch {
 
 class PhysicsOverrideEvent;
+class AccelerationEvent;
 
 namespace Physics {
 
@@ -30,12 +31,16 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     Lander &operator=(Lander &&other)      = delete;
     void Reset(const Game::ActorName &name, const std::shared_ptr<Data> &data);
     void Handle(const PhysicsOverrideEvent &event);
+    void Handle(const AccelerationEvent &event);
     void ExecuteAction();
     
   private:
     Game::ActorName       name_;
     Vectoid::Transform    transform_;
-    Vectoid::Vector       velocity_;
+    Vectoid::Vector       velocity_,
+                          acceleration_;
+    bool                  accelerationEnabled_,
+                          applyAccelerationInLocalCoordSys_;
     std::shared_ptr<Data> data_;       // Null after default construction!
 };
 

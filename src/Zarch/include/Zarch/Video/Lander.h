@@ -20,6 +20,7 @@ namespace Zarch {
 class ActorCreationEvent;
 class MoveEvent;
 class VelocityEvent;
+class AccelerationEvent;
 
 namespace Video {
 
@@ -41,7 +42,7 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     void Handle(const ActorCreationEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
-    void Handle(const ThrusterEvent &event);
+    void Handle(const AccelerationEvent &event);
     void ExecuteAction();
     
   private:

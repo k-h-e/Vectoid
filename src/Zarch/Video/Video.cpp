@@ -22,7 +22,7 @@
 #include <Zarch/Events/FrameGeneratedEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
-#include <Zarch/Events/ThrusterEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/Events/ControlsEvent.h>
 
 using namespace std;
@@ -45,7 +45,7 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type,   this);
     eventLoop_->RegisterHandler(MoveEvent::type,             this);
     eventLoop_->RegisterHandler(VelocityEvent::type,         this);
-    eventLoop_->RegisterHandler(ThrusterEvent::type,         this);
+    eventLoop_->RegisterHandler(AccelerationEvent::type,     this);
     
     data_ = shared_ptr<Data>(new Data());
     data_->mapParameters = make_shared<MapParameters>();
@@ -152,7 +152,7 @@ void Video::Handle(const VelocityEvent &event) {
     }
 }
 
-void Video::Handle(const ThrusterEvent &event) {
+void Video::Handle(const AccelerationEvent &event) {
     ActorInfo *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);

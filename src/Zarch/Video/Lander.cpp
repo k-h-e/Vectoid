@@ -10,7 +10,7 @@
 #include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
-#include <Zarch/Events/ThrusterEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/Video/Data.h>
 #include <Zarch/Video/TerrainRenderer.h>
 
@@ -65,8 +65,8 @@ void Lander::Handle(const VelocityEvent &event) {
     velocity_ = event.velocity;
 }
 
-void Lander::Handle(const ThrusterEvent &event) {
-    thrusterActive_ = event.thrusterActive;
+void Lander::Handle(const AccelerationEvent &event) {
+    thrusterActive_ = event.flags.enabled;
 }
 
 void Lander::ExecuteAction() {

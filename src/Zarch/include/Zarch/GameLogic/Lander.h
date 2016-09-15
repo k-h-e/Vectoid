@@ -34,6 +34,7 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
   private:
     Game::ActorName       name_;
     Vectoid::Vector       heading_;
+    bool                  oldThrusterActive_;
     std::shared_ptr<Data> data_;
 };
 

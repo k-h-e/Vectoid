@@ -6,6 +6,7 @@
 #include <Vectoid/Transform.h>
 #include <Zarch/Events/ControlsEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/GameLogic/Data.h>
 
 using namespace std;
@@ -25,8 +26,9 @@ void Lander::Reset(const ActorName &name, const shared_ptr<Data> &data) {
     if (data.get() != data_.get()) {    // Performance optimization.
         data_ = data;
     }
-    name_    = name;
-    heading_ = Vector(0.0f, 0.0f, -1.0f);
+    name_              = name;
+    heading_           = Vector(0.0f, 0.0f, -1.0f);
+    oldThrusterActive_ = false;
 }
 
 void Lander::Handle(const ControlsEvent &event) {
@@ -53,6 +55,11 @@ void Lander::Handle(const ControlsEvent &event) {
     newLanderTransform.Prepend(Transform(YAxis, 180.0));
     
     data_->eventLoop->Post(PhysicsOverrideEvent(name_, newLanderTransform));
+    
+    if (controls.thruster != oldThrusterActive_) {
+        data_->eventLoop->Post(AccelerationEvent(name_, controls.thruster, Vector(0.0f, 9.0f, 0.0f), true));
+        oldThrusterActive_ = controls.thruster;
+    }
     
     /*
     

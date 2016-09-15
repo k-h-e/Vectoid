@@ -12,6 +12,7 @@
 #include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/PhysicsUpdatedEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
+#include <Zarch/Events/AccelerationEvent.h>
 #include <Zarch/Physics/Data.h>
 #include <Zarch/Physics/Shot.h>
 
@@ -38,6 +39,7 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->eventLoop->RegisterHandler(ActorTerminationEvent::type, this);
     data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
     data_->eventLoop->RegisterHandler(PhysicsOverrideEvent::type,  this);
+    data_->eventLoop->RegisterHandler(AccelerationEvent::type,     this);
 }
 
 Physics::~Physics() {
@@ -101,6 +103,13 @@ void Physics::Handle(const UpdatePhysicsEvent &event) {
 }
 
 void Physics::Handle(const PhysicsOverrideEvent &event) {
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
+    }
+}
+
+void Physics::Handle(const AccelerationEvent &event) {
     ActorInfo *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);

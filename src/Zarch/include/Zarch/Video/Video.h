@@ -32,7 +32,7 @@ class ActorCreationEvent;
 class ActorTerminationEvent;
 class MoveEvent;
 class VelocityEvent;
-class ThrusterEvent;
+class AccelerationEvent;
 class EventHandlerCore;
 class ControlsState;
 
@@ -57,7 +57,7 @@ class Video : public EventHandlerCore {
     void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
-    void Handle(const ThrusterEvent &event);
+    void Handle(const AccelerationEvent &event);
     void Handle(const FrameGeneratedEvent &event);
   
   private:

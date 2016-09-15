@@ -29,6 +29,9 @@ namespace Zarch {
 
 class ActorCreationEvent;
 class ActorTerminationEvent;
+class UpdatePhysicsEvent;
+class PhysicsOverrideEvent;
+class AccelerationEvent;
 
 namespace Physics {
 
@@ -48,6 +51,7 @@ class Physics : public EventHandlerCore {
     void Handle(const ActorTerminationEvent &event);
     void Handle(const UpdatePhysicsEvent &event);
     void Handle(const PhysicsOverrideEvent &event);
+    void Handle(const AccelerationEvent &event);
     
   private:
     Physics(const Physics &other);
