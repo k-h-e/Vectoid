@@ -4,6 +4,7 @@
 #include <Game/EventLoop.h>
 #include <Zarch/MapParameters.h>
 #include <Zarch/Terrain.h>
+#include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
 #include <Zarch/Events/VelocityEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
@@ -20,16 +21,13 @@ namespace Zarch {
 namespace Physics {
 
 Lander::Lander() {
-    Reset(ActorName(), shared_ptr<Data>());
+    // Nop.
 }
 
-void Lander::Reset(const ActorName &name, const shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
-    name_                             = name;
-    transform_                        = Transform();
-    velocity_                         = Vector();
+void Lander::Handle(const ActorCreationEvent &event) {
+    name_                             = event.actor;
+    transform_                        = event.initialTransform;
+    velocity_                         = event.initialVelocity;
     acceleration_                     = Vector();
     accelerationEnabled_              = false;
     applyAccelerationInLocalCoordSys_ = false;

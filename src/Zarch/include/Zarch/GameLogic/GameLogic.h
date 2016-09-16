@@ -8,7 +8,6 @@
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 
 #include <memory>
-#include <Game/ActorNaming.h>
 #include <Game/ActorMap.h>
 #include <Game/ReusableActors.h>
 #include <Zarch/ActorInfo.h>
@@ -24,6 +23,8 @@ namespace Game {
 namespace Zarch {
 
 class InitializationEvent;
+class ActorCreationEvent;
+class TimeEvent;
 class ControlsEvent;
 
 namespace GameLogic {
@@ -45,20 +46,17 @@ class GameLogic : public EventHandlerCore {
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
+    void Handle(const TimeEvent &event);
     void Handle(const ControlsEvent &event);
     void PrepareMap();
-    void CreateLander();
-    //void CreateShot(const ShotEvent &event);
-    //! Terminates the shot if it exists.
-    //void TerminateShot(const ShotEvent &event);
+    void CreateActor(const ActorCreationEvent &event);
     void TerminateActor(const Game::ActorName &name);
     
-    Game::ActorNaming                                  actorNaming_;
-    Game::ActorMap<ActorInfo>                          actorMap_;
-    std::shared_ptr<Game::Actions>                     actions_;
-    Game::ReusableActors<Lander>                       landers_;
-    Game::ReusableActors<Shot>                         shots_;
-    std::shared_ptr<Data>                              data_;
+    Game::ActorMap<ActorInfo<EventHandlerCore>> actorMap_;
+    std::shared_ptr<Game::Actions>              actions_;
+    Game::ReusableActors<Lander>                landers_;
+    Game::ReusableActors<Shot>                  shots_;
+    std::shared_ptr<Data>                       data_;
 };
 
 }    // Namespace GameLogic.

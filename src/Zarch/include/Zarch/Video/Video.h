@@ -66,7 +66,7 @@ class Video : public EventHandlerCore {
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
-    Game::ActorMap<ActorInfo>                                      actorMap_;
+    Game::ActorMap<ActorInfo<EventHandlerCore>>                    actorMap_;
     std::shared_ptr<Game::Actions>                                 actions_;
     Game::ReusableActors<Lander>                                   landers_;
     Game::ActorName                                                landerName_;

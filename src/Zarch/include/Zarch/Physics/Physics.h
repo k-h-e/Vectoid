@@ -36,6 +36,7 @@ class AccelerationEvent;
 namespace Physics {
 
 class Data;
+class Actor;
 class Lander;
 class Shot;
 
@@ -45,7 +46,7 @@ class Shot;
  */
 class Physics : public EventHandlerCore {
   public:
-    Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
+    Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, bool emitTimeEvents);
     ~Physics();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
@@ -58,11 +59,12 @@ class Physics : public EventHandlerCore {
     Physics &operator=(const Physics &other);
 
     std::shared_ptr<Data>                              data_;
-    Game::ActorMap<ActorInfo>                          actorMap_;
+    Game::ActorMap<ActorInfo<Actor>>                   actorMap_;
     std::shared_ptr<Game::Actions>                     actions_;
     Game::ReusableActors<Lander>                       landers_;
     Game::ReusableActors<Shot>                         shots_;
     std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime_;
+    bool                                               emitTimeEvents_;
 };
 
 }    // Namespace Physics.

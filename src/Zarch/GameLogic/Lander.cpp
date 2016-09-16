@@ -3,7 +3,10 @@
 #include <cstdio>
 #include <kxm/Core/NumberTools.h>
 #include <Game/EventLoop.h>
+#include <Game/ActorNaming.h>
 #include <Vectoid/Transform.h>
+#include <Zarch/MapParameters.h>
+#include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/ControlsEvent.h>
 #include <Zarch/Events/PhysicsOverrideEvent.h>
 #include <Zarch/Events/AccelerationEvent.h>
@@ -29,10 +32,14 @@ void Lander::Reset(const ActorName &name, const shared_ptr<Data> &data) {
     name_              = name;
     heading_           = Vector(0.0f, 0.0f, -1.0f);
     oldThrusterActive_ = false;
+    trigger_           = false;
+    triggerTimeS_      = 0.0f;
 }
 
 void Lander::Handle(const ControlsEvent &event) {
     const ControlsState &controls = event.controlsState;
+    trigger_ = controls.trigger;
+    
     float projection = controls.orientation.x;
     NumberTools::Clamp(&projection, -1.0f, 1.0f);
     float xAngle = (float)asin(projection) * 180.0f / NumberTools::piAsFloat;
@@ -57,37 +64,26 @@ void Lander::Handle(const ControlsEvent &event) {
     data_->eventLoop->Post(PhysicsOverrideEvent(name_, newLanderTransform));
     
     if (controls.thruster != oldThrusterActive_) {
-        data_->eventLoop->Post(AccelerationEvent(name_, controls.thruster, Vector(0.0f, 9.0f, 0.0f), true));
+        data_->eventLoop->Post(AccelerationEvent(name_, controls.thruster,
+                                                 data_->mapParameters->landerThrust * Vector(0.0f, 1.0f, 0.0f), true));
         oldThrusterActive_ = controls.thruster;
     }
-    
-    /*
-    
-    // Fire shots...?
-    if (controls_.trigger && (data_->updateDeltaTimeS > 0.0f)) {
-        Vector landerPosition;
-        transform_.GetTranslationPart(&landerPosition);
-        Transform transform(transform_);
-        transform.SetTranslationPart(Vector());
-        float timeLeft = data_->updateDeltaTimeS - shotsParticleTimeCarryOver_;
-        while (timeLeft > 0.0f) {
-            Vector firingDirection(0.0f, 0.0f, 1.0f),
-                   startPoint(0.0f, 0.0f, .55f);
-            transform.ApplyTo(&firingDirection);
-            transform.ApplyTo(&startPoint);
-            Vector shotStartVelocity = velocity_ + data_->mapParameters->shotVelocity*firingDirection;
-            float t = 1.0f - timeLeft/data_->updateDeltaTimeS;
-            Vector shotStartPosition =   (1.0f - t)*lastLanderPosition + t*landerPosition
-                                       + startPoint + timeLeft*shotStartVelocity;
-            data.eventLoop->Post(ShotEvent(name_, shotStartPosition, shotStartVelocity, false));
-            timeLeft -= data_->mapParameters->shotFiringInterval;
-        }
-        shotsParticleTimeCarryOver_ = -timeLeft;
-    */
 }
 
 void Lander::ExecuteAction() {
-    // Nop.
+    if (trigger_) {
+        triggerTimeS_ += data_->deltaTimeS;
+    }
+    else {
+        triggerTimeS_ = 0.0f;
+    }
+    
+    if (triggerTimeS_ > 0.0f) {
+        data_->actorCreationEvents.push_back(
+            ActorCreationEvent(data_->actorNaming.Get(), ShotActor, Transform(Vector(0.0f, 0.0f, .55f)),
+                               data_->mapParameters->shotVelocity * Vector(0.0f, 0.0f, 1.0f), name_));
+        triggerTimeS_ -= data_->mapParameters->shotFiringInterval;
+    }
 }
 
 }    // Namespace GameLogic.

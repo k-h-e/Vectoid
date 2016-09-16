@@ -6,6 +6,7 @@
 #include <Zarch/Presentation.h>
 #include <Zarch/ControlsState.h>
 #include <Zarch/Events/InitializationEvent.h>
+#include <Zarch/Events/TimeEvent.h>
 #include <Zarch/Events/ActorCreationEvent.h>
 #include <Zarch/Events/ActorTerminationEvent.h>
 #include <Zarch/Events/MoveEvent.h>
@@ -42,6 +43,7 @@ Zarch::~Zarch() {
 
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new InitializationEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new TimeEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorCreationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorTerminationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new MoveEvent));

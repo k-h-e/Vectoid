@@ -13,7 +13,11 @@ namespace Zarch {
 void EventHandlerCore::Handle(const InitializationEvent &event) {
     Log(this).Stream() << "Unhandled InitializationEvent!" << endl;
 }
-    
+
+void EventHandlerCore::Handle(const TimeEvent &event) {
+    Log(this).Stream() << "Unhandled TimeEvent!" << endl;
+}
+
 void EventHandlerCore::Handle(const ActorCreationEvent &event) {
     Log(this).Stream() << "Unhandled ActorCreationEvent!" << endl;
 }

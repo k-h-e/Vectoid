@@ -109,12 +109,12 @@ void Video::Handle(const ActorCreationEvent &event) {
     
     if (newActor) {
         newActor->Handle(event);
-        actorMap_.Register(event.actor, ActorInfo(event.actorType, storageId, newActor));
+        actorMap_.Register(event.actor, ActorInfo<EventHandlerCore>(event.actorType, storageId, newActor));
     }
 }
 
 void Video::Handle(const ActorTerminationEvent &event) {
-    ActorInfo *info = actorMap_.Get(event.actor);
+    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
         
@@ -139,21 +139,21 @@ void Video::Handle(const ActorTerminationEvent &event) {
 }
 
 void Video::Handle(const MoveEvent &event) {
-    ActorInfo *info = actorMap_.Get(event.actor);
+    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const VelocityEvent &event) {
-    ActorInfo *info = actorMap_.Get(event.actor);
+    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const AccelerationEvent &event) {
-    ActorInfo *info = actorMap_.Get(event.actor);
+    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }

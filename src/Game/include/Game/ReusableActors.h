@@ -18,6 +18,8 @@ namespace Game {
 template<class ActorType>
 class ReusableActors {
   public:
+    class Iterator;
+  
     ReusableActors(std::shared_ptr<Actions> actions) : actors_(1), actions_(actions) {};
     ReusableActors(const ReusableActors &other)            = delete;
     ReusableActors &operator=(const ReusableActors &other) = delete;
@@ -35,6 +37,8 @@ class ReusableActors {
      *  upon construction.
      */
     void Put(int storageId);
+    //! Returns an iterator for the currently in-use actors.
+    Iterator GetIterator();
     
   private:
     struct ActorInfo {
@@ -46,6 +50,30 @@ class ReusableActors {
     Core::ReusableItems<ActorInfo> actors_;
     std::shared_ptr<Actions>       actions_;
 };
+
+//! Allows for iterating over the actors that are currently in use.
+/*!
+ *  \ingroup Game
+ */
+template<class ActorType>
+class ReusableActors<ActorType>::Iterator {
+  public:
+    //! Returns the next item, or <code>0</code> in case there are no more items.
+    ActorType *Next();
+    //! If the iterator has returned an item in the last call to \ref Next(), this item's id is
+    //! returned. Otherwise, the method's behavior is undefined.
+    /*!
+     *  The current item can be \ref Put() back using the returned id without invalidating the iterator.
+     */
+    int ItemId();
+    
+  private:
+    friend class ReusableActors;
+    Iterator(const typename Core::ReusableItems<ActorInfo>::Iterator &iterator);
+    
+    typename Core::ReusableItems<ActorInfo>::Iterator iterator_;
+};
+
 
 template<class ActorType>
 ActorType *ReusableActors<ActorType>::Get(int *outStorageId) {
@@ -62,6 +90,33 @@ void ReusableActors<ActorType>::Put(int storageId) {
     ActorInfo &info = actors_.Item(storageId);
     actions_->Unregister(info.actionStorageId);
     actors_.Put(storageId);
+}
+
+template<class ActorType>
+typename ReusableActors<ActorType>::Iterator ReusableActors<ActorType>::GetIterator() {
+    return Iterator(actors_.GetIterator(0));
+}
+
+template<class ActorType>
+ReusableActors<ActorType>::Iterator::Iterator(const typename Core::ReusableItems<ActorInfo>::Iterator &iterator)
+        : iterator_(iterator) {
+    // Nop.
+}
+
+template<class ActorType>
+ActorType *ReusableActors<ActorType>::Iterator::Next() {
+    ActorInfo *info = iterator_.Next();
+    if (info) {
+        return info->actor.get();
+    }
+    else {
+        return nullptr;
+    }
+}
+
+template<class ActorType>
+int ReusableActors<ActorType>::Iterator::ItemId() {
+    return iterator_.ItemId();
 }
 
 }    // Namespace Game.

@@ -16,18 +16,14 @@ ActorCreationEvent::ActorCreationEvent()
     // Nop.
 }
 
-ActorCreationEvent::ActorCreationEvent(const ActorName &anActor, ActorType anActorType)
-        : actor(anActor),
-          actorType(anActorType) {
-    // Nop.
-}
-
 ActorCreationEvent::ActorCreationEvent(const ActorName &anActor, ActorType anActorType,
-                                      const Transform &anInitialTransform, const Vector &anInitialVelocity)
+                                       const Transform &anInitialTransform, const Vector &anInitialVelocity,
+                                       const ActorName &aLaunchingActor)
         : actor(anActor),
           actorType(anActorType),
           initialTransform(anInitialTransform),
-          initialVelocity(anInitialVelocity) {
+          initialVelocity(anInitialVelocity),
+          launchingActor(aLaunchingActor) {
     // Nop.
 }
 
@@ -41,6 +37,7 @@ void ActorCreationEvent::Serialize(Buffer *targetBuffer) const {
     targetBuffer->Append(&actorType, sizeof(actorType));
     targetBuffer->Append(&initialTransform, sizeof(initialTransform));
     targetBuffer->Append(&initialVelocity, sizeof(initialVelocity));
+    targetBuffer->Append(&launchingActor, sizeof(launchingActor));
 }
 
 void ActorCreationEvent::Deserialize(Buffer::Reader *bufferReader) {
@@ -48,6 +45,7 @@ void ActorCreationEvent::Deserialize(Buffer::Reader *bufferReader) {
     bufferReader->ReadBlock(&actorType, sizeof(actorType));
     bufferReader->ReadBlock(&initialTransform, sizeof(initialTransform));
     bufferReader->ReadBlock(&initialVelocity, sizeof(initialVelocity));
+    bufferReader->ReadBlock(&launchingActor, sizeof(launchingActor));
 }
     
 }    // Namespace Zarch.

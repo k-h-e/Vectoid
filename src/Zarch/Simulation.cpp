@@ -29,7 +29,7 @@ Simulation::Simulation(const shared_ptr<EventLoopHub> &eventLoopHub)
           physicsUpdated_(false),
           frameGenerated_(false) {
     Zarch::RegisterEvents(eventLoop_.get());
-    physics_   = shared_ptr<Physics::Physics>(new Physics::Physics(eventLoop_));
+    physics_   = shared_ptr<Physics::Physics>(new Physics::Physics(eventLoop_, true));
     gameLogic_ = shared_ptr<GameLogic::GameLogic>(new GameLogic::GameLogic(eventLoop_));
     
     eventLoop_->RegisterHandler(InitializationEvent::type, this);
