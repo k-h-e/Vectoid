@@ -1,15 +1,5 @@
-//
-//  ZarchTerrain.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/15/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_ZARCH_TERRAIN_H_
 #define KXM_ZARCH_TERRAIN_H_
-
 
 #include <vector>
 #include <memory>
@@ -20,7 +10,6 @@
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/Vector.h>
 #include <kxm/Zarch/MapParameters.h>
-
 
 namespace kxm {
 namespace Zarch {
@@ -103,9 +92,7 @@ inline Vectoid::Vector &Terrain::CellColor(int cellX, int cellZ) {
     return colors_[cellZ*mapParameters_->numCellsX + cellX];
 }
 
-
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_TERRAIN_H_

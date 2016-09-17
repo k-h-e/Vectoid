@@ -4,9 +4,7 @@
 #include <cstring>
 #include <kxm/Core/NumberTools.h>
 
-
 using namespace std;
-
 
 namespace kxm {
 namespace Core {

@@ -1,11 +1,3 @@
-//
-//  EventLoopHub.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
-
 #ifndef KXM_GAME_EVENTLOOPHUB_H_
 #define KXM_GAME_EVENTLOOPHUB_H_
 

@@ -33,7 +33,6 @@ Zarch::Zarch() {
     
     auto simulation = simulation_;
     simulationThread_ = shared_ptr<thread>(new thread([simulation]{ simulation->ExecuteAction(); }));
-    std::printf("joinable=%d\n", (int)simulationThread_->joinable());
 }
 
 Zarch::~Zarch() {

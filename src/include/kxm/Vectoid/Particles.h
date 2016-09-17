@@ -1,23 +1,11 @@
-//
-//  Particles.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_PARTICLES_H_
 #define KXM_VECTOID_PARTICLES_H_
-
 
 #include <vector>
 #include <memory>
 #include <random>
-
 #include <kxm/Core/ReusableItems.h>
 #include <kxm/Vectoid/Vector.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -68,9 +56,7 @@ class Particles {
     std::uniform_int_distribution<>   random1000_;
 };
 
-
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_PARTICLES_H_

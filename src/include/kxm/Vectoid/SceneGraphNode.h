@@ -1,21 +1,10 @@
-//
-//  SceneGraphNode.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/5/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_SCENEGRAPHNODE_H_
 #define KXM_VECTOID_SCENEGRAPHNODE_H_
-
 
 #include <vector>
 #include <memory>
 
 #include <kxm/Core/Interface.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -53,6 +42,5 @@ class SceneGraphNode : public virtual Core::Interface {
     
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_SCENEGRAPHNODE_H_

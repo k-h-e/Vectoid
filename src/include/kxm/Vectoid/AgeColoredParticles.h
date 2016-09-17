@@ -1,23 +1,11 @@
-//
-//  AgeColoredParticles.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 6/10/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_AGECOLOREDPARTICLES_H_
 #define KXM_VECTOID_AGECOLOREDPARTICLES_H_
 
-
 #include <vector>
 #include <memory>
-
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/Vector.h>
 #include <kxm/Vectoid/GeometryInterface.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -45,10 +33,7 @@ class AgeColoredParticles : public virtual GeometryInterface {
                                         colorBuffer_;
 };
 
-
 }    // Namespace Vectoid.
 }    // Namespace kxm.
 
-
 #endif    // KXM_VECTOID_AGECOLOREDPARTICLES_H_
-

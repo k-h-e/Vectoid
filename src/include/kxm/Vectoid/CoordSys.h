@@ -1,18 +1,7 @@
-//
-//  CoordSys.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_COORDSYS_H_
 #define KXM_VECTOID_COORDSYS_H_
 
-
 #include <kxm/Vectoid/CoordSysCore.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -35,6 +24,5 @@ class CoordSys : public CoordSysCore {
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_COORDSYS_H_

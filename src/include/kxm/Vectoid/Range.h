@@ -1,15 +1,5 @@
-//
-//  Range.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_RANGE_H_
 #define KXM_VECTOID_RANGE_H_
-
 
 namespace kxm {
 namespace Vectoid {
@@ -117,9 +107,7 @@ float Range::AffineCombination(float t) const {
     return (1.0f - t)*min_ + t*max_;
 }
 
-
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_RANGE_H_

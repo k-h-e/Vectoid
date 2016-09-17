@@ -1,18 +1,7 @@
-//
-//  logging.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/7/12.
-//
-//
-
-
 #ifndef KXM_CORE_LOGGING_
 #define KXM_CORE_LOGGING_
 
-
 #include <ostream>
-
 
 namespace kxm {
 namespace Core {
@@ -41,7 +30,6 @@ LoggerHandle Log();
 
 }    // Namespace Core.
 }    // Namespace kxm.
-
 
 #endif    // KXM_CORE_LOGGING_
 

@@ -1,11 +1,3 @@
-//
-//  Simulation.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 4/7/13.
-//
-//
-
 #include <kxm/Zarch/Simulation.h>
 
 #include <kxm/Core/logging.h>

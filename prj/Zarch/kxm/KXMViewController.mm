@@ -1,12 +1,3 @@
-//
-//  KXMViewController.m
-//  kxm
-//
-//  Created by Kai Hergenroether on 2/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #import "KXMViewController.h"
 
 #include <string>
@@ -25,7 +16,6 @@ using namespace kxm::Game;
 using namespace kxm::Vectoid;
 using namespace kxm::Zarch;
 
-
 @interface KXMViewController () {
     EAGLContext               *glContext;
     CGFloat                   width, height;
@@ -43,7 +33,6 @@ using namespace kxm::Zarch;
 - (void)tearDownGL;
 
 @end
-
 
 @implementation KXMViewController
 

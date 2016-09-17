@@ -1,18 +1,8 @@
-//
-//  logging.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/7/12.
-//
-//
-
-
 #include <kxm/Core/logging.h>
 
 #include <iostream>
 
 using namespace std;
-
 
 namespace kxm {
 namespace Core {

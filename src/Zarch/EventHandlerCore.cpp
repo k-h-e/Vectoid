@@ -6,7 +6,6 @@
 using namespace std;
 using namespace kxm::Core;
 
-
 namespace kxm {
 namespace Zarch {
 

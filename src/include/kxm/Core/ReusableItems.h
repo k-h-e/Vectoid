@@ -1,19 +1,8 @@
-//
-//  ReusableItems.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 2/8/13.
-//
-//
-
-
 #ifndef KXM_CORE_REUSABLEITEMS_H_
 #define KXM_CORE_REUSABLEITEMS_H_
 
-
 #include <vector>
 #include <cassert>
-
 
 namespace kxm {
 namespace Core {
@@ -265,6 +254,4 @@ int ReusableItems<T>::Iterator::ItemId() {
 }    // Namespace Core.
 }    // Namespace kxm.
 
-
 #endif    // KXM_CORE_REUSABLEITEMS_H_
-

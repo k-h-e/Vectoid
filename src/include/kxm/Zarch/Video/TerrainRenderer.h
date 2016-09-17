@@ -1,21 +1,10 @@
-//
-//  TerrainRenderer.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 6/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef KXM_ZARCH_TERRAINRENDERER_H_
-#define KXM_ZARCH_TERRAINRENDERER_H_
-
+#ifndef KXM_ZARCH_VIDEO_TERRAINRENDERER_H_
+#define KXM_ZARCH_VIDEO_TERRAINRENDERER_H_
 
 #include <vector>
 #include <memory>
-
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
-
 
 namespace Vectoid {
     class RenderContext;
@@ -54,11 +43,8 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
     std::vector<GLfloat>                 vertices_;
 };
 
-
 }    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-
-#endif    // KXM_ZARCH_TERRAINRENDERER_H_
-
+#endif    // KXM_ZARCH_VIDEO_TERRAINRENDERER_H_

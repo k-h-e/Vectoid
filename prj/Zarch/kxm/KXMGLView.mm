@@ -1,27 +1,16 @@
-//
-//  KXMGLView.m
-//  kxm
-//
-//  Created by Kai Hergenroether on 6/7/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #import "KXMGLView.h"
 
 #include <memory>
-
 #include <kxm/Zarch/ControlsState.h>
 
 using namespace kxm::Zarch;
 
-
 @interface KXMGLView () {
     ControlsState *controlsState;
-    UITouch       *leftTouch, *rightTouch;
+    UITouch       *leftTouch,
+                  *rightTouch;
 }
 @end
-
 
 @implementation KXMGLView
 
@@ -48,7 +37,7 @@ using namespace kxm::Zarch;
 }
 
 - (void)touchesMoved: (NSSet *)touches withEvent: (UIEvent *)event {
-    // nop
+    // Nop.
 }
 
 - (void)touchesEnded: (NSSet *)touches withEvent: (UIEvent *)event {
@@ -67,6 +56,5 @@ using namespace kxm::Zarch;
 - (void)touchesCancelled: (NSSet *)touches withEvent: (UIEvent *)event {
     [self touchesEnded: touches withEvent: event];
 }
-
 
 @end

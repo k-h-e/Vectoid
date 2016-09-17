@@ -1,24 +1,13 @@
-//
-//  IntModN.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_CORE_INTMODN_H_
 #define KXM_CORE_INTMODN_H_
-
 
 namespace kxm {
 namespace Core {
 
-//! Integer variable representing a value from <c>[0, n - 1]</c> for a given modulus <c>n</c>,
-//! where this set is interpreted as a ring-like structure. For example, incrementing
-//! <c>n - 1</c> by one will yield <c>0</c>. Furthermore, the whole set can be offset by a given
-//! value <c>offset</c>, thus becoming <c>[offset, offset + n - 1]</c>, with
-//! <c>(offset + n - 1) + 1 = offset</c>.
+//! Integer variable representing a value from <c>[0, n - 1]</c> for a given modulus <c>n</c>, where this set is
+//! interpreted as a ring-like structure. For example, incrementing <c>n - 1</c> by one will yield <c>0</c>.
+//! Furthermore, the whole set can be offset by a given value <c>offset</c>, thus becoming
+//! <c>[offset, offset + n - 1]</c>, with <c>(offset + n - 1) + 1 = offset</c>.
 /*!
  *  \ingroup Core
  */
@@ -70,10 +59,8 @@ class IntModN {
         offset_;
 };
 
-
 }    // Namespace Core.
 }    // Namespace kxm.
-
 
 #endif    // KXM_CORE_INTMODN_H_
 

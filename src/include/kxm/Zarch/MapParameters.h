@@ -1,18 +1,7 @@
-//
-//  MapParameters.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/13/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_ZARCH_MAPPARAMETERS_H_
 #define KXM_ZARCH_MAPPARAMETERS_H_
 
-
 #include <kxm/Vectoid/Range.h>
-
 
 namespace kxm {
 namespace Zarch {
@@ -66,6 +55,5 @@ struct MapParameters {
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_MAPPARAMETERS_H_

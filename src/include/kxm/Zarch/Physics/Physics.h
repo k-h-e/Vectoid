@@ -4,8 +4,8 @@
  * \defgroup ZarchPhysics Physics
  */
 
-#ifndef KXM_ZARCH_PHYSICS_H_
-#define KXM_ZARCH_PHYSICS_H_
+#ifndef KXM_ZARCH_PHYSICS_PHYSICS_H_
+#define KXM_ZARCH_PHYSICS_PHYSICS_H_
 
 #include <memory>
 #include <chrono>
@@ -71,4 +71,4 @@ class Physics : public EventHandlerCore {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_PHYSICS_H_
+#endif    // KXM_ZARCH_PHYSICS_PHYSICS_H_

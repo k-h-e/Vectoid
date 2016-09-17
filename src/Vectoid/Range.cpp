@@ -1,14 +1,4 @@
-//
-//  Range.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/Range.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -40,7 +30,6 @@ void Range::Grow(float number) {
     else if (number > max_)
         max_ = number;
 }
-    
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.

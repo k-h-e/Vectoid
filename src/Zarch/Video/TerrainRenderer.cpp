@@ -1,12 +1,3 @@
-//
-//  TerrainRenderer.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 6/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 
 #include <kxm/Core/IntModN.h>
@@ -16,7 +7,6 @@
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
-
 
 namespace kxm {
 namespace Zarch {
@@ -147,7 +137,6 @@ void TerrainRenderer::Render(RenderContext *context) {
     glDisableClientState(GL_VERTEX_ARRAY);
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
-
 
 }    // Namespace Video.
 }    // Namespace Zarch.

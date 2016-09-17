@@ -380,14 +380,14 @@
 		2A8DFD751D8DCE6300E22E0D /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFD761D8DCE6300E22E0D /* Actions.h */,
-				2A8DFD771D8DCE6300E22E0D /* ActorMap.h */,
-				2A8DFD781D8DCE6300E22E0D /* ActorName.h */,
-				2A8DFD791D8DCE6300E22E0D /* ActorNaming.h */,
 				2A8DFD7A1D8DCE6300E22E0D /* Event.h */,
 				2A8DFD7B1D8DCE6300E22E0D /* EventLoop.h */,
 				2A8DFD7C1D8DCE6300E22E0D /* EventLoopHub.h */,
+				2A8DFD771D8DCE6300E22E0D /* ActorMap.h */,
+				2A8DFD781D8DCE6300E22E0D /* ActorName.h */,
+				2A8DFD791D8DCE6300E22E0D /* ActorNaming.h */,
 				2A8DFD7D1D8DCE6300E22E0D /* ReusableActors.h */,
+				2A8DFD761D8DCE6300E22E0D /* Actions.h */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -418,19 +418,19 @@
 		2A8DFD8F1D8DCE6300E22E0D /* Zarch */ = {
 			isa = PBXGroup;
 			children = (
+				2A8DFD941D8DCE6300E22E0D /* Events */,
+				2A8DFDA21D8DCE6300E22E0D /* GameLogic */,
+				2A8DFDA91D8DCE6300E22E0D /* Physics */,
+				2A8DFDB21D8DCE6300E22E0D /* Video */,
 				2A8DFD901D8DCE6300E22E0D /* ActorInfo.h */,
 				2A8DFD911D8DCE6300E22E0D /* ActorType.h */,
 				2A8DFD921D8DCE6300E22E0D /* ControlsState.h */,
 				2A8DFD931D8DCE6300E22E0D /* EventHandlerCore.h */,
-				2A8DFD941D8DCE6300E22E0D /* Events */,
-				2A8DFDA21D8DCE6300E22E0D /* GameLogic */,
 				2A8DFDA71D8DCE6300E22E0D /* LanderGeometry.h */,
 				2A8DFDA81D8DCE6300E22E0D /* MapParameters.h */,
-				2A8DFDA91D8DCE6300E22E0D /* Physics */,
 				2A8DFDAF1D8DCE6300E22E0D /* Presentation.h */,
 				2A8DFDB01D8DCE6300E22E0D /* Simulation.h */,
 				2A8DFDB11D8DCE6300E22E0D /* Terrain.h */,
-				2A8DFDB21D8DCE6300E22E0D /* Video */,
 				2A8DFDB91D8DCE6300E22E0D /* Zarch.h */,
 			);
 			path = Zarch;
@@ -459,8 +459,8 @@
 		2A8DFDA21D8DCE6300E22E0D /* GameLogic */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFDA31D8DCE6300E22E0D /* Data.h */,
 				2A8DFDA41D8DCE6300E22E0D /* GameLogic.h */,
+				2A8DFDA31D8DCE6300E22E0D /* Data.h */,
 				2A8DFDA51D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDA61D8DCE6300E22E0D /* Shot.h */,
 			);
@@ -470,10 +470,10 @@
 		2A8DFDA91D8DCE6300E22E0D /* Physics */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFDAA1D8DCE6300E22E0D /* Actor.h */,
-				2A8DFDAB1D8DCE6300E22E0D /* Data.h */,
-				2A8DFDAC1D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDAD1D8DCE6300E22E0D /* Physics.h */,
+				2A8DFDAB1D8DCE6300E22E0D /* Data.h */,
+				2A8DFDAA1D8DCE6300E22E0D /* Actor.h */,
+				2A8DFDAC1D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDAE1D8DCE6300E22E0D /* Shot.h */,
 			);
 			path = Physics;
@@ -482,12 +482,12 @@
 		2A8DFDB21D8DCE6300E22E0D /* Video */ = {
 			isa = PBXGroup;
 			children = (
+				2A8DFDB81D8DCE6300E22E0D /* Video.h */,
 				2A8DFDB31D8DCE6300E22E0D /* Data.h */,
 				2A8DFDB41D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDB51D8DCE6300E22E0D /* Shot.h */,
 				2A8DFDB61D8DCE6300E22E0D /* StarField.h */,
 				2A8DFDB71D8DCE6300E22E0D /* TerrainRenderer.h */,
-				2A8DFDB81D8DCE6300E22E0D /* Video.h */,
 			);
 			path = Video;
 			sourceTree = "<group>";

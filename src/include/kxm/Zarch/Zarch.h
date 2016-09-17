@@ -1,26 +1,13 @@
-//
-//  Zarch.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 12/3/12.
-//
-//
-
-
 #ifndef KXM_ZARCH_ZARCH_H_
 #define KXM_ZARCH_ZARCH_H_
-
 
 /*!
  *  \defgroup Zarch Zarch
  */
 
-
 #include <memory>
 #include <thread>
-
 #include <kxm/Zarch/Presentation.h>
-
 
 namespace kxm {
 
@@ -68,6 +55,4 @@ class Zarch {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-
 #endif    // KXM_ZARCH_ZARCH_H_
-

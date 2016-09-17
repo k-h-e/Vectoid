@@ -1,24 +1,11 @@
-//
-//  IntModN.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_CORE_BUFFER_H_
 #define KXM_CORE_BUFFER_H_
 
-
 #include <stdint.h>
-
 #include <vector>
-
 
 namespace kxm {
 namespace Core {
-
 
 //! Binary buffer, allowing iterative composition and readout.
 /*!
@@ -115,6 +102,5 @@ class Buffer {
 
 }    // Namespace Core.
 }    // Namespace kxm.
-
 
 #endif    // KXM_CORE_BUFFER_H_

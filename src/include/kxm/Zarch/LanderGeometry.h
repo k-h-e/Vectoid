@@ -1,20 +1,9 @@
-//
-//  LanderGeometry.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_ZARCH_LANDERGEOMETRY_H_
 #define KXM_ZARCH_LANDERGEOMETRY_H_
-
 
 #include <vector>
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
-
 
 namespace kxm {
 
@@ -49,9 +38,7 @@ class LanderGeometry : public virtual Vectoid::GeometryInterface {
                                  colorArray_;
 };
 
-
 }    // Namespace Zarch.
 }    // Namespace kxm.
-
 
 #endif    // KXM_ZARCH_LANDERGEOMETRY_H_

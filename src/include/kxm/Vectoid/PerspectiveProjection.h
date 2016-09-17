@@ -1,19 +1,8 @@
-//
-//  PerspectiveProjection.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_PERSPECTIVEPROJECTION_H_
 #define KXM_VECTOID_PERSPECTIVEPROJECTION_H_
 
-
 #include <kxm/Vectoid/SceneGraphNode.h>
 #include <kxm/Vectoid/Vector.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -56,6 +45,5 @@ class PerspectiveProjection : public SceneGraphNode {
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KVM_VECTOID_PERSPECTIVEPROJECTION_H_

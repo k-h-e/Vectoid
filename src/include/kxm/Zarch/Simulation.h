@@ -1,13 +1,10 @@
 #ifndef KXM_ZARCH_SIMULATION_H_
 #define KXM_ZARCH_SIMULATION_H_
 
-
 #include <memory>
-
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
-
 
 namespace kxm {
 
@@ -30,8 +27,8 @@ namespace Physics {
     class Physics;
 }
 
-//! Ties together the simulation subsytems, that together run on the dedicated simulation thread (as
-//! opposed to the main UI thread).
+//! Ties together the simulation subsytems, that together run on the dedicated simulation thread (as opposed to the main
+//! UI thread).
 /*!
  *  \ingroup Zarch
  */
@@ -59,6 +56,4 @@ class Simulation : public EventHandlerCore, public virtual Core::ActionInterface
 }
 }
 
-
 #endif    // KXM_ZARCH_SIMULATION_H_
-

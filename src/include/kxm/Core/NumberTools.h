@@ -1,14 +1,5 @@
-//
-//  Tools.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef KXM_CORE_TOOLS_H_
-#define KXM_CORE_TOOLS_H_
-
+#ifndef KXM_CORE_NUMBERTOOLS_H_
+#define KXM_CORE_NUMBERTOOLS_H_
 
 namespace kxm {
 namespace Core {
@@ -44,6 +35,4 @@ inline void ClampMin(float *numba, float min) {
 }    // Namespace Core.
 }    // namespace kxm.
 
-
-#endif    // KXM_CORE_TOOLS_H_
-
+#endif    // KXM_CORE_NUMBERTOOLS_H_

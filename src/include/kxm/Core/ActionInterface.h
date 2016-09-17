@@ -1,18 +1,7 @@
-//
-//  ActionInterface.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 3/30/13.
-//
-//
-
-
 #ifndef KXM_CORE_ACTIONINTERFACE_H_
 #define KXM_CORE_ACTIONINTERFACE_H_
 
-
 #include <kxm/Core/Interface.h>
-
 
 namespace kxm {
 namespace Core {
@@ -30,6 +19,4 @@ class ActionInterface : public virtual Interface {
 }
 }
 
-
 #endif    // KXM_CORE_ACTIONINTERFACE_H_
-

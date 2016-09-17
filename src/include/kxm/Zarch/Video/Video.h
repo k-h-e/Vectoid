@@ -4,8 +4,8 @@
  * \defgroup ZarchVideo Video
  */
 
-#ifndef KXM_ZARCH_VIDEO_H_
-#define KXM_ZARCH_VIDEO_H_
+#ifndef KXM_ZARCH_VIDEO_VIDEO_H_
+#define KXM_ZARCH_VIDEO_VIDEO_H_
 
 #include <memory>
 #include <chrono>
@@ -79,4 +79,4 @@ class Video : public EventHandlerCore {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_VIDEO_H_
+#endif    // KXM_ZARCH_VIDEO_VIDEO_H_

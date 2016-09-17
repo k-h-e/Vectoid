@@ -1,20 +1,8 @@
-//
-//  terminal.h
-//  kxm
-//
-//  Created by Kai Hergenröther on 3/30/13.
-//
-//
-
-
 #ifndef KXM_CORE_TERMINAL_H_
 #define KXM_CORE_TERMINAL_H_
 
-
 #include <cstdlib>
-
 #include <string>
-
 
 namespace kxm {
 namespace Core {
@@ -27,6 +15,5 @@ inline void HandleTerminalCondition(const std::string &message) {
 
 }    // Namespace Core.
 }    // Namespace kxm.
-
 
 #endif    // KXM_CORE_TERMINAL_H_

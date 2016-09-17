@@ -1,19 +1,9 @@
-//
-//  Particles.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/Particles.h>
 
 #include <kxm/Core/NumberTools.h>
 
 using namespace std;
 using namespace kxm::Core;
-
 
 namespace kxm {
 namespace Vectoid {

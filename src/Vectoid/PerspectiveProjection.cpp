@@ -1,16 +1,6 @@
-//
-//  PerspectiveProjection.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/PerspectiveProjection.h>
 
 #include <kxm/Vectoid/OpenGL.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -78,7 +68,7 @@ void PerspectiveProjection::Render(RenderContext *context) {
         ComputeWindowDimensions(&windowWidth, &windowHeight);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-#ifdef VECTOID_GLES
+#ifdef KXM_VECTOID_GLES
         glFrustumf(-windowWidth  / 2.0f, windowWidth  / 2.0f,
                    -windowHeight / 2.0f, windowHeight / 2.0f,
                     eyepointDistance_, eyepointDistance_ + viewingDepth_);

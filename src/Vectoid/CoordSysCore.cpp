@@ -1,14 +1,4 @@
-//
-//  CoordSysCore.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/CoordSysCore.h>
-
 
 namespace kxm {
 namespace Vectoid {

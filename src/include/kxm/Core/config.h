@@ -9,8 +9,8 @@ namespace Core {
 //! Used for spacer data members guarding against the "neighboring field" multithreading issue.
 typedef uint64_t spacer_t;
 
-}
-}
+}    // Namespace Core.
+}    // Namespace kxm.
 
 
 #endif    // KXM_CORE_CONFIG_H_

@@ -1,18 +1,8 @@
-//
-//  CoordSysInterface.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #ifndef KXM_VECTOID_COORDSYSINTERFACE_H_
 #define KXM_VECTOID_COORDSYSINTERFACE_H_
 
-
 #include <kxm/Core/Interface.h>
 #include <kxm/Vectoid/Vector.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -45,6 +35,5 @@ class CoordSysInterface : public virtual Core::Interface {
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_COORDSYSINTERFACE_H_

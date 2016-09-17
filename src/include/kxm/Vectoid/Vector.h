@@ -1,15 +1,5 @@
-//
-//  Header.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 2/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_VECTOR_H_
 #define KXM_VECTOID_VECTOR_H_
-
 
 #include <cmath>
 #include <string>
@@ -17,7 +7,6 @@
 /*!
  *  \defgroup Vectoid Vectoid 3D Graphics
  */
-
 
 namespace kxm {
 namespace Vectoid {

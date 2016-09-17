@@ -1,16 +1,6 @@
-//
-//  Event.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 10/29/14.
-//
-//
-
-
 #include <kxm/Game/Event.h>
 
 #include <functional>
-
 
 namespace kxm {
 namespace Game {

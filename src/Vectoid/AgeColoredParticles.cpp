@@ -1,12 +1,3 @@
-//
-//  AgeColoredParticles.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 6/10/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/AgeColoredParticles.h>
 
 #include <kxm/Core/logging.h>
@@ -15,7 +6,6 @@
 
 using namespace std;
 using namespace kxm::Core;
-
 
 namespace kxm {
 namespace Vectoid {
@@ -79,7 +69,6 @@ void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
         glDisableClientState(GL_VERTEX_ARRAY);
     }
 }
-
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.

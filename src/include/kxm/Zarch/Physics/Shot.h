@@ -1,5 +1,5 @@
-#ifndef ZARCH_PHYSICS_SHOT_H_
-#define ZARCH_PHYSICS_SHOT_H_
+#ifndef KXM_ZARCH_PHYSICS_SHOT_H_
+#define KXM_ZARCH_PHYSICS_SHOT_H_
 
 #include <memory>
 #include <kxm/Zarch/Physics/Actor.h>
@@ -37,4 +37,4 @@ class Shot : public Actor {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // ZARCH_PHYSICS_SHOT_H_
+#endif    // KXM_ZARCH_PHYSICS_SHOT_H_

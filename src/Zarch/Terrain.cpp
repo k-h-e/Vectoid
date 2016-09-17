@@ -1,12 +1,3 @@
-//
-//  ZarchTerrain.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/15/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Zarch/Terrain.h>
 
 #include <kxm/Core/NumberTools.h>
@@ -16,7 +7,6 @@
 using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
-
 
 namespace kxm {
 namespace Zarch {
@@ -141,7 +131,6 @@ void Terrain::GenerateValleyFormation() {
         }
     }
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

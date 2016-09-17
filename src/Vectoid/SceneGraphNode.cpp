@@ -1,19 +1,9 @@
-//
-//  SceneGraphNode.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/5/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/SceneGraphNode.h>
 
 #include <cstdio>
 #include <cassert>
 
 using namespace std;
-
 
 namespace kxm {
 namespace Vectoid {

@@ -1,5 +1,5 @@
-#ifndef KXM_ZARCH_STARFIELD_H_
-#define KXM_ZARCH_STARFIELD_H_
+#ifndef KXM_ZARCH_VIDEO_STARFIELD_H_
+#define KXM_ZARCH_VIDEO_STARFIELD_H_
 
 #include <memory>
 #include <kxm/Core/ActionInterface.h>
@@ -38,4 +38,4 @@ class StarField : public virtual Core::ActionInterface {
 }    // Namespace kxm.
 
 
-#endif    // KXM_ZARCH_STARFIELD_H_
+#endif    // KXM_ZARCH_VIDEO_STARFIELD_H_

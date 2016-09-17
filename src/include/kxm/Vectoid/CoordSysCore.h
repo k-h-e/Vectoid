@@ -1,20 +1,9 @@
-//
-//  CoordSysCore.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_COORDSYSCORE_H_
 #define KXM_VECTOID_COORDSYSCORE_H_
-
 
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/SceneGraphNode.h>
 #include <kxm/Vectoid/CoordSysInterface.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -46,6 +35,5 @@ class CoordSysCore : public SceneGraphNode,
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.
-
 
 #endif    // KXM_VECTOID_COORDSYSCORE_H_

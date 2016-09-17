@@ -1,19 +1,8 @@
-//
-//  Transform.h
-//  kxm
-//
-//  Created by Kai Hergenroether on 3/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #ifndef KXM_VECTOID_TRANSFORM_H_
 #define KXM_VECTOID_TRANSFORM_H_
 
-
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Vector.h>
-
 
 namespace kxm {
 namespace Vectoid {
@@ -336,6 +325,4 @@ const float *Transform::MatrixElements() const {
 }    // Namespace Vectoid.
 }    // Namespace kxm.
 
-
 #endif    // KXM_VECTOID_TRANSFORM_H_
-

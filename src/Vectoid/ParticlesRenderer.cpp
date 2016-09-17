@@ -1,12 +1,3 @@
-//
-//  ThrusterParticlesGeometry.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/13/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Vectoid/ParticlesRenderer.h>
 
 #include <kxm/Vectoid/Particles.h>
@@ -15,12 +6,12 @@ using namespace std;
 using namespace kxm::Core;
 using namespace kxm::Vectoid;
 
-
 namespace kxm {
-namespace Zarch {
+namespace Vectoid {
 
 ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
         : particles_(particles) {
+    // Nop.
 }
 
 void ParticlesRenderer::Render(RenderContext *context) {
@@ -55,6 +46,5 @@ void ParticlesRenderer::Render(RenderContext *context) {
     }
 }
 
-
-}    // Namespace Zarch.
+}    // Namespace Vectoid.
 }    // Namespace kxm.

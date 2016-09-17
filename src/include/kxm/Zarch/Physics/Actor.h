@@ -1,5 +1,5 @@
-#ifndef ZARCH_PHYSICS_ACTOR_H_
-#define ZARCH_PHYSICS_ACTOR_H_
+#ifndef KXM_ZARCH_PHYSICS_ACTOR_H_
+#define KXM_ZARCH_PHYSICS_ACTOR_H_
 
 #include <memory.h>
 #include <kxm/Core/ActionInterface.h>
@@ -36,4 +36,4 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
 }    // Namespace Zarch
 }    // Namespace kxm
 
-#endif    // ZARCH_PHYSICS_ACTOR_H_
+#endif    // KXM_ZARCH_PHYSICS_ACTOR_H_

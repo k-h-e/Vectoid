@@ -1,5 +1,5 @@
-#ifndef ZARCH_PHYSICS_LANDER_H_
-#define ZARCH_PHYSICS_LANDER_H_
+#ifndef KXM_ZARCH_PHYSICS_LANDER_H_
+#define KXM_ZARCH_PHYSICS_LANDER_H_
 
 #include <memory>
 #include <kxm/Zarch/Physics/Actor.h>
@@ -41,4 +41,4 @@ class Lander : public Actor {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // ZARCH_PHYSICS_LANDER_H_
+#endif    // KXM_ZARCH_PHYSICS_LANDER_H_

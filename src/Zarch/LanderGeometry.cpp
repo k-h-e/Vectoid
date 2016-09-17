@@ -1,19 +1,9 @@
-//
-//  LanderGeometry.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 5/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Zarch/LanderGeometry.h>
 
 #include <kxm/Vectoid/Vector.h>
 
 using std::vector;
 using namespace kxm::Vectoid;
-
 
 namespace kxm {
 namespace Zarch {
@@ -102,7 +92,6 @@ void LanderGeometry::Scale(float factor) {
          iter != vertexArray_.end(); ++iter)
         (*iter) *= (GLfloat)factor;
 }
-
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

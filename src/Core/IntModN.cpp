@@ -1,20 +1,9 @@
-//
-//  IntModN.cpp
-//  kxm
-//
-//  Created by Kai Hergenroether on 4/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-
 #include <kxm/Core/IntModN.h>
 
 #include <kxm/Core/NumberTools.h>
 
-
 namespace kxm {
 namespace Core {
-
 
 IntModN::IntModN(int modulus, int offset) {
     if (modulus < 2)
@@ -98,7 +87,6 @@ int IntModN::ToInt() const {
 bool IntModN::IncrementWillWrap() const {
     return number_ == modulus_ - 1;
 }
-
 
 }    // Namespace Core.
 }    // Namespace kxm.
