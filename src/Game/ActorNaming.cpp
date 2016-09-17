@@ -1,4 +1,4 @@
-#include <Game/ActorNaming.h>
+#include <kxm/Game/ActorNaming.h>
 
 #include <cassert>
 #include <cstdio>

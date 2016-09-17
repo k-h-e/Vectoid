@@ -7,7 +7,7 @@
 //
 
 
-#include <Vectoid/CoordSysCore.h>
+#include <kxm/Vectoid/CoordSysCore.h>
 
 
 namespace kxm {

@@ -7,7 +7,7 @@
 //
 
 
-#include <Zarch/MapParameters.h>
+#include <kxm/Zarch/MapParameters.h>
 
 
 namespace kxm {

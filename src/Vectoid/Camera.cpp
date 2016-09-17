@@ -7,9 +7,9 @@
 //
 
 
-#include <Vectoid/Camera.h>
+#include <kxm/Vectoid/Camera.h>
 
-#include <Vectoid/OpenGL.h>
+#include <kxm/Vectoid/OpenGL.h>
 
 
 namespace kxm {

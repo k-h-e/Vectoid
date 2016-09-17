@@ -1,5 +1,5 @@
-#include <Zarch/Events/FrameGeneratedEvent.h>
-#include <Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/Events/FrameGeneratedEvent.h>
+#include <kxm/Zarch/EventHandlerCore.h>
 
 namespace kxm {
 namespace Zarch {

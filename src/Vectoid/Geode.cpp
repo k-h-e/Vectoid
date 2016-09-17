@@ -6,13 +6,11 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#include <kxm/Vectoid/Geode.h>
 
 #include <cassert>
 
-#include <Vectoid/Geode.h>
-
 using namespace std;
-
 
 namespace kxm {
 namespace Vectoid {

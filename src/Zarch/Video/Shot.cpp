@@ -1,9 +1,9 @@
-#include <Zarch/Video/Shot.h>
+#include <kxm/Zarch/Video/Shot.h>
 
-#include <Vectoid/Particles.h>
-#include <Zarch/Events/ActorCreationEvent.h>
-#include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Video/Data.h>
+#include <kxm/Vectoid/Particles.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/MoveEvent.h>
+#include <kxm/Zarch/Video/Data.h>
 
 using namespace std;
 using namespace kxm::Vectoid;

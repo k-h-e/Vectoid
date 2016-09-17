@@ -1,16 +1,16 @@
-#include <Zarch/GameLogic/Lander.h>
+#include <kxm/Zarch/GameLogic/Lander.h>
 
 #include <cstdio>
 #include <kxm/Core/NumberTools.h>
-#include <Game/EventLoop.h>
-#include <Game/ActorNaming.h>
-#include <Vectoid/Transform.h>
-#include <Zarch/MapParameters.h>
-#include <Zarch/Events/ActorCreationEvent.h>
-#include <Zarch/Events/ControlsEvent.h>
-#include <Zarch/Events/PhysicsOverrideEvent.h>
-#include <Zarch/Events/AccelerationEvent.h>
-#include <Zarch/GameLogic/Data.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Game/ActorNaming.h>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
+#include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/GameLogic/Data.h>
 
 using namespace std;
 using namespace kxm::Core;

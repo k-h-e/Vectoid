@@ -1,29 +1,29 @@
-#include <Zarch/Video/Video.h>
+#include <kxm/Zarch/Video/Video.h>
 
 #include <kxm/Core/logging.h>
-#include <Vectoid/PerspectiveProjection.h>
-#include <Vectoid/Camera.h>
-#include <Vectoid/CoordSys.h>
-#include <Vectoid/Geode.h>
-#include <Vectoid/Particles.h>
-#include <Vectoid/ParticlesRenderer.h>
-#include <Vectoid/Transform.h>
-#include <Game/EventLoop.h>
-#include <Game/Actions.h>
-#include <Zarch/LanderGeometry.h>
-#include <Zarch/MapParameters.h>
-#include <Zarch/Terrain.h>
-#include <Zarch/Video/Shot.h>
-#include <Zarch/Video/StarField.h>
-#include <Zarch/Video/TerrainRenderer.h>
-#include <Zarch/Events/ZarchEvent.h>
-#include <Zarch/Events/ActorCreationEvent.h>
-#include <Zarch/Events/ActorTerminationEvent.h>
-#include <Zarch/Events/FrameGeneratedEvent.h>
-#include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Events/VelocityEvent.h>
-#include <Zarch/Events/AccelerationEvent.h>
-#include <Zarch/Events/ControlsEvent.h>
+#include <kxm/Vectoid/PerspectiveProjection.h>
+#include <kxm/Vectoid/Camera.h>
+#include <kxm/Vectoid/CoordSys.h>
+#include <kxm/Vectoid/Geode.h>
+#include <kxm/Vectoid/Particles.h>
+#include <kxm/Vectoid/ParticlesRenderer.h>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Game/Actions.h>
+#include <kxm/Zarch/LanderGeometry.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/Video/Shot.h>
+#include <kxm/Zarch/Video/StarField.h>
+#include <kxm/Zarch/Video/TerrainRenderer.h>
+#include <kxm/Zarch/Events/ZarchEvent.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ActorTerminationEvent.h>
+#include <kxm/Zarch/Events/FrameGeneratedEvent.h>
+#include <kxm/Zarch/Events/MoveEvent.h>
+#include <kxm/Zarch/Events/VelocityEvent.h>
+#include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 
 using namespace std;
 using namespace std::chrono;

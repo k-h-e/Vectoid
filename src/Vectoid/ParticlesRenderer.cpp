@@ -7,9 +7,9 @@
 //
 
 
-#include <Vectoid/ParticlesRenderer.h>
+#include <kxm/Vectoid/ParticlesRenderer.h>
 
-#include <Vectoid/Particles.h>
+#include <kxm/Vectoid/Particles.h>
 
 using namespace std;
 using namespace kxm::Core;

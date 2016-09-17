@@ -1,7 +1,7 @@
-#include <Zarch/GameLogic/Shot.h>
+#include <kxm/Zarch/GameLogic/Shot.h>
 
-#include <Zarch/MapParameters.h>
-#include <Zarch/GameLogic/Data.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/GameLogic/Data.h>
 
 using namespace std;
 using namespace kxm::Game;

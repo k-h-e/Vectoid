@@ -7,11 +7,11 @@
 //
 
 
-#include <Vectoid/AgeColoredParticles.h>
+#include <kxm/Vectoid/AgeColoredParticles.h>
 
 #include <kxm/Core/logging.h>
 #include <kxm/Core/NumberTools.h>
-#include <Vectoid/Particles.h>
+#include <kxm/Vectoid/Particles.h>
 
 using namespace std;
 using namespace kxm::Core;

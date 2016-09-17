@@ -7,7 +7,7 @@
 //
 
 
-#include <Vectoid/Range.h>
+#include <kxm/Vectoid/Range.h>
 
 
 namespace kxm {

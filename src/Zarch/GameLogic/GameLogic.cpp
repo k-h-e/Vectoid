@@ -1,20 +1,20 @@
-#include <Zarch/GameLogic/GameLogic.h>
+#include <kxm/Zarch/GameLogic/GameLogic.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventLoop.h>
-#include <Game/ReusableActors.h>
-#include <Vectoid/Transform.h>
-#include <Zarch/MapParameters.h>
-#include <Zarch/Events/ZarchEvent.h>
-#include <Zarch/Events/InitializationEvent.h>
-#include <Zarch/Events/TimeEvent.h>
-#include <Zarch/Events/ActorCreationEvent.h>
-#include <Zarch/Events/ActorTerminationEvent.h>
-#include <Zarch/Events/PhysicsOverrideEvent.h>
-#include <Zarch/Events/ControlsEvent.h>
-#include <Zarch/GameLogic/Data.h>
-#include <Zarch/GameLogic/Lander.h>
-#include <Zarch/GameLogic/Shot.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Game/ReusableActors.h>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Events/ZarchEvent.h>
+#include <kxm/Zarch/Events/InitializationEvent.h>
+#include <kxm/Zarch/Events/TimeEvent.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ActorTerminationEvent.h>
+#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/GameLogic/Data.h>
+#include <kxm/Zarch/GameLogic/Lander.h>
+#include <kxm/Zarch/GameLogic/Shot.h>
 
 using namespace std;
 using namespace std::chrono;

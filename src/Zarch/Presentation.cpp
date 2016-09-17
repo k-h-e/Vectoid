@@ -1,8 +1,8 @@
-#include <Zarch/Presentation.h>
+#include <kxm/Zarch/Presentation.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventLoop.h>
-#include <Zarch/Zarch.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Zarch/Zarch.h>
 
 using namespace std;
 using namespace kxm::Core;

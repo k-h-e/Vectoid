@@ -7,7 +7,7 @@
 //
 
 
-#include <Vectoid/Particles.h>
+#include <kxm/Vectoid/Particles.h>
 
 #include <kxm/Core/NumberTools.h>
 

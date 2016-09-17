@@ -6,16 +6,16 @@
 //
 //
 
-#include <Zarch/Simulation.h>
+#include <kxm/Zarch/Simulation.h>
 
 #include <kxm/Core/logging.h>
-#include <Game/EventLoop.h>
-#include <Zarch/Zarch.h>
-#include <Zarch/GameLogic/GameLogic.h>
-#include <Zarch/Physics/Physics.h>
-#include <Zarch/Events/InitializationEvent.h>
-#include <Zarch/Events/UpdatePhysicsEvent.h>
-#include <Zarch/Events/PhysicsUpdatedEvent.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Zarch/Zarch.h>
+#include <kxm/Zarch/GameLogic/GameLogic.h>
+#include <kxm/Zarch/Physics/Physics.h>
+#include <kxm/Zarch/Events/InitializationEvent.h>
+#include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
+#include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
 
 using namespace std;
 using namespace kxm::Core;

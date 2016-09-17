@@ -1,11 +1,10 @@
-#include <Zarch/Video/StarField.h>
+#include <kxm/Zarch/Video/StarField.h>
 
 #include <random>
-
 #include <kxm/Core/ReusableItems.h>
-#include <Vectoid/Camera.h>
-#include <Vectoid/Particles.h>
-#include <Zarch/MapParameters.h>
+#include <kxm/Vectoid/Camera.h>
+#include <kxm/Vectoid/Particles.h>
+#include <kxm/Zarch/MapParameters.h>
 
 using namespace std;
 using namespace kxm::Core;

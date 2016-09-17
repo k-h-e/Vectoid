@@ -1,12 +1,4 @@
-//
-//  EventLoopHub.cpp
-//  kxm
-//
-//  Created by Kai Hergenröther on 11/10/14.
-//
-//
-
-#include <Game/EventLoopHub.h>
+#include <kxm/Game/EventLoopHub.h>
 
 #include <cassert>
 #include <cstdio>

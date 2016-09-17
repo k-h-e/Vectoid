@@ -7,7 +7,7 @@
 //
 
 
-#include <Vectoid/TestTriangle.h>
+#include <kxm/Vectoid/TestTriangle.h>
 
 
 namespace kxm {

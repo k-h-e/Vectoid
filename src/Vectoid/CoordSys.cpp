@@ -7,9 +7,9 @@
 //
 
 
-#include <Vectoid/CoordSys.h>
+#include <kxm/Vectoid/CoordSys.h>
 
-#include <Vectoid/OpenGL.h>
+#include <kxm/Vectoid/OpenGL.h>
 
 
 namespace kxm {

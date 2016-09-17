@@ -1,5 +1,5 @@
-#include <Zarch/Events/AccelerationEvent.h>
-#include <Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/EventHandlerCore.h>
 
 using namespace kxm::Game;
 using namespace kxm::Vectoid;

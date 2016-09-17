@@ -1,5 +1,5 @@
-#include <Zarch/Events/ActorTerminationEvent.h>
-#include <Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/Events/ActorTerminationEvent.h>
+#include <kxm/Zarch/EventHandlerCore.h>
 
 using namespace kxm::Core;
 using namespace kxm::Game;

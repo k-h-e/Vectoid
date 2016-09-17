@@ -7,11 +7,11 @@
 //
 
 
-#include <Zarch/Video/TerrainRenderer.h>
+#include <kxm/Zarch/Video/TerrainRenderer.h>
 
 #include <kxm/Core/IntModN.h>
-#include <Zarch/Terrain.h>
-#include <Zarch/MapParameters.h>
+#include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/MapParameters.h>
 
 using namespace std;
 using namespace kxm::Core;

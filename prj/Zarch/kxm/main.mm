@@ -7,8 +7,8 @@
 //
 
 
-#include <Vectoid/Vector.h>
-#include <Vectoid/Transform.h>
+#include <kxm/Vectoid/Vector.h>
+#include <kxm/Vectoid/Transform.h>
 
 #import <UIKit/UIKit.h>
 

@@ -1,10 +1,10 @@
-#include <Zarch/Physics/Shot.h>
+#include <kxm/Zarch/Physics/Shot.h>
 
-#include <Game/EventLoop.h>
-#include <Zarch/MapParameters.h>
-#include <Zarch/Events/ActorCreationEvent.h>
-#include <Zarch/Events/MoveEvent.h>
-#include <Zarch/Physics/Data.h>
+#include <kxm/Game/EventLoop.h>
+#include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/MoveEvent.h>
+#include <kxm/Zarch/Physics/Data.h>
 
 using namespace std;
 using namespace kxm::Game;

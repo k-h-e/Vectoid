@@ -7,7 +7,7 @@
 //
 
 
-#include <Vectoid/SceneGraphNode.h>
+#include <kxm/Vectoid/SceneGraphNode.h>
 
 #include <cstdio>
 #include <cassert>

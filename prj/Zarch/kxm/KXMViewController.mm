@@ -12,14 +12,11 @@
 #include <string>
 #include <sstream>
 #include <memory>
-
 #import <CoreMotion/CMMotionManager.h>
-
 #include <kxm/Core/logging.h>
-#include <Vectoid/Transform.h>
-#include <Zarch/ControlsState.h>
-#include <Zarch/Zarch.h>
-
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Zarch/ControlsState.h>
+#include <kxm/Zarch/Zarch.h>
 #import "KXMGLView.h"
 
 using namespace std;

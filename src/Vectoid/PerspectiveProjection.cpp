@@ -7,9 +7,9 @@
 //
 
 
-#include <Vectoid/PerspectiveProjection.h>
+#include <kxm/Vectoid/PerspectiveProjection.h>
 
-#include <Vectoid/OpenGL.h>
+#include <kxm/Vectoid/OpenGL.h>
 
 
 namespace kxm {

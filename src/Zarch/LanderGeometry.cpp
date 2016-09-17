@@ -7,9 +7,9 @@
 //
 
 
-#include <Zarch/LanderGeometry.h>
+#include <kxm/Zarch/LanderGeometry.h>
 
-#include <Vectoid/Vector.h>
+#include <kxm/Vectoid/Vector.h>
 
 using std::vector;
 using namespace kxm::Vectoid;
