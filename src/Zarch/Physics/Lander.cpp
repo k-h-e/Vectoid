@@ -20,7 +20,9 @@ namespace kxm {
 namespace Zarch {
 namespace Physics {
 
-Lander::Lander() {
+Lander::Lander()
+        :  accelerationEnabled_(false),
+           applyAccelerationInLocalCoordSys_(false) {
     // Nop.
 }
 

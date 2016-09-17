@@ -31,7 +31,7 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
           landers_(actions_),
           shots_(actions_),
           data_(new Data()) {
-    data_->eventLoop = eventLoop;
+    data_->eventLoop     = eventLoop;
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
@@ -66,7 +66,7 @@ void GameLogic::Handle(const TimeEvent &event) {
 }
 
 void GameLogic::Handle(const ControlsEvent &event) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }
@@ -77,41 +77,38 @@ void GameLogic::PrepareMap() {
 }
 
 void GameLogic::CreateActor(const ActorCreationEvent &event) {
-    EventHandlerCore *actor = nullptr;
-    int storageId;
+    Actor *actor = nullptr;
+    int   storageId;
     switch (event.actorType) {
         case LanderActor:
             actor = landers_.Get(&storageId);
-            static_cast<Lander *>(actor)->Reset(event.actor, data_);
             break;
-            
         case ShotActor:
             actor = shots_.Get(&storageId);
-            static_cast<Shot *>(actor)->Reset(event.actor, data_);
             break;
-            
         default:
             break;
     }
-    if (actor) {
-        actorMap_.Register(event.actor, ActorInfo<EventHandlerCore>(event.actorType, storageId, actor));
-        data_->eventLoop->Post(event);
-    }
+    
+    assert(actor);
+    actor->SetData(data_);
+    actor->Handle(event);
+    actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
+    data_->eventLoop->Post(event);
 }
 
 void GameLogic::TerminateActor(const ActorName &name) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(name);
+    ActorInfo<Actor> *info = actorMap_.Get(name);
     assert(info);
     switch (info->type()) {
         case ShotActor:
             shots_.Put(info->storageId());
-            // Don't use info->actor() below.
             break;
-            
         default:
             assert(false);
             break;
     }
+    // Don't use info->actor() below.
     
     actorMap_.Unregister(name);
     data_->actorNaming.Put(name);

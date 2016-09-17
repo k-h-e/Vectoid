@@ -1,39 +1,33 @@
-#ifndef KXM_ZARCH_PHYSICS_ACTOR_H_
-#define KXM_ZARCH_PHYSICS_ACTOR_H_
+#ifndef KXM_ZARCH_GAMELOGIC_ACTOR_H_
+#define KXM_ZARCH_GAMELOGIC_ACTOR_H_
 
 #include <memory>
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/ActorName.h>
-#include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 
 namespace kxm {
 namespace Zarch {
-namespace Physics {
+namespace GameLogic {
 
 class Data;
 
-//! Base class to actors inside the physics sub system.
+//! Base class to actors inside the game logic sub system.
 /*!
- *  \ingroup ZarchPhysics
+ *  \ingroup ZarchGameLogic
  */
 class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);
-    void GetTransform(Vectoid::Transform *outTransform);
-    void GetVelocity(Vectoid::Vector *outVelocity);
-  
+    
   protected:
     Game::ActorName       name_;
-    Vectoid::Transform    transform_;
-    Vectoid::Vector       velocity_;
     std::shared_ptr<Data> data_;
-
 };
 
-}    // Namespace Physics
+}    // Namespace GameLogic
 }    // Namespace Zarch
 }    // Namespace kxm
 
-#endif    // KXM_ZARCH_PHYSICS_ACTOR_H_
+#endif    // KXM_ZARCH_GAMELOGIC_ACTOR_H_

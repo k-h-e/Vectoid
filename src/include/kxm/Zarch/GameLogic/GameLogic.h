@@ -13,6 +13,7 @@
 #include <kxm/Zarch/ActorInfo.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/GameLogic/Actor.h>
 
 namespace kxm {
 
@@ -52,11 +53,11 @@ class GameLogic : public EventHandlerCore {
     void CreateActor(const ActorCreationEvent &event);
     void TerminateActor(const Game::ActorName &name);
     
-    Game::ActorMap<ActorInfo<EventHandlerCore>> actorMap_;
-    std::shared_ptr<Game::Actions>              actions_;
-    Game::ReusableActors<Lander>                landers_;
-    Game::ReusableActors<Shot>                  shots_;
-    std::shared_ptr<Data>                       data_;
+    Game::ActorMap<ActorInfo<Actor>> actorMap_;
+    std::shared_ptr<Game::Actions>   actions_;
+    Game::ReusableActors<Lander>     landers_;
+    Game::ReusableActors<Shot>       shots_;
+    std::shared_ptr<Data>            data_;
 };
 
 }    // Namespace GameLogic.

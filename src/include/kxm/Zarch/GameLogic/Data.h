@@ -18,6 +18,10 @@ class MapParameters;
 
 namespace GameLogic {
 
+//! Game logic data.
+/*!
+ *  \ingroup ZarchGameLogic
+ */
 struct Data {
     Data() : deltaTimeS(0.0f) {}
     Game::ActorNaming                                              actorNaming;

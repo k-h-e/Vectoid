@@ -15,11 +15,8 @@ Shot::Shot()
     // Nop.
 }
 
-void Shot::Reset(const ActorName &name, const shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
-    name_ = name;
+void Shot::Handle(const ActorCreationEvent &event) {
+    name_ = event.actor;
     ageS_ = 0.0f;
 }
 

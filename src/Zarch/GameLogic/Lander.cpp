@@ -21,15 +21,15 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-Lander::Lander() {
-    Reset(ActorName(), shared_ptr<Data>());
+Lander::Lander()
+        : oldThrusterActive_(false),
+          trigger_(false),
+          triggerTimeS_(0.0f) {
+    // Nop.
 }
 
-void Lander::Reset(const ActorName &name, const shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
-    name_              = name;
+void Lander::Handle(const ActorCreationEvent &event) {
+    name_              = event.actor;
     heading_           = Vector(0.0f, 0.0f, -1.0f);
     oldThrusterActive_ = false;
     trigger_           = false;

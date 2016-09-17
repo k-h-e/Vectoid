@@ -8,7 +8,6 @@ namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
-class ActorTerminationEvent;
 
 namespace Physics {
 
@@ -26,11 +25,7 @@ class Shot : public Actor {
     Shot(Shot &&other)                 = delete;
     Shot &operator=(Shot &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
-    void Handle(const ActorTerminationEvent &event);
     void ExecuteAction();
-    
-  private:
-    Vectoid::Vector position_;
 };
 
 }    // Namespace Physics.

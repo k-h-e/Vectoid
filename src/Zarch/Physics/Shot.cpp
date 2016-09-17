@@ -7,6 +7,7 @@
 #include <kxm/Zarch/Physics/Data.h>
 
 using namespace std;
+using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
 namespace kxm {
@@ -18,21 +19,21 @@ Shot::Shot() {
 }
 
 void Shot::Handle(const ActorCreationEvent &event) {
-    name_     = event.actor;
-    event.initialTransform.GetTranslationPart(&position_);
-    velocity_ = event.initialVelocity;
-}
-
-void Shot::Handle(const ActorTerminationEvent &event) {
-    // Nop.
+    name_      = event.actor;
+    transform_ = event.initialTransform;
+    velocity_  = event.initialVelocity;
 }
 
 void Shot::ExecuteAction() {
     velocity_.y += data_->updateDeltaTimeS * -data_->mapParameters->gravity;
-    position_   += data_->updateDeltaTimeS * velocity_;
-    data_->mapParameters->xRange.ClampModulo(&position_.x);
-    data_->mapParameters->zRange.ClampModulo(&position_.z);
-    data_->eventLoop->Post(MoveEvent(name_, position_));
+    
+    Vector position;
+    transform_.GetTranslationPart(&position);
+    position += data_->updateDeltaTimeS * velocity_;
+    data_->mapParameters->xRange.ClampModulo(&position.x);
+    data_->mapParameters->zRange.ClampModulo(&position.z);
+    transform_.SetTranslationPart(position);
+    data_->eventLoop->Post(MoveEvent(name_, position));
 }
 
 }    // Namespace Physics.

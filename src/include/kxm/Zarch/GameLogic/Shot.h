@@ -2,12 +2,13 @@
 #define KXM_ZARCH_GAMELOGIC_SHOT_H_
 
 #include <memory>
-#include <kxm/Core/ActionInterface.h>
-#include <kxm/Game/ActorName.h>
-#include <kxm/Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/GameLogic/Actor.h>
 
 namespace kxm {
 namespace Zarch {
+
+class ActorCreationEvent;
+
 namespace GameLogic {
 
 class Data;
@@ -16,20 +17,18 @@ class Data;
 /*!
  *  \ingroup ZarchGameLogic
  */
-class Shot : public EventHandlerCore, public virtual Core::ActionInterface {
+class Shot : public Actor {
   public:
     Shot();
     Shot(const Shot &other)            = delete;
     Shot &operator=(const Shot &other) = delete;
     Shot(Shot &&other)                 = delete;
     Shot &operator=(Shot &&other)      = delete;
-    void Reset(const Game::ActorName &name, const std::shared_ptr<Data> &data);
+    void Handle(const ActorCreationEvent &event);
     void ExecuteAction();
     
   private:
-    Game::ActorName       name_;
-    float                 ageS_;
-    std::shared_ptr<Data> data_;
+    float ageS_;
 };
 
 }    // Namespace GameLogic.
