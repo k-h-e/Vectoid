@@ -8,8 +8,8 @@ using namespace std;
 namespace kxm {
 namespace Vectoid {
     
-SceneGraphNode::SceneGraphNode()
-        : parent_(0) {
+SceneGraphNode::SceneGraphNode() {
+    // Nop.
 }
 
 SceneGraphNode::~SceneGraphNode() {
@@ -17,14 +17,20 @@ SceneGraphNode::~SceneGraphNode() {
 }
 
 void SceneGraphNode::AddChild(const shared_ptr<SceneGraphNode> &child) {
-    assert(child->parent_ == 0);
     children_.push_back(child);
-    child->parent_ = this;
+}
+
+void SceneGraphNode::RemoveChild(const std::shared_ptr<SceneGraphNode> &child) {
+    std::vector<std::shared_ptr<SceneGraphNode>> oldChildren = children_;
+    children_.clear();
+    for (const std::shared_ptr<SceneGraphNode> &aChild : oldChildren) {
+        if (aChild != child) {
+            children_.push_back(aChild);
+        }
+    }
 }
 
 void SceneGraphNode::RemoveAllChildren() {
-    for (int i = 0; i < children_.size(); i++)
-        children_[i]->parent_ = 0;
     children_.clear();
 }
 

@@ -2,13 +2,14 @@
 #define KXM_ZARCH_GAMELOGIC_LANDER_H_
 
 #include <memory>
-#include <kxm/Vectoid/Vector.h>
+#include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/GameLogic/Actor.h>
 
 namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
+class MoveEvent;
 class ControlsEvent;
 
 namespace GameLogic {
@@ -27,10 +28,14 @@ class Lander : public Actor {
     Lander(Lander &&other)                 = delete;
     Lander &operator=(Lander &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
+    void Handle(const MoveEvent &event);
+    void Handle(const VelocityEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
     
   private:
+    Vectoid::Transform    transform_;
+    Vectoid::Vector       velocity_;
     Vectoid::Vector       heading_;
     bool                  oldThrusterActive_;
     bool                  trigger_;

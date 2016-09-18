@@ -1,9 +1,7 @@
 #ifndef KXM_ZARCH_VIDEO_SHOT_H_
 #define KXM_ZARCH_VIDEO_SHOT_H_
 
-#include <memory>
-#include <kxm/Core/ActionInterface.h>
-#include <kxm/Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/Video/Actor.h>
 
 namespace kxm {
 namespace Zarch {
@@ -20,22 +18,20 @@ struct Data;
 /*!
  *  \ingroup ZarchVideo
  */
-class Shot : public EventHandlerCore, public virtual Core::ActionInterface {
+class Shot : public Actor {
   public:
     Shot();
     Shot(const Shot &other)            = delete;
     Shot &operator=(const Shot &other) = delete;
     Shot(const Shot &&other)           = delete;
     Shot &operator=(Shot &&other)      = delete;
-    void Reset(const std::shared_ptr<Data> &data);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);
     void ExecuteAction();
     
   private:
-    std::shared_ptr<Data> data_;    // Null when default-initialized!
-    int                   particleStorageId_;
+    int particleStorageId_;
 };
 
 }    // Namespace Video.

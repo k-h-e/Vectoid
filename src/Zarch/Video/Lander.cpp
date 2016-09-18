@@ -8,6 +8,7 @@
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
@@ -16,6 +17,7 @@
 
 using namespace std;
 using namespace kxm::Core;
+using namespace kxm::Game;
 using namespace kxm::Vectoid;
 
 namespace kxm {
@@ -28,22 +30,33 @@ Lander::Lander()
     coordSys_->AddChild(make_shared<Geode>(make_shared<LanderGeometry>()));
     
     thrusterParticlesGeode_ = make_shared<Geode>(make_shared<AgeColoredParticles>(thrusterParticles_));
-              
-    Reset(false, std::shared_ptr<Data>());
-}
-
-void Lander::Reset(bool hasFocus, const std::shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
-    thrusterActive_        = false;
-    particleTimeCarryOver_ = 0.0f;
-    hasFocus_              = hasFocus;
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
+    name_                  = event.actor;
+    coordSys_->SetTransform(event.initialTransform);
+    velocity_              = event.initialVelocity;
+    event.initialTransform.GetTranslationPart(&lastPosition_);
+    thrusterActive_        = false;
+    particleTimeCarryOver_ = 0.0f;
+    hasFocus_              = data_->focusLander.IsNone();
+    if (hasFocus_) {
+        data_->focusLander = event.actor;
+    }
+    
+    // TODO: Clear thruster particles.
+
     data_->camera->AddChild(coordSys_);
     data_->camera->AddChild(thrusterParticlesGeode_);
+}
+
+void Lander::Handle(const ActorTerminationEvent &event) {
+    if (hasFocus_) {
+        data_->focusLander = ActorName();
+    }
+    
+    data_->camera->RemoveChild(coordSys_);
+    data_->camera->RemoveChild(thrusterParticlesGeode_);
 }
 
 void Lander::Handle(const MoveEvent &event) {

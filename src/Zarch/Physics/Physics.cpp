@@ -33,9 +33,9 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, 
           shots_(actions_),
           lastUpdateTime_(steady_clock::now()),
           emitTimeEvents_(emitTimeEvents) {
-    data_ = shared_ptr<Data>(new Data());
-    data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
-    data_->terrain       = shared_ptr<Terrain>(new Terrain(data_->mapParameters));
+    data_ = make_shared<Data>();
+    data_->mapParameters = make_shared<MapParameters>();
+    data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     data_->eventLoop     = eventLoop;
     
     data_->eventLoop->RegisterHandler(ActorCreationEvent::type,    this);
@@ -62,53 +62,55 @@ void Physics::Handle(const ActorCreationEvent &event) {
         default:
             break;
     }
-    assert(actor);
     
-    // Adapt initial transform and velocity because the actor was launched from another actor...?
-    ActorCreationEvent cookedEvent = event;
-    if (!event.launchingActor.IsNone()) {
-        ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
-        assert(info);
-        Transform launchingActorTransform;
-        info->actor()->GetTransform(&launchingActorTransform);
-        Vector launchingActorVelocity;
-        info->actor()->GetVelocity(&launchingActorVelocity);
+    if (actor) {
+        // Adapt initial transform and velocity because the actor was launched from another actor...?
+        ActorCreationEvent cookedEvent = event;
+        if (!event.launchingActor.IsNone()) {
+            ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
+            assert(info);
+            Transform launchingActorTransform;
+            info->actor()->GetTransform(&launchingActorTransform);
+            Vector launchingActorVelocity;
+            info->actor()->GetVelocity(&launchingActorVelocity);
+            
+            Transform transform = launchingActorTransform;
+            transform.SetTranslationPart(Vector());
+            Vector initialVelocity = event.initialVelocity;
+            transform.ApplyTo(&initialVelocity);
+            initialVelocity += launchingActorVelocity;
+            
+            Transform initialTransform = launchingActorTransform;
+            initialTransform.Prepend(event.initialTransform);
+            
+            cookedEvent = ActorCreationEvent(event.actor, event.actorType, initialTransform, initialVelocity,
+                                             ActorName());
+        }
         
-        Transform transform = launchingActorTransform;
-        transform.SetTranslationPart(Vector());
-        Vector initialVelocity = event.initialVelocity;
-        transform.ApplyTo(&initialVelocity);
-        initialVelocity += launchingActorVelocity;
-        
-        Transform initialTransform = launchingActorTransform;
-        initialTransform.Prepend(event.initialTransform);
-        
-        cookedEvent = ActorCreationEvent(event.actor, event.actorType, initialTransform, initialVelocity,
-                                         ActorName());
+        actor->SetData(data_);
+        actor->Handle(cookedEvent);
+        actorMap_.Register(cookedEvent.actor, ActorInfo<Actor>(cookedEvent.actorType, storageId, actor));
     }
-    
-    actor->SetData(data_);
-    actor->Handle(cookedEvent);
-    actorMap_.Register(cookedEvent.actor, ActorInfo<Actor>(cookedEvent.actorType, storageId, actor));
 }
 
 void Physics::Handle(const ActorTerminationEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    assert(info);
-    switch (info->type()) {
-        case LanderActor:
-            landers_.Put(info->storageId());
-            break;
-        case ShotActor:
-            shots_.Put(info->storageId());
-            break;
-        default:
-            assert(false);
-            break;
+    if (info) {
+        switch (info->type()) {
+            case LanderActor:
+                landers_.Put(info->storageId());
+                break;
+            case ShotActor:
+                shots_.Put(info->storageId());
+                break;
+            default:
+                assert(false);
+                break;
+        }
+        // Don't use info->actor() below.
+        
+        actorMap_.Unregister(event.actor);
     }
-    // Don't use info->actor() below.
-    
-    actorMap_.Unregister(event.actor);
 }
 
 void Physics::Handle(const UpdatePhysicsEvent &event) {

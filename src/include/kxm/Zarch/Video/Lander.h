@@ -2,9 +2,8 @@
 #define KXM_ZARCH_VIDEO_LANDER_H_
 
 #include <memory>
-#include <kxm/Core/ActionInterface.h>
 #include <kxm/Vectoid/Vector.h>
-#include <kxm/Zarch/EventHandlerCore.h>
+#include <kxm/Zarch/Video/Actor.h>
 
 namespace kxm {
 
@@ -18,6 +17,7 @@ namespace Vectoid {
 namespace Zarch {
 
 class ActorCreationEvent;
+class ActorTerminationEvent;
 class MoveEvent;
 class VelocityEvent;
 class AccelerationEvent;
@@ -30,7 +30,7 @@ struct Data;
 /*!
  *  \ingroup ZarchVideo
  */
-class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
+class Lander : public Actor {
   public:
     Lander();
     Lander(const Lander &other)            = delete;
@@ -38,15 +38,14 @@ class Lander : public EventHandlerCore, public virtual Core::ActionInterface {
     Lander(const Lander &&other)           = delete;
     Lander &operator=(Lander &&other)      = delete;
     
-    void Reset(bool hasFocus, const std::shared_ptr<Data> &data);
     void Handle(const ActorCreationEvent &event);
+    void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
     void Handle(const AccelerationEvent &event);
     void ExecuteAction();
     
   private:
-    std::shared_ptr<Data>               data_;    // Null when default-initialized!
     std::shared_ptr<Vectoid::CoordSys>  coordSys_;
     std::shared_ptr<Vectoid::Particles> thrusterParticles_;
     std::shared_ptr<Vectoid::Geode>     thrusterParticlesGeode_;

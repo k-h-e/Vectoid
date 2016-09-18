@@ -10,6 +10,7 @@
 		2A0C056B1D7B157F0018D865 /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0C056A1D7B157F0018D865 /* Lander.cpp */; };
 		2A0D28261D8B4856001AC162 /* AccelerationEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */; };
 		2A0E36C21D8DE44700C531DC /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E36C11D8DE44700C531DC /* Actor.cpp */; };
+		2A0E36C51D8EF95700C531DC /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E36C41D8EF95700C531DC /* Actor.cpp */; };
 		2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */; };
 		2A13520A1D84A20800F0AADF /* Actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1352091D84A20800F0AADF /* Actions.cpp */; };
 		2A137B9515508165000EDEA7 /* LanderGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A137B9415508165000EDEA7 /* LanderGeometry.cpp */; };
@@ -79,6 +80,8 @@
 		2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccelerationEvent.cpp; path = ../../../src/Zarch/Events/AccelerationEvent.cpp; sourceTree = "<group>"; };
 		2A0E36C01D8DE3A100C531DC /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
 		2A0E36C11D8DE44700C531DC /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/GameLogic/Actor.cpp; sourceTree = "<group>"; };
+		2A0E36C31D8EF93800C531DC /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
+		2A0E36C41D8EF95700C531DC /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/Video/Actor.cpp; sourceTree = "<group>"; };
 		2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = ../../../src/Vectoid/ParticlesRenderer.cpp; sourceTree = "<group>"; };
 		2A1352091D84A20800F0AADF /* Actions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actions.cpp; path = ../../../src/Game/Actions.cpp; sourceTree = "<group>"; };
 		2A137B9415508165000EDEA7 /* LanderGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LanderGeometry.cpp; path = ../../../src/Zarch/LanderGeometry.cpp; sourceTree = "<group>"; };
@@ -252,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				2A8AD4DC172D8527007290C7 /* Video.cpp */,
+				2A0E36C41D8EF95700C531DC /* Actor.cpp */,
 				2A0C056A1D7B157F0018D865 /* Lander.cpp */,
 				2A5F06461D873CCF00D50D2E /* Shot.cpp */,
 				2ABE9CDB17305EC700F5251C /* StarField.cpp */,
@@ -489,6 +493,7 @@
 			children = (
 				2A8DFDB81D8DCE6300E22E0D /* Video.h */,
 				2A8DFDB31D8DCE6300E22E0D /* Data.h */,
+				2A0E36C31D8EF93800C531DC /* Actor.h */,
 				2A8DFDB41D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDB51D8DCE6300E22E0D /* Shot.h */,
 				2A8DFDB61D8DCE6300E22E0D /* StarField.h */,
@@ -677,6 +682,7 @@
 				2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */,
 				2A1AF9551A475DE9007D20A6 /* GameLogic.cpp in Sources */,
 				2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */,
+				2A0E36C51D8EF95700C531DC /* Actor.cpp in Sources */,
 				2ADF9AF91D778F6E006C0B67 /* ActorCreationEvent.cpp in Sources */,
 				2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */,
 				2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */,

@@ -14,6 +14,10 @@ class Terrain;
 
 namespace Physics {
 
+//! Physics data.
+/*!
+ *  \ingroup ZarchPhysics
+ */
 struct Data {
     Data() : updateDeltaTimeS(0.0f) {}
     float                                                          updateDeltaTimeS;

@@ -7,6 +7,8 @@
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/MoveEvent.h>
+#include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
@@ -30,10 +32,20 @@ Lander::Lander()
 
 void Lander::Handle(const ActorCreationEvent &event) {
     name_              = event.actor;
+    transform_         = event.initialTransform;
+    velocity_          = event.initialVelocity;
     heading_           = Vector(0.0f, 0.0f, -1.0f);
     oldThrusterActive_ = false;
     trigger_           = false;
     triggerTimeS_      = 0.0f;
+}
+
+void Lander::Handle(const MoveEvent &event) {
+    transform_ = event.transform;
+}
+
+void Lander::Handle(const VelocityEvent &event) {
+    velocity_ = event.velocity;
 }
 
 void Lander::Handle(const ControlsEvent &event) {
@@ -79,9 +91,18 @@ void Lander::ExecuteAction() {
     }
     
     if (triggerTimeS_ > 0.0f) {
-        data_->actorCreationEvents.push_back(
-            ActorCreationEvent(data_->actorNaming.Get(), ShotActor, Transform(Vector(0.0f, 0.0f, .55f)),
-                               data_->mapParameters->shotVelocity * Vector(0.0f, 0.0f, 1.0f), name_));
+        Transform transform = transform_;
+        transform.SetTranslationPart(Vector());
+        
+        Vector initialVelocity = data_->mapParameters->shotVelocity * Vector(0.0f, 0.0f, 1.0f);
+        transform.ApplyTo(&initialVelocity);
+        initialVelocity += velocity_;
+            
+        Transform initialTransform(Vector(0.0f, 0.0f, .55f));
+        initialTransform.Append(transform_);
+        
+        data_->actorCreationEvents.push_back(ActorCreationEvent(data_->actorNaming.Get(), ShotActor, initialTransform,
+                                                                initialVelocity, ActorName()));
         triggerTimeS_ -= data_->mapParameters->shotFiringInterval;
     }
 }

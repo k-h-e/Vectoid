@@ -38,6 +38,7 @@ class ControlsState;
 
 namespace Video {
 
+class Actor;
 class Lander;
 class Shot;
 class StarField;
@@ -66,10 +67,9 @@ class Video : public EventHandlerCore {
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
-    Game::ActorMap<ActorInfo<EventHandlerCore>>                    actorMap_;
+    Game::ActorMap<ActorInfo<Actor>>                               actorMap_;
     std::shared_ptr<Game::Actions>                                 actions_;
     Game::ReusableActors<Lander>                                   landers_;
-    Game::ActorName                                                landerName_;
     Game::ReusableActors<Shot>                                     shots_;
     std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;

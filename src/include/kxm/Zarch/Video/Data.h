@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <kxm/Vectoid/Vector.h>
+#include <kxm/Game/ActorName.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Video/Lander.h>
@@ -39,6 +40,7 @@ class TerrainRenderer;
 struct Data {
     Data() : frameDeltaTimeS(0.0f) {}
     float                                           frameDeltaTimeS;
+    Game::ActorName                                 focusLander;
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
     std::shared_ptr<Vectoid::Camera>                camera;
     std::shared_ptr<Vectoid::Particles>             shotParticles;

@@ -47,7 +47,7 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(VelocityEvent::type,         this);
     eventLoop_->RegisterHandler(AccelerationEvent::type,     this);
     
-    data_ = shared_ptr<Data>(new Data());
+    data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
@@ -81,49 +81,40 @@ void Video::SetViewPort(int width, int height) {
 }
 
 void Video::PrepareFrame(const ControlsState &controlsState) {
-    if (!landerName_.IsNone()) {
-        eventLoop_->Post(ControlsEvent(landerName_, controlsState));
+    if (!data_->focusLander.IsNone()) {
+        eventLoop_->Post(ControlsEvent(data_->focusLander, controlsState));
     }
 }
 
 void Video::Handle(const ActorCreationEvent &event) {
-    int              storageId;
-    EventHandlerCore *newActor = nullptr;
+    Actor *actor = nullptr;
+    int   storageId;
     switch (event.actorType) {
         case LanderActor:
-            newActor = landers_.Get(&storageId);
-            static_cast<Lander *>(newActor)->Reset(landerName_.IsNone(), data_);
-            if (landerName_.IsNone()) {
-                landerName_ = event.actor;
-            }
+            actor = landers_.Get(&storageId);
             break;
-            
         case ShotActor:
-            newActor = shots_.Get(&storageId);
-            static_cast<Shot *>(newActor)->Reset(data_);
+            actor = shots_.Get(&storageId);
             break;
-            
         default:
             break;
     }
     
-    if (newActor) {
-        newActor->Handle(event);
-        actorMap_.Register(event.actor, ActorInfo<EventHandlerCore>(event.actorType, storageId, newActor));
+    if (actor) {
+        actor->SetData(data_);
+        actor->Handle(event);
+        actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
     }
 }
 
 void Video::Handle(const ActorTerminationEvent &event) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
         
         switch (info->type()) {
             case LanderActor:
                 landers_.Put(info->storageId());
-                if (landerName_ == event.actor) {
-                    landerName_ = ActorName();
-                }
                 break;
             case ShotActor:
                 shots_.Put(info->storageId());
@@ -139,21 +130,21 @@ void Video::Handle(const ActorTerminationEvent &event) {
 }
 
 void Video::Handle(const MoveEvent &event) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const VelocityEvent &event) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const AccelerationEvent &event) {
-    ActorInfo<EventHandlerCore> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
     }

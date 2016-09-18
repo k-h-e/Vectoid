@@ -17,13 +17,9 @@ Shot::Shot()
     // Nop.
 }
 
-void Shot::Reset(const shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
-}
-
 void Shot::Handle(const ActorCreationEvent &event) {
+    name_ = event.actor;
+    
     Vector initialPosition;
     event.initialTransform.GetTranslationPart(&initialPosition);
     data_->shotParticles->Add(initialPosition, event.initialVelocity, &particleStorageId_);

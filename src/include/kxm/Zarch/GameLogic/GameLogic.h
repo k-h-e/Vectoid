@@ -25,6 +25,8 @@ namespace Zarch {
 
 class InitializationEvent;
 class ActorCreationEvent;
+class MoveEvent;
+class VelocityEvent;
 class TimeEvent;
 class ControlsEvent;
 
@@ -47,11 +49,13 @@ class GameLogic : public EventHandlerCore {
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
+    void Handle(const MoveEvent &event);
+    void Handle(const VelocityEvent &event);
     void Handle(const TimeEvent &event);
     void Handle(const ControlsEvent &event);
-    void PrepareMap();
     void CreateActor(const ActorCreationEvent &event);
     void TerminateActor(const Game::ActorName &name);
+    void PrepareMap();
     
     Game::ActorMap<ActorInfo<Actor>> actorMap_;
     std::shared_ptr<Game::Actions>   actions_;
