@@ -19,19 +19,14 @@ class SceneGraphNode : public virtual Core::Interface {
   public:
     SceneGraphNode();
     ~SceneGraphNode();
-    //! Adds the specified node as child of the receiver node. The child node must not already be
-    //! child to another parent node.
+    //! Adds the specified node as child of the receiver node.
     void AddChild(const std::shared_ptr<SceneGraphNode> &child);
     //! Removes the specified child from the node, if it is in fact registered as a child.
     void RemoveChild(const std::shared_ptr<SceneGraphNode> &child);
     //! Removes all child nodes from the scene graph node.
-    /*!
-     *  For each child, data structure linkage will be properly disconnected in both parent and
-     *  child.
-     */
     void RemoveAllChildren();
-    //! Performs a render traversal of the sub scene graph rooted in the node. This is the
-    //! only scene graph node operation that is allowed to interact with <c>OpenGL</c>.
+    //! Performs a render traversal of the sub scene graph rooted in the node. This is the only scene graph node
+    //! operation that is allowed to interact with <c>OpenGL</c>.
     virtual void Render(RenderContext *context);
     
   private:
