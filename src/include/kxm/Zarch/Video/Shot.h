@@ -25,6 +25,8 @@ class Shot : public Actor {
     Shot &operator=(const Shot &other) = delete;
     Shot(const Shot &&other)           = delete;
     Shot &operator=(Shot &&other)      = delete;
+    void GetTransform(Vectoid::Transform *outTransform);
+    void GetVelocity(Vectoid::Vector *outVelocity);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);

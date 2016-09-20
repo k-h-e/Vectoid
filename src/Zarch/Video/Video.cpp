@@ -13,6 +13,7 @@
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/EventTools.h>
 #include <kxm/Zarch/Video/Shot.h>
 #include <kxm/Zarch/Video/StarField.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
@@ -101,9 +102,25 @@ void Video::Handle(const ActorCreationEvent &event) {
     }
     
     if (actor) {
+        const ActorCreationEvent *eventToUse = &event;
+        ActorCreationEvent cookedEvent;
+        if (!event.launchingActor.IsNone()) {
+            ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
+            assert(info);
+            Transform launchingActorTransform;
+            info->actor()->GetTransform(&launchingActorTransform);
+            Vector launchingActorVelocity;
+            info->actor()->GetVelocity(&launchingActorVelocity);
+            
+            cookedEvent = event;
+            EventTools::ResolveInitialTransformAndVelocity(&cookedEvent, launchingActorTransform,
+                                                           launchingActorVelocity);
+            eventToUse = &cookedEvent;
+        }
+
         actor->SetData(data_);
-        actor->Handle(event);
-        actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
+        actor->Handle(*eventToUse);
+        actorMap_.Register(eventToUse->actor, ActorInfo<Actor>(eventToUse->actorType, storageId, actor));
     }
 }
 

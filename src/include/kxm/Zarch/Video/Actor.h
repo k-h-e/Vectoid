@@ -7,7 +7,16 @@
 #include <kxm/Zarch/EventHandlerCore.h>
 
 namespace kxm {
+
+namespace Vectoid {
+    class Transform;
+    class Vector;
+}
+
 namespace Zarch {
+
+class ActorCreationEvent;
+
 namespace Video {
 
 class Data;
@@ -20,9 +29,10 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);
-  
+    virtual void GetTransform(Vectoid::Transform *outTransform) = 0;
+    virtual void GetVelocity(Vectoid::Vector *outVelocity) = 0;
+    
   protected:
-    Game::ActorName       name_;
     std::shared_ptr<Data> data_;
 };
 

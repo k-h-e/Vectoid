@@ -38,6 +38,8 @@ class Lander : public Actor {
     Lander(const Lander &&other)           = delete;
     Lander &operator=(Lander &&other)      = delete;
     
+    void GetTransform(Vectoid::Transform *outTransform);
+    void GetVelocity(Vectoid::Vector *outVelocity);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const MoveEvent &event);
@@ -49,8 +51,8 @@ class Lander : public Actor {
     std::shared_ptr<Vectoid::CoordSys>  coordSys_;
     std::shared_ptr<Vectoid::Particles> thrusterParticles_;
     std::shared_ptr<Vectoid::Geode>     thrusterParticlesGeode_;
-    Vectoid::Vector                     lastPosition_,
-                                        velocity_;
+    Vectoid::Vector                     velocity_,
+                                        lastPosition_;
     bool                                thrusterActive_;
     float                               particleTimeCarryOver_;
     bool                                hasFocus_;

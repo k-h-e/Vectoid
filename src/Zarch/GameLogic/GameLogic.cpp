@@ -10,8 +10,6 @@
 #include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
-#include <kxm/Zarch/Events/MoveEvent.h>
-#include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
@@ -37,8 +35,6 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
-    data_->eventLoop->RegisterHandler(MoveEvent::type,           this);
-    data_->eventLoop->RegisterHandler(VelocityEvent::type,       this);
     data_->eventLoop->RegisterHandler(TimeEvent::type,           this);
     data_->eventLoop->RegisterHandler(ControlsEvent::type,       this);
 }
@@ -49,20 +45,6 @@ GameLogic::~GameLogic() {
 
 void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
-}
-
-void GameLogic::Handle(const MoveEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == LanderActor)) {
-        info->actor()->Handle(event);
-    }
-}
-
-void GameLogic::Handle(const VelocityEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == LanderActor)) {
-        info->actor()->Handle(event);
-    }
 }
 
 void GameLogic::Handle(const TimeEvent &event) {

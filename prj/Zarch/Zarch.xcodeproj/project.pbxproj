@@ -76,6 +76,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A0202D31D91EC1000C9D0B8 /* EventTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventTools.h; sourceTree = "<group>"; };
 		2A0C056A1D7B157F0018D865 /* Lander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lander.cpp; path = ../../../src/Zarch/Video/Lander.cpp; sourceTree = "<group>"; };
 		2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccelerationEvent.cpp; path = ../../../src/Zarch/Events/AccelerationEvent.cpp; sourceTree = "<group>"; };
 		2A0E36C01D8DE3A100C531DC /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
@@ -440,6 +441,7 @@
 				2A8DFDB01D8DCE6300E22E0D /* Simulation.h */,
 				2A8DFDB11D8DCE6300E22E0D /* Terrain.h */,
 				2A8DFDB91D8DCE6300E22E0D /* Zarch.h */,
+				2A0202D31D91EC1000C9D0B8 /* EventTools.h */,
 			);
 			path = Zarch;
 			sourceTree = "<group>";

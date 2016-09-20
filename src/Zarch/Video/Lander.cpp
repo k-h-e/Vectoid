@@ -32,8 +32,15 @@ Lander::Lander()
     thrusterParticlesGeode_ = make_shared<Geode>(make_shared<AgeColoredParticles>(thrusterParticles_));
 }
 
+void Lander::GetTransform(Vectoid::Transform *outTransform) {
+    coordSys_->GetTransform(outTransform);
+}
+
+void Lander::GetVelocity(Vectoid::Vector *outVelocity) {
+    *outVelocity = velocity_;
+}
+
 void Lander::Handle(const ActorCreationEvent &event) {
-    name_                  = event.actor;
     coordSys_->SetTransform(event.initialTransform);
     velocity_              = event.initialVelocity;
     event.initialTransform.GetTranslationPart(&lastPosition_);

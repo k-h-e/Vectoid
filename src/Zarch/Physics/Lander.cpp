@@ -27,9 +27,7 @@ Lander::Lander()
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
-    name_                             = event.actor;
-    transform_                        = event.initialTransform;
-    velocity_                         = event.initialVelocity;
+    Actor::Reset(event);
     acceleration_                     = Vector();
     accelerationEnabled_              = false;
     applyAccelerationInLocalCoordSys_ = false;

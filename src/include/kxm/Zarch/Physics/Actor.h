@@ -9,6 +9,9 @@
 
 namespace kxm {
 namespace Zarch {
+
+class ActorCreationEvent;
+
 namespace Physics {
 
 class Data;
@@ -21,6 +24,7 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);
+    void Reset(const ActorCreationEvent &event);
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
   

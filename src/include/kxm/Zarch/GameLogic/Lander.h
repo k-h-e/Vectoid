@@ -28,14 +28,10 @@ class Lander : public Actor {
     Lander(Lander &&other)                 = delete;
     Lander &operator=(Lander &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
-    void Handle(const MoveEvent &event);
-    void Handle(const VelocityEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
     
   private:
-    Vectoid::Transform    transform_;
-    Vectoid::Vector       velocity_;
     Vectoid::Vector       heading_;
     bool                  oldThrusterActive_;
     bool                  trigger_;

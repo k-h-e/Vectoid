@@ -17,9 +17,15 @@ Shot::Shot()
     // Nop.
 }
 
-void Shot::Handle(const ActorCreationEvent &event) {
-    name_ = event.actor;
+void Shot::GetTransform(Vectoid::Transform *outTransform) {
+    *outTransform = Transform();
+}
     
+void Shot::GetVelocity(Vectoid::Vector *outVelocity) {
+    *outVelocity = Vector();
+}
+
+void Shot::Handle(const ActorCreationEvent &event) {
     Vector initialPosition;
     event.initialTransform.GetTranslationPart(&initialPosition);
     data_->shotParticles->Add(initialPosition, event.initialVelocity, &particleStorageId_);
@@ -35,6 +41,7 @@ void Shot::Handle(const MoveEvent &event) {
 }
 
 void Shot::ExecuteAction() {
+    // Nop.
 }
 
 }    // Namespace Video.

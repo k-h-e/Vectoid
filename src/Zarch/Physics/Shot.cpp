@@ -19,9 +19,7 @@ Shot::Shot() {
 }
 
 void Shot::Handle(const ActorCreationEvent &event) {
-    name_      = event.actor;
-    transform_ = event.initialTransform;
-    velocity_  = event.initialVelocity;
+    Actor::Reset(event);
 }
 
 void Shot::ExecuteAction() {

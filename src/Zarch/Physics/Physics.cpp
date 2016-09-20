@@ -6,6 +6,7 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/ControlsState.h>
+#include <kxm/Zarch/EventTools.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
@@ -64,8 +65,8 @@ void Physics::Handle(const ActorCreationEvent &event) {
     }
     
     if (actor) {
-        // Adapt initial transform and velocity because the actor was launched from another actor...?
-        ActorCreationEvent cookedEvent = event;
+        const ActorCreationEvent *eventToUse = &event;
+        ActorCreationEvent cookedEvent;
         if (!event.launchingActor.IsNone()) {
             ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
             assert(info);
@@ -74,22 +75,15 @@ void Physics::Handle(const ActorCreationEvent &event) {
             Vector launchingActorVelocity;
             info->actor()->GetVelocity(&launchingActorVelocity);
             
-            Transform transform = launchingActorTransform;
-            transform.SetTranslationPart(Vector());
-            Vector initialVelocity = event.initialVelocity;
-            transform.ApplyTo(&initialVelocity);
-            initialVelocity += launchingActorVelocity;
-            
-            Transform initialTransform = launchingActorTransform;
-            initialTransform.Prepend(event.initialTransform);
-            
-            cookedEvent = ActorCreationEvent(event.actor, event.actorType, initialTransform, initialVelocity,
-                                             ActorName());
+            cookedEvent = event;
+            EventTools::ResolveInitialTransformAndVelocity(&cookedEvent, launchingActorTransform,
+                                                           launchingActorVelocity);
+            eventToUse = &cookedEvent;
         }
         
         actor->SetData(data_);
-        actor->Handle(cookedEvent);
-        actorMap_.Register(cookedEvent.actor, ActorInfo<Actor>(cookedEvent.actorType, storageId, actor));
+        actor->Handle(*eventToUse);
+        actorMap_.Register(eventToUse->actor, ActorInfo<Actor>(eventToUse->actorType, storageId, actor));
     }
 }
 
