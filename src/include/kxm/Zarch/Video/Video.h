@@ -41,6 +41,7 @@ namespace Video {
 class Actor;
 class Lander;
 class Shot;
+class Saucer;
 class StarField;
 
 //! Video subsystem for the <c>Zarch</c> game.
@@ -71,6 +72,7 @@ class Video : public EventHandlerCore {
     std::shared_ptr<Game::Actions>                                 actions_;
     Game::ReusableActors<Lander>                                   landers_;
     Game::ReusableActors<Shot>                                     shots_;
+    Game::ReusableActors<Saucer>                                   saucers_;
     std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
 };

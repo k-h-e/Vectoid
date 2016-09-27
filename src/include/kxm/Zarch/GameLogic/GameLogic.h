@@ -35,6 +35,7 @@ namespace GameLogic {
 class Data;
 class Lander;
 class Shot;
+class Saucer;
 
 //! Game logic for the <c>Zarch</c> game.
 /*!
@@ -59,6 +60,7 @@ class GameLogic : public EventHandlerCore {
     std::shared_ptr<Game::Actions>   actions_;
     Game::ReusableActors<Lander>     landers_;
     Game::ReusableActors<Shot>       shots_;
+    Game::ReusableActors<Saucer>     saucers_;
     std::shared_ptr<Data>            data_;
 };
 

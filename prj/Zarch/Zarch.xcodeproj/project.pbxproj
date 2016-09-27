@@ -64,6 +64,10 @@
 		2AAC256215811661004A37C6 /* KXMGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC256115811661004A37C6 /* KXMGLView.mm */; };
 		2AAC25651584F405004A37C6 /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */; };
 		2AAC2568158D238A004A37C6 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */; };
+		2ABB11A11D9B0C2B00BD1CA4 /* Saucer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB11A01D9B0C2B00BD1CA4 /* Saucer.cpp */; };
+		2ABB11A41D9B0F3D00BD1CA4 /* Saucer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB11A31D9B0F3D00BD1CA4 /* Saucer.cpp */; };
+		2ABB11A71D9B14E400BD1CA4 /* SimpleGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB11A61D9B14E400BD1CA4 /* SimpleGeometry.cpp */; };
+		2ABB11AA1D9B17A900BD1CA4 /* SaucerGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */; };
 		2ABE9CDC17305EC700F5251C /* StarField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE9CDB17305EC700F5251C /* StarField.cpp */; };
 		2AC40A221556CEC700026789 /* Range.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC40A211556CEC700026789 /* Range.cpp */; };
 		2AD5C1401C18DD3600B2CD92 /* EventHandlerCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */; };
@@ -213,6 +217,14 @@
 		2AAC256115811661004A37C6 /* KXMGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = KXMGLView.mm; path = kxm/KXMGLView.mm; sourceTree = "<group>"; };
 		2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = ../../../src/Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
 		2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainRenderer.cpp; path = ../../../src/Zarch/Video/TerrainRenderer.cpp; sourceTree = "<group>"; };
+		2ABB119F1D9B0C0200BD1CA4 /* Saucer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
+		2ABB11A01D9B0C2B00BD1CA4 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/GameLogic/Saucer.cpp; sourceTree = "<group>"; };
+		2ABB11A21D9B0F2100BD1CA4 /* Saucer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
+		2ABB11A31D9B0F3D00BD1CA4 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/Video/Saucer.cpp; sourceTree = "<group>"; };
+		2ABB11A51D9B143F00BD1CA4 /* SimpleGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleGeometry.h; sourceTree = "<group>"; };
+		2ABB11A61D9B14E400BD1CA4 /* SimpleGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleGeometry.cpp; path = ../../../src/Zarch/SimpleGeometry.cpp; sourceTree = "<group>"; };
+		2ABB11A81D9B178800BD1CA4 /* SaucerGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaucerGeometry.h; sourceTree = "<group>"; };
+		2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SaucerGeometry.cpp; path = ../../../src/Zarch/SaucerGeometry.cpp; sourceTree = "<group>"; };
 		2ABE9CDB17305EC700F5251C /* StarField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarField.cpp; path = ../../../src/Zarch/Video/StarField.cpp; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = ../../../src/Vectoid/Range.cpp; sourceTree = "<group>"; };
 		2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandlerCore.cpp; path = ../../../src/Zarch/EventHandlerCore.cpp; sourceTree = "<group>"; };
@@ -259,6 +271,7 @@
 				2A0E36C41D8EF95700C531DC /* Actor.cpp */,
 				2A0C056A1D7B157F0018D865 /* Lander.cpp */,
 				2A5F06461D873CCF00D50D2E /* Shot.cpp */,
+				2ABB11A31D9B0F3D00BD1CA4 /* Saucer.cpp */,
 				2ABE9CDB17305EC700F5251C /* StarField.cpp */,
 				2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */,
 			);
@@ -272,6 +285,7 @@
 				2A0E36C11D8DE44700C531DC /* Actor.cpp */,
 				2A5F06401D8730FA00D50D2E /* Lander.cpp */,
 				2A5F06431D87371A00D50D2E /* Shot.cpp */,
+				2ABB11A01D9B0C2B00BD1CA4 /* Saucer.cpp */,
 			);
 			name = GameLogic;
 			sourceTree = "<group>";
@@ -435,7 +449,9 @@
 				2A8DFD911D8DCE6300E22E0D /* ActorType.h */,
 				2A8DFD921D8DCE6300E22E0D /* ControlsState.h */,
 				2A8DFD931D8DCE6300E22E0D /* EventHandlerCore.h */,
+				2ABB11A51D9B143F00BD1CA4 /* SimpleGeometry.h */,
 				2A8DFDA71D8DCE6300E22E0D /* LanderGeometry.h */,
+				2ABB11A81D9B178800BD1CA4 /* SaucerGeometry.h */,
 				2A8DFDA81D8DCE6300E22E0D /* MapParameters.h */,
 				2A8DFDAF1D8DCE6300E22E0D /* Presentation.h */,
 				2A8DFDB01D8DCE6300E22E0D /* Simulation.h */,
@@ -474,6 +490,7 @@
 				2A0E36C01D8DE3A100C531DC /* Actor.h */,
 				2A8DFDA51D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDA61D8DCE6300E22E0D /* Shot.h */,
+				2ABB119F1D9B0C0200BD1CA4 /* Saucer.h */,
 			);
 			path = GameLogic;
 			sourceTree = "<group>";
@@ -498,6 +515,7 @@
 				2A0E36C31D8EF93800C531DC /* Actor.h */,
 				2A8DFDB41D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDB51D8DCE6300E22E0D /* Shot.h */,
+				2ABB11A21D9B0F2100BD1CA4 /* Saucer.h */,
 				2A8DFDB61D8DCE6300E22E0D /* StarField.h */,
 				2A8DFDB71D8DCE6300E22E0D /* TerrainRenderer.h */,
 			);
@@ -572,7 +590,9 @@
 				2A2A6128166D1E960073658E /* Zarch.cpp */,
 				2A41FB1B171204E100A078CF /* Simulation.cpp */,
 				2A41FB1E171204F900A078CF /* Presentation.cpp */,
+				2ABB11A61D9B14E400BD1CA4 /* SimpleGeometry.cpp */,
 				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
+				2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */,
 				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
 				2AECEF62154D6CC900033D14 /* Terrain.cpp */,
 				2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */,
@@ -649,6 +669,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ABB11A11D9B0C2B00BD1CA4 /* Saucer.cpp in Sources */,
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
 				2A3046461D6D07CC007ED737 /* FrameGeneratedEvent.cpp in Sources */,
 				2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */,
@@ -660,11 +681,13 @@
 				2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */,
 				2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */,
 				2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */,
+				2ABB11A41D9B0F3D00BD1CA4 /* Saucer.cpp in Sources */,
 				2A663A651D8CA07A00437612 /* Actor.cpp in Sources */,
 				2A5E8AD41A114AAE0000617C /* ControlsEvent.cpp in Sources */,
 				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
 				2A0E36C21D8DE44700C531DC /* Actor.cpp in Sources */,
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
+				2ABB11AA1D9B17A900BD1CA4 /* SaucerGeometry.cpp in Sources */,
 				2AA9C65A1D67BD29003FD5D7 /* EventLoopHub.cpp in Sources */,
 				2A65AF5715361E710054F8E9 /* SceneGraphNode.cpp in Sources */,
 				2A6A2B631D8759C500DAC9D5 /* ActorTerminationEvent.cpp in Sources */,
@@ -697,6 +720,7 @@
 				2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */,
 				2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */,
 				2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */,
+				2ABB11A71D9B14E400BD1CA4 /* SimpleGeometry.cpp in Sources */,
 				2A8AD4DA172D7738007290C7 /* Lander.cpp in Sources */,
 				2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */,
 				2A8DFDBF1D8DCE8100E22E0D /* Buffer.cpp in Sources */,

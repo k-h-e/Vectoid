@@ -15,6 +15,7 @@
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
 #include <kxm/Zarch/GameLogic/Shot.h>
+#include <kxm/Zarch/GameLogic/Saucer.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -30,6 +31,7 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
         : actions_(new Actions()),
           landers_(actions_),
           shots_(actions_),
+          saucers_(actions_),
           data_(new Data()) {
     data_->eventLoop     = eventLoop;
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
@@ -82,6 +84,9 @@ void GameLogic::CreateActor(const ActorCreationEvent &event) {
         case ShotActor:
             actor = shots_.Get(&storageId);
             break;
+        case SaucerActor:
+            actor = saucers_.Get(&storageId);
+            break;
         default:
             break;
     }
@@ -103,6 +108,9 @@ void GameLogic::TerminateActor(const ActorName &name) {
         case ShotActor:
             shots_.Put(info->storageId());
             break;
+        case SaucerActor:
+            saucers_.Put(info->storageId());
+            break;
         default:
             assert(false);
             break;
@@ -116,6 +124,9 @@ void GameLogic::TerminateActor(const ActorName &name) {
 
 void GameLogic::PrepareMap() {
     CreateActor(ActorCreationEvent(data_->actorNaming.Get(), LanderActor, Transform(), Vector(), ActorName()));
+    
+    CreateActor(ActorCreationEvent(data_->actorNaming.Get(), SaucerActor, Transform(Vector(-1.0f, 3.0f, -2.0f)),
+                                   Vector(), ActorName()));
 }
 
 }    // Namespace GameLogic.

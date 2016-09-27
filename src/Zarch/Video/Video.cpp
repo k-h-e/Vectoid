@@ -15,6 +15,7 @@
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/EventTools.h>
 #include <kxm/Zarch/Video/Shot.h>
+#include <kxm/Zarch/Video/Saucer.h>
 #include <kxm/Zarch/Video/StarField.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
@@ -40,6 +41,7 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
           actions_(new Actions()),
           landers_(actions_),
           shots_(actions_),
+          saucers_(actions_),
           lastFrameTime_(steady_clock::now()) {
     eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
     eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
@@ -97,6 +99,9 @@ void Video::Handle(const ActorCreationEvent &event) {
         case ShotActor:
             actor = shots_.Get(&storageId);
             break;
+        case SaucerActor:
+            actor = saucers_.Get(&storageId);
+            break;
         default:
             break;
     }
@@ -135,6 +140,9 @@ void Video::Handle(const ActorTerminationEvent &event) {
                 break;
             case ShotActor:
                 shots_.Put(info->storageId());
+                break;
+            case SaucerActor:
+                saucers_.Put(info->storageId());
                 break;
             default:
                 assert(false);
