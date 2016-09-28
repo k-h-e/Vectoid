@@ -21,63 +21,73 @@ namespace Zarch {
 namespace Physics {
 
 Lander::Lander()
-        :  accelerationEnabled_(false),
-           applyAccelerationInLocalCoordSys_(false) {
+        :  body_(this),
+           killVelocity_(false) {
     // Nop.
+}
+
+void Lander::GetTransform(Vectoid::Transform *outTransform) {
+    body_.GetTransform(outTransform);
+}
+
+void Lander::GetVelocity(Vectoid::Vector *outVelocity) {
+    body_.GetVelocity(outVelocity);
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
-    acceleration_                     = Vector();
-    accelerationEnabled_              = false;
-    applyAccelerationInLocalCoordSys_ = false;
+    body_.SetTransform(event.initialTransform);
+    body_.SetVelocity(event.initialVelocity);
+    body_.EnableGravity(data_->mapParameters->gravity);
+    body_.DisableAcceleration();
 }
 
 void Lander::Handle(const PhysicsOverrideEvent &event) {
     if (event.flags.overrideOrientation) {
-        Vector position;
-        transform_.GetTranslationPart(&position);
-        transform_ = event.transform;
-        transform_.SetTranslationPart(position);
+        body_.SetOrientation(event.transform);
     }
 }
 
 void Lander::Handle(const AccelerationEvent &event) {
-    acceleration_                     = event.acceleration;
-    accelerationEnabled_              = event.flags.enabled;
-    applyAccelerationInLocalCoordSys_ = event.flags.applyInLocalCoordSys;
+    if (event.flags.enabled) {
+        body_.EnableAcceleration(event.acceleration, event.flags.applyInLocalCoordSys);
+    }
+    else {
+        body_.DisableAcceleration();
+    }
 }
 
 void Lander::ExecuteAction() {
+    body_.UpdateForTimeStep(data_->updateDeltaTimeS);
+}
+
+void Lander::HandleBodyTransformUpdate(Transform *transform, bool *outVelocityUpdateRequired) {
     Data &data = *data_;
     
-    // Apply gravity...
-    velocity_.y += data.updateDeltaTimeS * -data.mapParameters->gravity;
-    
-    // Apply acceleration...?
-    if (accelerationEnabled_) {
-        Vector acceleration = acceleration_;
-        if (applyAccelerationInLocalCoordSys_) {
-            Transform orientation = transform_;
-            orientation.SetTranslationPart(Vector());
-            orientation.ApplyTo(&acceleration);
-        }
-        velocity_ += data.updateDeltaTimeS * acceleration;
-    }
-    
-    Vector position = transform_.TranslationPart();
-    position += data.updateDeltaTimeS * velocity_;
+    Vector position;
+    transform->GetTranslationPart(&position);
     data.mapParameters->xRange.ClampModulo(&position.x);
     data.mapParameters->zRange.ClampModulo(&position.z);
     float terrainHeight = data.terrain->Height(position.x, position.z);
     if (position.y < terrainHeight) {
-        position.y  = terrainHeight;
-        velocity_.y = 0.0f;
+        position.y                 = terrainHeight;
+        killVelocity_              = true;
+        *outVelocityUpdateRequired = true;
     }
-    transform_.SetTranslationPart(position);
-    
-    data.eventLoop->Post(MoveEvent(name_, transform_));
-    data.eventLoop->Post(VelocityEvent(name_, velocity_));
+    else {
+        *outVelocityUpdateRequired = false;
+    }
+    transform->SetTranslationPart(position);
+
+    data.eventLoop->Post(MoveEvent(name_, *transform));
+}
+
+void Lander::HandleBodyVelocityUpdate(Vector *velocity) {
+    if (killVelocity_) {
+        velocity->y   = 0.0f;
+        killVelocity_ = false;
+    }
+    data_->eventLoop->Post(VelocityEvent(name_, *velocity));
 }
 
 }    // Namespace Physics.

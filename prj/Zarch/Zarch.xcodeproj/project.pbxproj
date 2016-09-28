@@ -34,6 +34,8 @@
 		2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1B171204E100A078CF /* Simulation.cpp */; };
 		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
 		2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */; };
+		2A5199511D9C5D7900C1A1C7 /* Saucer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */; };
+		2A5199541D9C60A700C1A1C7 /* Body.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199531D9C60A700C1A1C7 /* Body.cpp */; };
 		2A5E8AD41A114AAE0000617C /* ControlsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */; };
 		2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* MoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* VelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */; };
@@ -115,6 +117,10 @@
 		2A41FB1B171204E100A078CF /* Simulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Simulation.cpp; path = ../../../src/Zarch/Simulation.cpp; sourceTree = "<group>"; };
 		2A41FB1E171204F900A078CF /* Presentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Presentation.cpp; path = ../../../src/Zarch/Presentation.cpp; sourceTree = "<group>"; };
 		2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		2A51994F1D9C5D5F00C1A1C7 /* Saucer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
+		2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/Physics/Saucer.cpp; sourceTree = "<group>"; };
+		2A5199521D9C607400C1A1C7 /* Body.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Body.h; sourceTree = "<group>"; };
+		2A5199531D9C60A700C1A1C7 /* Body.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Body.cpp; path = ../../../src/Zarch/Physics/Body.cpp; sourceTree = "<group>"; };
 		2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsEvent.cpp; path = ../../../src/Zarch/Events/ControlsEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD51A114AD00000617C /* MoveEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveEvent.cpp; path = ../../../src/Zarch/Events/MoveEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VelocityEvent.cpp; path = ../../../src/Zarch/Events/VelocityEvent.cpp; sourceTree = "<group>"; };
@@ -260,6 +266,8 @@
 				2A663A641D8CA07A00437612 /* Actor.cpp */,
 				2A8AD4D8172D7737007290C7 /* Lander.cpp */,
 				2A5F064B1D874A9D00D50D2E /* Shot.cpp */,
+				2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */,
+				2A5199531D9C60A700C1A1C7 /* Body.cpp */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -503,6 +511,8 @@
 				2A8DFDAA1D8DCE6300E22E0D /* Actor.h */,
 				2A8DFDAC1D8DCE6300E22E0D /* Lander.h */,
 				2A8DFDAE1D8DCE6300E22E0D /* Shot.h */,
+				2A51994F1D9C5D5F00C1A1C7 /* Saucer.h */,
+				2A5199521D9C607400C1A1C7 /* Body.h */,
 			);
 			path = Physics;
 			sourceTree = "<group>";
@@ -720,6 +730,7 @@
 				2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */,
 				2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */,
 				2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */,
+				2A5199541D9C60A700C1A1C7 /* Body.cpp in Sources */,
 				2ABB11A71D9B14E400BD1CA4 /* SimpleGeometry.cpp in Sources */,
 				2A8AD4DA172D7738007290C7 /* Lander.cpp in Sources */,
 				2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */,
@@ -729,6 +740,7 @@
 				2A13520A1D84A20800F0AADF /* Actions.cpp in Sources */,
 				2A0D28261D8B4856001AC162 /* AccelerationEvent.cpp in Sources */,
 				2A8DFDC11D8DCE8100E22E0D /* IntModN.cpp in Sources */,
+				2A5199511D9C5D7900C1A1C7 /* Saucer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

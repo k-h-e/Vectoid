@@ -24,8 +24,14 @@ class Shot : public Actor {
     Shot &operator=(const Shot &other) = delete;
     Shot(Shot &&other)                 = delete;
     Shot &operator=(Shot &&other)      = delete;
+    void GetTransform(Vectoid::Transform *outTransform);
+    void GetVelocity(Vectoid::Vector *outVelocity);
     void Handle(const ActorCreationEvent &event);
     void ExecuteAction();
+    
+  private:
+    Vectoid::Vector position_,
+                    velocity_;
 };
 
 }    // Namespace Physics.

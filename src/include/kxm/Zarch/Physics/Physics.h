@@ -39,6 +39,7 @@ class Data;
 class Actor;
 class Lander;
 class Shot;
+class Saucer;
 
 //! Physics subsystem for the <c>Zarch</c> game.
 /*!
@@ -63,6 +64,7 @@ class Physics : public EventHandlerCore {
     std::shared_ptr<Game::Actions>                     actions_;
     Game::ReusableActors<Lander>                       landers_;
     Game::ReusableActors<Shot>                         shots_;
+    Game::ReusableActors<Saucer>                       saucers_;
     std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime_;
     bool                                               emitTimeEvents_;
 };

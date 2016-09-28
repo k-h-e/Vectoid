@@ -17,17 +17,7 @@ void Actor::SetData(const shared_ptr<Data> &data) {
 }
 
 void Actor::Reset(const ActorCreationEvent &event) {
-    name_      = event.actor;
-    transform_ = event.initialTransform;
-    velocity_  = event.initialVelocity;
-}
-
-void Actor::GetTransform(Transform *outTransform) {
-    *outTransform = transform_;
-}
-
-void Actor::GetVelocity(Vector *outVelocity) {
-    *outVelocity = velocity_;
+    name_ = event.actor;
 }
 
 }    // Namespace Physics.

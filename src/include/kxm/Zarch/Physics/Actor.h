@@ -25,15 +25,12 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);
     void Reset(const ActorCreationEvent &event);
-    void GetTransform(Vectoid::Transform *outTransform);
-    void GetVelocity(Vectoid::Vector *outVelocity);
+    virtual void GetTransform(Vectoid::Transform *outTransform) = 0;
+    virtual void GetVelocity(Vectoid::Vector *outVelocity) = 0;
   
   protected:
     Game::ActorName       name_;
-    Vectoid::Transform    transform_;
-    Vectoid::Vector       velocity_;
     std::shared_ptr<Data> data_;
-
 };
 
 }    // Namespace Physics

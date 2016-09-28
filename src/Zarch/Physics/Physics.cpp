@@ -17,6 +17,7 @@
 #include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 #include <kxm/Zarch/Physics/Shot.h>
+#include <kxm/Zarch/Physics/Saucer.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -32,6 +33,7 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, 
         : actions_(new Actions()),
           landers_(actions_),
           shots_(actions_),
+          saucers_(actions_),
           lastUpdateTime_(steady_clock::now()),
           emitTimeEvents_(emitTimeEvents) {
     data_ = make_shared<Data>();
@@ -59,6 +61,9 @@ void Physics::Handle(const ActorCreationEvent &event) {
             break;
         case ShotActor:
             actor = shots_.Get(&storageId);
+            break;
+        case SaucerActor:
+            actor = saucers_.Get(&storageId);
             break;
         default:
             break;
@@ -96,6 +101,9 @@ void Physics::Handle(const ActorTerminationEvent &event) {
                 break;
             case ShotActor:
                 shots_.Put(info->storageId());
+                break;
+            case SaucerActor:
+                saucers_.Put(info->storageId());
                 break;
             default:
                 assert(false);

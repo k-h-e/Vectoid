@@ -18,20 +18,27 @@ Shot::Shot() {
     // Nop.
 }
 
+void Shot::GetTransform(Vectoid::Transform *outTransform) {
+    *outTransform = Transform(position_);
+}
+
+void Shot::GetVelocity(Vectoid::Vector *outVelocity) {
+    *outVelocity = velocity_;
+}
+
 void Shot::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
+    event.initialTransform.GetTranslationPart(&position_);
+    velocity_ = event.initialVelocity;
 }
 
 void Shot::ExecuteAction() {
     velocity_.y += data_->updateDeltaTimeS * -data_->mapParameters->gravity;
     
-    Vector position;
-    transform_.GetTranslationPart(&position);
-    position += data_->updateDeltaTimeS * velocity_;
-    data_->mapParameters->xRange.ClampModulo(&position.x);
-    data_->mapParameters->zRange.ClampModulo(&position.z);
-    transform_.SetTranslationPart(position);
-    data_->eventLoop->Post(MoveEvent(name_, position));
+    position_ += data_->updateDeltaTimeS * velocity_;
+    data_->mapParameters->xRange.ClampModulo(&position_.x);
+    data_->mapParameters->zRange.ClampModulo(&position_.z);
+    data_->eventLoop->Post(MoveEvent(name_, position_));
 }
 
 }    // Namespace Physics.

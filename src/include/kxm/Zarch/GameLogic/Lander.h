@@ -32,10 +32,10 @@ class Lander : public Actor {
     void ExecuteAction();
     
   private:
-    Vectoid::Vector       heading_;
-    bool                  oldThrusterActive_;
-    bool                  trigger_;
-    float                 triggerTimeS_;
+    Vectoid::Vector heading_;
+    bool            oldThrusterActive_;
+    bool            trigger_;
+    float           triggerTimeS_;
 };
 
 }    // Namespace GameLogic.
