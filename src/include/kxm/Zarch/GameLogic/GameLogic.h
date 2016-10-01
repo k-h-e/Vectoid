@@ -26,7 +26,6 @@ namespace Zarch {
 class InitializationEvent;
 class ActorCreationEvent;
 class MoveEvent;
-class VelocityEvent;
 class TimeEvent;
 class ControlsEvent;
 
@@ -50,6 +49,7 @@ class GameLogic : public EventHandlerCore {
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
+    void Handle(const MoveEvent &event);
     void Handle(const TimeEvent &event);
     void Handle(const ControlsEvent &event);
     void CreateActor(const ActorCreationEvent &event);

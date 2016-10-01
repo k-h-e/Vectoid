@@ -16,7 +16,7 @@ Shot::Shot()
 }
 
 void Shot::Handle(const ActorCreationEvent &event) {
-    name_ = event.actor;
+    Actor::Reset(event);
     ageS_ = 0.0f;
 }
 

@@ -5,12 +5,14 @@
 #include <kxm/Game/ReusableActors.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Events/InitializationEvent.h>
 #include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
+#include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
@@ -35,10 +37,12 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
           data_(new Data()) {
     data_->eventLoop     = eventLoop;
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
+    data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
     data_->eventLoop->RegisterHandler(TimeEvent::type,           this);
     data_->eventLoop->RegisterHandler(ControlsEvent::type,       this);
+    data_->eventLoop->RegisterHandler(MoveEvent::type,           this);
 }
 
 GameLogic::~GameLogic() {
@@ -120,6 +124,13 @@ void GameLogic::TerminateActor(const ActorName &name) {
     actorMap_.Unregister(name);
     data_->actorNaming.Put(name);
     data_->eventLoop->Post(ActorTerminationEvent(name));
+}
+
+void GameLogic::Handle(const MoveEvent &event) {
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    if (info && (info->type() == SaucerActor)) {
+        info->actor()->Handle(event);
+    }
 }
 
 void GameLogic::PrepareMap() {

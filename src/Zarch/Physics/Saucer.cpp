@@ -4,6 +4,7 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
@@ -31,8 +32,17 @@ void Saucer::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     body_.SetTransform(event.initialTransform);
     body_.SetVelocity(event.initialVelocity);
-    body_.EnableGravity(data_->mapParameters->gravity);
+    body_.DisableGravity();
     body_.DisableAcceleration();
+}
+
+void Saucer::Handle(const PhysicsOverrideEvent &event) {
+    if (event.flags.overrideOrientation) {
+        body_.SetOrientation(event.transform);
+    }
+    if (event.flags.overrideVelocity) {
+        body_.SetVelocity(event.velocity);
+    }
 }
 
 void Saucer::ExecuteAction() {

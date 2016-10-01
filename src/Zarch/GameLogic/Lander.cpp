@@ -31,7 +31,7 @@ Lander::Lander()
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
-    name_              = event.actor;
+    Actor::Reset(event);
     heading_           = Vector(0.0f, 0.0f, -1.0f);
     oldThrusterActive_ = false;
     trigger_           = false;

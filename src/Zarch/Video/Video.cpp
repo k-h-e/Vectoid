@@ -163,14 +163,14 @@ void Video::Handle(const MoveEvent &event) {
 
 void Video::Handle(const VelocityEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info) {
+    if (info && (info->type() == LanderActor)) {
         info->actor()->Handle(event);
     }
 }
 
 void Video::Handle(const AccelerationEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info) {
+    if (info && (info->type() == LanderActor)) {
         info->actor()->Handle(event);
     }
 }

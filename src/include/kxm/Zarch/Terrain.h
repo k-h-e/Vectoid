@@ -39,7 +39,7 @@ class Terrain : public virtual Core::Interface {
                                    float remainderX, float remainderZ);
     //! Gives access to the height for the specified cell data point.
     inline float &CellHeight(int cellX, int cellZ);
-    //! Gives access to the height for the specified cell data point.
+    //! Gives access to the color for the specified cell data point.
     inline Vectoid::Vector &CellColor(int cellX, int cellZ);
     
   private:
@@ -69,8 +69,10 @@ float Terrain::Height(float x, float z) {
     float remainderX, remainderZ;    
     mapParameters_->xRange.ComputeSlotUnchecked(x, mapParameters_->cellSize, &cellX, &remainderX);
     mapParameters_->zRange.ComputeSlotUnchecked(z, mapParameters_->cellSize, &cellZ, &remainderZ);
-    Core::IntModN cellXModN(mapParameters_->numCellsX, 0);  cellXModN.SetValue(cellX);
-    Core::IntModN cellZModN(mapParameters_->numCellsZ, 0);  cellZModN.SetValue(cellZ);
+    Core::IntModN cellXModN(mapParameters_->numCellsX, 0);
+    cellXModN.SetValue(cellX);
+    Core::IntModN cellZModN(mapParameters_->numCellsZ, 0);
+    cellZModN.SetValue(cellZ);
     return InterpolateHeight(cellXModN, cellZModN, remainderX, remainderZ);
 }
 

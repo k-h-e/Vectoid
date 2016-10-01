@@ -15,6 +15,7 @@ namespace Game {
 namespace Zarch {
 
 class MapParameters;
+class Terrain;
 
 namespace GameLogic {
 
@@ -30,6 +31,7 @@ struct Data {
     std::vector<ActorCreationEvent>                                actorCreationEvents;
     std::vector<Game::ActorName>                                   actorsToTerminate;
     std::shared_ptr<MapParameters>                                 mapParameters;
+    std::shared_ptr<Terrain>                                       terrain;
 };
 
 }    // Namespace Physics

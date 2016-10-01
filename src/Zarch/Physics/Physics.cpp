@@ -137,7 +137,8 @@ void Physics::Handle(const PhysicsOverrideEvent &event) {
 
 void Physics::Handle(const AccelerationEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info) {
+    if (info && (   (info->type() == LanderActor)
+                 || (info->type() == SaucerActor))) {
         info->actor()->Handle(event);
     }
 }
