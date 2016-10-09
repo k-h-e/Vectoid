@@ -9,7 +9,7 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/OldControlsEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
@@ -38,7 +38,7 @@ void Lander::Handle(const ActorCreationEvent &event) {
     triggerTimeS_      = 0.0f;
 }
 
-void Lander::Handle(const ControlsEvent &event) {
+void Lander::Handle(const OldControlsEvent &event) {
     const ControlsState &controls = event.controlsState;
     trigger_ = controls.trigger;
     

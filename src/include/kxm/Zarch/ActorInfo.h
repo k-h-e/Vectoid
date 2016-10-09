@@ -1,5 +1,5 @@
-#ifndef KXM_ZARCH_ACTORINFO_
-#define KXM_ZARCH_ACTORINFO_
+#ifndef KXM_ZARCH_ACTORINFO_H_
+#define KXM_ZARCH_ACTORINFO_H_
 
 #include <kxm/Zarch/ActorType.h>
 
@@ -29,5 +29,5 @@ class ActorInfo {
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_ACTORINFO_
+#endif    // KXM_ZARCH_ACTORINFO_H_
 

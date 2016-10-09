@@ -13,7 +13,7 @@
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
-#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/OldControlsEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
 #include <kxm/Zarch/GameLogic/Shot.h>
@@ -41,7 +41,7 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
     data_->eventLoop->RegisterHandler(TimeEvent::type,           this);
-    data_->eventLoop->RegisterHandler(ControlsEvent::type,       this);
+    data_->eventLoop->RegisterHandler(OldControlsEvent::type,    this);
     data_->eventLoop->RegisterHandler(MoveEvent::type,           this);
 }
 
@@ -71,7 +71,7 @@ void GameLogic::Handle(const TimeEvent &event) {
     }
 }
 
-void GameLogic::Handle(const ControlsEvent &event) {
+void GameLogic::Handle(const OldControlsEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);

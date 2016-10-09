@@ -25,7 +25,8 @@
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
-#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
+#include <kxm/Zarch/Events/OldControlsEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -42,7 +43,9 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
-          lastFrameTime_(steady_clock::now()) {
+          lastFrameTime_(steady_clock::now()),
+          thruster_(false),
+          trigger_(false) {
     eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
     eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type,   this);
@@ -85,7 +88,22 @@ void Video::SetViewPort(int width, int height) {
 
 void Video::PrepareFrame(const ControlsState &controlsState) {
     if (!data_->focusLander.IsNone()) {
-        eventLoop_->Post(ControlsEvent(data_->focusLander, controlsState));
+        ControlsRequestEvent event(data_->focusLander);
+        event.AddControl(Control(Axis1Control, controlsState.orientation.x));
+        event.AddControl(Control(Axis2Control, controlsState.orientation.y));
+        if (controlsState.thruster != thruster_) {
+            event.AddControl(Control(ThrusterControl, controlsState.thruster ? 1.0f : 0.0f));
+            thruster_ = controlsState.thruster;
+        }
+        if (controlsState.trigger != trigger_) {
+            if (controlsState.trigger) {
+                event.AddControl(Control(PrimaryWeaponFiredControl));
+            }
+            trigger_ = controlsState.trigger;
+        }
+        eventLoop_->Post(event);
+        
+        eventLoop_->Post(OldControlsEvent(data_->focusLander, controlsState));
     }
 }
 

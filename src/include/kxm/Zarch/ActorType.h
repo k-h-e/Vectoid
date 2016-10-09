@@ -1,5 +1,5 @@
-#ifndef KXM_ZARCH_ACTORTYPE_
-#define KXM_ZARCH_ACTORTYPE_
+#ifndef KXM_ZARCH_ACTORTYPE_H_
+#define KXM_ZARCH_ACTORTYPE_H_
 
 namespace kxm {
 namespace Zarch {
@@ -12,4 +12,4 @@ enum ActorType { InvalidActor,
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_ACTORTYPE_
+#endif    // KXM_ZARCH_ACTORTYPE_H_

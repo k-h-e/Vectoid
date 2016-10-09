@@ -13,7 +13,10 @@
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/ControlsRejectionEvent.h>
+#include <kxm/Zarch/Events/OldControlsEvent.h>
 #include <kxm/Zarch/Events/FrameGeneratedEvent.h>
 #include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
 #include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
@@ -49,7 +52,10 @@ void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventL
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new VelocityEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsOverrideEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new AccelerationEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRequestEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRejectionEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new OldControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));

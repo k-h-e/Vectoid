@@ -1,38 +1,26 @@
 #ifndef KXM_ZARCH_CONTROLSEVENT_H_
 #define KXM_ZARCH_CONTROLSEVENT_H_
 
-#include <kxm/Game/ActorName.h>
-#include <kxm/Zarch/ControlsState.h>
-#include <kxm/Zarch/Events/ZarchEvent.h>
+#include <kxm/Zarch/Events/ControlsCoreEvent.h>
 
 namespace kxm {
 namespace Zarch {
 
-namespace Physics {
-    class Physics;
-}
-
-//! Controls event.
+//! Holds certain controls updates/events for a given actor.
 /*!
  *  \ingroup ZarchEvents
  */
-class ControlsEvent : public ZarchEvent {
+class ControlsEvent : public ControlsCoreEvent {
   public:
     ControlsEvent();
-    ControlsEvent(const Game::ActorName &anActor, const ControlsState &controlsState);
+    ControlsEvent(const Game::ActorName &actor);
     const EventType &Type() const { return type; }
-    void Serialize(Core::Buffer *targetBuffer) const;
-    void Deserialize(Core::Buffer::Reader *bufferReader);
     void Dispatch(EventHandlerCore *handler) const;
     
     static const EventType type;
-    
-    Game::ActorName actor;
-    ControlsState   controlsState;
 };
 
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
 #endif    // KXM_ZARCH_CONTROLSEVENT_H_
-

@@ -36,7 +36,7 @@
 		2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */; };
 		2A5199511D9C5D7900C1A1C7 /* Saucer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */; };
 		2A5199541D9C60A700C1A1C7 /* Body.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199531D9C60A700C1A1C7 /* Body.cpp */; };
-		2A5E8AD41A114AAE0000617C /* ControlsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */; };
+		2A5E8AD41A114AAE0000617C /* OldControlsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD31A114AAE0000617C /* OldControlsEvent.cpp */; };
 		2A5E8AD61A114AD00000617C /* MoveEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD51A114AD00000617C /* MoveEvent.cpp */; };
 		2A5E8AD81A114AEA0000617C /* VelocityEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */; };
 		2A5F063E1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */; };
@@ -54,6 +54,10 @@
 		2A663A621D8C7AE400437612 /* TimeEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A663A611D8C7AE400437612 /* TimeEvent.cpp */; };
 		2A663A651D8CA07A00437612 /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A663A641D8CA07A00437612 /* Actor.cpp */; };
 		2A6A2B631D8759C500DAC9D5 /* ActorTerminationEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */; };
+		2A81B3781DAAB5F40011CBD1 /* ControlsCoreEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */; };
+		2A81B37D1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A81B37C1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp */; };
+		2A81B37F1DAAC0000011CBD1 /* ControlsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A81B37E1DAAC0000011CBD1 /* ControlsEvent.cpp */; };
+		2A81B3811DAAC0200011CBD1 /* ControlsRejectionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A81B3801DAAC0200011CBD1 /* ControlsRejectionEvent.cpp */; };
 		2A8AD4D6172D51ED007290C7 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4D4172D51ED007290C7 /* Physics.cpp */; };
 		2A8AD4DA172D7738007290C7 /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4D8172D7737007290C7 /* Lander.cpp */; };
 		2A8AD4DE172D8527007290C7 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A8AD4DC172D8527007290C7 /* Video.cpp */; };
@@ -121,7 +125,7 @@
 		2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/Physics/Saucer.cpp; sourceTree = "<group>"; };
 		2A5199521D9C607400C1A1C7 /* Body.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Body.h; sourceTree = "<group>"; };
 		2A5199531D9C60A700C1A1C7 /* Body.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Body.cpp; path = ../../../src/Zarch/Physics/Body.cpp; sourceTree = "<group>"; };
-		2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsEvent.cpp; path = ../../../src/Zarch/Events/ControlsEvent.cpp; sourceTree = "<group>"; };
+		2A5E8AD31A114AAE0000617C /* OldControlsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OldControlsEvent.cpp; path = ../../../src/Zarch/Events/OldControlsEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD51A114AD00000617C /* MoveEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveEvent.cpp; path = ../../../src/Zarch/Events/MoveEvent.cpp; sourceTree = "<group>"; };
 		2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VelocityEvent.cpp; path = ../../../src/Zarch/Events/VelocityEvent.cpp; sourceTree = "<group>"; };
 		2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PhysicsOverrideEvent.cpp; path = ../../../src/Zarch/Events/PhysicsOverrideEvent.cpp; sourceTree = "<group>"; };
@@ -139,6 +143,15 @@
 		2A663A611D8C7AE400437612 /* TimeEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeEvent.cpp; path = ../../../src/Zarch/Events/TimeEvent.cpp; sourceTree = "<group>"; };
 		2A663A641D8CA07A00437612 /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/Physics/Actor.cpp; sourceTree = "<group>"; };
 		2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorTerminationEvent.cpp; path = ../../../src/Zarch/Events/ActorTerminationEvent.cpp; sourceTree = "<group>"; };
+		2A81B3761DAAB5CA0011CBD1 /* ControlsCoreEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsCoreEvent.h; sourceTree = "<group>"; };
+		2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsCoreEvent.cpp; path = ../../../src/Zarch/Events/ControlsCoreEvent.cpp; sourceTree = "<group>"; };
+		2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsRequestEvent.h; sourceTree = "<group>"; };
+		2A81B37A1DAAB7CC0011CBD1 /* ControlsEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsEvent.h; sourceTree = "<group>"; };
+		2A81B37B1DAAB8030011CBD1 /* ControlsRejectionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsRejectionEvent.h; sourceTree = "<group>"; };
+		2A81B37C1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsRequestEvent.cpp; path = ../../../src/Zarch/Events/ControlsRequestEvent.cpp; sourceTree = "<group>"; };
+		2A81B37E1DAAC0000011CBD1 /* ControlsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsEvent.cpp; path = ../../../src/Zarch/Events/ControlsEvent.cpp; sourceTree = "<group>"; };
+		2A81B3801DAAC0200011CBD1 /* ControlsRejectionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsRejectionEvent.cpp; path = ../../../src/Zarch/Events/ControlsRejectionEvent.cpp; sourceTree = "<group>"; };
+		2A81B3821DAAC24A0011CBD1 /* Control.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
 		2A8AD4D4172D51ED007290C7 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Physics.cpp; path = ../../../src/Zarch/Physics/Physics.cpp; sourceTree = "<group>"; };
 		2A8AD4D8172D7737007290C7 /* Lander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lander.cpp; path = ../../../src/Zarch/Physics/Lander.cpp; sourceTree = "<group>"; };
 		2A8AD4DC172D8527007290C7 /* Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Video.cpp; path = ../../../src/Zarch/Video/Video.cpp; sourceTree = "<group>"; };
@@ -182,7 +195,7 @@
 		2A8DFD951D8DCE6300E22E0D /* AccelerationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerationEvent.h; sourceTree = "<group>"; };
 		2A8DFD961D8DCE6300E22E0D /* ActorCreationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorCreationEvent.h; sourceTree = "<group>"; };
 		2A8DFD971D8DCE6300E22E0D /* ActorTerminationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorTerminationEvent.h; sourceTree = "<group>"; };
-		2A8DFD981D8DCE6300E22E0D /* ControlsEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsEvent.h; sourceTree = "<group>"; };
+		2A8DFD981D8DCE6300E22E0D /* OldControlsEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OldControlsEvent.h; sourceTree = "<group>"; };
 		2A8DFD991D8DCE6300E22E0D /* FrameGeneratedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameGeneratedEvent.h; sourceTree = "<group>"; };
 		2A8DFD9A1D8DCE6300E22E0D /* InitializationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitializationEvent.h; sourceTree = "<group>"; };
 		2A8DFD9B1D8DCE6300E22E0D /* MoveEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveEvent.h; sourceTree = "<group>"; };
@@ -455,6 +468,7 @@
 				2A8DFDB21D8DCE6300E22E0D /* Video */,
 				2A8DFD901D8DCE6300E22E0D /* ActorInfo.h */,
 				2A8DFD911D8DCE6300E22E0D /* ActorType.h */,
+				2A81B3821DAAC24A0011CBD1 /* Control.h */,
 				2A8DFD921D8DCE6300E22E0D /* ControlsState.h */,
 				2A8DFD931D8DCE6300E22E0D /* EventHandlerCore.h */,
 				2ABB11A51D9B143F00BD1CA4 /* SimpleGeometry.h */,
@@ -476,7 +490,11 @@
 				2A8DFD951D8DCE6300E22E0D /* AccelerationEvent.h */,
 				2A8DFD961D8DCE6300E22E0D /* ActorCreationEvent.h */,
 				2A8DFD971D8DCE6300E22E0D /* ActorTerminationEvent.h */,
-				2A8DFD981D8DCE6300E22E0D /* ControlsEvent.h */,
+				2A81B3761DAAB5CA0011CBD1 /* ControlsCoreEvent.h */,
+				2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */,
+				2A81B37A1DAAB7CC0011CBD1 /* ControlsEvent.h */,
+				2A81B37B1DAAB8030011CBD1 /* ControlsRejectionEvent.h */,
+				2A8DFD981D8DCE6300E22E0D /* OldControlsEvent.h */,
 				2A8DFD991D8DCE6300E22E0D /* FrameGeneratedEvent.h */,
 				2A8DFD9A1D8DCE6300E22E0D /* InitializationEvent.h */,
 				2A8DFD9B1D8DCE6300E22E0D /* MoveEvent.h */,
@@ -569,7 +587,11 @@
 				2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */,
 				2A5E8AD51A114AD00000617C /* MoveEvent.cpp */,
 				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
-				2A5E8AD31A114AAE0000617C /* ControlsEvent.cpp */,
+				2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */,
+				2A81B37C1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp */,
+				2A81B37E1DAAC0000011CBD1 /* ControlsEvent.cpp */,
+				2A81B3801DAAC0200011CBD1 /* ControlsRejectionEvent.cpp */,
+				2A5E8AD31A114AAE0000617C /* OldControlsEvent.cpp */,
 				2A5F063D1D85E68A00D50D2E /* PhysicsOverrideEvent.cpp */,
 				2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */,
 				2A3046451D6D07CC007ED737 /* FrameGeneratedEvent.cpp */,
@@ -681,19 +703,22 @@
 			files = (
 				2ABB11A11D9B0C2B00BD1CA4 /* Saucer.cpp in Sources */,
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
+				2A81B37F1DAAC0000011CBD1 /* ControlsEvent.cpp in Sources */,
 				2A3046461D6D07CC007ED737 /* FrameGeneratedEvent.cpp in Sources */,
 				2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */,
 				2A8DFDC01D8DCE8100E22E0D /* Interface.cpp in Sources */,
 				2A30464A1D734210007ED737 /* UpdatePhysicsEvent.cpp in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */,
+				2A81B37D1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp in Sources */,
 				2A8DFDC21D8DCE8100E22E0D /* logging.cpp in Sources */,
 				2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */,
+				2A81B3811DAAC0200011CBD1 /* ControlsRejectionEvent.cpp in Sources */,
 				2A65AF5315361E710054F8E9 /* CoordSys.cpp in Sources */,
 				2A65AF5415361E710054F8E9 /* CoordSysCore.cpp in Sources */,
 				2ABB11A41D9B0F3D00BD1CA4 /* Saucer.cpp in Sources */,
 				2A663A651D8CA07A00437612 /* Actor.cpp in Sources */,
-				2A5E8AD41A114AAE0000617C /* ControlsEvent.cpp in Sources */,
+				2A5E8AD41A114AAE0000617C /* OldControlsEvent.cpp in Sources */,
 				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
 				2A0E36C21D8DE44700C531DC /* Actor.cpp in Sources */,
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
@@ -712,6 +737,7 @@
 				2AC40A221556CEC700026789 /* Range.cpp in Sources */,
 				2ADF9AF11D777CD3006C0B67 /* ActorNaming.cpp in Sources */,
 				2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */,
+				2A81B3781DAAB5F40011CBD1 /* ControlsCoreEvent.cpp in Sources */,
 				2A0C056B1D7B157F0018D865 /* Lander.cpp in Sources */,
 				2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */,
 				2A1303F2157BBFD900A89134 /* ParticlesRenderer.cpp in Sources */,

@@ -27,7 +27,7 @@ class InitializationEvent;
 class ActorCreationEvent;
 class MoveEvent;
 class TimeEvent;
-class ControlsEvent;
+class OldControlsEvent;
 
 namespace GameLogic {
 
@@ -51,7 +51,7 @@ class GameLogic : public EventHandlerCore {
     GameLogic &operator=(const GameLogic &other);
     void Handle(const MoveEvent &event);
     void Handle(const TimeEvent &event);
-    void Handle(const ControlsEvent &event);
+    void Handle(const OldControlsEvent &event);
     void CreateActor(const ActorCreationEvent &event);
     void TerminateActor(const Game::ActorName &name);
     void PrepareMap();

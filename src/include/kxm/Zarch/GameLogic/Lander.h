@@ -10,7 +10,7 @@ namespace Zarch {
 
 class ActorCreationEvent;
 class MoveEvent;
-class ControlsEvent;
+class OldControlsEvent;
 
 namespace GameLogic {
 
@@ -28,7 +28,7 @@ class Lander : public Actor {
     Lander(Lander &&other)                 = delete;
     Lander &operator=(Lander &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
-    void Handle(const ControlsEvent &event);
+    void Handle(const OldControlsEvent &event);
     void ExecuteAction();
     
   private:

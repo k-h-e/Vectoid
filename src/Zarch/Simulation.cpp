@@ -6,6 +6,7 @@
 #include <kxm/Zarch/GameLogic/GameLogic.h>
 #include <kxm/Zarch/Physics/Physics.h>
 #include <kxm/Zarch/Events/InitializationEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
 #include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
 
@@ -24,9 +25,10 @@ Simulation::Simulation(const shared_ptr<EventLoopHub> &eventLoopHub)
     physics_   = shared_ptr<Physics::Physics>(new Physics::Physics(eventLoop_, true));
     gameLogic_ = shared_ptr<GameLogic::GameLogic>(new GameLogic::GameLogic(eventLoop_));
     
-    eventLoop_->RegisterHandler(InitializationEvent::type, this);
-    eventLoop_->RegisterHandler(PhysicsUpdatedEvent::type, this);
-    eventLoop_->RegisterHandler(FrameGeneratedEvent::type, this);
+    eventLoop_->RegisterHandler(InitializationEvent::type,  this);
+    eventLoop_->RegisterHandler(ControlsRequestEvent::type, this);
+    eventLoop_->RegisterHandler(PhysicsUpdatedEvent::type,  this);
+    eventLoop_->RegisterHandler(FrameGeneratedEvent::type,  this);
 }
 
 Simulation::~Simulation() {
