@@ -13,7 +13,7 @@
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
-#include <kxm/Zarch/Events/OldControlsEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
 #include <kxm/Zarch/GameLogic/Shot.h>
@@ -39,10 +39,10 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
-    data_->eventLoop->RegisterHandler(InitializationEvent::type, this);
-    data_->eventLoop->RegisterHandler(TimeEvent::type,           this);
-    data_->eventLoop->RegisterHandler(OldControlsEvent::type,    this);
-    data_->eventLoop->RegisterHandler(MoveEvent::type,           this);
+    data_->eventLoop->RegisterHandler(InitializationEvent::type,  this);
+    data_->eventLoop->RegisterHandler(TimeEvent::type,            this);
+    data_->eventLoop->RegisterHandler(ControlsRequestEvent::type, this);
+    data_->eventLoop->RegisterHandler(MoveEvent::type,            this);
 }
 
 GameLogic::~GameLogic() {
@@ -71,7 +71,7 @@ void GameLogic::Handle(const TimeEvent &event) {
     }
 }
 
-void GameLogic::Handle(const OldControlsEvent &event) {
+void GameLogic::Handle(const ControlsRequestEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);

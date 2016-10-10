@@ -21,9 +21,9 @@ class ControlsCoreEvent : public ZarchEvent {
     //! Adds the specified control information to the event.
     void AddControl(const Control &control);
     //! Gets the control information for the specified index (0-based).
-    void GetControl(int index, Control *outControl);
+    void GetControl(int index, Control *outControl) const;
     //! Tells the number of controls contained in the event.
-    int Count();
+    int Count() const;
     void Serialize(Core::Buffer *targetBuffer) const;
     void Deserialize(Core::Buffer::Reader *bufferReader);
     

@@ -10,6 +10,7 @@
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Game/EventLoop.h>
 #include <kxm/Game/Actions.h>
+#include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
@@ -21,12 +22,11 @@
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/FrameGeneratedEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/AccelerationEvent.h>
-#include <kxm/Zarch/Events/ControlsRequestEvent.h>
-#include <kxm/Zarch/Events/OldControlsEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -48,10 +48,10 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
           trigger_(false) {
     eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
     eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
+    eventLoop_->RegisterHandler(ControlsEvent::type,         this);
     eventLoop_->RegisterHandler(FrameGeneratedEvent::type,   this);
     eventLoop_->RegisterHandler(MoveEvent::type,             this);
     eventLoop_->RegisterHandler(VelocityEvent::type,         this);
-    eventLoop_->RegisterHandler(AccelerationEvent::type,     this);
     
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
@@ -96,14 +96,10 @@ void Video::PrepareFrame(const ControlsState &controlsState) {
             thruster_ = controlsState.thruster;
         }
         if (controlsState.trigger != trigger_) {
-            if (controlsState.trigger) {
-                event.AddControl(Control(PrimaryWeaponFiredControl));
-            }
+            event.AddControl(Control(TriggerControl, controlsState.trigger ? 1.0f : 0.0f));
             trigger_ = controlsState.trigger;
         }
         eventLoop_->Post(event);
-        
-        eventLoop_->Post(OldControlsEvent(data_->focusLander, controlsState));
     }
 }
 
@@ -172,6 +168,13 @@ void Video::Handle(const ActorTerminationEvent &event) {
     }
 }
 
+void Video::Handle(const ControlsEvent &event) {
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
+    }
+}
+
 void Video::Handle(const MoveEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
@@ -180,13 +183,6 @@ void Video::Handle(const MoveEvent &event) {
 }
 
 void Video::Handle(const VelocityEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == LanderActor)) {
-        info->actor()->Handle(event);
-    }
-}
-
-void Video::Handle(const AccelerationEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info && (info->type() == LanderActor)) {
         info->actor()->Handle(event);

@@ -9,19 +9,18 @@ namespace Zarch {
 enum ControlType { Axis1Control,
                    Axis2Control,
                    ThrusterControl,
-                   PrimaryWeaponFiredControl };
+                   TriggerControl };
 
 //! Describes a certain type of control input to an actor.
 /*!
  *  \ingroup Zarch
  *
- *  Such a control input has a type and a <c>float</c>-valued argument in the range <c>[-1, +1]</c>. The type implies
- *  whether a given control value has update or event semantics.
+ *  Such a control input has a type and a <c>float</c>-valued argument in the range <c>[-1, +1]</c>.
  */
 class Control {
   public:
-    Control(ControlType type)
-            : type_(type),
+    Control()
+            : type_(Axis1Control),
               argument_(0.0f) {
         // Nop.
     }

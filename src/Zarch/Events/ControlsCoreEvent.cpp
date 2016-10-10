@@ -23,12 +23,12 @@ void ControlsCoreEvent::AddControl(const Control &control) {
     ++data.count;
 }
 
-void ControlsCoreEvent::GetControl(int index, Control *outControl) {
+void ControlsCoreEvent::GetControl(int index, Control *outControl) const {
     assert((index >= 0) && (index < controlsMaxCount));
     *outControl = Control(data.types[index], data.arguments[index]);
 }
 
-int ControlsCoreEvent::Count() {
+int ControlsCoreEvent::Count() const {
     return data.count;
 }
 

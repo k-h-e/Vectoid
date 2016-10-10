@@ -11,6 +11,7 @@
 #include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
@@ -43,6 +44,7 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, 
     
     data_->eventLoop->RegisterHandler(ActorCreationEvent::type,    this);
     data_->eventLoop->RegisterHandler(ActorTerminationEvent::type, this);
+    data_->eventLoop->RegisterHandler(ControlsEvent::type,         this);
     data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
     data_->eventLoop->RegisterHandler(PhysicsOverrideEvent::type,  this);
     data_->eventLoop->RegisterHandler(AccelerationEvent::type,     this);
@@ -112,6 +114,13 @@ void Physics::Handle(const ActorTerminationEvent &event) {
         // Don't use info->actor() below.
         
         actorMap_.Unregister(event.actor);
+    }
+}
+
+void Physics::Handle(const ControlsEvent &event) {
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    if (info) {
+        info->actor()->Handle(event);
     }
 }
 

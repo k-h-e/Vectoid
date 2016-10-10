@@ -9,9 +9,9 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/Video/Data.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 
@@ -66,6 +66,16 @@ void Lander::Handle(const ActorTerminationEvent &event) {
     data_->camera->RemoveChild(thrusterParticlesGeode_);
 }
 
+void Lander::Handle(const ControlsEvent &event) {
+    Control control;
+    for (int i = 0; i < event.Count(); ++i) {
+        event.GetControl(i, &control);
+        if (control.Type() == ThrusterControl) {
+            thrusterActive_ = (control.Argument() > .5f);
+        }
+    }
+}
+
 void Lander::Handle(const MoveEvent &event) {
     coordSys_->SetTransform(event.transform);
     if (hasFocus_) {
@@ -83,10 +93,6 @@ void Lander::Handle(const MoveEvent &event) {
 
 void Lander::Handle(const VelocityEvent &event) {
     velocity_ = event.velocity;
-}
-
-void Lander::Handle(const AccelerationEvent &event) {
-    thrusterActive_ = event.flags.enabled;
 }
 
 void Lander::ExecuteAction() {

@@ -2,6 +2,7 @@
 #define KXM_ZARCH_PHYSICS_LANDER_H_
 
 #include <memory>
+#include <kxm/Vectoid/Vector.h>
 #include <kxm/Zarch/Physics/Actor.h>
 #include <kxm/Zarch/Physics/Body.h>
 
@@ -9,8 +10,7 @@ namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
-class PhysicsOverrideEvent;
-class AccelerationEvent;
+class ControlsEvent;
 
 namespace Physics {
 
@@ -30,16 +30,20 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
     void Handle(const ActorCreationEvent &event);
-    void Handle(const PhysicsOverrideEvent &event);
-    void Handle(const AccelerationEvent &event);
+    void Handle(const ControlsEvent &event);
     void ExecuteAction();
     
   private:
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body body_;
-    bool killVelocity_;
+    Body            body_;
+    float           axis1_,
+                    axis2_;
+    bool            thrusterActive_,
+                    oldThrusterActive_;
+    Vectoid::Vector heading_;
+    bool            killVelocity_;
 };
 
 }    // Namespace Physics.

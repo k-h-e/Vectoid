@@ -9,7 +9,8 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/OldControlsEvent.h>
+#include <kxm/Zarch/Events/ControlsRequestEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
@@ -24,51 +25,33 @@ namespace Zarch {
 namespace GameLogic {
 
 Lander::Lander()
-        : oldThrusterActive_(false),
-          trigger_(false),
+        : trigger_(false),
           triggerTimeS_(0.0f) {
     // Nop.
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
-    heading_           = Vector(0.0f, 0.0f, -1.0f);
-    oldThrusterActive_ = false;
-    trigger_           = false;
-    triggerTimeS_      = 0.0f;
+    trigger_      = false;
+    triggerTimeS_ = 0.0f;
 }
 
-void Lander::Handle(const OldControlsEvent &event) {
-    const ControlsState &controls = event.controlsState;
-    trigger_ = controls.trigger;
-    
-    float projection = controls.orientation.x;
-    NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float xAngle = (float)asin(projection) * 180.0f / NumberTools::piAsFloat;
-    projection = controls.orientation.y;
-    NumberTools::Clamp(&projection, -1.0f, 1.0f);
-    float yAngle = -(float)asin(projection) * 180.0f / NumberTools::piAsFloat;
-    float maxAngle = 30.0f;
-    NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
-    NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
-    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
-    float  speedLength = speed.Length();
-    if (speedLength > 0.0f) {
-        heading_ = (1.0f/speedLength) * speed;
+void Lander::Handle(const ControlsRequestEvent &event) {
+    ControlsEvent newEvent(name_);
+    Control       control;
+    for (int i = 0; i < event.Count(); ++i) {
+        event.GetControl(i, &control);
+        switch (control.Type()) {
+            case TriggerControl:
+                trigger_ = (control.Argument() > .5f);
+                break;
+            default:
+                newEvent.AddControl(control);
+                break;
+        }
     }
-    NumberTools::Clamp(&speedLength, 0.0f, 1.0f);
-    
-    Vector up(0.0f, 1.0f, 0.0f);
-    Transform newLanderTransform(CrossProduct(up, -heading_), up, -heading_);
-    newLanderTransform.Prepend(Transform(XAxis, -speedLength * 120.0f));
-    newLanderTransform.Prepend(Transform(YAxis, 180.0));
-    
-    data_->eventLoop->Post(PhysicsOverrideEvent(name_, newLanderTransform));
-    
-    if (controls.thruster != oldThrusterActive_) {
-        data_->eventLoop->Post(AccelerationEvent(name_, controls.thruster,
-                                                 data_->mapParameters->landerThrust * Vector(0.0f, 1.0f, 0.0f), true));
-        oldThrusterActive_ = controls.thruster;
+    if (newEvent.Count()) {
+        data_->eventLoop->Post(newEvent);
     }
 }
 

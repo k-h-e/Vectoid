@@ -30,9 +30,9 @@ namespace Zarch {
 
 class ActorCreationEvent;
 class ActorTerminationEvent;
+class ControlsEvent;
 class MoveEvent;
 class VelocityEvent;
-class AccelerationEvent;
 class EventHandlerCore;
 class ControlsState;
 
@@ -57,9 +57,9 @@ class Video : public EventHandlerCore {
     void PrepareFrame(const ControlsState &controlsState);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
+    void Handle(const ControlsEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
-    void Handle(const AccelerationEvent &event);
     void Handle(const FrameGeneratedEvent &event);
   
   private:

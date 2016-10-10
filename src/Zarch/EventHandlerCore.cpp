@@ -53,10 +53,6 @@ void EventHandlerCore::Handle(const ControlsRejectionEvent &event) {
     Log(this).Stream() << "Unhandled ControlsRejectionEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const OldControlsEvent &event) {
-    Log(this).Stream() << "Unhandled OldControlsEvent!" << endl;
-}
-
 void EventHandlerCore::Handle(const FrameGeneratedEvent &event) {
     Log(this).Stream() << "Unhandled FrameGeneratedEvent!" << endl;
 }

@@ -5,10 +5,9 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
-#include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 
 using namespace std;
@@ -22,6 +21,11 @@ namespace Physics {
 
 Lander::Lander()
         :  body_(this),
+           axis1_(0.0f),
+           axis2_(0.0f),
+           thrusterActive_(false),
+           oldThrusterActive_(false),
+           heading_(0.0f, 0.0f, -1.0f),
            killVelocity_(false) {
     // Nop.
 }
@@ -36,24 +40,64 @@ void Lander::GetVelocity(Vectoid::Vector *outVelocity) {
 
 void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
+    axis1_             = 0.0f;
+    axis2_             = 0.0f;
+    thrusterActive_    = false;
+    oldThrusterActive_ = false;
+    heading_        = Vector(0.0f, 0.0f, -1.0f);
     body_.SetTransform(event.initialTransform);
     body_.SetVelocity(event.initialVelocity);
     body_.EnableGravity(data_->mapParameters->gravity);
     body_.DisableAcceleration();
 }
 
-void Lander::Handle(const PhysicsOverrideEvent &event) {
-    if (event.flags.overrideOrientation) {
-        body_.SetOrientation(event.transform);
+void Lander::Handle(const ControlsEvent &event) {
+    Control control;
+    for (int i = 0; i < event.Count(); ++i) {
+        event.GetControl(i, &control);
+        switch (control.Type()) {
+            case Axis1Control:
+                axis1_ = control.Argument();
+                break;
+            case Axis2Control:
+                axis2_ = control.Argument();
+                break;
+            case ThrusterControl:
+                thrusterActive_ = (control.Argument() > .5f);
+                break;
+            default:
+                break;
+        }
     }
-}
-
-void Lander::Handle(const AccelerationEvent &event) {
-    if (event.flags.enabled) {
-        body_.EnableAcceleration(event.acceleration, event.flags.applyInLocalCoordSys);
+    
+    NumberTools::Clamp(&axis1_, -1.0f, 1.0f);
+    float xAngle = (float)asin(axis1_) * 180.0f / NumberTools::piAsFloat;
+    NumberTools::Clamp(&axis2_, -1.0f, 1.0f);
+    float yAngle = -(float)asin(axis2_) * 180.0f / NumberTools::piAsFloat;
+    float maxAngle = 30.0f;
+    NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
+    NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
+    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
+    float  speedLength = speed.Length();
+    if (speedLength > 0.0f) {
+        heading_ = (1.0f/speedLength) * speed;
     }
-    else {
-        body_.DisableAcceleration();
+    NumberTools::Clamp(&speedLength, 0.0f, 1.0f);
+    
+    Vector up(0.0f, 1.0f, 0.0f);
+    Transform newLanderTransform(CrossProduct(up, -heading_), up, -heading_);
+    newLanderTransform.Prepend(Transform(XAxis, -speedLength * 120.0f));
+    newLanderTransform.Prepend(Transform(YAxis, 180.0));
+    body_.SetOrientation(newLanderTransform);
+    
+    if (thrusterActive_ != oldThrusterActive_) {
+        if (thrusterActive_) {
+            body_.EnableAcceleration(data_->mapParameters->landerThrust * Vector(0.0f, 1.0f, 0.0f), true);
+        }
+        else {
+            body_.DisableAcceleration();
+        }
+        oldThrusterActive_ = thrusterActive_;
     }
 }
 
