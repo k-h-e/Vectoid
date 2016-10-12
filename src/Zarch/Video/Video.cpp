@@ -24,9 +24,9 @@
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
-#include <kxm/Zarch/Events/FrameGeneratedEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
+#include <kxm/Zarch/Events/TriggerEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -49,9 +49,9 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
     eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
     eventLoop_->RegisterHandler(ControlsEvent::type,         this);
-    eventLoop_->RegisterHandler(FrameGeneratedEvent::type,   this);
     eventLoop_->RegisterHandler(MoveEvent::type,             this);
     eventLoop_->RegisterHandler(VelocityEvent::type,         this);
+    eventLoop_->RegisterHandler(TriggerEvent::type,          this);
     
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
@@ -189,24 +189,26 @@ void Video::Handle(const VelocityEvent &event) {
     }
 }
 
-void Video::Handle(const FrameGeneratedEvent &event) {
-    auto now = steady_clock::now();
-    int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
-    lastFrameTime_ = now;
-    data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
-    
-    actions_->Execute();
-    
-    float observerX, observerZ;
-    data_->terrainRenderer->GetObserverPosition(&observerX, &observerZ);
-    auto iter = data_->shotParticles->GetIterator();
-    while (Particles::ParticleInfo *particle = iter.Next()) {
-        data_->mapParameters->xRange.ExpandModuloForObserver(observerX, &particle->position.x);
-        data_->mapParameters->zRange.ExpandModuloForObserver(observerZ, &particle->position.z);
+void Video::Handle(const TriggerEvent &event) {
+    if (event.trigger == TriggerEvent::FrameRenderedTrigger) {
+        auto now = steady_clock::now();
+        int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
+        lastFrameTime_ = now;
+        data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+        
+        actions_->Execute();
+        
+        float observerX, observerZ;
+        data_->terrainRenderer->GetObserverPosition(&observerX, &observerZ);
+        auto iter = data_->shotParticles->GetIterator();
+        while (Particles::ParticleInfo *particle = iter.Next()) {
+            data_->mapParameters->xRange.ExpandModuloForObserver(observerX, &particle->position.x);
+            data_->mapParameters->zRange.ExpandModuloForObserver(observerZ, &particle->position.z);
+        }
+        
+        data_->projection->Render(0);
+        eventLoop_->Post(TriggerEvent(TriggerEvent::FrameRenderedTrigger, 0.0f));
     }
-    
-    data_->projection->Render(0);
-    eventLoop_->Post(FrameGeneratedEvent());
 }
 
 }    // Namespace Video.

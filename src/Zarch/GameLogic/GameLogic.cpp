@@ -8,7 +8,6 @@
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
 #include <kxm/Zarch/Events/InitializationEvent.h>
-#include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
@@ -20,7 +19,6 @@
 #include <kxm/Zarch/GameLogic/Saucer.h>
 
 using namespace std;
-using namespace std::chrono;
 using namespace kxm::Core;
 using namespace kxm::Game;
 using namespace kxm::Vectoid;
@@ -29,20 +27,23 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop)
+GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
+                     TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
         : actions_(new Actions()),
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
-          data_(new Data()) {
+          data_(new Data()),
+          inTrigger_(anInTrigger),
+          outTrigger_(anOutTrigger) {
     data_->eventLoop     = eventLoop;
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type,  this);
-    data_->eventLoop->RegisterHandler(TimeEvent::type,            this);
     data_->eventLoop->RegisterHandler(ControlsRequestEvent::type, this);
     data_->eventLoop->RegisterHandler(MoveEvent::type,            this);
+    data_->eventLoop->RegisterHandler(TriggerEvent::type,         this);
 }
 
 GameLogic::~GameLogic() {
@@ -53,28 +54,41 @@ void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
 }
 
-void GameLogic::Handle(const TimeEvent &event) {
-    data_->deltaTimeS = event.deltaTimeS;
-    actions_->Execute();
-    
-    if (data_->actorCreationEvents.size()) {
-        for (ActorCreationEvent &creationEvent : data_->actorCreationEvents) {
-            CreateActor(creationEvent);
-        }
-        data_->actorCreationEvents.clear();
-    }
-    if (data_->actorsToTerminate.size()) {
-        for (ActorName &name : data_->actorsToTerminate) {
-            TerminateActor(name);
-        }
-        data_->actorsToTerminate.clear();
-    }
-}
-
 void GameLogic::Handle(const ControlsRequestEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
         info->actor()->Handle(event);
+    }
+}
+
+void GameLogic::Handle(const MoveEvent &event) {
+    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    if (info && (info->type() == SaucerActor)) {
+        info->actor()->Handle(event);
+    }
+}
+
+void GameLogic::Handle(const TriggerEvent &event) {
+    if ((inTrigger_ != TriggerEvent::NoTrigger) && (event.trigger == inTrigger_)) {
+        data_->deltaTimeS = event.deltaTime_s;
+        actions_->Execute();
+        
+        if (data_->actorCreationEvents.size()) {
+            for (ActorCreationEvent &creationEvent : data_->actorCreationEvents) {
+                CreateActor(creationEvent);
+            }
+            data_->actorCreationEvents.clear();
+        }
+        if (data_->actorsToTerminate.size()) {
+            for (ActorName &name : data_->actorsToTerminate) {
+                TerminateActor(name);
+            }
+            data_->actorsToTerminate.clear();
+        }
+        
+        if (outTrigger_ != TriggerEvent::NoTrigger) {
+            data_->eventLoop->Post(TriggerEvent(outTrigger_, event.deltaTime_s));
+        }
     }
 }
 
@@ -124,13 +138,6 @@ void GameLogic::TerminateActor(const ActorName &name) {
     actorMap_.Unregister(name);
     data_->actorNaming.Put(name);
     data_->eventLoop->Post(ActorTerminationEvent(name));
-}
-
-void GameLogic::Handle(const MoveEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == SaucerActor)) {
-        info->actor()->Handle(event);
-    }
 }
 
 void GameLogic::PrepareMap() {

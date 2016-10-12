@@ -8,20 +8,17 @@
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/EventTools.h>
 #include <kxm/Zarch/Events/ZarchEvent.h>
-#include <kxm/Zarch/Events/TimeEvent.h>
-#include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
-#include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
-#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
+#include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 #include <kxm/Zarch/Physics/Shot.h>
 #include <kxm/Zarch/Physics/Saucer.h>
 
 using namespace std;
-using namespace std::chrono;
 using namespace kxm::Core;
 using namespace kxm::Game;
 using namespace kxm::Vectoid;
@@ -30,13 +27,14 @@ namespace kxm {
 namespace Zarch {
 namespace Physics {
 
-Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, bool emitTimeEvents)
+Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
+                 TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
         : actions_(new Actions()),
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
-          lastUpdateTime_(steady_clock::now()),
-          emitTimeEvents_(emitTimeEvents) {
+          inTrigger_(anInTrigger),
+          outTrigger_(anOutTrigger) {
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
@@ -45,9 +43,9 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop, 
     data_->eventLoop->RegisterHandler(ActorCreationEvent::type,    this);
     data_->eventLoop->RegisterHandler(ActorTerminationEvent::type, this);
     data_->eventLoop->RegisterHandler(ControlsEvent::type,         this);
-    data_->eventLoop->RegisterHandler(UpdatePhysicsEvent::type,    this);
     data_->eventLoop->RegisterHandler(PhysicsOverrideEvent::type,  this);
     data_->eventLoop->RegisterHandler(AccelerationEvent::type,     this);
+    data_->eventLoop->RegisterHandler(TriggerEvent::type,          this);
 }
 
 Physics::~Physics() {
@@ -124,19 +122,6 @@ void Physics::Handle(const ControlsEvent &event) {
     }
 }
 
-void Physics::Handle(const UpdatePhysicsEvent &event) {
-    auto now = steady_clock::now();
-    int milliSeconds = (int)duration_cast<milliseconds>(now - lastUpdateTime_).count();
-    lastUpdateTime_ = now;
-    data_->updateDeltaTimeS = (float)milliSeconds / 1000.0f;
-    if (emitTimeEvents_) {
-        data_->eventLoop->Post(TimeEvent(data_->updateDeltaTimeS));
-    }
-    
-    actions_->Execute();
-    data_->eventLoop->Post(PhysicsUpdatedEvent());
-}
-
 void Physics::Handle(const PhysicsOverrideEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
@@ -149,6 +134,16 @@ void Physics::Handle(const AccelerationEvent &event) {
     if (info && (   (info->type() == LanderActor)
                  || (info->type() == SaucerActor))) {
         info->actor()->Handle(event);
+    }
+}
+
+void Physics::Handle(const TriggerEvent &event) {
+    if ((inTrigger_ != TriggerEvent::NoTrigger) && (event.trigger == inTrigger_)) {
+        data_->updateDeltaTimeS = event.deltaTime_s;
+        actions_->Execute();
+        if (outTrigger_ != TriggerEvent::NoTrigger) {
+            data_->eventLoop->Post(TriggerEvent(outTrigger_, event.deltaTime_s));
+        }
     }
 }
 

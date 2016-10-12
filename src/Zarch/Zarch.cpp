@@ -6,7 +6,6 @@
 #include <kxm/Zarch/Presentation.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Events/InitializationEvent.h>
-#include <kxm/Zarch/Events/TimeEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
@@ -16,9 +15,7 @@
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ControlsRejectionEvent.h>
-#include <kxm/Zarch/Events/FrameGeneratedEvent.h>
-#include <kxm/Zarch/Events/UpdatePhysicsEvent.h>
-#include <kxm/Zarch/Events/PhysicsUpdatedEvent.h>
+#include <kxm/Zarch/Events/TriggerEvent.h>
 
 using namespace std;
 using namespace kxm::Core;
@@ -44,7 +41,6 @@ Zarch::~Zarch() {
 
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new InitializationEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new TimeEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorCreationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ActorTerminationEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new MoveEvent));
@@ -54,9 +50,7 @@ void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventL
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRequestEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRejectionEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new FrameGeneratedEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new UpdatePhysicsEvent));
-    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PhysicsUpdatedEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new TriggerEvent));
 }
 
 }    // Namespace Zarch.

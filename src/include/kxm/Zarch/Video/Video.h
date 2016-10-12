@@ -35,6 +35,7 @@ class MoveEvent;
 class VelocityEvent;
 class EventHandlerCore;
 class ControlsState;
+class TriggerEvent;
 
 namespace Video {
 
@@ -60,7 +61,7 @@ class Video : public EventHandlerCore {
     void Handle(const ControlsEvent &event);
     void Handle(const MoveEvent &event);
     void Handle(const VelocityEvent &event);
-    void Handle(const FrameGeneratedEvent &event);
+    void Handle(const TriggerEvent &event);
   
   private:
     Video(const Video &other);

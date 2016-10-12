@@ -12,9 +12,12 @@ namespace kxm {
 namespace Zarch {
 
 Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub)
-        : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)) {
+        : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)),
+          lastTrigger_(TriggerEvent::NoTrigger) {
     Zarch::RegisterEvents(eventLoop_.get());
     video_ = shared_ptr<Video::Video>(new Video::Video(eventLoop_));
+    
+    eventLoop_->RegisterHandler(TriggerEvent::type, this);
 }
 
 Presentation::~Presentation() {
@@ -30,7 +33,14 @@ void Presentation::SetViewPort(int width, int height) {
 }
 
 void Presentation::RenderFrame() {
-    eventLoop_->RunUntilEventOfType(&frameGeneratedEvent_.Type());
+    lastTrigger_ = TriggerEvent::NoTrigger;
+    while (lastTrigger_ != TriggerEvent::FrameRenderedTrigger) {
+        eventLoop_->RunUntilEventOfType(&triggerEvent_.Type());
+    }
+}
+
+void Presentation::Handle(const TriggerEvent &event) {
+    lastTrigger_ = event.trigger;
 }
 
 }

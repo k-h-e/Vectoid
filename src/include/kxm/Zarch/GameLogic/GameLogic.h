@@ -11,7 +11,7 @@
 #include <kxm/Game/ActorMap.h>
 #include <kxm/Game/ReusableActors.h>
 #include <kxm/Zarch/ActorInfo.h>
-#include <kxm/Zarch/Events/ZarchEvent.h>
+#include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 #include <kxm/Zarch/GameLogic/Actor.h>
 
@@ -26,8 +26,8 @@ namespace Zarch {
 class InitializationEvent;
 class ActorCreationEvent;
 class MoveEvent;
-class TimeEvent;
-class ControlsRTequestEvent;
+class ControlsRequestEvent;
+class TriggerEvent;
 
 namespace GameLogic {
 
@@ -42,16 +42,17 @@ class Saucer;
  */
 class GameLogic : public EventHandlerCore {
   public:
-    GameLogic(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop);
+    GameLogic(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
+              TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
     ~GameLogic();
     void Handle(const InitializationEvent &event);
+    void Handle(const MoveEvent &event);
+    void Handle(const ControlsRequestEvent &event);
+    void Handle(const TriggerEvent &event);
     
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
-    void Handle(const MoveEvent &event);
-    void Handle(const TimeEvent &event);
-    void Handle(const ControlsRequestEvent &event);
     void CreateActor(const ActorCreationEvent &event);
     void TerminateActor(const Game::ActorName &name);
     void PrepareMap();
@@ -62,6 +63,9 @@ class GameLogic : public EventHandlerCore {
     Game::ReusableActors<Shot>       shots_;
     Game::ReusableActors<Saucer>     saucers_;
     std::shared_ptr<Data>            data_;
+    TriggerEvent::Trigger            inTrigger_,
+                                     outTrigger_;
+    
 };
 
 }    // Namespace GameLogic.

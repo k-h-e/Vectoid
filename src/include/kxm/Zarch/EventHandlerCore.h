@@ -18,8 +18,7 @@ class ControlsRequestEvent;
 class ControlsEvent;
 class ControlsRejectionEvent;
 class FrameGeneratedEvent;
-class UpdatePhysicsEvent;
-class PhysicsUpdatedEvent;
+class TriggerEvent;
 
 //! Base class to Zarch event handlers.
 /*!
@@ -39,9 +38,8 @@ class EventHandlerCore : public virtual Core::Interface {
     virtual void Handle(const ControlsEvent &event);
     virtual void Handle(const ControlsRejectionEvent &event);
     virtual void Handle(const FrameGeneratedEvent &event);
-    virtual void Handle(const UpdatePhysicsEvent &event);
-    virtual void Handle(const PhysicsUpdatedEvent &event);
-    };
+    virtual void Handle(const TriggerEvent &event);
+};
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include <kxm/Zarch/Video/Video.h>
-#include <kxm/Zarch/Events/FrameGeneratedEvent.h>
+#include <kxm/Zarch/Events/TriggerEvent.h>
 
 namespace kxm {
 
@@ -16,18 +16,20 @@ namespace Game {
 namespace Zarch {
 
 class ControlsState;
+class TriggerEvent;
 
 //! Ties together the presentation subsystems, that together run on the main UI thread.
 /*!
  *  \ingroup Zarch
  */
-class Presentation {
+class Presentation : public EventHandlerCore {
   public:
     Presentation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub);
     ~Presentation();
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height);
     void RenderFrame();
+    void Handle(const TriggerEvent &event);
     
   private:
     Presentation(const Presentation &other);
@@ -35,7 +37,8 @@ class Presentation {
     
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Video::Video>                                  video_;
-    FrameGeneratedEvent                                            frameGeneratedEvent_;
+    TriggerEvent                                                   triggerEvent_;
+    TriggerEvent::Trigger                                          lastTrigger_;
 };
 
 }

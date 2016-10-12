@@ -57,12 +57,8 @@ void EventHandlerCore::Handle(const FrameGeneratedEvent &event) {
     Log(this).Stream() << "Unhandled FrameGeneratedEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const UpdatePhysicsEvent &event) {
-    Log(this).Stream() << "Unhandled UpdatePhysicsEvent!" << endl;
-}
-
-void EventHandlerCore::Handle(const PhysicsUpdatedEvent &event) {
-    Log(this).Stream() << "Unhandled PhysicsUpdatedEvent!" << endl;
+void EventHandlerCore::Handle(const TriggerEvent &event) {
+    Log(this).Stream() << "Unhandled TriggerEvent!" << endl;
 }
 
 }    // Namespace Zarch.
