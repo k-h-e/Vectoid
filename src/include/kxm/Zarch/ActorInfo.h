@@ -16,9 +16,9 @@ class ActorInfo {
           storageId_(storageId),
           actor_(actor) {}
         // Default copy/move okay.
-    ActorType type()    { return type_; }
-    int storageId()     { return storageId_; }
-    ActorClass *actor() { return actor_; }
+    ActorType Type()    { return type_; }
+    int StorageId()     { return storageId_; }
+    ActorClass *Actor() { return actor_; }
   
   private:
     ActorType  type_;

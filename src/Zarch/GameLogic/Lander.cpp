@@ -11,7 +11,6 @@
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
-#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 

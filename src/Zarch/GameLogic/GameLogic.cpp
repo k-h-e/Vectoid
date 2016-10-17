@@ -10,8 +10,6 @@
 #include <kxm/Zarch/Events/InitializationEvent.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
-#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
-#include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
@@ -42,7 +40,6 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     
     data_->eventLoop->RegisterHandler(InitializationEvent::type,  this);
     data_->eventLoop->RegisterHandler(ControlsRequestEvent::type, this);
-    data_->eventLoop->RegisterHandler(MoveEvent::type,            this);
     data_->eventLoop->RegisterHandler(TriggerEvent::type,         this);
 }
 
@@ -57,14 +54,7 @@ void GameLogic::Handle(const InitializationEvent &event) {
 void GameLogic::Handle(const ControlsRequestEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
-        info->actor()->Handle(event);
-    }
-}
-
-void GameLogic::Handle(const MoveEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == SaucerActor)) {
-        info->actor()->Handle(event);
+        info->Actor()->Handle(event);
     }
 }
 
@@ -119,15 +109,15 @@ void GameLogic::CreateActor(const ActorCreationEvent &event) {
 void GameLogic::TerminateActor(const ActorName &name) {
     ActorInfo<Actor> *info = actorMap_.Get(name);
     assert(info);
-    switch (info->type()) {
+    switch (info->Type()) {
         case LanderActor:
-            landers_.Put(info->storageId());
+            landers_.Put(info->StorageId());
             break;
         case ShotActor:
-            shots_.Put(info->storageId());
+            shots_.Put(info->StorageId());
             break;
         case SaucerActor:
-            saucers_.Put(info->storageId());
+            saucers_.Put(info->StorageId());
             break;
         default:
             assert(false);

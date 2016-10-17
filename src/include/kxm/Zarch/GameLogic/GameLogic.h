@@ -25,7 +25,6 @@ namespace Zarch {
 
 class InitializationEvent;
 class ActorCreationEvent;
-class MoveEvent;
 class ControlsRequestEvent;
 class TriggerEvent;
 
@@ -46,7 +45,6 @@ class GameLogic : public EventHandlerCore {
               TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
     ~GameLogic();
     void Handle(const InitializationEvent &event);
-    void Handle(const MoveEvent &event);
     void Handle(const ControlsRequestEvent &event);
     void Handle(const TriggerEvent &event);
     

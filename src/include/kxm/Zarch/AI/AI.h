@@ -24,6 +24,7 @@ namespace Zarch {
 
 class ActorCreationEvent;
 class ActorTerminationEvent;
+class MoveEvent;
 class TriggerEvent;
 
 namespace AI {
@@ -47,6 +48,7 @@ class AI : public EventHandlerCore {
     ~AI();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
+    void Handle(const MoveEvent &event);
     void Handle(const TriggerEvent &event);
     
   private:

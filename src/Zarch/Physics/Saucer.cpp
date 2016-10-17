@@ -4,7 +4,7 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
-#include <kxm/Zarch/Events/PhysicsOverrideEvent.h>
+#include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
@@ -36,13 +36,30 @@ void Saucer::Handle(const ActorCreationEvent &event) {
     body_.DisableAcceleration();
 }
 
-void Saucer::Handle(const PhysicsOverrideEvent &event) {
-    if (event.flags.overrideOrientation) {
-        body_.SetOrientation(event.transform);
+void Saucer::Handle(const ControlsEvent &event) {
+    static const float maxTravelVelocity = .4f;
+    
+    Vector velocity;
+    body_.GetVelocity(&velocity);
+    
+    Control control;
+    for (int i = 0; i < event.Count(); ++i) {
+        event.GetControl(i, &control);
+        switch (control.Type()) {
+            case Axis1Control:
+                velocity.x = control.Argument() * maxTravelVelocity;
+                break;
+            case Axis2Control:
+                velocity.z = control.Argument() * maxTravelVelocity;
+                break;
+            case ThrusterControl:
+                break;
+            default:
+                break;
+        }
     }
-    if (event.flags.overrideVelocity) {
-        body_.SetVelocity(event.velocity);
-    }
+    
+    body_.SetVelocity(velocity);
 }
 
 void Saucer::ExecuteAction() {

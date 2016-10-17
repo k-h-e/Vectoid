@@ -29,7 +29,6 @@ namespace Zarch {
 class ActorCreationEvent;
 class ActorTerminationEvent;
 class ControlsEvent;
-class PhysicsOverrideEvent;
 class AccelerationEvent;
 class TriggerEvent;
 
@@ -53,7 +52,6 @@ class Physics : public EventHandlerCore {
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const ControlsEvent &event);
-    void Handle(const PhysicsOverrideEvent &event);
     void Handle(const AccelerationEvent &event);
     void Handle(const TriggerEvent &event);
     

@@ -33,10 +33,6 @@ void EventHandlerCore::Handle(const VelocityEvent &event) {
     Log(this).Stream() << "Unhandled VelocityEvent!" << endl;
 }
 
-void EventHandlerCore::Handle(const PhysicsOverrideEvent &event) {
-    Log(this).Stream() << "Unhandled PhysicsOverrideEvent!" << endl;
-}
-
 void EventHandlerCore::Handle(const AccelerationEvent &event) {
     Log(this).Stream() << "Unhandled AccelerationEvent!" << endl;
 }

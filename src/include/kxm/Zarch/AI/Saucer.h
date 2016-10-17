@@ -1,12 +1,16 @@
 #ifndef KXM_ZARCH_AI_SAUCER_H_
 #define KXM_ZARCH_AI_SAUCER_H_
 
+#include <memory>
+#include <random>
+#include <kxm/Vectoid/Vector.h>
 #include <kxm/Zarch/AI/Actor.h>
 
 namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
+class MoveEvent;
 
 namespace AI {
 
@@ -14,7 +18,7 @@ class Data;
 
 //! Represents an enemy saucer inside the AI subsystem.
 /*!
- *  \ingroup ZarchAI
+ *  \ingroup ZarchGameLogic
  */
 class Saucer : public Actor {
   public:
@@ -24,9 +28,23 @@ class Saucer : public Actor {
     Saucer(Saucer &&other)                 = delete;
     Saucer &operator=(Saucer &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
+    void Handle(const MoveEvent &event);
     void ExecuteAction();
-  
+    
   private:
+    enum State { ChooseDestinationState,
+                 AccelerateState,
+                 TravelState,
+                 BrakeState,
+                 LandingState };
+  
+    State                           state_;
+    Vectoid::Vector                 position_,
+                                    destination_,
+                                    direction_;
+    float                           lastDistance_;
+    std::default_random_engine      randomEngine_;
+    std::uniform_int_distribution<> randomDistribution_;
 };
 
 }    // Namespace AI.

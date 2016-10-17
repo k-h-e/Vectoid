@@ -127,9 +127,9 @@ void Video::Handle(const ActorCreationEvent &event) {
             ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
             assert(info);
             Transform launchingActorTransform;
-            info->actor()->GetTransform(&launchingActorTransform);
+            info->Actor()->GetTransform(&launchingActorTransform);
             Vector launchingActorVelocity;
-            info->actor()->GetVelocity(&launchingActorVelocity);
+            info->Actor()->GetVelocity(&launchingActorVelocity);
             
             cookedEvent = event;
             EventTools::ResolveInitialTransformAndVelocity(&cookedEvent, launchingActorTransform,
@@ -146,17 +146,17 @@ void Video::Handle(const ActorCreationEvent &event) {
 void Video::Handle(const ActorTerminationEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
-        info->actor()->Handle(event);
+        info->Actor()->Handle(event);
         
-        switch (info->type()) {
+        switch (info->Type()) {
             case LanderActor:
-                landers_.Put(info->storageId());
+                landers_.Put(info->StorageId());
                 break;
             case ShotActor:
-                shots_.Put(info->storageId());
+                shots_.Put(info->StorageId());
                 break;
             case SaucerActor:
-                saucers_.Put(info->storageId());
+                saucers_.Put(info->StorageId());
                 break;
             default:
                 assert(false);
@@ -170,22 +170,22 @@ void Video::Handle(const ActorTerminationEvent &event) {
 
 void Video::Handle(const ControlsEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info) {
-        info->actor()->Handle(event);
+    if (info && (info->Type() == LanderActor)) {
+        info->Actor()->Handle(event);
     }
 }
 
 void Video::Handle(const MoveEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info) {
-        info->actor()->Handle(event);
+        info->Actor()->Handle(event);
     }
 }
 
 void Video::Handle(const VelocityEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (info->type() == LanderActor)) {
-        info->actor()->Handle(event);
+    if (info && (info->Type() == LanderActor)) {
+        info->Actor()->Handle(event);
     }
 }
 

@@ -8,7 +8,6 @@ namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
-class PhysicsOverrideEvent;
 
 namespace Physics {
 
@@ -28,7 +27,7 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
     void Handle(const ActorCreationEvent &event);
-    void Handle(const PhysicsOverrideEvent &event);
+    void Handle(const ControlsEvent &event);
     void ExecuteAction();
     
   private:

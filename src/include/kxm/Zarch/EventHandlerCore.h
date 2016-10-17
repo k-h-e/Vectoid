@@ -12,7 +12,6 @@ class ActorCreationEvent;
 class ActorTerminationEvent;
 class MoveEvent;
 class VelocityEvent;
-class PhysicsOverrideEvent;
 class AccelerationEvent;
 class ControlsRequestEvent;
 class ControlsEvent;
@@ -32,7 +31,6 @@ class EventHandlerCore : public virtual Core::Interface {
     virtual void Handle(const ActorTerminationEvent &event);
     virtual void Handle(const MoveEvent &event);
     virtual void Handle(const VelocityEvent &event);
-    virtual void Handle(const PhysicsOverrideEvent &event);
     virtual void Handle(const AccelerationEvent &event);
     virtual void Handle(const ControlsRequestEvent &event);
     virtual void Handle(const ControlsEvent &event);
