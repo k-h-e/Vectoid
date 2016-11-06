@@ -9,6 +9,9 @@ namespace Physics {
 Body::Body(BodyUpdateHandlerInterface *updateHandler)
         : accelerationEnabled_(false),
           applyAccelerationInLocalCoordSys_(false),
+          rotationAxis_(Vectoid::YAxis),
+          rotationAngularVelocity_(10.0f),
+          rotationEnabled_(false),
           updateHandler_(updateHandler) {
     // Nop.
 }
@@ -46,6 +49,16 @@ void Body::DisableAcceleration() {
     accelerationEnabled_ = false;
 }
 
+void Body::EnableRotation(Vectoid::Axis axis, float angularVelocity) {
+    rotationAxis_            = axis;
+    rotationAngularVelocity_ = angularVelocity;
+    rotationEnabled_         = true;
+}
+
+void Body::DisableRotation() {
+    rotationEnabled_ = false;
+}
+
 void Body::EnableGravity(float gravity) {
     gravity_        = gravity;
     gravityEnabled_ = true;
@@ -70,6 +83,11 @@ void Body::UpdateForTimeStep(float time_s) {
             orientation.ApplyTo(&acceleration);
         }
         velocity_ += time_s * acceleration;
+    }
+    
+    // Apply rotation...?
+    if (rotationEnabled_) {
+        transform_.Prepend(Transform(rotationAxis_, time_s * rotationAngularVelocity_));
     }
     
     // Apply velocity...

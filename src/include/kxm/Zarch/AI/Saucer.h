@@ -33,16 +33,12 @@ class Saucer : public Actor {
     
   private:
     enum State { ChooseDestinationState,
-                 AccelerateState,
-                 TravelState,
-                 BrakeState,
-                 LandingState };
+                 TravelState };
   
     State                           state_;
     Vectoid::Vector                 position_,
-                                    destination_,
+                                    destinationXZ_,
                                     direction_;
-    float                           lastDistance_;
     std::default_random_engine      randomEngine_;
     std::uniform_int_distribution<> randomDistribution_;
 };

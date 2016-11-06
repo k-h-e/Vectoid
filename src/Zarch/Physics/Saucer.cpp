@@ -37,22 +37,40 @@ void Saucer::Handle(const ActorCreationEvent &event) {
 }
 
 void Saucer::Handle(const ControlsEvent &event) {
-    static const float maxTravelVelocity = .4f;
+    static const float maxTravelVelocity = .4f,
+                       verticalVelocity  = .2f;
     
     Vector velocity;
     body_.GetVelocity(&velocity);
     
+    float rotationSpeedFactor = 0.0f;
     Control control;
     for (int i = 0; i < event.Count(); ++i) {
         event.GetControl(i, &control);
         switch (control.Type()) {
             case Axis1Control:
                 velocity.x = control.Argument() * maxTravelVelocity;
+                // arg may be negative, fix!
+                if (control.Argument() > rotationSpeedFactor) {
+                    rotationSpeedFactor = control.Argument();
+                }
                 break;
             case Axis2Control:
                 velocity.z = control.Argument() * maxTravelVelocity;
+                if (control.Argument() > rotationSpeedFactor) {
+                    rotationSpeedFactor = control.Argument();
+                }
                 break;
             case ThrusterControl:
+                if (control.Argument() > 0.0f) {
+                    velocity.y = verticalVelocity;
+                }
+                else if (control.Argument() < 0.0f) {
+                    velocity.y = -verticalVelocity;
+                }
+                else {
+                    velocity.y = 0.0f;
+                }
                 break;
             default:
                 break;
@@ -60,6 +78,9 @@ void Saucer::Handle(const ControlsEvent &event) {
     }
     
     body_.SetVelocity(velocity);
+    body_.EnableRotation(YAxis, rotationSpeedFactor * 30.0f);
+    
+    std::printf("rot_speed_factor=%f\n", rotationSpeedFactor);
 }
 
 void Saucer::ExecuteAction() {
@@ -73,10 +94,6 @@ void Saucer::HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outV
     transform->GetTranslationPart(&position);
     data.mapParameters->xRange.ClampModulo(&position.x);
     data.mapParameters->zRange.ClampModulo(&position.z);
-    float terrainHeight = data.terrain->Height(position.x, position.z);
-    if (position.y < terrainHeight) {
-        position.y = terrainHeight + 5.0f;
-    }
     transform->SetTranslationPart(position);
 
     data.eventLoop->Post(MoveEvent(name_, *transform));

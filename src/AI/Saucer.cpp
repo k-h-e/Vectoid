@@ -22,18 +22,16 @@ namespace AI {
 
 Saucer::Saucer()
         : state_(ChooseDestinationState),
-          lastDistance_(0.0f),
           randomDistribution_(0, INT_MAX) {
     // Nop.
 }
 
 void Saucer::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
-    state_       = ChooseDestinationState;
+    state_           = ChooseDestinationState;
     event.initialTransform.GetTranslationPart(&position_);
-    destination_ = position_;
-    //direction_
-    //lastDistance_
+    destinationXZ_   = position_;
+    destinationXZ_.y = 0.0f;
 }
 
 void Saucer::Handle(const MoveEvent &event) {
@@ -41,50 +39,61 @@ void Saucer::Handle(const MoveEvent &event) {
 }
 
 void Saucer::ExecuteAction() {
-    static const float maxTravelVelocity =  .4f,
-                       travelHeight      = 4.0f,
-                       landingHeight     = 1.0f,
+    static const float travelHeight      = 4.0,
+                       arrivalHeight     = 1.0,
+                       heightHysteresis  =  .2,
                        brakingDistance   = 3.0f,
-                       acceleration      =  .2f;
+                       arrivalDistance   =  .1f;
     
-    float heightAboveGround = position_.y - data_->terrain->Height(position_.x, position_.z);
-    Vector position = position_;
-    position.y = 0.0f;
-    float distance = (destination_ - position).Length();
+    float groundY = data_->terrain->Height(position_.x, position_.z);
+    Vector positionXZ = position_;
+    positionXZ.y      = 0.0f;
+    float distance = (destinationXZ_ - positionXZ).Length();
     
     switch (state_) {
-        case AccelerateState:
-            break;
         case TravelState:
-            if (distance > lastDistance_) {
+            if (distance <= arrivalDistance) {
                 state_ = ChooseDestinationState;
             }
             else {
+                Vector velocity = direction_;
+                float  height   = travelHeight;
+                if (distance <= brakingDistance) {
+                    float t = distance / brakingDistance;
+                    velocity = t * velocity;
+                    height   = (1.0f - t)*arrivalHeight + t*travelHeight;
+                }
+                float thruster = 0.0f,
+                      desiredY = groundY + height;
+                if (position_.y < desiredY - heightHysteresis) {
+                    thruster = 1.0f;
+                }
+                else if (position_.y > desiredY + heightHysteresis) {
+                    thruster = -1.0f;
+                }
+                
                 ControlsRequestEvent event(name_);
-                event.AddControl(Control(Axis1Control, direction_.x));
-                event.AddControl(Control(Axis2Control, direction_.z));
+                event.AddControl(Control(Axis1Control,    velocity.x));
+                event.AddControl(Control(Axis2Control,    velocity.z));
+                event.AddControl(Control(ThrusterControl, thruster));
                 data_->eventLoop->Post(event);
             }
-            break;
-        case BrakeState:
-            break;
-        case LandingState:
             break;
         case ChooseDestinationState:
         default:
             do {
-                destination_.x = data_->mapParameters->xRange.AffineCombination(
-                                    (float)randomDistribution_(randomEngine_) / (float)INT_MAX);
-                destination_.z = data_->mapParameters->zRange.AffineCombination(
-                                    (float)randomDistribution_(randomEngine_) / (float)INT_MAX);
-                direction_     = destination_ - position;
+                destinationXZ_.x = data_->mapParameters->xRange.AffineCombination(
+                                       (float)randomDistribution_(randomEngine_) / (float)INT_MAX);
+                destinationXZ_.z = data_->mapParameters->zRange.AffineCombination(
+                                       (float)randomDistribution_(randomEngine_) / (float)INT_MAX);
+                destinationXZ_.y = 0.0f;
+                direction_       = destinationXZ_ - positionXZ;
             } while (direction_.Length() < 5.0f);
             direction_.Normalize();
+            std::printf("saucer: direction=(%f, %f)\n", direction_.x, direction_.z);
             state_ = TravelState;
             break;
     }
-    
-    lastDistance_ = distance;
 }
 
 }    // Namespace AI.

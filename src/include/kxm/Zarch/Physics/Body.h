@@ -48,6 +48,10 @@ class Body {
     void EnableAcceleration(const Vectoid::Vector &acceleration, bool applyInLocalCoordSys);
     //! Disables the body's acceleration if it is enabled.
     void DisableAcceleration();
+    //! Sets the body's rotation as specified and enables it, if it is disabled.
+    void EnableRotation(Vectoid::Axis axis, float angularVelocity);
+    //! Disables the body's rotation if it is enabled.
+    void DisableRotation();
     //! Sets the body's gravity and enables it, if it is disabled.
     void EnableGravity(float gravity);
     //! Disables the body's gravity if it is enabled.
@@ -61,6 +65,9 @@ class Body {
     Vectoid::Vector            acceleration_;
     bool                       accelerationEnabled_,
                                applyAccelerationInLocalCoordSys_;
+    Vectoid::Axis              rotationAxis_;
+    float                      rotationAngularVelocity_;
+    bool                       rotationEnabled_;
     float                      gravity_;
     bool                       gravityEnabled_;
     BodyUpdateHandlerInterface *updateHandler_;
