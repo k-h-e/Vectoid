@@ -46,20 +46,16 @@ void Saucer::Handle(const ControlsEvent &event) {
     float rotationSpeedFactor = 0.0f;
     Control control;
     for (int i = 0; i < event.Count(); ++i) {
+        bool updateRotationSpeedFactor = false;
         event.GetControl(i, &control);
         switch (control.Type()) {
             case Axis1Control:
                 velocity.x = control.Argument() * maxTravelVelocity;
-                // arg may be negative, fix!
-                if (control.Argument() > rotationSpeedFactor) {
-                    rotationSpeedFactor = control.Argument();
-                }
+                updateRotationSpeedFactor = true;
                 break;
             case Axis2Control:
                 velocity.z = control.Argument() * maxTravelVelocity;
-                if (control.Argument() > rotationSpeedFactor) {
-                    rotationSpeedFactor = control.Argument();
-                }
+                updateRotationSpeedFactor = true;
                 break;
             case ThrusterControl:
                 if (control.Argument() > 0.0f) {
@@ -75,12 +71,20 @@ void Saucer::Handle(const ControlsEvent &event) {
             default:
                 break;
         }
+        
+        if (updateRotationSpeedFactor) {
+            float absArg = control.Argument();
+            if (absArg < 0.0f) {
+                absArg = -absArg;
+            }
+            if (absArg > rotationSpeedFactor) {
+                rotationSpeedFactor = absArg;
+            }
+        }
     }
     
     body_.SetVelocity(velocity);
     body_.EnableRotation(YAxis, rotationSpeedFactor * 30.0f);
-    
-    std::printf("rot_speed_factor=%f\n", rotationSpeedFactor);
 }
 
 void Saucer::ExecuteAction() {

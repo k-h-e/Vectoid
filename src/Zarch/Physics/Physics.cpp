@@ -29,11 +29,14 @@ namespace Physics {
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
                  TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
         : actions_(new Actions()),
+          collisionChecker_(CollisionGroupCount),
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
           inTrigger_(anInTrigger),
           outTrigger_(anOutTrigger) {
+    collisionChecker_.IncludeChecksForGroupPair(ShotsCollisionGroup, EnemiesCollisionGroup);
+    
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
@@ -52,16 +55,20 @@ Physics::~Physics() {
 
 void Physics::Handle(const ActorCreationEvent &event) {
     Actor *actor = nullptr;
-    int   storageId;
+    int   storageId    = -1,
+          collidableId = -1;
     switch (event.actorType) {
         case LanderActor:
             actor = landers_.Get(&storageId);
+            collidableId = collisionChecker_.Register(event.actor, actor, PlayerCollisionGroup);
             break;
         case ShotActor:
             actor = shots_.Get(&storageId);
+            collidableId = collisionChecker_.Register(event.actor, actor, ShotsCollisionGroup);
             break;
         case SaucerActor:
             actor = saucers_.Get(&storageId);
+            collidableId = collisionChecker_.Register(event.actor, actor, EnemiesCollisionGroup);
             break;
         default:
             break;
@@ -71,12 +78,12 @@ void Physics::Handle(const ActorCreationEvent &event) {
         const ActorCreationEvent *eventToUse = &event;
         ActorCreationEvent cookedEvent;
         if (!event.launchingActor.IsNone()) {
-            ActorInfo<Actor> *info = actorMap_.Get(event.launchingActor);
+            ActorInfo *info = actorMap_.Get(event.launchingActor);
             assert(info);
             Transform launchingActorTransform;
-            info->Actor()->GetTransform(&launchingActorTransform);
+            info->actor->GetTransform(&launchingActorTransform);
             Vector launchingActorVelocity;
-            info->Actor()->GetVelocity(&launchingActorVelocity);
+            info->actor->GetVelocity(&launchingActorVelocity);
             
             cookedEvent = event;
             EventTools::ResolveInitialTransformAndVelocity(&cookedEvent, launchingActorTransform,
@@ -86,45 +93,48 @@ void Physics::Handle(const ActorCreationEvent &event) {
         
         actor->SetData(data_);
         actor->Handle(*eventToUse);
-        actorMap_.Register(eventToUse->actor, ActorInfo<Actor>(eventToUse->actorType, storageId, actor));
+        actorMap_.Register(eventToUse->actor, ActorInfo(eventToUse->actorType, storageId, collidableId, actor));
     }
 }
 
 void Physics::Handle(const ActorTerminationEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    ActorInfo *info = actorMap_.Get(event.actor);
     if (info) {
-        switch (info->Type()) {
+        switch (info->type) {
             case LanderActor:
-                landers_.Put(info->StorageId());
+                landers_.Put(info->storageId);
                 break;
             case ShotActor:
-                shots_.Put(info->StorageId());
+                shots_.Put(info->storageId);
                 break;
             case SaucerActor:
-                saucers_.Put(info->StorageId());
+                saucers_.Put(info->storageId);
                 break;
             default:
                 assert(false);
                 break;
         }
-        // Don't use info->actor() below.
+        // Don't use info->actor below.
         
+        if (info->collidableId >= 0) {
+            collisionChecker_.Unregister(info->collidableId);
+        }
         actorMap_.Unregister(event.actor);
     }
 }
 
 void Physics::Handle(const ControlsEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    ActorInfo *info = actorMap_.Get(event.actor);
     if (info) {
-        info->Actor()->Handle(event);
+        info->actor->Handle(event);
     }
 }
 
 void Physics::Handle(const AccelerationEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
-    if (info && (   (info->Type() == LanderActor)
-                 || (info->Type() == SaucerActor))) {
-        info->Actor()->Handle(event);
+    ActorInfo *info = actorMap_.Get(event.actor);
+    if (info && (   (info->type == LanderActor)
+                 || (info->type == SaucerActor))) {
+        info->actor->Handle(event);
     }
 }
 
@@ -132,6 +142,7 @@ void Physics::Handle(const TriggerEvent &event) {
     if ((inTrigger_ != TriggerEvent::NoTrigger) && (event.trigger == inTrigger_)) {
         data_->updateDeltaTimeS = event.deltaTime_s;
         actions_->Execute();
+        collisionChecker_.Check();
         if (outTrigger_ != TriggerEvent::NoTrigger) {
             data_->eventLoop->Post(TriggerEvent(outTrigger_, event.deltaTime_s));
         }

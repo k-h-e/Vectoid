@@ -18,7 +18,8 @@ class Actions {
     Actions &operator=(const Actions &other) = delete;
     Actions(Actions &&other)                 = delete;
     Actions &operator=(Actions &&other)      = delete;
-    //! Registers the specified action as weak reference (dumb pointer), and returns an id for unregistering it later.
+    //! Registers the specified action as weak reference (dumb pointer), and returns a non-negative id for unregistering
+    //! it later.
     int Register(Core::ActionInterface *action);
     //! Unregisters the specified action.
     void Unregister(int id);

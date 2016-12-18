@@ -135,6 +135,8 @@
 		2A65AF5115361E710054F8E9 /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTriangle.cpp; path = ../../../src/Vectoid/TestTriangle.cpp; sourceTree = "<group>"; };
 		2A663A641D8CA07A00437612 /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/Physics/Actor.cpp; sourceTree = "<group>"; };
 		2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorTerminationEvent.cpp; path = ../../../src/Zarch/Events/ActorTerminationEvent.cpp; sourceTree = "<group>"; };
+		2A7429CC1E07135E00BD3D28 /* CollidableInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidableInterface.h; sourceTree = "<group>"; };
+		2A7429CD1E07156700BD3D28 /* CollisionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollisionChecker.h; sourceTree = "<group>"; };
 		2A81B3761DAAB5CA0011CBD1 /* ControlsCoreEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsCoreEvent.h; sourceTree = "<group>"; };
 		2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsCoreEvent.cpp; path = ../../../src/Zarch/Events/ControlsCoreEvent.cpp; sourceTree = "<group>"; };
 		2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsRequestEvent.h; sourceTree = "<group>"; };
@@ -457,6 +459,8 @@
 			children = (
 				2A8DFD7F1D8DCE6300E22E0D /* AgeColoredParticles.h */,
 				2A8DFD801D8DCE6300E22E0D /* Camera.h */,
+				2A7429CC1E07135E00BD3D28 /* CollidableInterface.h */,
+				2A7429CD1E07156700BD3D28 /* CollisionChecker.h */,
 				2A8DFD811D8DCE6300E22E0D /* CoordSys.h */,
 				2A8DFD821D8DCE6300E22E0D /* CoordSysCore.h */,
 				2A8DFD831D8DCE6300E22E0D /* CoordSysInterface.h */,

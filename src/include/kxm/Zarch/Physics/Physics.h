@@ -14,7 +14,8 @@
 #include <kxm/Game/ActorMap.h>
 #include <kxm/Game/Actions.h>
 #include <kxm/Game/ReusableActors.h>
-#include <kxm/Zarch/ActorInfo.h>
+#include <kxm/Vectoid/CollisionChecker.h>
+#include <kxm/Zarch/ActorType.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 
@@ -56,17 +57,39 @@ class Physics : public EventHandlerCore {
     void Handle(const TriggerEvent &event);
     
   private:
+    enum CollisionGroup {
+        PlayerCollisionGroup = 0,
+        ShotsCollisionGroup,
+        EnemiesCollisionGroup,
+        CollisionGroupCount
+    };
+    
+    struct ActorInfo {
+        ActorType  type;
+        int        storageId,
+                   collidableId;
+        Actor      *actor;
+        ActorInfo() : type(LanderActor), storageId(0), collidableId(0), actor(nullptr) {}
+        ActorInfo(ActorType aType, int aStorageId, int aCollidableId, Actor *anActor)
+            : type(aType),
+              storageId(aStorageId),
+              collidableId(aCollidableId),
+              actor(anActor) {}
+        // Default copy/move okay.
+    };
+  
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Data>                              data_;
-    Game::ActorMap<ActorInfo<Actor>>                   actorMap_;
-    std::shared_ptr<Game::Actions>                     actions_;
-    Game::ReusableActors<Lander>                       landers_;
-    Game::ReusableActors<Shot>                         shots_;
-    Game::ReusableActors<Saucer>                       saucers_;
-    TriggerEvent::Trigger                              inTrigger_,
-                                                       outTrigger_;
+    std::shared_ptr<Data>                      data_;
+    Game::ActorMap<ActorInfo>                  actorMap_;
+    std::shared_ptr<Game::Actions>             actions_;
+    Vectoid::CollisionChecker<Game::ActorName> collisionChecker_;
+    Game::ReusableActors<Lander>               landers_;
+    Game::ReusableActors<Shot>                 shots_;
+    Game::ReusableActors<Saucer>               saucers_;
+    TriggerEvent::Trigger                      inTrigger_,
+                                               outTrigger_;
 };
 
 }    // Namespace Physics.

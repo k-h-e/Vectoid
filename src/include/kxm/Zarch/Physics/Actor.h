@@ -4,6 +4,7 @@
 #include <memory>
 #include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/ActorName.h>
+#include <kxm/Vectoid/CollidableInterface.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 
@@ -20,7 +21,7 @@ class Data;
 /*!
  *  \ingroup ZarchPhysics
  */
-class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
+class Actor : public EventHandlerCore, public virtual Core::ActionInterface, public Vectoid::CollidableInterface {
   public:
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);

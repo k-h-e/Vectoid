@@ -128,6 +128,8 @@ ReusableItems<T>::ReusableItems(int numGroups)
 
 template<class T>
 T &ReusableItems<T>::Get(int groupId, int *itemId) {
+    assert((groupId >= 0) && (groupId < groupAnchors_.size()));
+    
     if (!idleCount_)
         AddIdleItem();
     
