@@ -2,6 +2,8 @@
 #define KXM_ZARCH_PHYSICS_SAUCER_H_
 
 #include <kxm/Zarch/Physics/Actor.h>
+
+#include <kxm/Vectoid/CollidablePoint.h>
 #include <kxm/Zarch/Physics/Body.h>
 
 namespace kxm {
@@ -26,6 +28,7 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Saucer &operator=(Saucer &&other)      = delete;
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
+    Vectoid::CollidableInterface *Collidable();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
@@ -34,7 +37,8 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body body_;
+    Body                     body_;
+    Vectoid::CollidablePoint collidable_;
 };
 
 }    // Namespace Physics.

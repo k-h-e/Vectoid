@@ -60,15 +60,15 @@ void Physics::Handle(const ActorCreationEvent &event) {
     switch (event.actorType) {
         case LanderActor:
             actor = landers_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor, PlayerCollisionGroup);
+            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), PlayerCollisionGroup);
             break;
         case ShotActor:
             actor = shots_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor, ShotsCollisionGroup);
+            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), ShotsCollisionGroup);
             break;
         case SaucerActor:
             actor = saucers_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor, EnemiesCollisionGroup);
+            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), EnemiesCollisionGroup);
             break;
         default:
             break;

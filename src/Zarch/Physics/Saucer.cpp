@@ -28,6 +28,10 @@ void Saucer::GetVelocity(Vector *outVelocity) {
     body_.GetVelocity(outVelocity);
 }
 
+CollidableInterface *Saucer::Collidable() {
+    return &collidable_;
+}
+
 void Saucer::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     body_.SetTransform(event.initialTransform);

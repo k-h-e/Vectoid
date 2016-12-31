@@ -26,6 +26,10 @@ void Shot::GetVelocity(Vectoid::Vector *outVelocity) {
     *outVelocity = velocity_;
 }
 
+CollidableInterface *Shot::Collidable() {
+    return &collidable_;
+}
+
 void Shot::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     event.initialTransform.GetTranslationPart(&position_);

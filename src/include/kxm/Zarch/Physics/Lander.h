@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <kxm/Vectoid/Vector.h>
+#include <kxm/Vectoid/CollidablePoint.h>
 #include <kxm/Zarch/Physics/Actor.h>
 #include <kxm/Zarch/Physics/Body.h>
 
@@ -29,6 +30,7 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Lander &operator=(Lander &&other)      = delete;
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
+    Vectoid::CollidableInterface *Collidable();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
@@ -37,13 +39,14 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body            body_;
-    float           axis1_,
-                    axis2_;
-    bool            thrusterActive_,
-                    oldThrusterActive_;
-    Vectoid::Vector heading_;
-    bool            killVelocity_;
+    Body                     body_;
+    float                    axis1_,
+                             axis2_;
+    bool                     thrusterActive_,
+                             oldThrusterActive_;
+    Vectoid::Vector          heading_;
+    bool                     killVelocity_;
+    Vectoid::CollidablePoint collidable_;
 };
 
 }    // Namespace Physics.

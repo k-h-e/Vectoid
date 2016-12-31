@@ -38,6 +38,10 @@ void Lander::GetVelocity(Vectoid::Vector *outVelocity) {
     body_.GetVelocity(outVelocity);
 }
 
+CollidableInterface *Lander::Collidable() {
+    return &collidable_;
+}
+
 void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     axis1_             = 0.0f;

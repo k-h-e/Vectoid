@@ -249,6 +249,9 @@
 		2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializationEvent.cpp; path = ../../../src/Zarch/Events/InitializationEvent.cpp; sourceTree = "<group>"; };
 		2ADF9AF81D778F6E006C0B67 /* ActorCreationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorCreationEvent.cpp; path = ../../../src/Zarch/Events/ActorCreationEvent.cpp; sourceTree = "<group>"; };
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../../../src/Zarch/Terrain.cpp; sourceTree = "<group>"; };
+		2AEDBC1D1E17F8D1004BB950 /* CollidableBoundingBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidableBoundingBox.h; sourceTree = "<group>"; };
+		2AEDBC1E1E17F8E5004BB950 /* CollidablePoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidablePoint.h; sourceTree = "<group>"; };
+		2AEDBC1F1E17FC09004BB950 /* BoundingBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../../../src/Vectoid/Particles.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -458,8 +461,11 @@
 			isa = PBXGroup;
 			children = (
 				2A8DFD7F1D8DCE6300E22E0D /* AgeColoredParticles.h */,
+				2AEDBC1F1E17FC09004BB950 /* BoundingBox.h */,
 				2A8DFD801D8DCE6300E22E0D /* Camera.h */,
 				2A7429CC1E07135E00BD3D28 /* CollidableInterface.h */,
+				2AEDBC1D1E17F8D1004BB950 /* CollidableBoundingBox.h */,
+				2AEDBC1E1E17F8E5004BB950 /* CollidablePoint.h */,
 				2A7429CD1E07156700BD3D28 /* CollisionChecker.h */,
 				2A8DFD811D8DCE6300E22E0D /* CoordSys.h */,
 				2A8DFD821D8DCE6300E22E0D /* CoordSysCore.h */,

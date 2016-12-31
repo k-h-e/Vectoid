@@ -1,8 +1,10 @@
 #ifndef KXM_ZARCH_PHYSICS_SHOT_H_
 #define KXM_ZARCH_PHYSICS_SHOT_H_
 
-#include <memory>
 #include <kxm/Zarch/Physics/Actor.h>
+
+#include <memory>
+#include <kxm/Vectoid/CollidablePoint.h>
 
 namespace kxm {
 namespace Zarch {
@@ -26,12 +28,14 @@ class Shot : public Actor {
     Shot &operator=(Shot &&other)      = delete;
     void GetTransform(Vectoid::Transform *outTransform);
     void GetVelocity(Vectoid::Vector *outVelocity);
+    Vectoid::CollidableInterface *Collidable();
     void Handle(const ActorCreationEvent &event);
     void ExecuteAction();
     
   private:
-    Vectoid::Vector position_,
-                    velocity_;
+    Vectoid::Vector          position_,
+                             velocity_;
+    Vectoid::CollidablePoint collidable_;
 };
 
 }    // Namespace Physics.
