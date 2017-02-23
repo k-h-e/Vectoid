@@ -16,7 +16,8 @@ namespace Zarch {
 namespace Physics {
 
 Saucer::Saucer()
-        : body_(this) {
+        : body_(this),
+          collidable_(testBoundingBox_) {
     // Nop.
 }
 

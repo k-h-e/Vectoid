@@ -83,9 +83,13 @@ void CollisionChecker<IdType>::Check() {
             auto iter1 = collidables_.GetIterator(pair.group1);
             while (CollidableInfo *info1 = iter1.Next()) {
                 // Perform check...
+                std::printf("checking collision %d-%d <-> %d-%d\n",
+                            pair.group0, iter0.ItemId(), pair.group1, iter1.ItemId());
+                info0->collidable->CheckCollision(*info1->collidable, Transform(), Transform());
             }
         }
     }
+    std::puts("---");
 }
 
 }    // Namespace Vectoid.

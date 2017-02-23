@@ -3,7 +3,8 @@
 
 #include <kxm/Zarch/Physics/Actor.h>
 
-#include <kxm/Vectoid/CollidablePoint.h>
+#include <kxm/Vectoid/BoundingBox.h>
+#include <kxm/Vectoid/CollidableBoundingBox.h>
 #include <kxm/Zarch/Physics/Body.h>
 
 namespace kxm {
@@ -37,8 +38,9 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body                     body_;
-    Vectoid::CollidablePoint collidable_;
+    Body                           body_;
+    Vectoid::BoundingBox           testBoundingBox_;
+    Vectoid::CollidableBoundingBox collidable_;
 };
 
 }    // Namespace Physics.

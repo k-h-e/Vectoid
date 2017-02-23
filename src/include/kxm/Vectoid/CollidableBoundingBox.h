@@ -1,12 +1,13 @@
 #ifndef KXM_VECTOID_COLLIDABLEBOUNDINGBOX_H_
 #define KXM_VECTOID_COLLIDABLEBOUNDINGBOX_H_
 
-#include <kxm/Core/Interface.h>
+#include <kxm/Vectoid/CollidableInterface.h>
 
 namespace kxm {
 namespace Vectoid {
 
 class BoundingBox;
+class Transform;
 
 //! Adapts a bounding box for taking part in collision checking.
 /*! 
@@ -16,6 +17,12 @@ class CollidableBoundingBox : public virtual CollidableInterface {
   public:
     //! The specified bounding box object is expected to outlive the constructed collidable instance.
     CollidableBoundingBox(const BoundingBox &boundingBox);
+    bool CheckCollision(const CollidableInterface &other, const Transform &otherTransform,
+                        const Transform &ourTransform) const;
+    bool CheckCollision(const CollidableBoundingBox &other, const Transform &otherTransform,
+                        const Transform &ourTransform) const;
+    bool CheckCollision(const CollidablePoint &other, const Transform &otherTransform,
+                        const Transform &ourTransform) const;
     
   private:
     const BoundingBox &boundingBox_;

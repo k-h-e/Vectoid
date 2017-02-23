@@ -1,4 +1,5 @@
 Zarch
+- implement collision check: bounding box <-> bounding box.
 
 Raspiator
 - fix header dependencies
