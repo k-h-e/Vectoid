@@ -29,13 +29,13 @@ namespace Physics {
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
                  TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
         : actions_(new Actions()),
-          collisionChecker_(CollisionGroupCount),
+          collider_(CollisionGroupCount),
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
           inTrigger_(anInTrigger),
           outTrigger_(anOutTrigger) {
-    collisionChecker_.IncludeChecksForGroupPair(ShotsCollisionGroup, EnemiesCollisionGroup);
+    collider_.IncludeChecksForGroupPair(ShotsCollisionGroup, EnemiesCollisionGroup);
     
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
@@ -60,15 +60,15 @@ void Physics::Handle(const ActorCreationEvent &event) {
     switch (event.actorType) {
         case LanderActor:
             actor = landers_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), PlayerCollisionGroup);
+            collidableId = collider_.Register(actor, PlayerCollisionGroup);
             break;
         case ShotActor:
             actor = shots_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), ShotsCollisionGroup);
+            collidableId = collider_.Register(actor, ShotsCollisionGroup);
             break;
         case SaucerActor:
             actor = saucers_.Get(&storageId);
-            collidableId = collisionChecker_.Register(event.actor, actor->Collidable(), EnemiesCollisionGroup);
+            collidableId = collider_.Register(actor, EnemiesCollisionGroup);
             break;
         default:
             break;
@@ -117,7 +117,7 @@ void Physics::Handle(const ActorTerminationEvent &event) {
         // Don't use info->actor below.
         
         if (info->collidableId >= 0) {
-            collisionChecker_.Unregister(info->collidableId);
+            collider_.Unregister(info->collidableId);
         }
         actorMap_.Unregister(event.actor);
     }
@@ -142,7 +142,7 @@ void Physics::Handle(const TriggerEvent &event) {
     if ((inTrigger_ != TriggerEvent::NoTrigger) && (event.trigger == inTrigger_)) {
         data_->updateDeltaTimeS = event.deltaTime_s;
         actions_->Execute();
-        collisionChecker_.Check();
+        collider_.Check();
         if (outTrigger_ != TriggerEvent::NoTrigger) {
             data_->eventLoop->Post(TriggerEvent(outTrigger_, event.deltaTime_s));
         }

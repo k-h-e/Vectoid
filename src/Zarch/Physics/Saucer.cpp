@@ -17,11 +17,11 @@ namespace Physics {
 
 Saucer::Saucer()
         : body_(this),
-          collidable_(testBoundingBox_) {
+          collisionChecker_(testBoundingBox_) {
     // Nop.
 }
 
-void Saucer::GetTransform(Transform *outTransform) {
+void Saucer::GetTransform(Transform *outTransform) const {
     body_.GetTransform(outTransform);
 }
 
@@ -29,8 +29,8 @@ void Saucer::GetVelocity(Vector *outVelocity) {
     body_.GetVelocity(outVelocity);
 }
 
-CollidableInterface *Saucer::Collidable() {
-    return &collidable_;
+CollisionCheckerInterface *Saucer::CollisionChecker() {
+    return &collisionChecker_;
 }
 
 void Saucer::Handle(const ActorCreationEvent &event) {

@@ -4,7 +4,7 @@
 #include <kxm/Zarch/Physics/Actor.h>
 
 #include <memory>
-#include <kxm/Vectoid/CollidablePoint.h>
+#include <kxm/Vectoid/PointCollisionChecker.h>
 
 namespace kxm {
 namespace Zarch {
@@ -26,16 +26,16 @@ class Shot : public Actor {
     Shot &operator=(const Shot &other) = delete;
     Shot(Shot &&other)                 = delete;
     Shot &operator=(Shot &&other)      = delete;
-    void GetTransform(Vectoid::Transform *outTransform);
+    void GetTransform(Vectoid::Transform *outTransform) const;
     void GetVelocity(Vectoid::Vector *outVelocity);
-    Vectoid::CollidableInterface *Collidable();
+    Vectoid::CollisionCheckerInterface *CollisionChecker();
     void Handle(const ActorCreationEvent &event);
     void ExecuteAction();
     
   private:
-    Vectoid::Vector          position_,
-                             velocity_;
-    Vectoid::CollidablePoint collidable_;
+    Vectoid::Vector                position_,
+                                   velocity_;
+    Vectoid::PointCollisionChecker collisionChecker_;
 };
 
 }    // Namespace Physics.

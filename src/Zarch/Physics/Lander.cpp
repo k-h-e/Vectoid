@@ -30,7 +30,7 @@ Lander::Lander()
     // Nop.
 }
 
-void Lander::GetTransform(Vectoid::Transform *outTransform) {
+void Lander::GetTransform(Vectoid::Transform *outTransform) const {
     body_.GetTransform(outTransform);
 }
 
@@ -38,8 +38,8 @@ void Lander::GetVelocity(Vectoid::Vector *outVelocity) {
     body_.GetVelocity(outVelocity);
 }
 
-CollidableInterface *Lander::Collidable() {
-    return &collidable_;
+CollisionCheckerInterface *Lander::CollisionChecker() {
+    return &collisionChecker_;
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {

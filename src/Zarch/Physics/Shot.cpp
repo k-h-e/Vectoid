@@ -18,7 +18,7 @@ Shot::Shot() {
     // Nop.
 }
 
-void Shot::GetTransform(Vectoid::Transform *outTransform) {
+void Shot::GetTransform(Vectoid::Transform *outTransform) const {
     *outTransform = Transform(position_);
 }
 
@@ -26,8 +26,8 @@ void Shot::GetVelocity(Vectoid::Vector *outVelocity) {
     *outVelocity = velocity_;
 }
 
-CollidableInterface *Shot::Collidable() {
-    return &collidable_;
+CollisionCheckerInterface *Shot::CollisionChecker() {
+    return &collisionChecker_;
 }
 
 void Shot::Handle(const ActorCreationEvent &event) {

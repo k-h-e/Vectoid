@@ -4,7 +4,7 @@
 #include <kxm/Zarch/Physics/Actor.h>
 
 #include <kxm/Vectoid/BoundingBox.h>
-#include <kxm/Vectoid/CollidableBoundingBox.h>
+#include <kxm/Vectoid/BoundingBoxCollisionChecker.h>
 #include <kxm/Zarch/Physics/Body.h>
 
 namespace kxm {
@@ -27,9 +27,9 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Saucer &operator=(const Saucer &other) = delete;
     Saucer(Saucer &&other)                 = delete;
     Saucer &operator=(Saucer &&other)      = delete;
-    void GetTransform(Vectoid::Transform *outTransform);
+    void GetTransform(Vectoid::Transform *outTransform) const;
     void GetVelocity(Vectoid::Vector *outVelocity);
-    Vectoid::CollidableInterface *Collidable();
+    Vectoid::CollisionCheckerInterface *CollisionChecker();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
@@ -38,9 +38,9 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body                           body_;
-    Vectoid::BoundingBox           testBoundingBox_;
-    Vectoid::CollidableBoundingBox collidable_;
+    Body                                 body_;
+    Vectoid::BoundingBox                 testBoundingBox_;
+    Vectoid::BoundingBoxCollisionChecker collisionChecker_;
 };
 
 }    // Namespace Physics.

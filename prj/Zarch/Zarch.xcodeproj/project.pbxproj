@@ -30,6 +30,7 @@
 		2A3C13FE14F6ECC70091BD84 /* KXMViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A3C13FC14F6ECC70091BD84 /* KXMViewController_iPad.xib */; };
 		2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1B171204E100A078CF /* Simulation.cpp */; };
 		2A41FB20171204F900A078CF /* Presentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A41FB1E171204F900A078CF /* Presentation.cpp */; };
+		2A493C3F1E64DB39004557CF /* Collider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A493C3E1E64DB39004557CF /* Collider.cpp */; };
 		2A4B91CB1C0399810079ACD6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */; };
 		2A5199511D9C5D7900C1A1C7 /* Saucer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */; };
 		2A5199541D9C60A700C1A1C7 /* Body.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5199531D9C60A700C1A1C7 /* Body.cpp */; };
@@ -80,8 +81,8 @@
 		2ADF9AF71D778F56006C0B67 /* InitializationEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */; };
 		2ADF9AF91D778F6E006C0B67 /* ActorCreationEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF9AF81D778F6E006C0B67 /* ActorCreationEvent.cpp */; };
 		2AECEF63154D6CC900033D14 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AECEF62154D6CC900033D14 /* Terrain.cpp */; };
-		2AEDBC211E196F93004BB950 /* CollidableBoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDBC201E196F93004BB950 /* CollidableBoundingBox.cpp */; };
-		2AEDBC231E197159004BB950 /* CollidablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDBC221E197159004BB950 /* CollidablePoint.cpp */; };
+		2AEDBC211E196F93004BB950 /* BoundingBoxCollisionChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDBC201E196F93004BB950 /* BoundingBoxCollisionChecker.cpp */; };
+		2AEDBC231E197159004BB950 /* PointCollisionChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDBC221E197159004BB950 /* PointCollisionChecker.cpp */; };
 		2AEECB37155EB90800AC21A2 /* Particles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEECB36155EB90800AC21A2 /* Particles.cpp */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,7 @@
 		2A3C13FD14F6ECC70091BD84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/KXMViewController_iPad.xib; sourceTree = "<group>"; };
 		2A41FB1B171204E100A078CF /* Simulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Simulation.cpp; path = ../../../src/Zarch/Simulation.cpp; sourceTree = "<group>"; };
 		2A41FB1E171204F900A078CF /* Presentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Presentation.cpp; path = ../../../src/Zarch/Presentation.cpp; sourceTree = "<group>"; };
+		2A493C3E1E64DB39004557CF /* Collider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Collider.cpp; path = ../../../src/Vectoid/Collider.cpp; sourceTree = "<group>"; };
 		2A4B91CA1C0399810079ACD6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2A51994F1D9C5D5F00C1A1C7 /* Saucer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
 		2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/Physics/Saucer.cpp; sourceTree = "<group>"; };
@@ -137,8 +139,8 @@
 		2A65AF5115361E710054F8E9 /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTriangle.cpp; path = ../../../src/Vectoid/TestTriangle.cpp; sourceTree = "<group>"; };
 		2A663A641D8CA07A00437612 /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/Physics/Actor.cpp; sourceTree = "<group>"; };
 		2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorTerminationEvent.cpp; path = ../../../src/Zarch/Events/ActorTerminationEvent.cpp; sourceTree = "<group>"; };
-		2A7429CC1E07135E00BD3D28 /* CollidableInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidableInterface.h; sourceTree = "<group>"; };
-		2A7429CD1E07156700BD3D28 /* CollisionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollisionChecker.h; sourceTree = "<group>"; };
+		2A7429CC1E07135E00BD3D28 /* CollisionCheckerInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollisionCheckerInterface.h; sourceTree = "<group>"; };
+		2A7429CD1E07156700BD3D28 /* Collider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collider.h; sourceTree = "<group>"; };
 		2A81B3761DAAB5CA0011CBD1 /* ControlsCoreEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsCoreEvent.h; sourceTree = "<group>"; };
 		2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsCoreEvent.cpp; path = ../../../src/Zarch/Events/ControlsCoreEvent.cpp; sourceTree = "<group>"; };
 		2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControlsRequestEvent.h; sourceTree = "<group>"; };
@@ -245,17 +247,19 @@
 		2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SaucerGeometry.cpp; path = ../../../src/Zarch/SaucerGeometry.cpp; sourceTree = "<group>"; };
 		2ABE9CDB17305EC700F5251C /* StarField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StarField.cpp; path = ../../../src/Zarch/Video/StarField.cpp; sourceTree = "<group>"; };
 		2AC40A211556CEC700026789 /* Range.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Range.cpp; path = ../../../src/Vectoid/Range.cpp; sourceTree = "<group>"; };
+		2ACFF5421E64BCBA00B94FF5 /* CollidableInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidableInterface.h; sourceTree = "<group>"; };
 		2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandlerCore.cpp; path = ../../../src/Zarch/EventHandlerCore.cpp; sourceTree = "<group>"; };
 		2ADD5C211A0175F1006533B8 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = ../../../src/Game/Event.cpp; sourceTree = "<group>"; };
 		2ADF9AF01D777CD3006C0B67 /* ActorNaming.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorNaming.cpp; path = ../../../src/Game/ActorNaming.cpp; sourceTree = "<group>"; };
 		2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializationEvent.cpp; path = ../../../src/Zarch/Events/InitializationEvent.cpp; sourceTree = "<group>"; };
 		2ADF9AF81D778F6E006C0B67 /* ActorCreationEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorCreationEvent.cpp; path = ../../../src/Zarch/Events/ActorCreationEvent.cpp; sourceTree = "<group>"; };
+		2AE1673E1E64C0BA001AD276 /* HasTransformInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HasTransformInterface.h; sourceTree = "<group>"; };
 		2AECEF62154D6CC900033D14 /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = ../../../src/Zarch/Terrain.cpp; sourceTree = "<group>"; };
-		2AEDBC1D1E17F8D1004BB950 /* CollidableBoundingBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidableBoundingBox.h; sourceTree = "<group>"; };
-		2AEDBC1E1E17F8E5004BB950 /* CollidablePoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollidablePoint.h; sourceTree = "<group>"; };
+		2AEDBC1D1E17F8D1004BB950 /* BoundingBoxCollisionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBoxCollisionChecker.h; sourceTree = "<group>"; };
+		2AEDBC1E1E17F8E5004BB950 /* PointCollisionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointCollisionChecker.h; sourceTree = "<group>"; };
 		2AEDBC1F1E17FC09004BB950 /* BoundingBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
-		2AEDBC201E196F93004BB950 /* CollidableBoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CollidableBoundingBox.cpp; path = ../../../src/Vectoid/CollidableBoundingBox.cpp; sourceTree = "<group>"; };
-		2AEDBC221E197159004BB950 /* CollidablePoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CollidablePoint.cpp; path = ../../../src/Vectoid/CollidablePoint.cpp; sourceTree = "<group>"; };
+		2AEDBC201E196F93004BB950 /* BoundingBoxCollisionChecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingBoxCollisionChecker.cpp; path = ../../../src/Vectoid/BoundingBoxCollisionChecker.cpp; sourceTree = "<group>"; };
+		2AEDBC221E197159004BB950 /* PointCollisionChecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointCollisionChecker.cpp; path = ../../../src/Vectoid/PointCollisionChecker.cpp; sourceTree = "<group>"; };
 		2AEECB36155EB90800AC21A2 /* Particles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particles.cpp; path = ../../../src/Vectoid/Particles.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -375,8 +379,6 @@
 			isa = PBXGroup;
 			children = (
 				2A65AF4B15361E700054F8E9 /* Camera.cpp */,
-				2AEDBC201E196F93004BB950 /* CollidableBoundingBox.cpp */,
-				2AEDBC221E197159004BB950 /* CollidablePoint.cpp */,
 				2A65AF4C15361E700054F8E9 /* CoordSys.cpp */,
 				2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */,
 				2A65AF4E15361E700054F8E9 /* Geode.cpp */,
@@ -387,6 +389,9 @@
 				2AEECB36155EB90800AC21A2 /* Particles.cpp */,
 				2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */,
 				2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */,
+				2AEDBC221E197159004BB950 /* PointCollisionChecker.cpp */,
+				2AEDBC201E196F93004BB950 /* BoundingBoxCollisionChecker.cpp */,
+				2A493C3E1E64DB39004557CF /* Collider.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -469,13 +474,15 @@
 				2A8DFD7F1D8DCE6300E22E0D /* AgeColoredParticles.h */,
 				2AEDBC1F1E17FC09004BB950 /* BoundingBox.h */,
 				2A8DFD801D8DCE6300E22E0D /* Camera.h */,
-				2A7429CC1E07135E00BD3D28 /* CollidableInterface.h */,
-				2AEDBC1D1E17F8D1004BB950 /* CollidableBoundingBox.h */,
-				2AEDBC1E1E17F8E5004BB950 /* CollidablePoint.h */,
-				2A7429CD1E07156700BD3D28 /* CollisionChecker.h */,
+				2A7429CC1E07135E00BD3D28 /* CollisionCheckerInterface.h */,
+				2AEDBC1D1E17F8D1004BB950 /* BoundingBoxCollisionChecker.h */,
+				2AEDBC1E1E17F8E5004BB950 /* PointCollisionChecker.h */,
+				2ACFF5421E64BCBA00B94FF5 /* CollidableInterface.h */,
+				2A7429CD1E07156700BD3D28 /* Collider.h */,
 				2A8DFD811D8DCE6300E22E0D /* CoordSys.h */,
 				2A8DFD821D8DCE6300E22E0D /* CoordSysCore.h */,
 				2A8DFD831D8DCE6300E22E0D /* CoordSysInterface.h */,
+				2AE1673E1E64C0BA001AD276 /* HasTransformInterface.h */,
 				2A8DFD841D8DCE6300E22E0D /* Geode.h */,
 				2A8DFD851D8DCE6300E22E0D /* GeometryInterface.h */,
 				2A8DFD861D8DCE6300E22E0D /* OpenGL.h */,
@@ -727,12 +734,13 @@
 			files = (
 				2ABB11A11D9B0C2B00BD1CA4 /* Saucer.cpp in Sources */,
 				2A3C13ED14F6ECC70091BD84 /* main.mm in Sources */,
+				2A493C3F1E64DB39004557CF /* Collider.cpp in Sources */,
 				2A81B37F1DAAC0000011CBD1 /* ControlsEvent.cpp in Sources */,
 				2A5F06441D87371A00D50D2E /* Shot.cpp in Sources */,
 				2A8DFDC01D8DCE8100E22E0D /* Interface.cpp in Sources */,
 				2A3C13F114F6ECC70091BD84 /* KXMAppDelegate.m in Sources */,
 				2A3C13F814F6ECC70091BD84 /* KXMViewController.mm in Sources */,
-				2AEDBC231E197159004BB950 /* CollidablePoint.cpp in Sources */,
+				2AEDBC231E197159004BB950 /* PointCollisionChecker.cpp in Sources */,
 				2A81B37D1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp in Sources */,
 				2A8DFDC21D8DCE8100E22E0D /* logging.cpp in Sources */,
 				2A65AF5215361E710054F8E9 /* Camera.cpp in Sources */,
@@ -773,7 +781,7 @@
 				2ADD5C221A0175F1006533B8 /* Event.cpp in Sources */,
 				2A2A612A166D1E980073658E /* Zarch.cpp in Sources */,
 				2A5F06471D873CCF00D50D2E /* Shot.cpp in Sources */,
-				2AEDBC211E196F93004BB950 /* CollidableBoundingBox.cpp in Sources */,
+				2AEDBC211E196F93004BB950 /* BoundingBoxCollisionChecker.cpp in Sources */,
 				2A41FB1D171204E100A078CF /* Simulation.cpp in Sources */,
 				2A41FB20171204F900A078CF /* Presentation.cpp in Sources */,
 				2A5F064C1D874A9D00D50D2E /* Shot.cpp in Sources */,

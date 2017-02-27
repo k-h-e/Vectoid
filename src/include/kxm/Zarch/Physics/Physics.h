@@ -14,7 +14,7 @@
 #include <kxm/Game/ActorMap.h>
 #include <kxm/Game/Actions.h>
 #include <kxm/Game/ReusableActors.h>
-#include <kxm/Vectoid/CollisionChecker.h>
+#include <kxm/Vectoid/Collider.h>
 #include <kxm/Zarch/ActorType.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
@@ -81,15 +81,15 @@ class Physics : public EventHandlerCore {
     Physics(const Physics &other);
     Physics &operator=(const Physics &other);
 
-    std::shared_ptr<Data>                      data_;
-    Game::ActorMap<ActorInfo>                  actorMap_;
-    std::shared_ptr<Game::Actions>             actions_;
-    Vectoid::CollisionChecker<Game::ActorName> collisionChecker_;
-    Game::ReusableActors<Lander>               landers_;
-    Game::ReusableActors<Shot>                 shots_;
-    Game::ReusableActors<Saucer>               saucers_;
-    TriggerEvent::Trigger                      inTrigger_,
-                                               outTrigger_;
+    std::shared_ptr<Data>              data_;
+    Game::ActorMap<ActorInfo>          actorMap_;
+    std::shared_ptr<Game::Actions>     actions_;
+    Vectoid::Collider                  collider_;
+    Game::ReusableActors<Lander>       landers_;
+    Game::ReusableActors<Shot>         shots_;
+    Game::ReusableActors<Saucer>       saucers_;
+    TriggerEvent::Trigger              inTrigger_,
+                                       outTrigger_;
 };
 
 }    // Namespace Physics.

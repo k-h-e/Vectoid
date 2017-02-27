@@ -1,39 +1,22 @@
 #ifndef KXM_VECTOID_COLLIDABLEINTERFACE_H_
 #define KXM_VECTOID_COLLIDABLEINTERFACE_H_
 
-#include <kxm/Core/Interface.h>
+#include <kxm/Vectoid/HasTransformInterface.h>
 
 namespace kxm {
 namespace Vectoid {
 
-class Transform;
-class CollidableBoundingBox;
-class CollidablePoint;
+class CollisionCheckerInterface;
 
 //! Interface to objects taking part in collision checking.
-/*! 
+/*!
  *  \ingroup Vectoid
  */ 
-class CollidableInterface : public virtual Core::Interface {
+class CollidableInterface : public virtual HasTransformInterface {
   public:
-    //! Checks for collision with the specified other collidable.
-    /*!
-     *  \return <c>true</c> in case a collision was detected.
-     */
-    virtual bool CheckCollision(const CollidableInterface &other, const Transform &otherTransform,
-                                const Transform &ourTransform) const = 0;
-    //! Checks for collision with the specified bounding box.
-    /*!
-     *  \return <c>true</c> in case a collision was detected.
-     */
-    virtual bool CheckCollision(const CollidableBoundingBox &other, const Transform &otherTransform,
-                                const Transform &ourTransform) const = 0;
-    //! Checks for collision with the specified point.
-    /*!
-     *  \return <c>true</c> in case a collision was detected.
-     */
-    virtual bool CheckCollision(const CollidablePoint &other, const Transform &otherTransform,
-                                const Transform &ourTransform) const = 0;
+    //! Returns the collidable's collision checker which is guaranteed to live at least as long as the collidable
+    //! itself.
+    virtual CollisionCheckerInterface *CollisionChecker() = 0;
 };
 
 }    // Namespace Vectoid.

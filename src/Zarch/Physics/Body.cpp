@@ -27,7 +27,7 @@ void Body::SetOrientation(const Transform &transform) {
     transform_.SetTranslationPart(position);
 }
 
-void Body::GetTransform(Transform *outTransform) {
+void Body::GetTransform(Transform *outTransform) const {
     *outTransform = transform_;
 }
 

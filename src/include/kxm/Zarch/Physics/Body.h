@@ -39,7 +39,7 @@ class Body {
     //! Sets the body's orientation from the specified transform's orientation part.
     void SetOrientation(const Vectoid::Transform &transform);
     //! Gets the body's transform (position and orientation information).
-    void GetTransform(Vectoid::Transform *outTransform);
+    void GetTransform(Vectoid::Transform *outTransform) const;
     //! Sets the body's velociy as specified.
     void SetVelocity(const Vectoid::Vector &velocity);
     //! Gets the body's velociy.

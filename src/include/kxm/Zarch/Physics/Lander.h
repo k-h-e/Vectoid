@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <kxm/Vectoid/Vector.h>
-#include <kxm/Vectoid/CollidablePoint.h>
+#include <kxm/Vectoid/PointCollisionChecker.h>
 #include <kxm/Zarch/Physics/Actor.h>
 #include <kxm/Zarch/Physics/Body.h>
 
@@ -28,9 +28,9 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Lander &operator=(const Lander &other) = delete;
     Lander(Lander &&other)                 = delete;
     Lander &operator=(Lander &&other)      = delete;
-    void GetTransform(Vectoid::Transform *outTransform);
+    void GetTransform(Vectoid::Transform *outTransform) const;
     void GetVelocity(Vectoid::Vector *outVelocity);
-    Vectoid::CollidableInterface *Collidable();
+    Vectoid::CollisionCheckerInterface *CollisionChecker();
     void Handle(const ActorCreationEvent &event);
     void Handle(const ControlsEvent &event);
     void ExecuteAction();
@@ -39,14 +39,14 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyTransformUpdate(Vectoid::Transform *transform, bool *outVelocityUpdateRequired);
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
-    Body                     body_;
-    float                    axis1_,
-                             axis2_;
-    bool                     thrusterActive_,
-                             oldThrusterActive_;
-    Vectoid::Vector          heading_;
-    bool                     killVelocity_;
-    Vectoid::CollidablePoint collidable_;
+    Body                           body_;
+    float                          axis1_,
+                                   axis2_;
+    bool                           thrusterActive_,
+                                   oldThrusterActive_;
+    Vectoid::Vector                heading_;
+    bool                           killVelocity_;
+    Vectoid::PointCollisionChecker collisionChecker_;
 };
 
 }    // Namespace Physics.
