@@ -106,9 +106,9 @@ void Lander::ExecuteAction() {
         particle->velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
         particle->position   += data.frameDeltaTimeS * particle->velocity;
         data.mapParameters->xRange.ClampModulo(&particle->position.x);
-        data.mapParameters->xRange.ExpandModuloForObserver(landerPosition.x, &particle->position.x);
+        data.mapParameters->xRange.CorrectForObserver(&particle->position.x, landerPosition.x);
         data.mapParameters->zRange.ClampModulo(&particle->position.z);
-        data.mapParameters->zRange.ExpandModuloForObserver(landerPosition.z, &particle->position.z);
+        data.mapParameters->zRange.CorrectForObserver(&particle->position.z, landerPosition.z);
         particle->age        += data.frameDeltaTimeS;
         if (particle->age >= data.mapParameters->maxThrusterParticleAge)
             thrusterParticles_->Remove(iter.ItemId());

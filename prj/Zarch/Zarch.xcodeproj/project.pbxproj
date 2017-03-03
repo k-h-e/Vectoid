@@ -17,6 +17,7 @@
 		2A1AF9551A475DE9007D20A6 /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */; };
 		2A2A612A166D1E980073658E /* Zarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A6128166D1E960073658E /* Zarch.cpp */; };
 		2A2BF0D61560556000F6A771 /* MapParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2BF0D51560556000F6A771 /* MapParameters.cpp */; };
+		2A317D271E6A107B007DD258 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A317D261E6A107B007DD258 /* BoundingBox.cpp */; };
 		2A3C13DD14F6ECC70091BD84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DC14F6ECC70091BD84 /* UIKit.framework */; };
 		2A3C13DF14F6ECC70091BD84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13DE14F6ECC70091BD84 /* Foundation.framework */; };
 		2A3C13E114F6ECC70091BD84 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3C13E014F6ECC70091BD84 /* CoreGraphics.framework */; };
@@ -100,6 +101,7 @@
 		2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLogic.cpp; path = ../../../src/Zarch/GameLogic/GameLogic.cpp; sourceTree = "<group>"; };
 		2A2A6128166D1E960073658E /* Zarch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Zarch.cpp; path = ../../../src/Zarch/Zarch.cpp; sourceTree = "<group>"; };
 		2A2BF0D51560556000F6A771 /* MapParameters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MapParameters.cpp; path = ../../../src/Zarch/MapParameters.cpp; sourceTree = "<group>"; };
+		2A317D261E6A107B007DD258 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingBox.cpp; path = ../../../src/Vectoid/BoundingBox.cpp; sourceTree = "<group>"; };
 		2A3C13D814F6ECC70091BD84 /* Zarch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zarch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A3C13DC14F6ECC70091BD84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2A3C13DE14F6ECC70091BD84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -378,7 +380,11 @@
 		2A3C140414F6F2950091BD84 /* Vectoid */ = {
 			isa = PBXGroup;
 			children = (
+				2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */,
+				2A317D261E6A107B007DD258 /* BoundingBox.cpp */,
+				2AEDBC201E196F93004BB950 /* BoundingBoxCollisionChecker.cpp */,
 				2A65AF4B15361E700054F8E9 /* Camera.cpp */,
+				2A493C3E1E64DB39004557CF /* Collider.cpp */,
 				2A65AF4C15361E700054F8E9 /* CoordSys.cpp */,
 				2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */,
 				2A65AF4E15361E700054F8E9 /* Geode.cpp */,
@@ -388,10 +394,7 @@
 				2AC40A211556CEC700026789 /* Range.cpp */,
 				2AEECB36155EB90800AC21A2 /* Particles.cpp */,
 				2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */,
-				2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */,
 				2AEDBC221E197159004BB950 /* PointCollisionChecker.cpp */,
-				2AEDBC201E196F93004BB950 /* BoundingBoxCollisionChecker.cpp */,
-				2A493C3E1E64DB39004557CF /* Collider.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -634,10 +637,10 @@
 		2AECEF4F154D60E600033D14 /* Game */ = {
 			isa = PBXGroup;
 			children = (
+				2A1352091D84A20800F0AADF /* Actions.cpp */,
+				2ADF9AF01D777CD3006C0B67 /* ActorNaming.cpp */,
 				2ADD5C211A0175F1006533B8 /* Event.cpp */,
 				2AA9C6591D67BD29003FD5D7 /* EventLoopHub.cpp */,
-				2ADF9AF01D777CD3006C0B67 /* ActorNaming.cpp */,
-				2A1352091D84A20800F0AADF /* Actions.cpp */,
 			);
 			name = Game;
 			sourceTree = "<group>";
@@ -751,6 +754,7 @@
 				2A663A651D8CA07A00437612 /* Actor.cpp in Sources */,
 				2A65AF5515361E710054F8E9 /* Geode.cpp in Sources */,
 				2A0E36C21D8DE44700C531DC /* Actor.cpp in Sources */,
+				2A317D271E6A107B007DD258 /* BoundingBox.cpp in Sources */,
 				2A8781AC1DAECFA800C63340 /* Actor.cpp in Sources */,
 				2A65AF5615361E710054F8E9 /* PerspectiveProjection.cpp in Sources */,
 				2ABB11AA1D9B17A900BD1CA4 /* SaucerGeometry.cpp in Sources */,

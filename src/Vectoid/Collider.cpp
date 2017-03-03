@@ -25,14 +25,19 @@ void Collider::IncludeChecksForGroupPair(int group0, int group1) {
 }
 
 void Collider::Check() {
+    Transform transform0, transform1;
     for (GroupPair &pair : groupPairsToCheck_) {
         auto iter0 = collidables_.GetIterator(pair.group0);
         while (CollidableInterface **collidable0 = iter0.Next()) {
+            (*collidable0)->GetTransform(&transform0);
             auto iter1 = collidables_.GetIterator(pair.group1);
             while (CollidableInterface **collidable1 = iter1.Next()) {
-                // Perform check...
-                (*collidable0)->CollisionChecker()->CheckCollision((*collidable1)->CollisionChecker(), Transform(),
-                                                                   Transform());
+                (*collidable1)->GetTransform(&transform1);
+                // TODO: Correct for word wrap-around.
+                if ((*collidable0)->CollisionChecker()->CheckCollision((*collidable1)->CollisionChecker(), transform1,
+                                                                       transform0)) {
+                    std::puts("    COLLISION");
+                }
             }
         }
     }

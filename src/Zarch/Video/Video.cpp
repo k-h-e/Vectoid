@@ -202,8 +202,8 @@ void Video::Handle(const TriggerEvent &event) {
         data_->terrainRenderer->GetObserverPosition(&observerX, &observerZ);
         auto iter = data_->shotParticles->GetIterator();
         while (Particles::ParticleInfo *particle = iter.Next()) {
-            data_->mapParameters->xRange.ExpandModuloForObserver(observerX, &particle->position.x);
-            data_->mapParameters->zRange.ExpandModuloForObserver(observerZ, &particle->position.z);
+            data_->mapParameters->xRange.CorrectForObserver(&particle->position.x, observerX);
+            data_->mapParameters->zRange.CorrectForObserver(&particle->position.z, observerZ);
         }
         
         data_->projection->Render(0);
