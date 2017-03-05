@@ -198,12 +198,11 @@ void Video::Handle(const TriggerEvent &event) {
         
         actions_->Execute();
         
-        float observerX, observerZ;
-        data_->terrainRenderer->GetObserverPosition(&observerX, &observerZ);
+        Vector observerPosition;
+        data_->terrainRenderer->GetObserverPosition(&observerPosition);
         auto iter = data_->shotParticles->GetIterator();
         while (Particles::ParticleInfo *particle = iter.Next()) {
-            data_->mapParameters->xRange.CorrectForObserver(&particle->position.x, observerX);
-            data_->mapParameters->zRange.CorrectForObserver(&particle->position.z, observerZ);
+            data_->mapParameters->CorrectForObserver(&particle->position, observerPosition);
         }
         
         data_->projection->Render(0);

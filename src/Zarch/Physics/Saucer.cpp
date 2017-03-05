@@ -3,6 +3,7 @@
 #include <kxm/Game/EventLoop.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
+#include <kxm/Zarch/SaucerGeometry.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
@@ -17,8 +18,9 @@ namespace Physics {
 
 Saucer::Saucer()
         : body_(this),
-          collisionChecker_(testBoundingBox_) {
-    // Nop.
+          collisionChecker_(boundingBox_) {
+    SaucerGeometry geometry;
+    geometry.GetBoundingBox(&boundingBox_);
 }
 
 void Saucer::GetTransform(Transform *outTransform) const {

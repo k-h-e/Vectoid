@@ -39,7 +39,7 @@ class Saucer : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     void HandleBodyVelocityUpdate(Vectoid::Vector *velocity);
   
     Body                                 body_;
-    Vectoid::BoundingBox                 testBoundingBox_;
+    Vectoid::BoundingBox                 boundingBox_;
     Vectoid::BoundingBoxCollisionChecker collisionChecker_;
 };
 

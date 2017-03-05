@@ -5,10 +5,12 @@
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Zarch/SaucerGeometry.h>
+#include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Video/Data.h>
+#include <kxm/Zarch/Video/TerrainRenderer.h>
 
 using namespace std;
 using namespace kxm::Vectoid;
@@ -24,6 +26,7 @@ Saucer::Saucer() {
 
 void Saucer::GetTransform(Vectoid::Transform *outTransform) {
     coordSys_->GetTransform(outTransform);
+    outTransform->SetTranslationPart(position_);    // Our CoordSys's position gets observer-corrected!
 }
     
 void Saucer::GetVelocity(Vectoid::Vector *outVelocity) {
@@ -31,6 +34,7 @@ void Saucer::GetVelocity(Vectoid::Vector *outVelocity) {
 }
 
 void Saucer::Handle(const ActorCreationEvent &event) {
+    event.initialTransform.GetTranslationPart(&position_);
     coordSys_->SetTransform(event.initialTransform);
     data_->camera->AddChild(coordSys_);
 }
@@ -40,11 +44,17 @@ void Saucer::Handle(const ActorTerminationEvent &event) {
 }
 
 void Saucer::Handle(const MoveEvent &event) {
+    event.transform.GetTranslationPart(&position_);
     coordSys_->SetTransform(event.transform);
 }
 
 void Saucer::ExecuteAction() {
-    // Nop.
+    Vector landerPosition;
+    data_->terrainRenderer->GetObserverPosition(&landerPosition);
+    Vector position;
+    coordSys_->GetPosition(&position);
+    data_->mapParameters->CorrectForObserver(&position, landerPosition);
+    coordSys_->SetPosition(position);
 }
 
 }    // Namespace Video.

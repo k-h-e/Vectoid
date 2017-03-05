@@ -6,11 +6,13 @@
 #include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
 
+namespace kxm {
+
 namespace Vectoid {
     class RenderContext;
+    class Vector;
 }
 
-namespace kxm {
 namespace Zarch {
 
 class Terrain;
@@ -27,10 +29,10 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
     TerrainRenderer(std::shared_ptr<Terrain> terrain,
                     std::shared_ptr<MapParameters> mapParameters);
     
-    //! Sets the observer's position in the <c>xz</c>-plane.
-    void SetObserverPosition(float x, float z);
-    //! Gets the observer's position in the <c>xz</c>-plane.
-    void GetObserverPosition(float *outX, float *outZ);
+    //! Sets the observer's position in the <c>xz</c>-plane, ignoring the <c>y</c>-coordinate.
+    void SetObserverPosition(const Vectoid::Vector &position);
+    //! Gets the observer's position in the <c>xz</c>-plane, not affecting the output vector's <c>y</c>-coordinate.
+    void GetObserverPosition(Vectoid::Vector *outPosition);
     void Render(Vectoid::RenderContext *context);
     
   private:

@@ -1,6 +1,8 @@
 #include <kxm/Vectoid/BoundingBoxCollisionChecker.h>
 
 #include <cstdio>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Vectoid/BoundingBox.h>
 
 namespace kxm {
 namespace Vectoid {
@@ -23,7 +25,12 @@ bool BoundingBoxCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *ot
 bool BoundingBoxCollisionChecker::CheckCollision(PointCollisionChecker *other,
                                                  const Transform &otherTransform, const Transform &ourTransform) {
     std::puts("    box <-> point");
-    return false;    // TODO: Implement check!
+    
+    Vector point;
+    otherTransform.GetTranslationPart(&point);
+    Transform inverseOurTransform(Transform::InitAsInverse, ourTransform);
+    inverseOurTransform.ApplyTo(&point);
+    return boundingBox_.Contains(point);
 }
 
 }    // Namespace Vectoid.

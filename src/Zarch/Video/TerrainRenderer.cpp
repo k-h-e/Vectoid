@@ -21,14 +21,14 @@ TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
     vertices_.resize(2 * 3 * 3);    // Two triangles.
 }
 
-void TerrainRenderer::SetObserverPosition(float x, float z) {
-    observerX_ = x;
-    observerZ_ = z;
+void TerrainRenderer::SetObserverPosition(const Vector &position) {
+    observerX_ = position.x;
+    observerZ_ = position.z;
 }
 
-void TerrainRenderer::GetObserverPosition(float *outX, float *outZ) {
-    *outX = observerX_;
-    *outZ = observerZ_;
+void TerrainRenderer::GetObserverPosition(Vector *outPosition) {
+    outPosition->x = observerX_;
+    outPosition->z = observerZ_;
 }
 
 void TerrainRenderer::Render(RenderContext *context) {

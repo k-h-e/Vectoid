@@ -2,6 +2,7 @@
 #define KXM_ZARCH_MAPPARAMETERS_H_
 
 #include <kxm/Vectoid/Range.h>
+#include <kxm/Vectoid/Vector.h>
 
 namespace kxm {
 namespace Zarch {
@@ -51,7 +52,14 @@ struct MapParameters {
     float          starFieldMinHeight;
     
     MapParameters();
+    //! Applies \ref Vectoid::Range::CorrectForObserver() for <c>x</c>- and <c>z</c>-directions.
+    inline void CorrectForObserver(Vectoid::Vector *inOutPosition, const Vectoid::Vector &observerPosition) const;
 };
+
+void MapParameters::CorrectForObserver(Vectoid::Vector *inOutPosition, const Vectoid::Vector &observerPosition) const {
+    xRange.CorrectForObserver(&inOutPosition->x, observerPosition.x);
+    zRange.CorrectForObserver(&inOutPosition->z, observerPosition.z);
+}
 
 }    // Namespace Zarch.
 }    // Namespace kxm.

@@ -8,8 +8,27 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Zarch {
 
-SimpleGeometry::SimpleGeometry() : numTriangles_(0) {
+SimpleGeometry::SimpleGeometry()
+        : numTriangles_(0),
+          boundingBoxValid_(false) {
     // Nop.
+}
+
+void SimpleGeometry::GetBoundingBox(BoundingBox *outBoundingBox) {
+    if (!boundingBoxValid_) {
+        BoundingBox boundingBox;
+        GLfloat *coordPtr = &vertexArray_[0];
+        Vector point;
+        for (int i = 0; i < numTriangles_ * 3; ++i) {
+            point.x = *coordPtr++;
+            point.y = *coordPtr++;
+            point.z = *coordPtr++;
+            boundingBox.Grow(point);
+        }
+        boundingBox_ = boundingBox;
+        boundingBoxValid_ = true;
+    }
+    *outBoundingBox = boundingBox_;
 }
 
 void SimpleGeometry::Render(RenderContext *context) {
@@ -48,6 +67,7 @@ void SimpleGeometry::AddTriangle(const Vector &vertex0, const Vector &vertex1, c
     colorArray_.push_back(color.z);
     colorArray_.push_back(1.0f);
     ++numTriangles_;
+    boundingBoxValid_ = false;
 }
 
 void SimpleGeometry::Move(const Vector &translation) {
@@ -60,12 +80,14 @@ void SimpleGeometry::Move(const Vector &translation) {
         (*iter) += translation.z;
         ++iter;
     }
+    boundingBoxValid_ = false;
 }
 
 void SimpleGeometry::Scale(float factor) {
-    for (vector<GLfloat>::iterator iter = vertexArray_.begin();
-         iter != vertexArray_.end(); ++iter)
+    for (vector<GLfloat>::iterator iter = vertexArray_.begin(); iter != vertexArray_.end(); ++iter) {
         (*iter) *= (GLfloat)factor;
+    }
+    boundingBoxValid_ = false;
 }
 
 }    // Namespace Zarch.

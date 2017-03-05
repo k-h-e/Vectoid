@@ -1,5 +1,6 @@
-#include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Video/Actor.h>
+
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
 
 using namespace std;
 using namespace kxm::Game;

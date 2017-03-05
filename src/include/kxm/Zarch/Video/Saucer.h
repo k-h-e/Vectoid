@@ -3,6 +3,8 @@
 
 #include <kxm/Zarch/Video/Actor.h>
 
+#include <kxm/Vectoid/Vector.h>
+
 namespace kxm {
 
 namespace Vectoid {
@@ -39,6 +41,7 @@ class Saucer : public Actor {
     
   private:
     std::shared_ptr<Vectoid::CoordSys> coordSys_;
+    Vectoid::Vector                    position_;
 };
 
 }    // Namespace Video.

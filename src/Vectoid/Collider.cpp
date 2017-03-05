@@ -37,6 +37,7 @@ void Collider::Check() {
                 if ((*collidable0)->CollisionChecker()->CheckCollision((*collidable1)->CollisionChecker(), transform1,
                                                                        transform0)) {
                     std::puts("    COLLISION");
+                    std::exit(0);
                 }
             }
         }

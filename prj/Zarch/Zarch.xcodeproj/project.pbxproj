@@ -235,6 +235,7 @@
 		2A8DFDBE1D8DCE8100E22E0D /* logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logging.cpp; sourceTree = "<group>"; };
 		2A9D7C1D154D9DF700D7DE2F /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		2AA9C6591D67BD29003FD5D7 /* EventLoopHub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventLoopHub.cpp; path = ../../../src/Game/EventLoopHub.cpp; sourceTree = "<group>"; };
+		2AAA92CE1E6B203E004FAB90 /* HasBoundingBoxInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HasBoundingBoxInterface.h; sourceTree = "<group>"; };
 		2AAC256015811661004A37C6 /* KXMGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KXMGLView.h; path = kxm/KXMGLView.h; sourceTree = "<group>"; };
 		2AAC256115811661004A37C6 /* KXMGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = KXMGLView.mm; path = kxm/KXMGLView.mm; sourceTree = "<group>"; };
 		2AAC25641584F405004A37C6 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = ../../../src/Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
@@ -285,12 +286,12 @@
 		2A2A6124166B811F0073658E /* Physics */ = {
 			isa = PBXGroup;
 			children = (
-				2A8AD4D4172D51ED007290C7 /* Physics.cpp */,
 				2A663A641D8CA07A00437612 /* Actor.cpp */,
-				2A8AD4D8172D7737007290C7 /* Lander.cpp */,
-				2A5F064B1D874A9D00D50D2E /* Shot.cpp */,
-				2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */,
 				2A5199531D9C60A700C1A1C7 /* Body.cpp */,
+				2A8AD4D8172D7737007290C7 /* Lander.cpp */,
+				2A8AD4D4172D51ED007290C7 /* Physics.cpp */,
+				2A5199501D9C5D7900C1A1C7 /* Saucer.cpp */,
+				2A5F064B1D874A9D00D50D2E /* Shot.cpp */,
 			);
 			name = Physics;
 			sourceTree = "<group>";
@@ -298,13 +299,13 @@
 		2A2A6125166B81280073658E /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				2A8AD4DC172D8527007290C7 /* Video.cpp */,
 				2A0E36C41D8EF95700C531DC /* Actor.cpp */,
 				2A0C056A1D7B157F0018D865 /* Lander.cpp */,
-				2A5F06461D873CCF00D50D2E /* Shot.cpp */,
 				2ABB11A31D9B0F3D00BD1CA4 /* Saucer.cpp */,
+				2A5F06461D873CCF00D50D2E /* Shot.cpp */,
 				2ABE9CDB17305EC700F5251C /* StarField.cpp */,
 				2AAC2567158D238A004A37C6 /* TerrainRenderer.cpp */,
+				2A8AD4DC172D8527007290C7 /* Video.cpp */,
 			);
 			name = Video;
 			sourceTree = "<group>";
@@ -312,11 +313,11 @@
 		2A2A6126166B812E0073658E /* GameLogic */ = {
 			isa = PBXGroup;
 			children = (
-				2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */,
 				2A0E36C11D8DE44700C531DC /* Actor.cpp */,
+				2A1AF9541A475DE9007D20A6 /* GameLogic.cpp */,
 				2A5F06401D8730FA00D50D2E /* Lander.cpp */,
-				2A5F06431D87371A00D50D2E /* Shot.cpp */,
 				2ABB11A01D9B0C2B00BD1CA4 /* Saucer.cpp */,
+				2A5F06431D87371A00D50D2E /* Shot.cpp */,
 			);
 			name = GameLogic;
 			sourceTree = "<group>";
@@ -388,13 +389,13 @@
 				2A65AF4C15361E700054F8E9 /* CoordSys.cpp */,
 				2A65AF4D15361E700054F8E9 /* CoordSysCore.cpp */,
 				2A65AF4E15361E700054F8E9 /* Geode.cpp */,
-				2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */,
-				2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */,
-				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
-				2AC40A211556CEC700026789 /* Range.cpp */,
 				2AEECB36155EB90800AC21A2 /* Particles.cpp */,
 				2A1303F1157BBFD900A89134 /* ParticlesRenderer.cpp */,
+				2A65AF4F15361E700054F8E9 /* PerspectiveProjection.cpp */,
 				2AEDBC221E197159004BB950 /* PointCollisionChecker.cpp */,
+				2AC40A211556CEC700026789 /* Range.cpp */,
+				2A65AF5015361E700054F8E9 /* SceneGraphNode.cpp */,
+				2A65AF5115361E710054F8E9 /* TestTriangle.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -402,8 +403,8 @@
 		2A8781A41DAECBC900C63340 /* AI */ = {
 			isa = PBXGroup;
 			children = (
-				2A8781A71DAECC5900C63340 /* AI.cpp */,
 				2A8781AB1DAECFA800C63340 /* Actor.cpp */,
+				2A8781A71DAECC5900C63340 /* AI.cpp */,
 				2A8781AE1DAED0A500C63340 /* Saucer.cpp */,
 			);
 			name = AI;
@@ -413,8 +414,8 @@
 			isa = PBXGroup;
 			children = (
 				2A8781A61DAECC2A00C63340 /* AI.h */,
-				2A8781A91DAECE1600C63340 /* Data.h */,
 				2A8781AA1DAECEB700C63340 /* Actor.h */,
+				2A8781A91DAECE1600C63340 /* Data.h */,
 				2A8781AD1DAED08E00C63340 /* Saucer.h */,
 			);
 			name = AI;
@@ -459,14 +460,14 @@
 		2A8DFD751D8DCE6300E22E0D /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFD7A1D8DCE6300E22E0D /* Event.h */,
-				2A8DFD7B1D8DCE6300E22E0D /* EventLoop.h */,
-				2A8DFD7C1D8DCE6300E22E0D /* EventLoopHub.h */,
+				2A8DFD761D8DCE6300E22E0D /* Actions.h */,
 				2A8DFD771D8DCE6300E22E0D /* ActorMap.h */,
 				2A8DFD781D8DCE6300E22E0D /* ActorName.h */,
 				2A8DFD791D8DCE6300E22E0D /* ActorNaming.h */,
+				2A8DFD7A1D8DCE6300E22E0D /* Event.h */,
+				2A8DFD7B1D8DCE6300E22E0D /* EventLoop.h */,
+				2A8DFD7C1D8DCE6300E22E0D /* EventLoopHub.h */,
 				2A8DFD7D1D8DCE6300E22E0D /* ReusableActors.h */,
-				2A8DFD761D8DCE6300E22E0D /* Actions.h */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -476,22 +477,23 @@
 			children = (
 				2A8DFD7F1D8DCE6300E22E0D /* AgeColoredParticles.h */,
 				2AEDBC1F1E17FC09004BB950 /* BoundingBox.h */,
-				2A8DFD801D8DCE6300E22E0D /* Camera.h */,
-				2A7429CC1E07135E00BD3D28 /* CollisionCheckerInterface.h */,
 				2AEDBC1D1E17F8D1004BB950 /* BoundingBoxCollisionChecker.h */,
-				2AEDBC1E1E17F8E5004BB950 /* PointCollisionChecker.h */,
+				2A8DFD801D8DCE6300E22E0D /* Camera.h */,
 				2ACFF5421E64BCBA00B94FF5 /* CollidableInterface.h */,
 				2A7429CD1E07156700BD3D28 /* Collider.h */,
+				2A7429CC1E07135E00BD3D28 /* CollisionCheckerInterface.h */,
 				2A8DFD811D8DCE6300E22E0D /* CoordSys.h */,
 				2A8DFD821D8DCE6300E22E0D /* CoordSysCore.h */,
 				2A8DFD831D8DCE6300E22E0D /* CoordSysInterface.h */,
-				2AE1673E1E64C0BA001AD276 /* HasTransformInterface.h */,
 				2A8DFD841D8DCE6300E22E0D /* Geode.h */,
 				2A8DFD851D8DCE6300E22E0D /* GeometryInterface.h */,
+				2AAA92CE1E6B203E004FAB90 /* HasBoundingBoxInterface.h */,
+				2AE1673E1E64C0BA001AD276 /* HasTransformInterface.h */,
 				2A8DFD861D8DCE6300E22E0D /* OpenGL.h */,
 				2A8DFD871D8DCE6300E22E0D /* Particles.h */,
 				2A8DFD881D8DCE6300E22E0D /* ParticlesRenderer.h */,
 				2A8DFD891D8DCE6300E22E0D /* PerspectiveProjection.h */,
+				2AEDBC1E1E17F8E5004BB950 /* PointCollisionChecker.h */,
 				2A8DFD8A1D8DCE6300E22E0D /* Range.h */,
 				2A8DFD8B1D8DCE6300E22E0D /* SceneGraphNode.h */,
 				2A8DFD8C1D8DCE6300E22E0D /* TestTriangle.h */,
@@ -514,15 +516,15 @@
 				2A81B3821DAAC24A0011CBD1 /* Control.h */,
 				2A8DFD921D8DCE6300E22E0D /* ControlsState.h */,
 				2A8DFD931D8DCE6300E22E0D /* EventHandlerCore.h */,
-				2ABB11A51D9B143F00BD1CA4 /* SimpleGeometry.h */,
+				2A0202D31D91EC1000C9D0B8 /* EventTools.h */,
 				2A8DFDA71D8DCE6300E22E0D /* LanderGeometry.h */,
-				2ABB11A81D9B178800BD1CA4 /* SaucerGeometry.h */,
 				2A8DFDA81D8DCE6300E22E0D /* MapParameters.h */,
 				2A8DFDAF1D8DCE6300E22E0D /* Presentation.h */,
+				2ABB11A81D9B178800BD1CA4 /* SaucerGeometry.h */,
+				2ABB11A51D9B143F00BD1CA4 /* SimpleGeometry.h */,
 				2A8DFDB01D8DCE6300E22E0D /* Simulation.h */,
 				2A8DFDB11D8DCE6300E22E0D /* Terrain.h */,
 				2A8DFDB91D8DCE6300E22E0D /* Zarch.h */,
-				2A0202D31D91EC1000C9D0B8 /* EventTools.h */,
 			);
 			path = Zarch;
 			sourceTree = "<group>";
@@ -534,13 +536,13 @@
 				2A8DFD961D8DCE6300E22E0D /* ActorCreationEvent.h */,
 				2A8DFD971D8DCE6300E22E0D /* ActorTerminationEvent.h */,
 				2A81B3761DAAB5CA0011CBD1 /* ControlsCoreEvent.h */,
-				2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */,
 				2A81B37A1DAAB7CC0011CBD1 /* ControlsEvent.h */,
 				2A81B37B1DAAB8030011CBD1 /* ControlsRejectionEvent.h */,
+				2A81B3791DAAB7B60011CBD1 /* ControlsRequestEvent.h */,
 				2A8DFD9A1D8DCE6300E22E0D /* InitializationEvent.h */,
 				2A8DFD9B1D8DCE6300E22E0D /* MoveEvent.h */,
-				2A8DFDA01D8DCE6300E22E0D /* VelocityEvent.h */,
 				2A8781B01DAED7A000C63340 /* TriggerEvent.h */,
+				2A8DFDA01D8DCE6300E22E0D /* VelocityEvent.h */,
 				2A8DFDA11D8DCE6300E22E0D /* ZarchEvent.h */,
 			);
 			path = Events;
@@ -549,12 +551,12 @@
 		2A8DFDA21D8DCE6300E22E0D /* GameLogic */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFDA41D8DCE6300E22E0D /* GameLogic.h */,
-				2A8DFDA31D8DCE6300E22E0D /* Data.h */,
 				2A0E36C01D8DE3A100C531DC /* Actor.h */,
+				2A8DFDA31D8DCE6300E22E0D /* Data.h */,
+				2A8DFDA41D8DCE6300E22E0D /* GameLogic.h */,
 				2A8DFDA51D8DCE6300E22E0D /* Lander.h */,
-				2A8DFDA61D8DCE6300E22E0D /* Shot.h */,
 				2ABB119F1D9B0C0200BD1CA4 /* Saucer.h */,
+				2A8DFDA61D8DCE6300E22E0D /* Shot.h */,
 			);
 			path = GameLogic;
 			sourceTree = "<group>";
@@ -562,13 +564,13 @@
 		2A8DFDA91D8DCE6300E22E0D /* Physics */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFDAD1D8DCE6300E22E0D /* Physics.h */,
-				2A8DFDAB1D8DCE6300E22E0D /* Data.h */,
 				2A8DFDAA1D8DCE6300E22E0D /* Actor.h */,
-				2A8DFDAC1D8DCE6300E22E0D /* Lander.h */,
-				2A8DFDAE1D8DCE6300E22E0D /* Shot.h */,
-				2A51994F1D9C5D5F00C1A1C7 /* Saucer.h */,
 				2A5199521D9C607400C1A1C7 /* Body.h */,
+				2A8DFDAB1D8DCE6300E22E0D /* Data.h */,
+				2A8DFDAC1D8DCE6300E22E0D /* Lander.h */,
+				2A8DFDAD1D8DCE6300E22E0D /* Physics.h */,
+				2A51994F1D9C5D5F00C1A1C7 /* Saucer.h */,
+				2A8DFDAE1D8DCE6300E22E0D /* Shot.h */,
 			);
 			path = Physics;
 			sourceTree = "<group>";
@@ -576,14 +578,14 @@
 		2A8DFDB21D8DCE6300E22E0D /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				2A8DFDB81D8DCE6300E22E0D /* Video.h */,
-				2A8DFDB31D8DCE6300E22E0D /* Data.h */,
 				2A0E36C31D8EF93800C531DC /* Actor.h */,
+				2A8DFDB31D8DCE6300E22E0D /* Data.h */,
 				2A8DFDB41D8DCE6300E22E0D /* Lander.h */,
-				2A8DFDB51D8DCE6300E22E0D /* Shot.h */,
 				2ABB11A21D9B0F2100BD1CA4 /* Saucer.h */,
+				2A8DFDB51D8DCE6300E22E0D /* Shot.h */,
 				2A8DFDB61D8DCE6300E22E0D /* StarField.h */,
 				2A8DFDB71D8DCE6300E22E0D /* TerrainRenderer.h */,
+				2A8DFDB81D8DCE6300E22E0D /* Video.h */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -619,17 +621,17 @@
 		2ADD5C281A019B68006533B8 /* Events */ = {
 			isa = PBXGroup;
 			children = (
-				2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */,
+				2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */,
 				2ADF9AF81D778F6E006C0B67 /* ActorCreationEvent.cpp */,
 				2A6A2B621D8759C500DAC9D5 /* ActorTerminationEvent.cpp */,
-				2A5E8AD51A114AD00000617C /* MoveEvent.cpp */,
-				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
 				2A81B3771DAAB5F40011CBD1 /* ControlsCoreEvent.cpp */,
-				2A81B37C1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp */,
 				2A81B37E1DAAC0000011CBD1 /* ControlsEvent.cpp */,
 				2A81B3801DAAC0200011CBD1 /* ControlsRejectionEvent.cpp */,
-				2A0D28251D8B4856001AC162 /* AccelerationEvent.cpp */,
+				2A81B37C1DAAB91B0011CBD1 /* ControlsRequestEvent.cpp */,
+				2ADF9AF61D778F56006C0B67 /* InitializationEvent.cpp */,
+				2A5E8AD51A114AD00000617C /* MoveEvent.cpp */,
 				2A8781B11DAED8B600C63340 /* TriggerEvent.cpp */,
+				2A5E8AD71A114AEA0000617C /* VelocityEvent.cpp */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -653,15 +655,15 @@
 				2A2A6126166B812E0073658E /* GameLogic */,
 				2A2A6124166B811F0073658E /* Physics */,
 				2A2A6125166B81280073658E /* Video */,
-				2A2A6128166D1E960073658E /* Zarch.cpp */,
-				2A41FB1B171204E100A078CF /* Simulation.cpp */,
-				2A41FB1E171204F900A078CF /* Presentation.cpp */,
-				2ABB11A61D9B14E400BD1CA4 /* SimpleGeometry.cpp */,
-				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
-				2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */,
-				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
-				2AECEF62154D6CC900033D14 /* Terrain.cpp */,
 				2AD5C13F1C18DD3600B2CD92 /* EventHandlerCore.cpp */,
+				2A137B9415508165000EDEA7 /* LanderGeometry.cpp */,
+				2A2BF0D51560556000F6A771 /* MapParameters.cpp */,
+				2A41FB1E171204F900A078CF /* Presentation.cpp */,
+				2ABB11A91D9B17A900BD1CA4 /* SaucerGeometry.cpp */,
+				2ABB11A61D9B14E400BD1CA4 /* SimpleGeometry.cpp */,
+				2A41FB1B171204E100A078CF /* Simulation.cpp */,
+				2AECEF62154D6CC900033D14 /* Terrain.cpp */,
+				2A2A6128166D1E960073658E /* Zarch.cpp */,
 			);
 			name = Zarch;
 			sourceTree = "<group>";
