@@ -10,13 +10,22 @@
 namespace kxm {
 namespace Vectoid {
 
+class Transform;
+
 //! Checks for collisions between groups of collidables.
 /*! 
  *  \ingroup Vectoid
  */
 class Collider {
   public:
-    Collider(int numCollisionGroups);
+    class DelegateInterface : public Core::Interface {
+      public:
+        virtual void ModifyOtherTransform(Transform *inOutOtherTransform, const Transform &ourTransform) = 0;
+    };
+  
+    //! The delegate, if specified, must be guaranteed to live as long as the collider - the collider's destructor won't
+    //! call into the delegate, though.
+    Collider(int numCollisionGroups, DelegateInterface *delegate = 0);
     Collider(const Collider &other)            = delete;
     Collider &operator=(const Collider &other) = delete;
     Collider(Collider &&other)                 = delete;
@@ -41,6 +50,7 @@ class Collider {
     };
     Core::ReusableItems<CollidableInterface *> collidables_;
     std::vector<GroupPair>                     groupPairsToCheck_;
+    DelegateInterface                          *delegate_;
 };
 
 }    // Namespace Vectoid.

@@ -45,11 +45,12 @@ class Saucer;
 /*!
  *  \ingroup ZarchPhysics
  */
-class Physics : public EventHandlerCore {
+class Physics : public EventHandlerCore, public virtual Vectoid::Collider::DelegateInterface {
   public:
     Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
             TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
     ~Physics();
+    void ModifyOtherTransform(Vectoid::Transform *inOutOtherTransform, const Vectoid::Transform &ourTransform);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const ControlsEvent &event);

@@ -29,7 +29,7 @@ namespace Physics {
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
                  TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
         : actions_(new Actions()),
-          collider_(CollisionGroupCount),
+          collider_(CollisionGroupCount, this),
           landers_(actions_),
           shots_(actions_),
           saucers_(actions_),
@@ -51,6 +51,14 @@ Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
 
 Physics::~Physics() {
     // Nop.
+}
+
+void Physics::ModifyOtherTransform(Transform *inOutOtherTransform, const Transform &ourTransform) {
+   Vector otherPosition, ourPosition;
+   inOutOtherTransform->GetTranslationPart(&otherPosition);
+   ourTransform.GetTranslationPart(&ourPosition);
+   data_->mapParameters->CorrectForObserver(&otherPosition, ourPosition);
+   inOutOtherTransform->SetTranslationPart(otherPosition);
 }
 
 void Physics::Handle(const ActorCreationEvent &event) {

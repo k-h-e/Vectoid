@@ -5,8 +5,9 @@
 namespace kxm {
 namespace Vectoid {
 
-Collider::Collider(int numCollisionGroups)
-        : collidables_(numCollisionGroups) {
+Collider::Collider(int numCollisionGroups, DelegateInterface *delegate)
+        : collidables_(numCollisionGroups),
+          delegate_(delegate) {
     // Nop.
 }
 
@@ -33,7 +34,9 @@ void Collider::Check() {
             auto iter1 = collidables_.GetIterator(pair.group1);
             while (CollidableInterface **collidable1 = iter1.Next()) {
                 (*collidable1)->GetTransform(&transform1);
-                // TODO: Correct for word wrap-around.
+                if (delegate_) {
+                    delegate_->ModifyOtherTransform(&transform1, transform0);
+                }
                 if ((*collidable0)->CollisionChecker()->CheckCollision((*collidable1)->CollisionChecker(), transform1,
                                                                        transform0)) {
                     std::puts("    COLLISION");
