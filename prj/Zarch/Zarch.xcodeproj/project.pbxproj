@@ -153,12 +153,12 @@
 		2A81B3801DAAC0200011CBD1 /* ControlsRejectionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsRejectionEvent.cpp; path = ../../../src/Zarch/Events/ControlsRejectionEvent.cpp; sourceTree = "<group>"; };
 		2A81B3821DAAC24A0011CBD1 /* Control.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
 		2A8781A61DAECC2A00C63340 /* AI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AI.h; path = AI/AI.h; sourceTree = "<group>"; };
-		2A8781A71DAECC5900C63340 /* AI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AI.cpp; path = ../../../src/AI/AI.cpp; sourceTree = "<group>"; };
+		2A8781A71DAECC5900C63340 /* AI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AI.cpp; path = ../../../src/Zarch/AI/AI.cpp; sourceTree = "<group>"; };
 		2A8781A91DAECE1600C63340 /* Data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Data.h; path = AI/Data.h; sourceTree = "<group>"; };
 		2A8781AA1DAECEB700C63340 /* Actor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = AI/Actor.h; sourceTree = "<group>"; };
-		2A8781AB1DAECFA800C63340 /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/AI/Actor.cpp; sourceTree = "<group>"; };
+		2A8781AB1DAECFA800C63340 /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../src/Zarch/AI/Actor.cpp; sourceTree = "<group>"; };
 		2A8781AD1DAED08E00C63340 /* Saucer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Saucer.h; path = AI/Saucer.h; sourceTree = "<group>"; };
-		2A8781AE1DAED0A500C63340 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/AI/Saucer.cpp; sourceTree = "<group>"; };
+		2A8781AE1DAED0A500C63340 /* Saucer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Saucer.cpp; path = ../../../src/Zarch/AI/Saucer.cpp; sourceTree = "<group>"; };
 		2A8781B01DAED7A000C63340 /* TriggerEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TriggerEvent.h; sourceTree = "<group>"; };
 		2A8781B11DAED8B600C63340 /* TriggerEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TriggerEvent.cpp; path = ../../../src/Zarch/Events/TriggerEvent.cpp; sourceTree = "<group>"; };
 		2A8AD4D4172D51ED007290C7 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Physics.cpp; path = ../../../src/Zarch/Physics/Physics.cpp; sourceTree = "<group>"; };
