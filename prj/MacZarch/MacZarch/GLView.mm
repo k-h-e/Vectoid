@@ -9,40 +9,63 @@ using namespace std;
 using namespace kxm::Zarch;
 
 @interface GLView () {
-    shared_ptr<Zarch>         zarch;
-    shared_ptr<ControlsState> controlsState;
-    CGSize                    size;
+    shared_ptr<Zarch>         _zarch;
+    shared_ptr<ControlsState> _controlsState;
+    CGSize                    _size;
 }
 @end
 
 @implementation GLView
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    NSOpenGLPixelFormatAttribute attributes[] = { NSOpenGLPFADoubleBuffer,
+                                                  NSOpenGLPFADepthSize, 32,
+                                                  0
+                                                };
+    self.pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes: attributes];
+    [self clearGLContext];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(surfaceNeedsUpdate:)
+                                          name: NSViewGlobalFrameDidChangeNotification object:self];
+}
+
 - (void)setZarch: (const std::shared_ptr<kxm::Zarch::Zarch> &)aZarch
         controlsState: (const std::shared_ptr<kxm::Zarch::ControlsState> &)aControlsState {
-    zarch         = aZarch;
-    controlsState = aControlsState;
-    size.width  = 0.0f;
-    size.height = 0.0f;
+    _zarch         = aZarch;
+    _controlsState = aControlsState;
+    _size.width  = 0.0f;
+    _size.height = 0.0f;
+}
+
+- (void)prepareOpenGL {
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glEnable(GL_DEPTH_TEST);
 }
 
 - (void)drawRect: (NSRect)bounds {
-    if (zarch.get()) {
+    if (_zarch.get()) {
+        [self.openGLContext makeCurrentContext];
+    
         CGSize newSize = bounds.size;
-        if ((newSize.width != size.width) || (newSize.height != size.height)) {
-            NSLog(@"resizing...");
-            size.width  = newSize.width;
-            size.height = newSize.height;
-            zarch->SetViewPort((int)(size.width +.5f), (int)(size.height + .5f));
-            
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glEnable(GL_DEPTH_TEST);
+        if ((newSize.width != _size.width) || (newSize.height != _size.height)) {
+            _size.width  = newSize.width;
+            _size.height = newSize.height;
+            _zarch->SetViewPort((int)(_size.width +.5f), (int)(_size.height + .5f));
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        zarch->PrepareFrame(*controlsState);
-        zarch->RenderFrame();
-        glFlush();
+        _zarch->PrepareFrame(*_controlsState);
+        _zarch->RenderFrame();
+        
+        [self.openGLContext flushBuffer];
     }
+}
+
+- (void) surfaceNeedsUpdate: (NSNotification *)notification {
+   NSLog(@"surfaceNeedsUpdate");
+   [self update];
 }
 
 /*
