@@ -48,7 +48,7 @@ void Lander::Handle(const ActorCreationEvent &event) {
     axis2_             = 0.0f;
     thrusterActive_    = false;
     oldThrusterActive_ = false;
-    heading_        = Vector(0.0f, 0.0f, -1.0f);
+    heading_           = Vector(0.0f, 0.0f, -1.0f);
     body_.SetTransform(event.initialTransform);
     body_.SetVelocity(event.initialVelocity);
     body_.EnableGravity(data_->mapParameters->gravity);
@@ -56,6 +56,8 @@ void Lander::Handle(const ActorCreationEvent &event) {
 }
 
 void Lander::Handle(const ControlsEvent &event) {
+    Data &data = *data_;
+    
     Control control;
     for (int i = 0; i < event.Count(); ++i) {
         event.GetControl(i, &control);
@@ -75,9 +77,12 @@ void Lander::Handle(const ControlsEvent &event) {
     }
     
     NumberTools::Clamp(&axis1_, -1.0f, 1.0f);
-    float xAngle = (float)asin(axis1_) * 180.0f / NumberTools::piAsFloat;
     NumberTools::Clamp(&axis2_, -1.0f, 1.0f);
-    float yAngle = -(float)asin(axis2_) * 180.0f / NumberTools::piAsFloat;
+    
+    /*
+    // Accelerometer...
+    float xAngle   =  (float)asin(axis1_) * 180.0f / NumberTools::piAsFloat;
+    float yAngle   = -(float)asin(axis2_) * 180.0f / NumberTools::piAsFloat;
     float maxAngle = 30.0f;
     NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
     NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
@@ -93,6 +98,38 @@ void Lander::Handle(const ControlsEvent &event) {
     newLanderTransform.Prepend(Transform(XAxis, -speedLength * 120.0f));
     newLanderTransform.Prepend(Transform(YAxis, 180.0));
     body_.SetOrientation(newLanderTransform);
+    */
+    
+    // Game pad 2
+    float xAngle   =  (float)asin(axis1_) * 180.0f / NumberTools::piAsFloat;
+    float yAngle   = -(float)asin(axis2_) * 180.0f / NumberTools::piAsFloat;
+    float maxAngle = 30.0f;
+    NumberTools::Clamp(&xAngle, -maxAngle, maxAngle);
+    NumberTools::Clamp(&yAngle, -maxAngle, maxAngle);
+    Vector speed(xAngle / maxAngle, 0.0f, yAngle / maxAngle);
+    float  speedLength = speed.Length();
+    if (speedLength > 0.0f) {
+        heading_ = (1.0f/speedLength) * speed;
+    }
+    NumberTools::Clamp(&speedLength, 0.0f, 1.0f);
+    
+    Vector up(0.0f, 1.0f, 0.0f);
+    Transform newLanderTransform(CrossProduct(up, -heading_), up, -heading_);
+    newLanderTransform.Prepend(Transform(XAxis, -speedLength * 120.0f));
+    newLanderTransform.Prepend(Transform(YAxis, 180.0));
+    body_.SetOrientation(newLanderTransform);
+    
+    /*
+    // Game pad...
+    Transform transform;
+    body_.GetTransform(&transform);
+    transform.SetTranslationPart(Vector(0.0f, 0.0f, 0.0f));
+    Transform yaw(YAxis, -axis1_ * 180.0f * data.updateDeltaTimeS);
+    transform.Append(yaw);
+    Transform pitch(XAxis, axis2_ * 180.0f * data.updateDeltaTimeS);
+    transform.Prepend(pitch);
+    body_.SetOrientation(transform);
+    */
     
     if (thrusterActive_ != oldThrusterActive_) {
         if (thrusterActive_) {
