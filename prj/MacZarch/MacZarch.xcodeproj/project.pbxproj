@@ -10,6 +10,7 @@
 		2A9890D71EBFA1910061F6F4 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9890D51EBFA1800061F6F4 /* OpenGL.framework */; };
 		2A9890DA1EBFAD1F0061F6F4 /* GLViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A9890D91EBFAD1F0061F6F4 /* GLViewController.mm */; };
 		2A9F39871EC3B0AE00D7B720 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9F39861EC3B0AE00D7B720 /* GameController.framework */; };
+		2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F398E1EC78F4000D7B720 /* FloatModN.cpp */; };
 		2AEB260D1EBF6651002F6733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB260C1EBF6651002F6733 /* AppDelegate.swift */; };
 		2AEB26111EBF6651002F6733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AEB26101EBF6651002F6733 /* Assets.xcassets */; };
 		2AEB26141EBF6651002F6733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AEB26121EBF6651002F6733 /* Main.storyboard */; };
@@ -104,6 +105,8 @@
 		2A9890D81EBFAD1F0061F6F4 /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
 		2A9890D91EBFAD1F0061F6F4 /* GLViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLViewController.mm; sourceTree = "<group>"; };
 		2A9F39861EC3B0AE00D7B720 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		2A9F398D1EC78F0400D7B720 /* FloatModN.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FloatModN.h; path = ../../../src/include/kxm/Core/FloatModN.h; sourceTree = "<group>"; };
+		2A9F398E1EC78F4000D7B720 /* FloatModN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FloatModN.cpp; path = ../../../src/Core/FloatModN.cpp; sourceTree = "<group>"; };
 		2AEB26091EBF6650002F6733 /* MacZarch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacZarch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AEB260C1EBF6651002F6733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2AEB26101EBF6651002F6733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -162,54 +165,54 @@
 		2AEB26881EBF68DE002F6733 /* ReusableActors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReusableActors.h; path = ../../../src/include/kxm/Game/ReusableActors.h; sourceTree = "<group>"; };
 		2AEB26891EBF6915002F6733 /* ActorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorInfo.h; path = ../../../src/include/kxm/Zarch/ActorInfo.h; sourceTree = "<group>"; };
 		2AEB268A1EBF6915002F6733 /* ActorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorType.h; path = ../../../src/include/kxm/Zarch/ActorType.h; sourceTree = "<group>"; };
-		2AEB268C1EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
-		2AEB268D1EBF6915002F6733 /* AI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AI.h; sourceTree = "<group>"; };
-		2AEB268E1EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		2AEB268F1EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
+		2AEB268C1EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../include/kxm/Zarch/AI/Actor.h; sourceTree = "<group>"; };
+		2AEB268D1EBF6915002F6733 /* AI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AI.h; path = ../../include/kxm/Zarch/AI/AI.h; sourceTree = "<group>"; };
+		2AEB268E1EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../include/kxm/Zarch/AI/Data.h; sourceTree = "<group>"; };
+		2AEB268F1EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Saucer.h; path = ../../include/kxm/Zarch/AI/Saucer.h; sourceTree = "<group>"; };
 		2AEB26901EBF6915002F6733 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Control.h; path = ../../../src/include/kxm/Zarch/Control.h; sourceTree = "<group>"; };
 		2AEB26911EBF6915002F6733 /* ControlsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsState.h; path = ../../../src/include/kxm/Zarch/ControlsState.h; sourceTree = "<group>"; };
 		2AEB26921EBF6915002F6733 /* EventHandlerCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventHandlerCore.h; path = ../../../src/include/kxm/Zarch/EventHandlerCore.h; sourceTree = "<group>"; };
-		2AEB26941EBF6915002F6733 /* AccelerationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerationEvent.h; sourceTree = "<group>"; };
-		2AEB26951EBF6915002F6733 /* ActorCreationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorCreationEvent.h; sourceTree = "<group>"; };
-		2AEB26961EBF6915002F6733 /* ActorTerminationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorTerminationEvent.h; sourceTree = "<group>"; };
-		2AEB26971EBF6915002F6733 /* ControlsCoreEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsCoreEvent.h; sourceTree = "<group>"; };
-		2AEB26981EBF6915002F6733 /* ControlsEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsEvent.h; sourceTree = "<group>"; };
-		2AEB26991EBF6915002F6733 /* ControlsRejectionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsRejectionEvent.h; sourceTree = "<group>"; };
-		2AEB269A1EBF6915002F6733 /* ControlsRequestEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsRequestEvent.h; sourceTree = "<group>"; };
-		2AEB269B1EBF6915002F6733 /* InitializationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitializationEvent.h; sourceTree = "<group>"; };
-		2AEB269C1EBF6915002F6733 /* MoveEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveEvent.h; sourceTree = "<group>"; };
-		2AEB269D1EBF6915002F6733 /* TriggerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerEvent.h; sourceTree = "<group>"; };
-		2AEB269E1EBF6915002F6733 /* VelocityEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VelocityEvent.h; sourceTree = "<group>"; };
-		2AEB269F1EBF6915002F6733 /* ZarchEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZarchEvent.h; sourceTree = "<group>"; };
+		2AEB26941EBF6915002F6733 /* AccelerationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccelerationEvent.h; path = ../../include/kxm/Zarch/Events/AccelerationEvent.h; sourceTree = "<group>"; };
+		2AEB26951EBF6915002F6733 /* ActorCreationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorCreationEvent.h; path = ../../include/kxm/Zarch/Events/ActorCreationEvent.h; sourceTree = "<group>"; };
+		2AEB26961EBF6915002F6733 /* ActorTerminationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorTerminationEvent.h; path = ../../include/kxm/Zarch/Events/ActorTerminationEvent.h; sourceTree = "<group>"; };
+		2AEB26971EBF6915002F6733 /* ControlsCoreEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsCoreEvent.h; path = ../../include/kxm/Zarch/Events/ControlsCoreEvent.h; sourceTree = "<group>"; };
+		2AEB26981EBF6915002F6733 /* ControlsEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsEvent.h; path = ../../include/kxm/Zarch/Events/ControlsEvent.h; sourceTree = "<group>"; };
+		2AEB26991EBF6915002F6733 /* ControlsRejectionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsRejectionEvent.h; path = ../../include/kxm/Zarch/Events/ControlsRejectionEvent.h; sourceTree = "<group>"; };
+		2AEB269A1EBF6915002F6733 /* ControlsRequestEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsRequestEvent.h; path = ../../include/kxm/Zarch/Events/ControlsRequestEvent.h; sourceTree = "<group>"; };
+		2AEB269B1EBF6915002F6733 /* InitializationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializationEvent.h; path = ../../include/kxm/Zarch/Events/InitializationEvent.h; sourceTree = "<group>"; };
+		2AEB269C1EBF6915002F6733 /* MoveEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoveEvent.h; path = ../../include/kxm/Zarch/Events/MoveEvent.h; sourceTree = "<group>"; };
+		2AEB269D1EBF6915002F6733 /* TriggerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TriggerEvent.h; path = ../../include/kxm/Zarch/Events/TriggerEvent.h; sourceTree = "<group>"; };
+		2AEB269E1EBF6915002F6733 /* VelocityEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VelocityEvent.h; path = ../../include/kxm/Zarch/Events/VelocityEvent.h; sourceTree = "<group>"; };
+		2AEB269F1EBF6915002F6733 /* ZarchEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZarchEvent.h; path = ../../include/kxm/Zarch/Events/ZarchEvent.h; sourceTree = "<group>"; };
 		2AEB26A01EBF6915002F6733 /* EventTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventTools.h; path = ../../../src/include/kxm/Zarch/EventTools.h; sourceTree = "<group>"; };
-		2AEB26A21EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
-		2AEB26A31EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		2AEB26A41EBF6915002F6733 /* GameLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLogic.h; sourceTree = "<group>"; };
-		2AEB26A51EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lander.h; sourceTree = "<group>"; };
-		2AEB26A61EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
-		2AEB26A71EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shot.h; sourceTree = "<group>"; };
+		2AEB26A21EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../include/kxm/Zarch/GameLogic/Actor.h; sourceTree = "<group>"; };
+		2AEB26A31EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../include/kxm/Zarch/GameLogic/Data.h; sourceTree = "<group>"; };
+		2AEB26A41EBF6915002F6733 /* GameLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameLogic.h; path = ../../include/kxm/Zarch/GameLogic/GameLogic.h; sourceTree = "<group>"; };
+		2AEB26A51EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lander.h; path = ../../include/kxm/Zarch/GameLogic/Lander.h; sourceTree = "<group>"; };
+		2AEB26A61EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Saucer.h; path = ../../include/kxm/Zarch/GameLogic/Saucer.h; sourceTree = "<group>"; };
+		2AEB26A71EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shot.h; path = ../../include/kxm/Zarch/GameLogic/Shot.h; sourceTree = "<group>"; };
 		2AEB26A81EBF6915002F6733 /* LanderGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanderGeometry.h; path = ../../../src/include/kxm/Zarch/LanderGeometry.h; sourceTree = "<group>"; };
 		2AEB26A91EBF6915002F6733 /* MapParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapParameters.h; path = ../../../src/include/kxm/Zarch/MapParameters.h; sourceTree = "<group>"; };
-		2AEB26AB1EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
-		2AEB26AC1EBF6915002F6733 /* Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Body.h; sourceTree = "<group>"; };
-		2AEB26AD1EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		2AEB26AE1EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lander.h; sourceTree = "<group>"; };
-		2AEB26AF1EBF6915002F6733 /* Physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Physics.h; sourceTree = "<group>"; };
-		2AEB26B01EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
-		2AEB26B11EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shot.h; sourceTree = "<group>"; };
+		2AEB26AB1EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../include/kxm/Zarch/Physics/Actor.h; sourceTree = "<group>"; };
+		2AEB26AC1EBF6915002F6733 /* Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Body.h; path = ../../include/kxm/Zarch/Physics/Body.h; sourceTree = "<group>"; };
+		2AEB26AD1EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../include/kxm/Zarch/Physics/Data.h; sourceTree = "<group>"; };
+		2AEB26AE1EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lander.h; path = ../../include/kxm/Zarch/Physics/Lander.h; sourceTree = "<group>"; };
+		2AEB26AF1EBF6915002F6733 /* Physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Physics.h; path = ../../include/kxm/Zarch/Physics/Physics.h; sourceTree = "<group>"; };
+		2AEB26B01EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Saucer.h; path = ../../include/kxm/Zarch/Physics/Saucer.h; sourceTree = "<group>"; };
+		2AEB26B11EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shot.h; path = ../../include/kxm/Zarch/Physics/Shot.h; sourceTree = "<group>"; };
 		2AEB26B21EBF6915002F6733 /* Presentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Presentation.h; path = ../../../src/include/kxm/Zarch/Presentation.h; sourceTree = "<group>"; };
 		2AEB26B31EBF6915002F6733 /* SaucerGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaucerGeometry.h; path = ../../../src/include/kxm/Zarch/SaucerGeometry.h; sourceTree = "<group>"; };
 		2AEB26B41EBF6915002F6733 /* SimpleGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleGeometry.h; path = ../../../src/include/kxm/Zarch/SimpleGeometry.h; sourceTree = "<group>"; };
 		2AEB26B51EBF6915002F6733 /* Simulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Simulation.h; path = ../../../src/include/kxm/Zarch/Simulation.h; sourceTree = "<group>"; };
 		2AEB26B61EBF6915002F6733 /* Terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Terrain.h; path = ../../../src/include/kxm/Zarch/Terrain.h; sourceTree = "<group>"; };
-		2AEB26B81EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actor.h; sourceTree = "<group>"; };
-		2AEB26B91EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		2AEB26BA1EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lander.h; sourceTree = "<group>"; };
-		2AEB26BB1EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Saucer.h; sourceTree = "<group>"; };
-		2AEB26BC1EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shot.h; sourceTree = "<group>"; };
-		2AEB26BD1EBF6915002F6733 /* StarField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarField.h; sourceTree = "<group>"; };
-		2AEB26BE1EBF6915002F6733 /* TerrainRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainRenderer.h; sourceTree = "<group>"; };
-		2AEB26BF1EBF6915002F6733 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
+		2AEB26B81EBF6915002F6733 /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../include/kxm/Zarch/Video/Actor.h; sourceTree = "<group>"; };
+		2AEB26B91EBF6915002F6733 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../include/kxm/Zarch/Video/Data.h; sourceTree = "<group>"; };
+		2AEB26BA1EBF6915002F6733 /* Lander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lander.h; path = ../../include/kxm/Zarch/Video/Lander.h; sourceTree = "<group>"; };
+		2AEB26BB1EBF6915002F6733 /* Saucer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Saucer.h; path = ../../include/kxm/Zarch/Video/Saucer.h; sourceTree = "<group>"; };
+		2AEB26BC1EBF6915002F6733 /* Shot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shot.h; path = ../../include/kxm/Zarch/Video/Shot.h; sourceTree = "<group>"; };
+		2AEB26BD1EBF6915002F6733 /* StarField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StarField.h; path = ../../include/kxm/Zarch/Video/StarField.h; sourceTree = "<group>"; };
+		2AEB26BE1EBF6915002F6733 /* TerrainRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = ../../include/kxm/Zarch/Video/TerrainRenderer.h; sourceTree = "<group>"; };
+		2AEB26BF1EBF6915002F6733 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Video.h; path = ../../include/kxm/Zarch/Video/Video.h; sourceTree = "<group>"; };
 		2AEB26C01EBF6915002F6733 /* Zarch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Zarch.h; path = ../../../src/include/kxm/Zarch/Zarch.h; sourceTree = "<group>"; };
 		2AEB26C11EBF6987002F6733 /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = ../../../src/Vectoid/AgeColoredParticles.cpp; sourceTree = "<group>"; };
 		2AEB26C21EBF6987002F6733 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingBox.cpp; path = ../../../src/Vectoid/BoundingBox.cpp; sourceTree = "<group>"; };
@@ -303,6 +306,78 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A9F39881EC775EB00D7B720 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2AEB26941EBF6915002F6733 /* AccelerationEvent.h */,
+				2AEB26951EBF6915002F6733 /* ActorCreationEvent.h */,
+				2AEB26961EBF6915002F6733 /* ActorTerminationEvent.h */,
+				2AEB26971EBF6915002F6733 /* ControlsCoreEvent.h */,
+				2AEB26981EBF6915002F6733 /* ControlsEvent.h */,
+				2AEB26991EBF6915002F6733 /* ControlsRejectionEvent.h */,
+				2AEB269A1EBF6915002F6733 /* ControlsRequestEvent.h */,
+				2AEB269B1EBF6915002F6733 /* InitializationEvent.h */,
+				2AEB269C1EBF6915002F6733 /* MoveEvent.h */,
+				2AEB269D1EBF6915002F6733 /* TriggerEvent.h */,
+				2AEB269E1EBF6915002F6733 /* VelocityEvent.h */,
+				2AEB269F1EBF6915002F6733 /* ZarchEvent.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A9F39891EC7762F00D7B720 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2AEB26B81EBF6915002F6733 /* Actor.h */,
+				2AEB26B91EBF6915002F6733 /* Data.h */,
+				2AEB26BA1EBF6915002F6733 /* Lander.h */,
+				2AEB26BB1EBF6915002F6733 /* Saucer.h */,
+				2AEB26BC1EBF6915002F6733 /* Shot.h */,
+				2AEB26BD1EBF6915002F6733 /* StarField.h */,
+				2AEB26BE1EBF6915002F6733 /* TerrainRenderer.h */,
+				2AEB26BF1EBF6915002F6733 /* Video.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A9F398A1EC7764200D7B720 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2AEB26AB1EBF6915002F6733 /* Actor.h */,
+				2AEB26AC1EBF6915002F6733 /* Body.h */,
+				2AEB26AD1EBF6915002F6733 /* Data.h */,
+				2AEB26AE1EBF6915002F6733 /* Lander.h */,
+				2AEB26AF1EBF6915002F6733 /* Physics.h */,
+				2AEB26B01EBF6915002F6733 /* Saucer.h */,
+				2AEB26B11EBF6915002F6733 /* Shot.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A9F398B1EC7765600D7B720 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2AEB26A21EBF6915002F6733 /* Actor.h */,
+				2AEB26A31EBF6915002F6733 /* Data.h */,
+				2AEB26A41EBF6915002F6733 /* GameLogic.h */,
+				2AEB26A51EBF6915002F6733 /* Lander.h */,
+				2AEB26A61EBF6915002F6733 /* Saucer.h */,
+				2AEB26A71EBF6915002F6733 /* Shot.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		2A9F398C1EC7766A00D7B720 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2AEB268C1EBF6915002F6733 /* Actor.h */,
+				2AEB268D1EBF6915002F6733 /* AI.h */,
+				2AEB268E1EBF6915002F6733 /* Data.h */,
+				2AEB268F1EBF6915002F6733 /* Saucer.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
 		2AEB26001EBF6650002F6733 = {
 			isa = PBXGroup;
 			children = (
@@ -374,6 +449,7 @@
 			children = (
 				2AEB26411EBF67A8002F6733 /* include */,
 				2AEB26391EBF6783002F6733 /* Buffer.cpp */,
+				2A9F398E1EC78F4000D7B720 /* FloatModN.cpp */,
 				2AEB263A1EBF6783002F6733 /* Interface.cpp */,
 				2AEB263B1EBF6783002F6733 /* IntModN.cpp */,
 				2AEB263C1EBF6783002F6733 /* logging.cpp */,
@@ -387,6 +463,7 @@
 				2AEB26421EBF67C2002F6733 /* ActionInterface.h */,
 				2AEB26431EBF67C2002F6733 /* Buffer.h */,
 				2AEB26441EBF67C2002F6733 /* config.h */,
+				2A9F398D1EC78F0400D7B720 /* FloatModN.h */,
 				2AEB26451EBF67C2002F6733 /* Interface.h */,
 				2AEB26461EBF67C2002F6733 /* IntModN.h */,
 				2AEB26471EBF67C2002F6733 /* logging.h */,
@@ -503,11 +580,6 @@
 		2AEB26501EBF6897002F6733 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				2AEB26931EBF6915002F6733 /* Events */,
-				2AEB26B71EBF6915002F6733 /* Video */,
-				2AEB26AA1EBF6915002F6733 /* Physics */,
-				2AEB26A11EBF6915002F6733 /* GameLogic */,
-				2AEB268B1EBF6915002F6733 /* AI */,
 				2AEB26891EBF6915002F6733 /* ActorInfo.h */,
 				2AEB268A1EBF6915002F6733 /* ActorType.h */,
 				2AEB26901EBF6915002F6733 /* Control.h */,
@@ -526,86 +598,10 @@
 			name = include;
 			sourceTree = "<group>";
 		};
-		2AEB268B1EBF6915002F6733 /* AI */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB268C1EBF6915002F6733 /* Actor.h */,
-				2AEB268D1EBF6915002F6733 /* AI.h */,
-				2AEB268E1EBF6915002F6733 /* Data.h */,
-				2AEB268F1EBF6915002F6733 /* Saucer.h */,
-			);
-			name = AI;
-			path = ../../../src/include/kxm/Zarch/AI;
-			sourceTree = "<group>";
-		};
-		2AEB26931EBF6915002F6733 /* Events */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB26941EBF6915002F6733 /* AccelerationEvent.h */,
-				2AEB26951EBF6915002F6733 /* ActorCreationEvent.h */,
-				2AEB26961EBF6915002F6733 /* ActorTerminationEvent.h */,
-				2AEB26971EBF6915002F6733 /* ControlsCoreEvent.h */,
-				2AEB26981EBF6915002F6733 /* ControlsEvent.h */,
-				2AEB26991EBF6915002F6733 /* ControlsRejectionEvent.h */,
-				2AEB269A1EBF6915002F6733 /* ControlsRequestEvent.h */,
-				2AEB269B1EBF6915002F6733 /* InitializationEvent.h */,
-				2AEB269C1EBF6915002F6733 /* MoveEvent.h */,
-				2AEB269D1EBF6915002F6733 /* TriggerEvent.h */,
-				2AEB269E1EBF6915002F6733 /* VelocityEvent.h */,
-				2AEB269F1EBF6915002F6733 /* ZarchEvent.h */,
-			);
-			name = Events;
-			path = ../../../src/include/kxm/Zarch/Events;
-			sourceTree = "<group>";
-		};
-		2AEB26A11EBF6915002F6733 /* GameLogic */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB26A21EBF6915002F6733 /* Actor.h */,
-				2AEB26A31EBF6915002F6733 /* Data.h */,
-				2AEB26A41EBF6915002F6733 /* GameLogic.h */,
-				2AEB26A51EBF6915002F6733 /* Lander.h */,
-				2AEB26A61EBF6915002F6733 /* Saucer.h */,
-				2AEB26A71EBF6915002F6733 /* Shot.h */,
-			);
-			name = GameLogic;
-			path = ../../../src/include/kxm/Zarch/GameLogic;
-			sourceTree = "<group>";
-		};
-		2AEB26AA1EBF6915002F6733 /* Physics */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB26AB1EBF6915002F6733 /* Actor.h */,
-				2AEB26AC1EBF6915002F6733 /* Body.h */,
-				2AEB26AD1EBF6915002F6733 /* Data.h */,
-				2AEB26AE1EBF6915002F6733 /* Lander.h */,
-				2AEB26AF1EBF6915002F6733 /* Physics.h */,
-				2AEB26B01EBF6915002F6733 /* Saucer.h */,
-				2AEB26B11EBF6915002F6733 /* Shot.h */,
-			);
-			name = Physics;
-			path = ../../../src/include/kxm/Zarch/Physics;
-			sourceTree = "<group>";
-		};
-		2AEB26B71EBF6915002F6733 /* Video */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB26B81EBF6915002F6733 /* Actor.h */,
-				2AEB26B91EBF6915002F6733 /* Data.h */,
-				2AEB26BA1EBF6915002F6733 /* Lander.h */,
-				2AEB26BB1EBF6915002F6733 /* Saucer.h */,
-				2AEB26BC1EBF6915002F6733 /* Shot.h */,
-				2AEB26BD1EBF6915002F6733 /* StarField.h */,
-				2AEB26BE1EBF6915002F6733 /* TerrainRenderer.h */,
-				2AEB26BF1EBF6915002F6733 /* Video.h */,
-			);
-			name = Video;
-			path = ../../../src/include/kxm/Zarch/Video;
-			sourceTree = "<group>";
-		};
 		2AEB26E71EBF69AE002F6733 /* AI */ = {
 			isa = PBXGroup;
 			children = (
+				2A9F398C1EC7766A00D7B720 /* include */,
 				2AEB26E81EBF69AE002F6733 /* Actor.cpp */,
 				2AEB26E91EBF69AE002F6733 /* AI.cpp */,
 				2AEB26EA1EBF69AE002F6733 /* Saucer.cpp */,
@@ -617,6 +613,7 @@
 		2AEB26EC1EBF69AE002F6733 /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				2A9F39881EC775EB00D7B720 /* include */,
 				2AEB26ED1EBF69AE002F6733 /* AccelerationEvent.cpp */,
 				2AEB26EE1EBF69AE002F6733 /* ActorCreationEvent.cpp */,
 				2AEB26EF1EBF69AE002F6733 /* ActorTerminationEvent.cpp */,
@@ -636,6 +633,7 @@
 		2AEB26F81EBF69AE002F6733 /* GameLogic */ = {
 			isa = PBXGroup;
 			children = (
+				2A9F398B1EC7765600D7B720 /* include */,
 				2AEB26F91EBF69AE002F6733 /* Actor.cpp */,
 				2AEB26FA1EBF69AE002F6733 /* GameLogic.cpp */,
 				2AEB26FB1EBF69AE002F6733 /* Lander.cpp */,
@@ -649,6 +647,7 @@
 		2AEB27001EBF69AE002F6733 /* Physics */ = {
 			isa = PBXGroup;
 			children = (
+				2A9F398A1EC7764200D7B720 /* include */,
 				2AEB27011EBF69AE002F6733 /* Actor.cpp */,
 				2AEB27021EBF69AE002F6733 /* Body.cpp */,
 				2AEB27031EBF69AE002F6733 /* Lander.cpp */,
@@ -663,6 +662,7 @@
 		2AEB270C1EBF69AE002F6733 /* Video */ = {
 			isa = PBXGroup;
 			children = (
+				2A9F39891EC7762F00D7B720 /* include */,
 				2AEB270D1EBF69AE002F6733 /* Actor.cpp */,
 				2AEB270E1EBF69AE002F6733 /* Lander.cpp */,
 				2AEB270F1EBF69AE002F6733 /* Saucer.cpp */,
@@ -856,6 +856,7 @@
 				2AEB272D1EBF69AE002F6733 /* Lander.cpp in Sources */,
 				2AEB27271EBF69AE002F6733 /* Saucer.cpp in Sources */,
 				2AEB272E1EBF69AE002F6733 /* Physics.cpp in Sources */,
+				2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */,
 				2AEB27151EBF69AE002F6733 /* Actor.cpp in Sources */,
 				2AEB271B1EBF69AE002F6733 /* ActorTerminationEvent.cpp in Sources */,
 				2AEB26E51EBF699B002F6733 /* Event.cpp in Sources */,

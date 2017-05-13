@@ -2,6 +2,7 @@
 #define KXM_ZARCH_PHYSICS_LANDER_H_
 
 #include <memory>
+#include <kxm/Core/FloatModN.h>
 #include <kxm/Vectoid/Vector.h>
 #include <kxm/Vectoid/PointCollisionChecker.h>
 #include <kxm/Zarch/Physics/Actor.h>
@@ -44,7 +45,9 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
                                    axis2_;
     bool                           thrusterActive_,
                                    oldThrusterActive_;
-    Vectoid::Vector                heading_;
+    Vectoid::Vector                headingVector_;
+    Core::FloatModN                heading_,
+                                   pitch_;
     bool                           killVelocity_;
     Vectoid::PointCollisionChecker collisionChecker_;
 };

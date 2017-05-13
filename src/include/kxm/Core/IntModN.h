@@ -23,6 +23,8 @@ class IntModN {
      *  over <c>[offset, offset + modulus - 1]</c>.
      */
     IntModN(int modulus, int offset);
+    // Default copy and move ok.
+    
     //! Well...
     bool operator==(const IntModN &other) const;
     //! Well...

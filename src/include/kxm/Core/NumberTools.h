@@ -26,9 +26,19 @@ inline void ClampMin(int *numba, int min) {
         *numba = min;
 }
 
+inline void ClampMax(int *numba, int max) {
+    if (*numba > max)
+        *numba = max;
+}
+
 inline void ClampMin(float *numba, float min) {
     if (*numba < min)
         *numba = min;
+}
+
+inline void ClampMax(float *numba, float max) {
+    if (*numba > max)
+        *numba = max;
 }
 
 }    // Namespace NumberTools.
