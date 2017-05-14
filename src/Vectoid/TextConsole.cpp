@@ -1,16 +1,14 @@
-#include "TextConsole.h"
+#include <kxm/Vectoid/TextConsole.h>
 
 #include <string>
 #include <cassert>
-#include <Vectoid/OpenGL.h>
-
-#include "Glyphs.h"
+#include <kxm/Vectoid/OpenGL.h>
+#include <kxm/Vectoid/Glyphs.h>
 
 using namespace std;
-using namespace kxm::Vectoid;
 
-
-namespace Raspiator {
+namespace kxm {
+namespace Vectoid {
 
 TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
                          shared_ptr<Glyphs> glyphs)
@@ -119,5 +117,6 @@ void TextConsole::Render(RenderContext *context) {
     glDisable(GL_BLEND);
 }
 
-}    // Namespace Raspiator.
+}    // Namespace Vectoid.
+}    // Namespace kxm.
 

@@ -1,13 +1,16 @@
-#ifndef RASPIATOR_GLYPHS_H_
-#define RASPIATOR_GLYPHS_H_
+#ifndef KXM_VECTOID_GLYPHS_H_
+#define KXM_VECTOID_GLYPHS_H_
 
 
-#include <Vectoid/OpenGL.h>
+#include <kxm/Vectoid/OpenGL.h>
 
-
-namespace Raspiator {
+namespace kxm {
+namespace Vectoid {
 
 //! Manages textures for text glyphs.
+/*! 
+ *  \ingroup Vectoid
+ */
 class Glyphs {
   public:
     Glyphs();
@@ -20,12 +23,12 @@ class Glyphs {
     void BindGlyphTexture(uint8_t glyph);
     
   private:
-    void GenerateTextures();
-  
     static const int     numGlyphs,
                          glyphWidth, glyphHeight;
     static const uint8_t glyphData[],
                          glyphCodes[];
+  
+    void GenerateTextures();
                          
     GLuint  textures_[256];
     uint8_t defaultGlyph_;
@@ -33,7 +36,8 @@ class Glyphs {
             haveDefaultGlyph_;
 };
 
-}    // Namespace Raspiator.
+}    // Namespace Vectoid.
+}    // Namespace kxm.
 
 
-#endif    // RASPIATOR_GLYPHS_H_
+#endif    // KXM_VECTOID_GLYPHS_H_

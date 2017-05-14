@@ -1,9 +1,7 @@
-#include "Glyphs.h"
+#include <kxm/Vectoid/Glyphs.h>
 
-using namespace std;
-
-
-namespace Raspiator {
+namespace kxm {
+namespace Vectoid {
 
 Glyphs::Glyphs()
         : defaultGlyph_(0),
@@ -2731,5 +2729,7 @@ const uint8_t Glyphs::glyphCodes[] = {
     0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x2e, 0x2c, 0x21, 0x3f, 0x28, 0x29, 0x5b, 0x5d, 0x2b, 0x2d, 0x2a, 0x2f, 0x3d
 };
 
-}    // Namespace Raspiator.
+}    // Namespace Vectoid.
+}    // Namespace kxm.
+
 

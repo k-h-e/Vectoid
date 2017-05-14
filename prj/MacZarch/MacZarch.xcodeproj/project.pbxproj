@@ -81,6 +81,8 @@
 		2AEB273C1EBF69AF002F6733 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB27131EBF69AE002F6733 /* Video.cpp */; };
 		2AEB273D1EBF69AF002F6733 /* Zarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB27141EBF69AE002F6733 /* Zarch.cpp */; };
 		2AEB27401EBF6E83002F6733 /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB273F1EBF6E83002F6733 /* GLView.mm */; };
+		2AF6591B1EC8CDC9001D6034 /* Glyphs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF6591A1EC8CDC9001D6034 /* Glyphs.cpp */; };
+		2AF6591D1EC8CDDD001D6034 /* TextConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AF6591C1EC8CDDD001D6034 /* TextConsole.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -277,6 +279,10 @@
 		2AEB273E1EBF6E83002F6733 /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		2AEB273F1EBF6E83002F6733 /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLView.mm; sourceTree = "<group>"; };
 		2AEB27421EBF6FD4002F6733 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		2AF6591A1EC8CDC9001D6034 /* Glyphs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Glyphs.cpp; path = ../../../src/Vectoid/Glyphs.cpp; sourceTree = "<group>"; };
+		2AF6591C1EC8CDDD001D6034 /* TextConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextConsole.cpp; path = ../../../src/Vectoid/TextConsole.cpp; sourceTree = "<group>"; };
+		2AF6591E1EC8CDF2001D6034 /* Glyphs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Glyphs.h; path = ../../../src/include/kxm/Vectoid/Glyphs.h; sourceTree = "<group>"; };
+		2AF6591F1EC8CDFD001D6034 /* TextConsole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TextConsole.h; path = ../../../src/include/kxm/Vectoid/TextConsole.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -486,6 +492,7 @@
 				2AEB26C61EBF6987002F6733 /* CoordSys.cpp */,
 				2AEB26C71EBF6987002F6733 /* CoordSysCore.cpp */,
 				2AEB26C81EBF6987002F6733 /* Geode.cpp */,
+				2AF6591A1EC8CDC9001D6034 /* Glyphs.cpp */,
 				2AEB26C91EBF6987002F6733 /* Particles.cpp */,
 				2AEB26CA1EBF6987002F6733 /* ParticlesRenderer.cpp */,
 				2AEB26CB1EBF6987002F6733 /* PerspectiveProjection.cpp */,
@@ -493,6 +500,7 @@
 				2AEB26CD1EBF6987002F6733 /* Range.cpp */,
 				2AEB26CE1EBF6987002F6733 /* SceneGraphNode.cpp */,
 				2AEB26CF1EBF6987002F6733 /* TestTriangle.cpp */,
+				2AF6591C1EC8CDDD001D6034 /* TextConsole.cpp */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -545,6 +553,7 @@
 				2AEB26711EBF68CC002F6733 /* CoordSysCore.h */,
 				2AEB26721EBF68CC002F6733 /* CoordSysInterface.h */,
 				2AEB26731EBF68CC002F6733 /* Geode.h */,
+				2AF6591E1EC8CDF2001D6034 /* Glyphs.h */,
 				2AEB26741EBF68CC002F6733 /* GeometryInterface.h */,
 				2AEB26751EBF68CC002F6733 /* HasBoundingBoxInterface.h */,
 				2AEB26761EBF68CC002F6733 /* HasTransformInterface.h */,
@@ -556,6 +565,7 @@
 				2AEB267C1EBF68CC002F6733 /* Range.h */,
 				2AEB267D1EBF68CC002F6733 /* SceneGraphNode.h */,
 				2AEB267E1EBF68CC002F6733 /* TestTriangle.h */,
+				2AF6591F1EC8CDFD001D6034 /* TextConsole.h */,
 				2AEB267F1EBF68CC002F6733 /* Transform.h */,
 				2AEB26801EBF68CC002F6733 /* Vector.h */,
 			);
@@ -870,6 +880,7 @@
 				2AEB27241EBF69AE002F6733 /* Actor.cpp in Sources */,
 				2AEB272F1EBF69AE002F6733 /* Saucer.cpp in Sources */,
 				2AEB26DC1EBF6987002F6733 /* Range.cpp in Sources */,
+				2AF6591D1EC8CDDD001D6034 /* TextConsole.cpp in Sources */,
 				2AEB27311EBF69AE002F6733 /* Presentation.cpp in Sources */,
 				2AEB26D11EBF6987002F6733 /* BoundingBox.cpp in Sources */,
 				2AEB27181EBF69AE002F6733 /* EventHandlerCore.cpp in Sources */,
@@ -881,6 +892,7 @@
 				2AEB27331EBF69AE002F6733 /* SimpleGeometry.cpp in Sources */,
 				2AEB27291EBF69AE002F6733 /* LanderGeometry.cpp in Sources */,
 				2AEB26E41EBF699B002F6733 /* ActorNaming.cpp in Sources */,
+				2AF6591B1EC8CDC9001D6034 /* Glyphs.cpp in Sources */,
 				2AEB26DE1EBF6987002F6733 /* TestTriangle.cpp in Sources */,
 				2AEB272A1EBF69AE002F6733 /* MapParameters.cpp in Sources */,
 				2AEB27351EBF69AE002F6733 /* Terrain.cpp in Sources */,

@@ -28,7 +28,7 @@ using namespace kxm::Zarch;
     GCControllerAxisInput     *xAxis,           // Valid <=> haveGamePad.
                               *yAxis;           // Valid <=> haveGamePad.
     GCControllerButtonInput   *rightTrigger,    // Valid <=> haveGamePad.
-                              *buttonB;         // Valid <=> haveGamePad.
+                              *buttonA;         // Valid <=> haveGamePad.
 }
 
 @end
@@ -53,8 +53,8 @@ using namespace kxm::Zarch;
         float x = xAxis.value,
               y = yAxis.value;
         controlsState->orientation = Vector(x, y, 0.0f);
-        controlsState->thruster    = buttonB.pressed;
-        controlsState->trigger     = rightTrigger.pressed;
+        controlsState->thruster    = rightTrigger.pressed;
+        controlsState->trigger     = buttonA.pressed;
     }
     else {
         NSArray<GCController *> *controllers = [GCController controllers];
@@ -67,13 +67,13 @@ using namespace kxm::Zarch;
                 }
                 
                 rightTrigger = gamePad.rightTrigger;
-                buttonB = gamePad.buttonB;
-                haveGamePad = xAxis && yAxis && rightTrigger && buttonB;
+                buttonA = gamePad.buttonA;
+                haveGamePad = xAxis && yAxis && rightTrigger && buttonA;
                 if (!haveGamePad) {
                     xAxis        = nil;
                     yAxis        = nil;
                     rightTrigger = nil;
-                    buttonB      = nil;
+                    buttonA      = nil;
                 }
             }
         }

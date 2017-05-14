@@ -22,6 +22,7 @@ namespace Vectoid {
     class Camera;
     class CoordSys;
     class Particles;
+    class TextConsole;
 }
 
 namespace Zarch {
@@ -44,6 +45,8 @@ struct Data {
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
     std::shared_ptr<Vectoid::Camera>                camera;
     std::shared_ptr<Vectoid::Particles>             shotParticles;
+    std::shared_ptr<Vectoid::TextConsole>           statsConsole;
+    std::shared_ptr<Vectoid::CoordSys>              statsConsoleCoordSys;
     std::shared_ptr<TerrainRenderer>                terrainRenderer;
     std::shared_ptr<MapParameters>                  mapParameters;
     std::shared_ptr<Terrain>                        terrain;

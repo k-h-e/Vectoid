@@ -88,6 +88,8 @@ void Lander::Handle(const MoveEvent &event) {
         }
         position.z += 5.0f;
         data_->camera->SetPosition(position);
+        
+        data_->statsConsoleCoordSys->SetPosition(position + Vector(0.0f, -2.0f, -.1f));
     }
 }
 

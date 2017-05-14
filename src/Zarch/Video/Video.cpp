@@ -8,6 +8,8 @@
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
 #include <kxm/Vectoid/Transform.h>
+#include <kxm/Vectoid/Glyphs.h>
+#include <kxm/Vectoid/TextConsole.h>
 #include <kxm/Game/EventLoop.h>
 #include <kxm/Game/Actions.h>
 #include <kxm/Zarch/ControlsState.h>
@@ -73,6 +75,12 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->shotParticles = shotParticles;
     data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(shotParticles)));
     data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(starFieldParticles)));
+    
+    data_->statsConsole = make_shared<TextConsole>(20, 4, .2f, .2f, make_shared<Glyphs>());
+    data_->statsConsoleCoordSys = make_shared<CoordSys>();
+    data_->statsConsoleCoordSys->AddChild(make_shared<Geode>(data_->statsConsole));
+    data_->camera->AddChild(data_->statsConsoleCoordSys);
+    data_->statsConsole->WriteLine("Hello, world");
     
     starField_ = unique_ptr<StarField>(new StarField(data_, starFieldParticles));
     actions_->Register(starField_.get());
