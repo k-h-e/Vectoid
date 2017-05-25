@@ -1,5 +1,6 @@
 /*!
- *  \defgroup Game Game Infrastructure
+ *  \defgroup Game Game
+ *  \brief Reusable game infrastructure, like event bus and actor naming scheme.
  */
 
 #ifndef KXM_GAME_EVENT_H_

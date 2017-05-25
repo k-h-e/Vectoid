@@ -1,5 +1,6 @@
 #include <kxm/Zarch/Video/Lander.h>
 
+#include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
 #include <kxm/Vectoid/Geode.h>
@@ -89,7 +90,7 @@ void Lander::Handle(const MoveEvent &event) {
         position.z += 5.0f;
         data_->camera->SetPosition(position);
         
-        data_->statsConsoleCoordSys->SetPosition(position + Vector(0.0f, -2.0f, -.1f));
+        data_->statsConsoleCoordSys->SetPosition(position + data_->statsConsolePosition);
     }
 }
 

@@ -90,21 +90,25 @@ void TextConsole::Render(RenderContext *context) {
           y           = top;
     uint8_t *ptr = &buffer_[rowCursor_ * width_];
     for (int row = 0; row < height_; ++row) {
-        if (rowCursor_ + row == height_)
+        if (rowCursor_ + row == height_) {
             ptr = &buffer_[0];
+        }
         float nextY = y - glyphHeight_;
         for (int col = 0; col < width_; ++col) {
             float nextX = x + glyphWidth_;
-            vertices[ 0] = x;        vertices[ 1] = nextY;
-            vertices[ 3] = nextX;    vertices[ 4] = nextY;
-            vertices[ 6] = nextX;    vertices[ 7] = y;
+            if (*ptr != ' ') {
+                vertices[ 0] = x;        vertices[ 1] = nextY;
+                vertices[ 3] = nextX;    vertices[ 4] = nextY;
+                vertices[ 6] = nextX;    vertices[ 7] = y;
 
-            vertices[ 9] = x;        vertices[10] = nextY;
-            vertices[12] = nextX;    vertices[13] = y;
-            vertices[15] = x;        vertices[16] = y;
+                vertices[ 9] = x;        vertices[10] = nextY;
+                vertices[12] = nextX;    vertices[13] = y;
+                vertices[15] = x;        vertices[16] = y;
 
-            glyphs_->BindGlyphTexture(*ptr++);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+                glyphs_->BindGlyphTexture(*ptr);
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            }
+            ptr++;
             x = nextX;
         }
         x = left;

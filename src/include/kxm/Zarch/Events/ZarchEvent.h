@@ -2,6 +2,7 @@
  * \ingroup Zarch
  *
  * \defgroup ZarchEvents Events
+ * \brief Zarch's game events.
  */
 
 #ifndef KXM_ZARCH_ZARCHEVENT_H_

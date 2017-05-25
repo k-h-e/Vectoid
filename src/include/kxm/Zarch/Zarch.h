@@ -3,6 +3,7 @@
 
 /*!
  *  \defgroup Zarch Zarch
+ *  \brief Zarch-like game.
  */
 
 #include <memory>

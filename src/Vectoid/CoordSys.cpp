@@ -6,6 +6,7 @@ namespace kxm {
 namespace Vectoid {
 
 CoordSys::CoordSys() {
+    // Nop.
 }
 
 void CoordSys::Render(RenderContext *context) {

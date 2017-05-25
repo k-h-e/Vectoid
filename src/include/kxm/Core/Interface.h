@@ -2,7 +2,10 @@
 #define KXM_CORE_INTERFACE_H_
 
 /*!
- *  \defgroup Core Platform Core
+ *  \defgroup Core Core
+ *  \brief Platform core classes.
+ *
+ *
  */
 
 namespace kxm {

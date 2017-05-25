@@ -13,11 +13,15 @@ SceneGraphNode::SceneGraphNode() {
 }
 
 SceneGraphNode::~SceneGraphNode() {
-    RemoveAllChildren();
+    // Nop.
 }
 
 void SceneGraphNode::AddChild(const shared_ptr<SceneGraphNode> &child) {
     children_.push_back(child);
+}
+
+void SceneGraphNode::AddAsLastChild(const shared_ptr<SceneGraphNode> &child) {
+    lastChild_ = child;
 }
 
 void SceneGraphNode::RemoveChild(const std::shared_ptr<SceneGraphNode> &child) {
@@ -28,15 +32,23 @@ void SceneGraphNode::RemoveChild(const std::shared_ptr<SceneGraphNode> &child) {
             children_.push_back(aChild);
         }
     }
+    if (lastChild_ == child) {
+        lastChild_.reset();
+    }
 }
 
 void SceneGraphNode::RemoveAllChildren() {
     children_.clear();
+    lastChild_.reset();
 }
 
 void SceneGraphNode::Render(RenderContext *context) {
-    for (int i = 0; i < children_.size(); i++)
-        children_[i]->Render(context);
+    for (auto &child : children_) {
+        child->Render(context);
+    }
+    if (lastChild_) {
+        lastChild_->Render(context);
+    }
 }
 
 }    // Namespace Vectoid.

@@ -2,6 +2,7 @@
  * \ingroup Zarch
  *
  * \defgroup ZarchPhysics Physics
+ * \brief Zarch's physics subsystem.
  */
 
 #ifndef KXM_ZARCH_PHYSICS_PHYSICS_H_

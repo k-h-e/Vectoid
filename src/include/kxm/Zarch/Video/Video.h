@@ -76,7 +76,6 @@ class Video : public EventHandlerCore {
     Game::ReusableActors<Saucer>                                   saucers_;
     std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
-    
     bool                                                           thruster_,
                                                                    trigger_;
 };

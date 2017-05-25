@@ -2,6 +2,7 @@
  * \ingroup Zarch
  *
  * \defgroup ZarchGameLogic Game Logic
+ * \brief Zarch's game logic subsystem.
  */
 
 #ifndef KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_

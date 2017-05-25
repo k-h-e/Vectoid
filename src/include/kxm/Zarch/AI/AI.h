@@ -2,6 +2,7 @@
  * \ingroup Zarch
  *
  * \defgroup ZarchAI AI
+ * \brief Zarch's AI subsystem.
  */
 
 #ifndef KXM_ZARCH_AI_AI_H_

@@ -78,9 +78,17 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     
     data_->statsConsole = make_shared<TextConsole>(20, 4, .2f, .2f, make_shared<Glyphs>());
     data_->statsConsoleCoordSys = make_shared<CoordSys>();
+    Transform transform(YAxis, -40.0f);
+    transform.Prepend(Transform(ZAxis, -12.0f));
+    transform.Prepend(Transform(XAxis,  30.0f));
+    data_->statsConsoleCoordSys->SetTransform(transform);
     data_->statsConsoleCoordSys->AddChild(make_shared<Geode>(data_->statsConsole));
-    data_->camera->AddChild(data_->statsConsoleCoordSys);
-    data_->statsConsole->WriteLine("Hello, world");
+    data_->camera->AddAsLastChild(data_->statsConsoleCoordSys);
+    data_->statsConsole->WriteLine("      SCORE 00000000");
+    data_->statsConsole->WriteLine("FPS   FUEL  00000000");
+    data_->statsConsole->WriteLine("000   LIVES      000");
+    data_->statsConsole->WriteLine("");
+    
     
     starField_ = unique_ptr<StarField>(new StarField(data_, starFieldParticles));
     actions_->Register(starField_.get());
@@ -92,6 +100,9 @@ Video::~Video() {
 
 void Video::SetViewPort(int width, int height) {
     data_->projection->SetViewPort((float)width, (float)height);
+    
+    data_->statsConsolePosition =   data_->projection->TransformViewPortCoordinates(width, 0)
+                                  + Vector(-1.5f, 0.0f, -1.5f);
 }
 
 void Video::PrepareFrame(const ControlsState &controlsState) {

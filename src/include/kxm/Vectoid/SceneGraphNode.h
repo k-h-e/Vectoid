@@ -18,9 +18,19 @@ class RenderContext;
 class SceneGraphNode : public virtual Core::Interface {
   public:
     SceneGraphNode();
+    SceneGraphNode(const SceneGraphNode &other)            = delete;
+    SceneGraphNode &operator=(const SceneGraphNode &other) = delete;
+    SceneGraphNode(SceneGraphNode &&other)                 = delete;
+    SceneGraphNode &operator=(SceneGraphNode &&other)      = delete;
     ~SceneGraphNode();
     //! Adds the specified node as child of the receiver node.
     void AddChild(const std::shared_ptr<SceneGraphNode> &child);
+    //! Adds the specified node as child in a special slot: if the "last" child is present, it will always be visited
+    //! last, e.g. when rendering.
+    /*!
+     *  If a child node was already attached in the "last child" slot, it is removed. 
+     */
+    void AddAsLastChild(const std::shared_ptr<SceneGraphNode> &child);
     //! Removes the specified child from the node, if it is in fact registered as a child.
     void RemoveChild(const std::shared_ptr<SceneGraphNode> &child);
     //! Removes all child nodes from the scene graph node.
@@ -30,10 +40,8 @@ class SceneGraphNode : public virtual Core::Interface {
     virtual void Render(RenderContext *context);
     
   private:
-    SceneGraphNode(const SceneGraphNode &other);
-    SceneGraphNode &operator=(const SceneGraphNode &other);
-    
     std::vector<std::shared_ptr<SceneGraphNode>> children_;
+    std::shared_ptr<SceneGraphNode>              lastChild_;
 };
     
 }    // Namespace Vectoid.

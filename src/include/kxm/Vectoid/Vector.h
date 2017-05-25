@@ -5,7 +5,8 @@
 #include <string>
 
 /*!
- *  \defgroup Vectoid Vectoid 3D Graphics
+ *  \defgroup Vectoid Vectoid
+ *  \brief 3D graphics engine.
  */
 
 namespace kxm {
