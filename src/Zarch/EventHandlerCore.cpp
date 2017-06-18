@@ -49,6 +49,10 @@ void EventHandlerCore::Handle(const ControlsRejectionEvent &event) {
     Log(this).Stream() << "Unhandled ControlsRejectionEvent!" << endl;
 }
 
+void EventHandlerCore::Handle(const PlayerStatsEvent &event) {
+    Log(this).Stream() << "Unhandled PlayeStatsEvent!" << endl;
+}
+
 void EventHandlerCore::Handle(const FrameGeneratedEvent &event) {
     Log(this).Stream() << "Unhandled FrameGeneratedEvent!" << endl;
 }

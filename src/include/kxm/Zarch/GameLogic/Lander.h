@@ -30,8 +30,12 @@ class Lander : public Actor {
     void ExecuteAction();
     
   private:
-    bool  trigger_;
+    bool  trigger_,
+          thruster_;
     float triggerTimeS_;
+    float fuel_,
+          fuelMax_,
+          fuelConsumptionPerS_;
 };
 
 }    // Namespace GameLogic.

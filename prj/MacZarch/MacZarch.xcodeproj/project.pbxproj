@@ -11,6 +11,7 @@
 		2A9890DA1EBFAD1F0061F6F4 /* GLViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A9890D91EBFAD1F0061F6F4 /* GLViewController.mm */; };
 		2A9F39871EC3B0AE00D7B720 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A9F39861EC3B0AE00D7B720 /* GameController.framework */; };
 		2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A9F398E1EC78F4000D7B720 /* FloatModN.cpp */; };
+		2ABC115E1EF728C400171924 /* PlayerStatsEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABC115D1EF728C400171924 /* PlayerStatsEvent.cpp */; };
 		2AEB260D1EBF6651002F6733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB260C1EBF6651002F6733 /* AppDelegate.swift */; };
 		2AEB26111EBF6651002F6733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AEB26101EBF6651002F6733 /* Assets.xcassets */; };
 		2AEB26141EBF6651002F6733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AEB26121EBF6651002F6733 /* Main.storyboard */; };
@@ -109,6 +110,8 @@
 		2A9F39861EC3B0AE00D7B720 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		2A9F398D1EC78F0400D7B720 /* FloatModN.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FloatModN.h; path = ../../../src/include/kxm/Core/FloatModN.h; sourceTree = "<group>"; };
 		2A9F398E1EC78F4000D7B720 /* FloatModN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FloatModN.cpp; path = ../../../src/Core/FloatModN.cpp; sourceTree = "<group>"; };
+		2ABC115C1EF7289B00171924 /* PlayerStatsEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlayerStatsEvent.h; path = ../../include/kxm/Zarch/Events/PlayerStatsEvent.h; sourceTree = "<group>"; };
+		2ABC115D1EF728C400171924 /* PlayerStatsEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerStatsEvent.cpp; sourceTree = "<group>"; };
 		2AEB26091EBF6650002F6733 /* MacZarch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacZarch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AEB260C1EBF6651002F6733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2AEB26101EBF6651002F6733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -324,6 +327,7 @@
 				2AEB269A1EBF6915002F6733 /* ControlsRequestEvent.h */,
 				2AEB269B1EBF6915002F6733 /* InitializationEvent.h */,
 				2AEB269C1EBF6915002F6733 /* MoveEvent.h */,
+				2ABC115C1EF7289B00171924 /* PlayerStatsEvent.h */,
 				2AEB269D1EBF6915002F6733 /* TriggerEvent.h */,
 				2AEB269E1EBF6915002F6733 /* VelocityEvent.h */,
 				2AEB269F1EBF6915002F6733 /* ZarchEvent.h */,
@@ -633,6 +637,7 @@
 				2AEB26F31EBF69AE002F6733 /* ControlsRequestEvent.cpp */,
 				2AEB26F41EBF69AE002F6733 /* InitializationEvent.cpp */,
 				2AEB26F51EBF69AE002F6733 /* MoveEvent.cpp */,
+				2ABC115D1EF728C400171924 /* PlayerStatsEvent.cpp */,
 				2AEB26F61EBF69AE002F6733 /* TriggerEvent.cpp */,
 				2AEB26F71EBF69AE002F6733 /* VelocityEvent.cpp */,
 			);
@@ -865,6 +870,7 @@
 				2AEB26D61EBF6987002F6733 /* CoordSysCore.cpp in Sources */,
 				2AEB272D1EBF69AE002F6733 /* Lander.cpp in Sources */,
 				2AEB27271EBF69AE002F6733 /* Saucer.cpp in Sources */,
+				2ABC115E1EF728C400171924 /* PlayerStatsEvent.cpp in Sources */,
 				2AEB272E1EBF69AE002F6733 /* Physics.cpp in Sources */,
 				2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */,
 				2AEB27151EBF69AE002F6733 /* Actor.cpp in Sources */,

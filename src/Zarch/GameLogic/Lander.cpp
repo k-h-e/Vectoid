@@ -12,6 +12,7 @@
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/PlayerStatsEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 
 using namespace std;
@@ -25,14 +26,22 @@ namespace GameLogic {
 
 Lander::Lander()
         : trigger_(false),
-          triggerTimeS_(0.0f) {
+          thruster_(false),
+          triggerTimeS_(0.0f),
+          fuelMax_(20.0f),
+          fuel_(20.0f),
+          fuelConsumptionPerS_(1.0f) {
     // Nop.
 }
 
 void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
-    trigger_      = false;
-    triggerTimeS_ = 0.0f;
+    trigger_             = false;
+    thruster_            = false;
+    triggerTimeS_        = 0.0f;
+    fuelMax_             = 20.0f;
+    fuel_                = fuelMax_;
+    fuelConsumptionPerS_ = 1.0f;
 }
 
 void Lander::Handle(const ControlsRequestEvent &event) {
@@ -43,6 +52,10 @@ void Lander::Handle(const ControlsRequestEvent &event) {
         switch (control.Type()) {
             case TriggerControl:
                 trigger_ = (control.Argument() > .5f);
+                break;
+            case ThrusterControl:
+                thruster_ = (control.Argument() > .5f) && (fuel_ > 0.0f);
+                newEvent.AddControl(Control(ThrusterControl, thruster_ ? 1.0f : 0.0f));
                 break;
             default:
                 newEvent.AddControl(control);
@@ -55,6 +68,8 @@ void Lander::Handle(const ControlsRequestEvent &event) {
 }
 
 void Lander::ExecuteAction() {
+    PlayerStatsEvent statsEvent(name_);
+    
     if (trigger_) {
         triggerTimeS_ += data_->deltaTimeS;
     }
@@ -68,6 +83,20 @@ void Lander::ExecuteAction() {
             data_->mapParameters->shotVelocity * Vector(0.0f, 0.0f, 1.0f), name_));
         triggerTimeS_ -= data_->mapParameters->shotFiringInterval;
     }
+    
+    if (thruster_) {
+        fuel_ -= data_->deltaTimeS * fuelConsumptionPerS_;
+        if (fuel_ < 0.0f) {
+            ControlsEvent controlsEvent(name_);
+            controlsEvent.AddControl(Control(ThrusterControl, 0.0f));
+            data_->eventLoop->Post(controlsEvent);
+            fuel_     = 0.0f;
+            thruster_ = false;
+        }
+    }
+    
+    // TODO: Only send when updates present.
+    data_->eventLoop->Post(statsEvent);
 }
 
 }    // Namespace GameLogic.

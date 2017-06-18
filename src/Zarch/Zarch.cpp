@@ -14,6 +14,7 @@
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ControlsRejectionEvent.h>
+#include <kxm/Zarch/Events/PlayerStatsEvent.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
 
 using namespace std;
@@ -48,6 +49,7 @@ void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventL
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRequestEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRejectionEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new PlayerStatsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new TriggerEvent));
 }
 
