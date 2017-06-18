@@ -78,6 +78,8 @@ class Video : public EventHandlerCore {
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
     bool                                                           thruster_,
                                                                    trigger_;
+    int                                                            fpsFrameCounter_;
+    float                                                          fpsTimeS_;
 };
 
 }    // Namespace Video.

@@ -1,6 +1,7 @@
 #include <kxm/Zarch/Video/Video.h>
 
 #include <kxm/Core/logging.h>
+#include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/PerspectiveProjection.h>
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/CoordSys.h>
@@ -32,6 +33,7 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace kxm::Core;
 using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
@@ -47,7 +49,9 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
           saucers_(actions_),
           lastFrameTime_(steady_clock::now()),
           thruster_(false),
-          trigger_(false) {
+          trigger_(false),
+          fpsFrameCounter_(0),
+          fpsTimeS_(0.0f) {
     eventLoop_->RegisterHandler(ActorCreationEvent::type,    this);
     eventLoop_->RegisterHandler(ActorTerminationEvent::type, this);
     eventLoop_->RegisterHandler(ControlsEvent::type,         this);
@@ -222,6 +226,18 @@ void Video::Handle(const TriggerEvent &event) {
         auto iter = data_->shotParticles->GetIterator();
         while (Particles::ParticleInfo *particle = iter.Next()) {
             data_->mapParameters->CorrectForObserver(&particle->position, observerPosition);
+        }
+        
+        ++fpsFrameCounter_;
+        fpsTimeS_ += data_->frameDeltaTimeS;
+        if (fpsTimeS_ >= 2.0f) {
+            float fps = (float)fpsFrameCounter_ / fpsTimeS_;
+            NumberTools::Clamp(&fps, 0.0f, 500.0f);
+            char text[80];
+            std::sprintf(text, "%03d", (int)(fps + .5f));
+            data_->statsConsole->WriteAt(0, 2, text);
+            fpsFrameCounter_ = 0;
+            fpsTimeS_        = 0.0f;
         }
         
         data_->projection->Render(0);

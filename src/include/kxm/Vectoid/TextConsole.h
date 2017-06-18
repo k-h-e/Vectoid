@@ -26,7 +26,12 @@ class TextConsole : public virtual GeometryInterface {
     /*!
      *  \note Encoding is ASCII for now.
      */
-    void WriteLine(const std::string &line);
+    void WriteLine(const char *line);
+    //! Writes text at specified coordinates, without breaking into any new lines.
+    /*!
+     *  Does not change the \ref WriteLine() cursor.
+     */
+    void WriteAt(int column, int row, const char *text);
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
     void Render(RenderContext *context);
