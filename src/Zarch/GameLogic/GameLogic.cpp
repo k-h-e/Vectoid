@@ -100,10 +100,10 @@ void GameLogic::CreateActor(const ActorCreationEvent &event) {
     }
     
     assert(actor);
-    actor->SetData(data_);
-    actor->Handle(event);
     actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
     data_->eventLoop->Post(event);
+    actor->SetData(data_);
+    actor->Handle(event);
 }
 
 void GameLogic::TerminateActor(const ActorName &name) {

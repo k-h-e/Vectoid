@@ -28,9 +28,9 @@ Lander::Lander()
         : trigger_(false),
           thruster_(false),
           triggerTimeS_(0.0f),
-          fuelMax_(20.0f),
-          fuel_(20.0f),
-          fuelConsumptionPerS_(1.0f) {
+          maxFuel_(2000.0f),
+          fuel_(2000.0f),
+          fuelConsumptionPerS_(100.0f) {
     // Nop.
 }
 
@@ -39,9 +39,14 @@ void Lander::Handle(const ActorCreationEvent &event) {
     trigger_             = false;
     thruster_            = false;
     triggerTimeS_        = 0.0f;
-    fuelMax_             = 20.0f;
-    fuel_                = fuelMax_;
-    fuelConsumptionPerS_ = 1.0f;
+    maxFuel_             = 2000.0f;
+    fuel_                = maxFuel_;
+    fuelConsumptionPerS_ = 100.0f;
+    
+    PlayerStatsEvent statsEvent(name_);
+    statsEvent.AddStat(PlayerStatsEvent::MaxFuelStat, maxFuel_);
+    statsEvent.AddStat(PlayerStatsEvent::FuelStat, fuel_);
+    data_->eventLoop->Post(statsEvent);
 }
 
 void Lander::Handle(const ControlsRequestEvent &event) {
@@ -85,6 +90,7 @@ void Lander::ExecuteAction() {
     }
     
     if (thruster_) {
+        float oldFuel = fuel_;
         fuel_ -= data_->deltaTimeS * fuelConsumptionPerS_;
         if (fuel_ < 0.0f) {
             ControlsEvent controlsEvent(name_);
@@ -93,10 +99,14 @@ void Lander::ExecuteAction() {
             fuel_     = 0.0f;
             thruster_ = false;
         }
+        if (fuel_ != oldFuel) {
+            statsEvent.AddStat(PlayerStatsEvent::FuelStat, (int)(fuel_ + .5f));
+        }
     }
     
-    // TODO: Only send when updates present.
-    data_->eventLoop->Post(statsEvent);
+    if (statsEvent.StatCount()) {
+        data_->eventLoop->Post(statsEvent);
+    }
 }
 
 }    // Namespace GameLogic.

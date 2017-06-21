@@ -34,7 +34,7 @@ class Lander : public Actor {
           thruster_;
     float triggerTimeS_;
     float fuel_,
-          fuelMax_,
+          maxFuel_,
           fuelConsumptionPerS_;
 };
 

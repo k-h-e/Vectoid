@@ -30,6 +30,7 @@
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
+#include <kxm/Zarch/Events/PlayerStatsEvent.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -58,6 +59,7 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(MoveEvent::type,             this);
     eventLoop_->RegisterHandler(VelocityEvent::type,         this);
     eventLoop_->RegisterHandler(TriggerEvent::type,          this);
+    eventLoop_->RegisterHandler(PlayerStatsEvent::type,      this);
     
     data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
@@ -92,7 +94,6 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->statsConsole->WriteLine("FPS   FUEL  00000000");
     data_->statsConsole->WriteLine("000   LIVES      000");
     data_->statsConsole->WriteLine("");
-    
     
     starField_ = unique_ptr<StarField>(new StarField(data_, starFieldParticles));
     actions_->Register(starField_.get());
@@ -209,6 +210,25 @@ void Video::Handle(const VelocityEvent &event) {
     ActorInfo<Actor> *info = actorMap_.Get(event.actor);
     if (info && (info->Type() == LanderActor)) {
         info->Actor()->Handle(event);
+    }
+}
+
+void Video::Handle(const PlayerStatsEvent &event) {
+    if (!data_->focusLander.IsNone() && (data_->focusLander == event.actor)) {
+        char text[80];
+        PlayerStatsEvent::Stat stat;
+        for (int i = 0; i < event.StatCount(); ++i) {
+            event.GetStat(i, &stat);
+            switch (stat.type) {
+                case PlayerStatsEvent::FuelStat:
+                    NumberTools::Clamp(&stat.value, 0, 99999999);
+                    std::sprintf(text, "%08d", stat.value);
+                    data_->statsConsole->WriteAt(12, 1, text);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 

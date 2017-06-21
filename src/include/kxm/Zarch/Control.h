@@ -30,7 +30,7 @@ class Control {
               argument_(argument) {
         Core::NumberTools::Clamp(&argument_, -1.0f, 1.0f);
     }
-        // Default copy/move ok.
+    // Default copy/move ok.
     
     ControlType Type() const { return type_;     }
     float Argument() const   { return argument_; }
