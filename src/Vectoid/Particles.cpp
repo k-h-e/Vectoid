@@ -46,10 +46,6 @@ int Particles::Count() {
     return particles_.Count() - particles_.IdleCount();
 }
 
-ReusableItems<Particles::ParticleInfo>::Iterator Particles::GetIterator() {
-    return particles_.GetIterator(0);
-}
-
 Particles::ParticleInfo::ParticleInfo()
     : age(0.0f),
       hidden(false),

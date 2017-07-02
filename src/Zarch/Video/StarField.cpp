@@ -39,18 +39,17 @@ StarField::StarField(shared_ptr<Data> videoData, shared_ptr<Vectoid::Particles> 
 
 void StarField::ExecuteAction() {
     Data   &data = *data_;
-    Vector base = data.camera->Position();
-    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
-    while (Particles::ParticleInfo *particle = iter.Next()) {
-        Vector position = particle->position;
+    Vector base  = data.camera->Position();
+    for (Particles::ParticleInfo &particle : particles_->Iterate()) {
+        Vector position = particle.position;
         Range xRange(data.mapParameters->starFieldCoordRange, base.x);
         xRange.ClampModulo(&position.x);
         Range yRange(data.mapParameters->starFieldCoordRange, base.y);
         yRange.ClampModulo(&position.y);
         Range zRange(data.mapParameters->starFieldCoordRange, base.z);
         zRange.ClampModulo(&position.z);
-        particle->position = position;
-        particle->hidden   = (position.y < data.mapParameters->starFieldMinHeight);
+        particle.position = position;
+        particle.hidden   = (position.y < data.mapParameters->starFieldMinHeight);
     }
 }
 

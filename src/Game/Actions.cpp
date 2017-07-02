@@ -19,9 +19,8 @@ void Actions::Unregister(int id) {
 
 void Actions::Execute() {
     int num = 0;
-    auto iter = actions_.GetIterator(0);
-    while (ActionInterface **action = iter.Next()) {
-        (*action)->ExecuteAction();
+    for (ActionInterface *action : actions_.Iterate(0)) {
+        action->ExecuteAction();
         ++num;
     }
     //std::printf("executed %d actions\n", num);

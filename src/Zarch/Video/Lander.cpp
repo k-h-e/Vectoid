@@ -103,17 +103,20 @@ void Lander::ExecuteAction() {
     
     // Move and age particles...
     Vector landerPosition = coordSys_->Position();
-    ReusableItems<Particles::ParticleInfo>::Iterator iter = thrusterParticles_->GetIterator();
-    Particles::ParticleInfo *particle;
-    while ((particle = iter.Next())) {
+    auto iter = thrusterParticles_->Iterate().begin();
+    while (!iter.AtEnd()) {
+        Particles::ParticleInfo *particle = &*iter;
         particle->velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
         particle->position   += data.frameDeltaTimeS * particle->velocity;
         data.mapParameters->xRange.ClampModulo(&particle->position.x);
         data.mapParameters->zRange.ClampModulo(&particle->position.z);
         data.mapParameters->CorrectForObserver(&particle->position, landerPosition);
         particle->age        += data.frameDeltaTimeS;
-        if (particle->age >= data.mapParameters->maxThrusterParticleAge)
+        if (particle->age >= data.mapParameters->maxThrusterParticleAge) {
             thrusterParticles_->Remove(iter.ItemId());
+        }
+        
+        ++iter;
     }
     
     // Add new particles...?

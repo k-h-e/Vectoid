@@ -28,17 +28,15 @@ void Collider::IncludeChecksForGroupPair(int group0, int group1) {
 void Collider::Check() {
     Transform transform0, transform1;
     for (GroupPair &pair : groupPairsToCheck_) {
-        auto iter0 = collidables_.GetIterator(pair.group0);
-        while (CollidableInterface **collidable0 = iter0.Next()) {
-            (*collidable0)->GetTransform(&transform0);
-            auto iter1 = collidables_.GetIterator(pair.group1);
-            while (CollidableInterface **collidable1 = iter1.Next()) {
-                (*collidable1)->GetTransform(&transform1);
+        for (CollidableInterface *collidable0 : collidables_.Iterate(pair.group0)) {
+            collidable0->GetTransform(&transform0);
+            for (CollidableInterface *collidable1 : collidables_.Iterate(pair.group1)) {
+                collidable1->GetTransform(&transform1);
                 if (delegate_) {
                     delegate_->ModifyOtherTransform(&transform1, transform0);
                 }
-                if ((*collidable0)->CollisionChecker()->CheckCollision((*collidable1)->CollisionChecker(), transform1,
-                                                                       transform0)) {
+                if (collidable0->CollisionChecker()->CheckCollision(collidable1->CollisionChecker(), transform1,
+                                                                    transform0)) {
                     std::puts("    COLLISION");
                     std::exit(0);
                 }

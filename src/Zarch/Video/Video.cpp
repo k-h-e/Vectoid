@@ -243,9 +243,8 @@ void Video::Handle(const TriggerEvent &event) {
         
         Vector observerPosition;
         data_->terrainRenderer->GetObserverPosition(&observerPosition);
-        auto iter = data_->shotParticles->GetIterator();
-        while (Particles::ParticleInfo *particle = iter.Next()) {
-            data_->mapParameters->CorrectForObserver(&particle->position, observerPosition);
+        for (Particles::ParticleInfo &particle : data_->shotParticles->Iterate()) {
+            data_->mapParameters->CorrectForObserver(&particle.position, observerPosition);
         }
         
         ++fpsFrameCounter_;

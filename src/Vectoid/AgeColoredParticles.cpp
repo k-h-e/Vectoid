@@ -37,20 +37,18 @@ void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
     int     numToRender   = 0,
             numColorSlots = (int)colors_.size() -1;
     float   colorSlotSize = highAge_ / (float)numColorSlots;
-    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
-    Particles::ParticleInfo *particle;
-    Vector                   particleColor;
-    while ((particle = iter.Next())) {
-        if (particle->hidden)
+    Vector  particleColor;
+    for (Particles::ParticleInfo &particle : particles_->Iterate()) {
+        if (particle.hidden)
             continue;
-        int color = (int)(particle->age / highAge_ * (float)numColorSlots);
+        int color = (int)(particle.age / highAge_ * (float)numColorSlots);
         NumberTools::Clamp(&color, 0, numColorSlots - 1);
-        float t = (particle->age - (float)color*colorSlotSize) / colorSlotSize;
+        float t = (particle.age - (float)color*colorSlotSize) / colorSlotSize;
         NumberTools::Clamp(&t, 0.0f, 1.0f);
         particleColor = (1.0f - t)*colors_[color] + t*colors_[color + 1];
-        *vertexPtr++ = particle->position.x;
-        *vertexPtr++ = particle->position.y;
-        *vertexPtr++ = particle->position.z;
+        *vertexPtr++ = particle.position.x;
+        *vertexPtr++ = particle.position.y;
+        *vertexPtr++ = particle.position.z;
         *colorPtr++  = particleColor.x;
         *colorPtr++  = particleColor.y;
         *colorPtr++  = particleColor.z;

@@ -25,16 +25,16 @@ void ParticlesRenderer::Render(RenderContext *context) {
     
     GLfloat *ptr        = &vertexBuffer_[0];
     int     numToRender = 0;
-    ReusableItems<Particles::ParticleInfo>::Iterator iter = particles_->GetIterator();
-    Particles::ParticleInfo *particle;
-    while ((particle = iter.Next())) {
-        if (particle->hidden)
+    for (Particles::ParticleInfo &particle : particles_->Iterate()) {
+        if (particle.hidden) {
             continue;
-        *ptr++ = particle->position.x;
-        *ptr++ = particle->position.y;
-        *ptr++ = particle->position.z;
+        }
+        *ptr++ = particle.position.x;
+        *ptr++ = particle.position.y;
+        *ptr++ = particle.position.z;
         numToRender++;
     }
+
     
     if (numToRender) {
         glPointSize(3.0f);

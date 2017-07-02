@@ -7,35 +7,34 @@
 namespace kxm {
 namespace Core {
 
-//! Pool-like item container, keeping track of which items are currently in use and which are idle
-//! (= waiting to be re-used), and providing efficient means of moving items between those two
-//! states.
+//! Pool-like item container, keeping track of which items are currently in use and which are idle (= waiting to be
+//! re-used), and providing efficient means of moving items between those two states.
 /*!
  *  \ingroup Core
  *
- *  Multiple groups can be set up in order to organize the items currently in use. Each item that is
- *  currently in use belongs to exactly one of these groups.
+ *  Multiple groups can be set up in order to organize the items currently in use. Each item that is currently in use
+ *  belongs to exactly one of these groups.
  *
  *  The template parameter type <code>T</code> must be copyable and default-constructible. 
  *
- *  There's no support for multithreaded use. Specifically, the items might get stored in a compact
- *  way without spacer fields.
+ *  There's no support for multithreaded use. Specifically, the items might get stored in a compact way without spacer
+ *  fields.
  */
 template<class T>
 class ReusableItems {
   public:
     class Iterator;
+    class IteratorProvider;
     
     ReusableItems(int numGroups);
-    //! Provides another item for the client to use, assigning it to the specified group. The item
-    //! is either taken from the set of idle items, or newly created if no idle item is currently
-    //! present.
+    //! Provides another item for the client to use, assigning it to the specified group. The item is either taken from
+    //! the set of idle items, or newly created if no idle item is currently present.
     /*!
-     *  The item remains owned by the container. With respect to iterations over the in-use items,
-     *  new items get appended at the end of their group.
+     *  The item remains owned by the container. With respect to iterations over the in-use items, new items get
+     *  appended at the end of their group.
      *
-     *  When the client has finished using the item, it must put it back into the pool of idle items
-     *  for future re-use using \ref Put().
+     *  When the client has finished using the item, it must put it back into the pool of idle items for future re-use
+     *  using \ref Put().
      *
      *  Iterators for groups other than the one specified will not get invalidated.
      */
@@ -52,13 +51,8 @@ class ReusableItems {
      *  The item is added to the back of the target group.
      */
     void Move(int itemId, int targetGroup);
-    //! Returns an iterator allowing to iterate over those items currently in use that are assigned
-    //! to the specified group.
-    /*!
-     *  The iterator may only be used as long as the container lives. Unless noted otherwise, 
-     *  operations on the container invalidate handed-out iterators.
-     */
-    Iterator GetIterator(int groupId);
+    //! Allows to iterate over the items in the specified group.
+    IteratorProvider Iterate(int groupId);
     //! Grants access to the specified item.
     inline T &Item(int itemId);
     //! Tells the total number of items in the container, including the idle ones.
@@ -89,22 +83,49 @@ class ReusableItems {
 template<class T>
 class ReusableItems<T>::Iterator {
   public:
-    //! Returns the next item, or <code>0</code> in case there are no more items.
-    T *Next();
-    //! If the iterator has returned an item in the last call to \ref Next(), this item's id is
-    //! returned. Otherwise, the method's behavior is undefined.
+    Iterator &operator++();
+    bool operator!=(const Iterator &other) const;
+    //! Returns the item the iterator is currently pointing at.
     /*!
-     *  The current item can be \ref Put() back or \ref Move() d to another group using the returned
-     *  id without invalidating the iterator.
+     *  Undefined in case the iterator is \ref AtEnd().
+     */
+    T &operator*();
+    //! The item id associated with the item the iterator is currently pointing at.
+    /*!
+     *  The current item can be \ref Put() back or \ref Move() d to another group using the returned id without
+     *  invalidating the iterator.
+     *
+     *  Undefined in case the iterator is \ref AtEnd().
      */
     int ItemId();
+    //! Tells whether or not the iterator points behind the end of the sequence.
+    bool AtEnd();
     
   private:
     friend class ReusableItems;
-    Iterator(std::vector<ItemInfo> *items, int groupAnchor);
+    Iterator(std::vector<ItemInfo> *items, int groupAnchor, bool isAtEnd);
     std::vector<ItemInfo> *items_;
     int                    currentItem_, nextItem_,
                            groupAnchor_;
+};
+
+//! Supports standard iteration over a given item group.
+/*!
+ *  \ingroup Core
+ */
+template<class T>
+class ReusableItems<T>::IteratorProvider {
+  public:
+    //! Returns an iterator pointing to the beginning of the item group sequence.
+    Iterator begin() { return begin_; }
+    //! Returns an iterator pointing behind the end of the item group sequence.
+    Iterator end()   { return end_;   }
+    
+  private:
+    friend class ReusableItems;
+    IteratorProvider(const Iterator &begin, const Iterator &end) : begin_(begin), end_(end) {}
+    Iterator begin_,
+             end_;
 };
 
 template<class T>
@@ -194,8 +215,9 @@ void ReusableItems<T>::Move(int itemId, int targetGroup) {
 }
 
 template<class T>
-typename ReusableItems<T>::Iterator ReusableItems<T>::GetIterator(int groupId) {
-    return Iterator(&items_, groupAnchors_[groupId]);
+typename ReusableItems<T>::IteratorProvider ReusableItems<T>::Iterate(int groupId) {
+    return IteratorProvider(Iterator(&items_, groupAnchors_[groupId], false),
+                            Iterator(&items_, groupAnchors_[groupId], true));
 }
 
 template<class T>
@@ -230,27 +252,40 @@ void ReusableItems<T>::AddIdleItem() {
 }
 
 template<class T>
-ReusableItems<T>::Iterator::Iterator(std::vector<ItemInfo> *items, int groupAnchor)
+ReusableItems<T>::Iterator::Iterator(std::vector<ItemInfo> *items, int groupAnchor, bool isAtEnd)
         : items_(items),
-          groupAnchor_(groupAnchor),
-          currentItem_(-1) {
-    nextItem_ = (*items_)[groupAnchor_].next;
+          groupAnchor_(groupAnchor) {
+    currentItem_ = isAtEnd ? groupAnchor_ : (*items_)[groupAnchor_].next;
+    nextItem_    = (*items_)[currentItem_].next;
 }
 
 template<class T>
-T *ReusableItems<T>::Iterator::Next() {
-    if (nextItem_ == groupAnchor_)
-        return 0;
-    currentItem_              = nextItem_;
-    ItemInfo &currentItemInfo = (*items_)[currentItem_];
-    nextItem_                 = currentItemInfo.next;
-    return &currentItemInfo.item;
+typename ReusableItems<T>::Iterator &ReusableItems<T>::Iterator::operator++() {
+    if (currentItem_ != groupAnchor_) {
+        currentItem_ = nextItem_;
+        nextItem_    = (*items_)[currentItem_].next;
+    }
+    return *this;
+}
+
+template<class T>
+bool ReusableItems<T>::Iterator::operator!=(const Iterator &other) const {
+    return (currentItem_ != other.currentItem_);
+}
+
+template<class T>
+T &ReusableItems<T>::Iterator::operator*() {
+    return (*items_)[currentItem_].item;
 }
 
 template<class T>
 int ReusableItems<T>::Iterator::ItemId() {
-    assert(currentItem_ != -1);
     return currentItem_;
+}
+
+template<class T>
+bool ReusableItems<T>::Iterator::AtEnd() {
+    return (currentItem_ == groupAnchor_);
 }
 
 }    // Namespace Core.
