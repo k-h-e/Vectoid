@@ -46,12 +46,13 @@ class Saucer;
 /*!
  *  \ingroup ZarchPhysics
  */
-class Physics : public EventHandlerCore, public virtual Vectoid::Collider::DelegateInterface {
+class Physics : public EventHandlerCore, public virtual Vectoid::Collider<Game::ActorName>::DelegateInterface {
   public:
     Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
             TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
     ~Physics();
     void ModifyOtherTransform(Vectoid::Transform *inOutOtherTransform, const Vectoid::Transform &ourTransform);
+    void HandleCollision(const Game::ActorName &id, const Game::ActorName &otherId);
     void Handle(const ActorCreationEvent &event);
     void Handle(const ActorTerminationEvent &event);
     void Handle(const ControlsEvent &event);
@@ -86,7 +87,7 @@ class Physics : public EventHandlerCore, public virtual Vectoid::Collider::Deleg
     std::shared_ptr<Data>              data_;
     Game::ActorMap<ActorInfo>          actorMap_;
     std::shared_ptr<Game::Actions>     actions_;
-    Vectoid::Collider                  collider_;
+    Vectoid::Collider<Game::ActorName> collider_;
     Game::ReusableActors<Lander>       landers_;
     Game::ReusableActors<Shot>         shots_;
     Game::ReusableActors<Saucer>       saucers_;

@@ -12,6 +12,7 @@
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 #include <kxm/Zarch/Physics/Shot.h>
@@ -54,11 +55,15 @@ Physics::~Physics() {
 }
 
 void Physics::ModifyOtherTransform(Transform *inOutOtherTransform, const Transform &ourTransform) {
-   Vector otherPosition, ourPosition;
-   inOutOtherTransform->GetTranslationPart(&otherPosition);
-   ourTransform.GetTranslationPart(&ourPosition);
-   data_->mapParameters->CorrectForObserver(&otherPosition, ourPosition);
-   inOutOtherTransform->SetTranslationPart(otherPosition);
+    Vector otherPosition, ourPosition;
+    inOutOtherTransform->GetTranslationPart(&otherPosition);
+    ourTransform.GetTranslationPart(&ourPosition);
+    data_->mapParameters->CorrectForObserver(&otherPosition, ourPosition);
+    inOutOtherTransform->SetTranslationPart(otherPosition);
+}
+
+void Physics::HandleCollision(const Game::ActorName &id, const Game::ActorName &otherId) {
+    data_->eventLoop->Post(CollisionEvent(id, otherId));
 }
 
 void Physics::Handle(const ActorCreationEvent &event) {
@@ -68,15 +73,15 @@ void Physics::Handle(const ActorCreationEvent &event) {
     switch (event.actorType) {
         case LanderActor:
             actor = landers_.Get(&storageId);
-            collidableId = collider_.Register(actor, PlayerCollisionGroup);
+            collidableId = collider_.Register(event.actor, actor, PlayerCollisionGroup);
             break;
         case ShotActor:
             actor = shots_.Get(&storageId);
-            collidableId = collider_.Register(actor, ShotsCollisionGroup);
+            collidableId = collider_.Register(event.actor, actor, ShotsCollisionGroup);
             break;
         case SaucerActor:
             actor = saucers_.Get(&storageId);
-            collidableId = collider_.Register(actor, EnemiesCollisionGroup);
+            collidableId = collider_.Register(event.actor, actor, EnemiesCollisionGroup);
             break;
         default:
             break;

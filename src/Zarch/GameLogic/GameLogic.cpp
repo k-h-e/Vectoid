@@ -11,6 +11,7 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
 #include <kxm/Zarch/GameLogic/Shot.h>
@@ -41,6 +42,7 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     data_->eventLoop->RegisterHandler(InitializationEvent::type,  this);
     data_->eventLoop->RegisterHandler(ControlsRequestEvent::type, this);
     data_->eventLoop->RegisterHandler(TriggerEvent::type,         this);
+    data_->eventLoop->RegisterHandler(CollisionEvent::type,       this);
 }
 
 GameLogic::~GameLogic() {
@@ -52,9 +54,20 @@ void GameLogic::Handle(const InitializationEvent &event) {
 }
 
 void GameLogic::Handle(const ControlsRequestEvent &event) {
-    ActorInfo<Actor> *info = actorMap_.Get(event.actor);
+    ActorInfo<Actor> *info = data_->actorMap.Get(event.actor);
     if (info) {
         info->Actor()->Handle(event);
+    }
+}
+
+void GameLogic::Handle(const CollisionEvent &event) {
+    ActorInfo<Actor> *info      = data_->actorMap.Get(event.actor),
+                     *otherInfo = data_->actorMap.Get(event.otherActor);
+    if (info) {
+        info->Actor()->Handle(event);
+    }
+    if (otherInfo) {
+        otherInfo->Actor()->Handle(event);
     }
 }
 
@@ -100,14 +113,14 @@ void GameLogic::CreateActor(const ActorCreationEvent &event) {
     }
     
     assert(actor);
-    actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
+    data_->actorMap.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
     data_->eventLoop->Post(event);
     actor->SetData(data_);
     actor->Handle(event);
 }
 
 void GameLogic::TerminateActor(const ActorName &name) {
-    ActorInfo<Actor> *info = actorMap_.Get(name);
+    ActorInfo<Actor> *info = data_->actorMap.Get(name);
     assert(info);
     switch (info->Type()) {
         case LanderActor:
@@ -125,7 +138,7 @@ void GameLogic::TerminateActor(const ActorName &name) {
     }
     // Don't use info->actor() below.
     
-    actorMap_.Unregister(name);
+    data_->actorMap.Unregister(name);
     data_->actorNaming.Put(name);
     data_->eventLoop->Post(ActorTerminationEvent(name));
 }

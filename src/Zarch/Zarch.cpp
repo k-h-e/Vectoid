@@ -11,6 +11,7 @@
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/ControlsRejectionEvent.h>
@@ -46,6 +47,7 @@ void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventL
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new MoveEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new VelocityEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new AccelerationEvent));
+    eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new CollisionEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRequestEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsEvent));
     eventLoop->RegisterEvent(unique_ptr<ZarchEvent>(new ControlsRejectionEvent));

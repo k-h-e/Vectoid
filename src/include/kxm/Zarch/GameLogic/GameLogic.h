@@ -9,9 +9,7 @@
 #define KXM_ZARCH_GAMELOGIC_GAMELOGIC_H_
 
 #include <memory>
-#include <kxm/Game/ActorMap.h>
 #include <kxm/Game/ReusableActors.h>
-#include <kxm/Zarch/ActorInfo.h>
 #include <kxm/Zarch/Events/TriggerEvent.h>
 #include <kxm/Zarch/EventHandlerCore.h>
 #include <kxm/Zarch/GameLogic/Actor.h>
@@ -27,6 +25,7 @@ namespace Zarch {
 class InitializationEvent;
 class ActorCreationEvent;
 class ControlsRequestEvent;
+class CollisionEvent;
 class TriggerEvent;
 
 namespace GameLogic {
@@ -47,6 +46,7 @@ class GameLogic : public EventHandlerCore {
     ~GameLogic();
     void Handle(const InitializationEvent &event);
     void Handle(const ControlsRequestEvent &event);
+    void Handle(const CollisionEvent &event);
     void Handle(const TriggerEvent &event);
     
   private:
@@ -56,7 +56,6 @@ class GameLogic : public EventHandlerCore {
     void TerminateActor(const Game::ActorName &name);
     void PrepareMap();
     
-    Game::ActorMap<ActorInfo<Actor>> actorMap_;
     std::shared_ptr<Game::Actions>   actions_;
     Game::ReusableActors<Lander>     landers_;
     Game::ReusableActors<Shot>       shots_;

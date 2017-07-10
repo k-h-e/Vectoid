@@ -37,6 +37,10 @@ void EventHandlerCore::Handle(const AccelerationEvent &event) {
     Log(this).Stream() << "Unhandled AccelerationEvent!" << endl;
 }
 
+void EventHandlerCore::Handle(const CollisionEvent &event) {
+    Log(this).Stream() << "Unhandled CollisionEvent!" << endl;
+}
+
 void EventHandlerCore::Handle(const ControlsRequestEvent &event) {
     Log(this).Stream() << "Unhandled ControlsRequestEvent!" << endl;
 }

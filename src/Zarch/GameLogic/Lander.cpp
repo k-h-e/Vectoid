@@ -11,6 +11,7 @@
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
 #include <kxm/Zarch/Events/PlayerStatsEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
@@ -70,6 +71,19 @@ void Lander::Handle(const ControlsRequestEvent &event) {
     if (newEvent.Count()) {
         data_->eventLoop->Post(newEvent);
     }
+}
+
+void Lander::Handle(const CollisionEvent &event) {
+   ActorInfo<Actor> *otherInfo = data_->actorMap.Get((event.actor == name_) ? event.otherActor : event.actor);
+   if (otherInfo) {
+       switch (otherInfo->Type()) {
+           case ShotActor:
+               std::puts("player hit by shot!");
+               break;
+           default:
+               break;
+       }
+   }
 }
 
 void Lander::ExecuteAction() {

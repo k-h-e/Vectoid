@@ -5,8 +5,10 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 
 using namespace std;
+using namespace kxm::Vectoid;
 using namespace kxm::Game;
 
 namespace kxm {
@@ -35,6 +37,22 @@ void Saucer::Handle(const ControlsRequestEvent &event) {
     if (newEvent.Count()) {
         data_->eventLoop->Post(newEvent);
     }
+}
+
+void Saucer::Handle(const CollisionEvent &event) {
+   ActorInfo<Actor> *otherInfo = data_->actorMap.Get((event.actor == name_) ? event.otherActor : event.actor);
+   if (otherInfo) {
+       switch (otherInfo->Type()) {
+           case ShotActor:
+               data_->actorsToTerminate.push_back(name_);
+               data_->actorCreationEvents.push_back(
+                          ActorCreationEvent(data_->actorNaming.Get(), SaucerActor,
+                                             Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
+               break;
+           default:
+               break;
+       }
+   }
 }
 
 void Saucer::ExecuteAction() {

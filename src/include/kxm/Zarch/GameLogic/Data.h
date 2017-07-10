@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <kxm/Game/ActorNaming.h>
+#include <kxm/Zarch/ActorInfo.h>
+#include <kxm/Game/ActorMap.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 
@@ -26,6 +28,7 @@ namespace GameLogic {
 struct Data {
     Data() : deltaTimeS(0.0f) {}
     Game::ActorNaming                                              actorNaming;
+    Game::ActorMap<ActorInfo<Actor>>                               actorMap;
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop;
     float                                                          deltaTimeS;
     std::vector<ActorCreationEvent>                                actorCreationEvents;

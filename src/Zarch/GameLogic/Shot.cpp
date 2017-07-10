@@ -2,6 +2,8 @@
 
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/GameLogic/Data.h>
+#include <kxm/Zarch/Events/ActorCreationEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 
 using namespace std;
 using namespace kxm::Game;
@@ -18,6 +20,9 @@ Shot::Shot()
 void Shot::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     ageS_ = 0.0f;
+}
+
+void Shot::Handle(const CollisionEvent &event) {
 }
 
 void Shot::ExecuteAction() {
