@@ -28,7 +28,7 @@ class Particles {
                velocity;
         float  age;
         bool   hidden;
-        float  random0, random1;    // Random numbers in [0, 1].
+        float  random0, random1;    // Random numbers in [-1, 1].
         
         ParticleInfo();
     };

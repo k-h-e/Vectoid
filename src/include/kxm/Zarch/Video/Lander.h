@@ -10,8 +10,6 @@ namespace kxm {
 namespace Vectoid {
     class Camera;
     class CoordSys;
-    class Geode;
-    class Particles;
 }
 
 namespace Zarch {
@@ -49,8 +47,6 @@ class Lander : public Actor {
     
   private:
     std::shared_ptr<Vectoid::CoordSys>  coordSys_;
-    std::shared_ptr<Vectoid::Particles> thrusterParticles_;
-    std::shared_ptr<Vectoid::Geode>     thrusterParticlesGeode_;
     Vectoid::Vector                     velocity_,
                                         lastPosition_;
     bool                                thrusterActive_;

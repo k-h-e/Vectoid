@@ -46,7 +46,8 @@ struct Data {
     Game::ActorName                                 focusLander;
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
     std::shared_ptr<Vectoid::Camera>                camera;
-    std::shared_ptr<Vectoid::Particles>             shotParticles;
+    std::shared_ptr<Vectoid::Particles>             shotParticles,
+                                                    thrusterParticles;
     std::shared_ptr<Vectoid::TextConsole>           statsConsole;
     std::shared_ptr<Vectoid::CoordSys>              statsConsoleCoordSys;
     std::shared_ptr<TerrainRenderer>                terrainRenderer;

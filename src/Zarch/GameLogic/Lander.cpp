@@ -97,7 +97,7 @@ void Lander::ExecuteAction() {
     }
     
     if (triggerTimeS_ > 0.0f) {
-        data_->actorCreationEvents.push_back(ActorCreationEvent(
+        data_->ScheduleActorCreation(ActorCreationEvent(
             data_->actorNaming.Get(), ShotActor, Transform(Vector(0.0f, 0.0f, .55f)),
             data_->mapParameters->shotVelocity * Vector(0.0f, 0.0f, 1.0f), name_));
         triggerTimeS_ -= data_->mapParameters->shotFiringInterval;

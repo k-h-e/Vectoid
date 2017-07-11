@@ -8,6 +8,7 @@
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/ParticlesRenderer.h>
+#include <kxm/Vectoid/AgeColoredParticles.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/Glyphs.h>
 #include <kxm/Vectoid/TextConsole.h>
@@ -76,10 +77,11 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     data_->terrainRenderer = make_shared<TerrainRenderer>(data_->terrain, data_->mapParameters);
     data_->camera->AddChild(make_shared<Geode>(data_->terrainRenderer));
     
-    shared_ptr<Particles> shotParticles(new Particles()),
-                          starFieldParticles(new Particles());
-    data_->shotParticles = shotParticles;
-    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(shotParticles)));
+    data_->shotParticles = make_shared<Particles>();
+    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(data_->shotParticles)));
+    data_->thrusterParticles = make_shared<Particles>();
+    data_->camera->AddChild(make_shared<Geode>(make_shared<AgeColoredParticles>(data_->thrusterParticles)));
+    shared_ptr<Particles> starFieldParticles(new Particles());
     data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(starFieldParticles)));
     
     data_->statsConsole = make_shared<TextConsole>(20, 4, .2f, .2f, make_shared<Glyphs>());
@@ -234,32 +236,51 @@ void Video::Handle(const PlayerStatsEvent &event) {
 
 void Video::Handle(const TriggerEvent &event) {
     if (event.trigger == TriggerEvent::FrameRenderedTrigger) {
+        Data &data = *data_;
         auto now = steady_clock::now();
         int milliSeconds = (int)duration_cast<milliseconds>(now - lastFrameTime_).count();
         lastFrameTime_ = now;
-        data_->frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+        data.frameDeltaTimeS = (float)milliSeconds / 1000.0f;
+        
+        Vector observerPosition;
+        data.terrainRenderer->GetObserverPosition(&observerPosition);
+        
+        for (Particles::ParticleInfo &particle : data.shotParticles->Iterate()) {
+            data.mapParameters->CorrectForObserver(&particle.position, observerPosition);
+        }
+        
+        // Move and age thruster particles...
+        auto iter = data.thrusterParticles->Iterate().begin();
+        while (!iter.AtEnd()) {
+            Particles::ParticleInfo *particle = &*iter;
+            particle->velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
+            particle->position   += data.frameDeltaTimeS * particle->velocity;
+            data.mapParameters->xRange.ClampModulo(&particle->position.x);
+            data.mapParameters->zRange.ClampModulo(&particle->position.z);
+            data.mapParameters->CorrectForObserver(&particle->position, observerPosition);
+            particle->age        += data.frameDeltaTimeS;
+            if (particle->age >= data.mapParameters->maxThrusterParticleAge) {
+                data.thrusterParticles->Remove(iter.ItemId());
+            }
+            
+            ++iter;
+        }
         
         actions_->Execute();
         
-        Vector observerPosition;
-        data_->terrainRenderer->GetObserverPosition(&observerPosition);
-        for (Particles::ParticleInfo &particle : data_->shotParticles->Iterate()) {
-            data_->mapParameters->CorrectForObserver(&particle.position, observerPosition);
-        }
-        
         ++fpsFrameCounter_;
-        fpsTimeS_ += data_->frameDeltaTimeS;
+        fpsTimeS_ += data.frameDeltaTimeS;
         if (fpsTimeS_ >= 2.0f) {
             float fps = (float)fpsFrameCounter_ / fpsTimeS_;
             NumberTools::Clamp(&fps, 0.0f, 500.0f);
             char text[80];
             std::sprintf(text, "%03d", (int)(fps + .5f));
-            data_->statsConsole->WriteAt(0, 2, text);
+            data.statsConsole->WriteAt(0, 2, text);
             fpsFrameCounter_ = 0;
             fpsTimeS_        = 0.0f;
         }
         
-        data_->projection->Render(0);
+        data.projection->Render(0);
         eventLoop_->Post(TriggerEvent(TriggerEvent::FrameRenderedTrigger, 0.0f));
     }
 }

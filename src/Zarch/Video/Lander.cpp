@@ -25,12 +25,9 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Lander::Lander()
-        : thrusterParticles_(new Particles()) {
+Lander::Lander() {
     coordSys_ = make_shared<CoordSys>();
     coordSys_->AddChild(make_shared<Geode>(make_shared<LanderGeometry>()));
-    
-    thrusterParticlesGeode_ = make_shared<Geode>(make_shared<AgeColoredParticles>(thrusterParticles_));
 }
 
 void Lander::GetTransform(Vectoid::Transform *outTransform) {
@@ -51,20 +48,14 @@ void Lander::Handle(const ActorCreationEvent &event) {
     if (hasFocus_) {
         data_->focusLander = event.actor;
     }
-    
-    // TODO: Clear thruster particles.
-
     data_->camera->AddChild(coordSys_);
-    data_->camera->AddChild(thrusterParticlesGeode_);
 }
 
 void Lander::Handle(const ActorTerminationEvent &event) {
     if (hasFocus_) {
         data_->focusLander = ActorName();
     }
-    
     data_->camera->RemoveChild(coordSys_);
-    data_->camera->RemoveChild(thrusterParticlesGeode_);
 }
 
 void Lander::Handle(const ControlsEvent &event) {
@@ -99,25 +90,8 @@ void Lander::Handle(const VelocityEvent &event) {
 }
 
 void Lander::ExecuteAction() {
-    Data &data = *data_;
-    
-    // Move and age particles...
+    Data   &data = *data_;
     Vector landerPosition = coordSys_->Position();
-    auto iter = thrusterParticles_->Iterate().begin();
-    while (!iter.AtEnd()) {
-        Particles::ParticleInfo *particle = &*iter;
-        particle->velocity.y += data.frameDeltaTimeS * -data.mapParameters->gravity;
-        particle->position   += data.frameDeltaTimeS * particle->velocity;
-        data.mapParameters->xRange.ClampModulo(&particle->position.x);
-        data.mapParameters->zRange.ClampModulo(&particle->position.z);
-        data.mapParameters->CorrectForObserver(&particle->position, landerPosition);
-        particle->age        += data.frameDeltaTimeS;
-        if (particle->age >= data.mapParameters->maxThrusterParticleAge) {
-            thrusterParticles_->Remove(iter.ItemId());
-        }
-        
-        ++iter;
-    }
     
     // Add new particles...?
     if (thrusterActive_ && (data.frameDeltaTimeS > 0.0f)) {
@@ -126,7 +100,7 @@ void Lander::ExecuteAction() {
         transform.SetTranslationPart(Vector());
         float timeLeft = data.frameDeltaTimeS - particleTimeCarryOver_;
         while (timeLeft > 0.0f) {
-            Particles::ParticleInfo &particle = thrusterParticles_->Add(Vector(), Vector());
+            Particles::ParticleInfo &particle = data_->thrusterParticles->Add(Vector(), Vector());
             Vector ejectDirection(data.mapParameters->thrusterParticleSpread * particle.random0,
                                   -1.0f,
                                   data.mapParameters->thrusterParticleSpread * particle.random1),

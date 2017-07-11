@@ -28,7 +28,7 @@ void Shot::Handle(const CollisionEvent &event) {
 void Shot::ExecuteAction() {
     ageS_ += data_->deltaTimeS;
     if (ageS_ >= data_->mapParameters->maxShotParticleAge) {
-        data_->actorsToTerminate.push_back(name_);
+        data_->ScheduleActorForTermination(name_);
     }
 }
 

@@ -44,10 +44,10 @@ void Saucer::Handle(const CollisionEvent &event) {
    if (otherInfo) {
        switch (otherInfo->Type()) {
            case ShotActor:
-               data_->actorsToTerminate.push_back(name_);
-               data_->actorCreationEvents.push_back(
+               data_->ScheduleActorForTermination(name_);
+               data_->ScheduleActorCreation(
                           ActorCreationEvent(data_->actorNaming.Get(), SaucerActor,
-                                             Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
+                          Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
                break;
            default:
                break;

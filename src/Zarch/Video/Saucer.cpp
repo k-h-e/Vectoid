@@ -41,6 +41,27 @@ void Saucer::Handle(const ActorCreationEvent &event) {
 
 void Saucer::Handle(const ActorTerminationEvent &event) {
     data_->camera->RemoveChild(coordSys_);
+    
+    // Add explosion particles...
+    Vector position;
+    coordSys_->GetPosition(&position);
+    for (int i = 0; i < 100; ++i) {
+        Particles::ParticleInfo *particle      = &data_->thrusterParticles->Add(Vector(), Vector()),
+                                *otherParticle = &data_->thrusterParticles->Add(Vector(), Vector());
+        for (int j = 0; j < 2; j++) {
+            if (j) {
+                Particles::ParticleInfo *tmp = particle;
+                particle = otherParticle;
+                otherParticle = tmp;
+            }
+            Vector direction(1.0f, 0.0f, 0.0f);
+            Transform transform(YAxis, particle->random0 * 180.0f);
+            transform.Prepend(Transform(ZAxis, particle->random1 * 90.0f));
+            transform.ApplyTo(&direction);
+            particle->position = position + (0.5f * (otherParticle->random0 + 1.0f) * .5f) * direction;
+            particle->velocity = (1.0f + (0.5f * (otherParticle->random1 + 1.0f)) * 1.5f) * direction;
+        }
+    }
 }
 
 void Saucer::Handle(const MoveEvent &event) {

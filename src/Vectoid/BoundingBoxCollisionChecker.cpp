@@ -18,14 +18,11 @@ bool BoundingBoxCollisionChecker::CheckCollision(CollisionCheckerInterface *othe
 
 bool BoundingBoxCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *other,
                                                  const Transform &otherTransform, const Transform &ourTransform) {
-    std::puts("    box <-> box");
     return false;    // TODO: Implement check!
 }
 
 bool BoundingBoxCollisionChecker::CheckCollision(PointCollisionChecker *other,
                                                  const Transform &otherTransform, const Transform &ourTransform) {
-    std::puts("    box <-> point");
-    
     Vector point;
     otherTransform.GetTranslationPart(&point);
     Transform inverseOurTransform(Transform::InitAsInverse, ourTransform);

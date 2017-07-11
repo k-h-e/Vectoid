@@ -26,7 +26,6 @@ namespace GameLogic {
  *  \ingroup ZarchGameLogic
  */
 struct Data {
-    Data() : deltaTimeS(0.0f) {}
     Game::ActorNaming                                              actorNaming;
     Game::ActorMap<ActorInfo<Actor>>                               actorMap;
     std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop;
@@ -35,6 +34,14 @@ struct Data {
     std::vector<Game::ActorName>                                   actorsToTerminate;
     std::shared_ptr<MapParameters>                                 mapParameters;
     std::shared_ptr<Terrain>                                       terrain;
+    
+    Data() : deltaTimeS(0.0f) {}
+    void ScheduleActorCreation(const ActorCreationEvent &event) {
+        actorCreationEvents.push_back(event);
+    }
+    void ScheduleActorForTermination(const Game::ActorName &name) {
+        actorsToTerminate.push_back(name);
+    }
 };
 
 }    // Namespace Physics

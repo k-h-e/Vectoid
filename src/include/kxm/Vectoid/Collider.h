@@ -116,7 +116,6 @@ void Collider<IdType>::Check() {
             }
         }
     }
-    std::puts("---");
 }
 
 }    // Namespace Vectoid.

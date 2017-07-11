@@ -51,12 +51,14 @@ GameLogic::~GameLogic() {
 
 void GameLogic::Handle(const InitializationEvent &event) {
     PrepareMap();
+    FinalizeEventHandler();
 }
 
 void GameLogic::Handle(const ControlsRequestEvent &event) {
     ActorInfo<Actor> *info = data_->actorMap.Get(event.actor);
     if (info) {
         info->Actor()->Handle(event);
+        FinalizeEventHandler();
     }
 }
 
@@ -69,6 +71,7 @@ void GameLogic::Handle(const CollisionEvent &event) {
     if (otherInfo) {
         otherInfo->Actor()->Handle(event);
     }
+    FinalizeEventHandler();
 }
 
 void GameLogic::Handle(const TriggerEvent &event) {
@@ -76,18 +79,7 @@ void GameLogic::Handle(const TriggerEvent &event) {
         data_->deltaTimeS = event.deltaTime_s;
         actions_->Execute();
         
-        if (data_->actorCreationEvents.size()) {
-            for (ActorCreationEvent &creationEvent : data_->actorCreationEvents) {
-                CreateActor(creationEvent);
-            }
-            data_->actorCreationEvents.clear();
-        }
-        if (data_->actorsToTerminate.size()) {
-            for (ActorName &name : data_->actorsToTerminate) {
-                TerminateActor(name);
-            }
-            data_->actorsToTerminate.clear();
-        }
+        FinalizeEventHandler();    // It's okay here for this not to be last action in handler.
         
         if (outTrigger_ != TriggerEvent::NoTrigger) {
             data_->eventLoop->Post(TriggerEvent(outTrigger_, event.deltaTime_s));
@@ -95,59 +87,68 @@ void GameLogic::Handle(const TriggerEvent &event) {
     }
 }
 
-void GameLogic::CreateActor(const ActorCreationEvent &event) {
-    Actor *actor = nullptr;
-    int   storageId;
-    switch (event.actorType) {
-        case LanderActor:
-            actor = landers_.Get(&storageId);
-            break;
-        case ShotActor:
-            actor = shots_.Get(&storageId);
-            break;
-        case SaucerActor:
-            actor = saucers_.Get(&storageId);
-            break;
-        default:
-            break;
+void GameLogic::FinalizeEventHandler() {
+    if (data_->actorCreationEvents.size()) {
+        for (ActorCreationEvent &creationEvent : data_->actorCreationEvents) {
+            Actor *actor = nullptr;
+            int   storageId;
+            switch (creationEvent.actorType) {
+                case LanderActor:
+                    actor = landers_.Get(&storageId);
+                    break;
+                case ShotActor:
+                    actor = shots_.Get(&storageId);
+                    break;
+                case SaucerActor:
+                    actor = saucers_.Get(&storageId);
+                    break;
+                default:
+                    break;
+            }
+            
+            assert(actor);
+            data_->actorMap.Register(creationEvent.actor, ActorInfo<Actor>(creationEvent.actorType, storageId, actor));
+            data_->eventLoop->Post(creationEvent);
+            actor->SetData(data_);
+            actor->Handle(creationEvent);
+        }
+        data_->actorCreationEvents.clear();
     }
     
-    assert(actor);
-    data_->actorMap.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
-    data_->eventLoop->Post(event);
-    actor->SetData(data_);
-    actor->Handle(event);
-}
-
-void GameLogic::TerminateActor(const ActorName &name) {
-    ActorInfo<Actor> *info = data_->actorMap.Get(name);
-    assert(info);
-    switch (info->Type()) {
-        case LanderActor:
-            landers_.Put(info->StorageId());
-            break;
-        case ShotActor:
-            shots_.Put(info->StorageId());
-            break;
-        case SaucerActor:
-            saucers_.Put(info->StorageId());
-            break;
-        default:
-            assert(false);
-            break;
+    if (data_->actorsToTerminate.size()) {
+        for (ActorName &name : data_->actorsToTerminate) {
+            ActorInfo<Actor> *info = data_->actorMap.Get(name);
+            if (info) {
+                switch (info->Type()) {
+                    case LanderActor:
+                        landers_.Put(info->StorageId());
+                        break;
+                    case ShotActor:
+                        shots_.Put(info->StorageId());
+                        break;
+                    case SaucerActor:
+                        saucers_.Put(info->StorageId());
+                        break;
+                    default:
+                        assert(false);
+                        break;
+                }
+                // Don't use info->actor() below.
+                
+                data_->actorMap.Unregister(name);
+                data_->actorNaming.Put(name);
+                data_->eventLoop->Post(ActorTerminationEvent(name));
+            }
+        }
+        data_->actorsToTerminate.clear();
     }
-    // Don't use info->actor() below.
-    
-    data_->actorMap.Unregister(name);
-    data_->actorNaming.Put(name);
-    data_->eventLoop->Post(ActorTerminationEvent(name));
 }
 
 void GameLogic::PrepareMap() {
-    CreateActor(ActorCreationEvent(data_->actorNaming.Get(), LanderActor, Transform(), Vector(), ActorName()));
-    
-    CreateActor(ActorCreationEvent(data_->actorNaming.Get(), SaucerActor, Transform(Vector(-1.0f, 3.0f, -2.0f)),
-                                   Vector(), ActorName()));
+    data_->ScheduleActorCreation(ActorCreationEvent(data_->actorNaming.Get(), LanderActor, Transform(), Vector(),
+                                                    ActorName()));
+    data_->ScheduleActorCreation(ActorCreationEvent(data_->actorNaming.Get(), SaucerActor,
+                                                    Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
 }
 
 }    // Namespace GameLogic.

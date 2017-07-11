@@ -52,8 +52,7 @@ class GameLogic : public EventHandlerCore {
   private:
     GameLogic(const GameLogic &other);
     GameLogic &operator=(const GameLogic &other);
-    void CreateActor(const ActorCreationEvent &event);
-    void TerminateActor(const Game::ActorName &name);
+    void FinalizeEventHandler();
     void PrepareMap();
     
     std::shared_ptr<Game::Actions>   actions_;
