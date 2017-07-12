@@ -71,6 +71,10 @@ using namespace kxm::Zarch;
    [self update];
 }
 
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
+
 /*
 - (void)touchesBegan: (NSSet *)touches withEvent: (UIEvent *)event {
     for (UITouch *touch in touches) {

@@ -29,6 +29,10 @@ using namespace kxm::Zarch;
                               *yAxis;           // Valid <=> haveGamePad.
     GCControllerButtonInput   *rightTrigger,    // Valid <=> haveGamePad.
                               *buttonA;         // Valid <=> haveGamePad.
+    bool                      mouseCaptured;
+    float                     mouseDeltaX,
+                              mouseDeltaY;
+    bool                      mouseLeftButtonDown;
 }
 
 @end
@@ -47,8 +51,30 @@ using namespace kxm::Zarch;
     [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSDefaultRunLoopMode];
 }
 
+- (void)mouseDown: (NSEvent *)event {
+    mouseLeftButtonDown = true;
+}
+
+- (void)mouseUp: (NSEvent *)event {
+    mouseLeftButtonDown = false;
+}
+
+- (void)mouseDragged: (NSEvent *)event {
+    mouseDeltaX += (float)event.deltaX;
+    mouseDeltaY += (float)event.deltaY;
+}
+
+- (void)mouseMoved: (NSEvent *)event {
+    mouseDeltaX += (float)event.deltaX;
+    mouseDeltaY += (float)event.deltaY;
+}
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
 
 - (void)handleTimer {
+    /*
     if (haveGamePad) {
         float x = xAxis.value,
               y = yAxis.value;
@@ -76,6 +102,43 @@ using namespace kxm::Zarch;
                     buttonA      = nil;
                 }
             }
+        }
+    }
+    */
+    
+    if (mouseCaptured) {
+        const float maxLength = 1000.0f;
+        
+        Vector direction(mouseDeltaX, mouseDeltaY, 0.0f);
+        float length = direction.Length();
+        if (length > 0.0f) {
+            float scale  = 1.0f/length;
+            if (length > maxLength) {
+                length = maxLength;
+            }
+            scale *= length/maxLength;
+        
+            controlsState->orientation = scale * direction;
+            
+            std::printf("length=%f\n", length/maxLength);
+        }
+        else {
+            controlsState->orientation = Vector();
+        }
+    
+        controlsState->thruster    = mouseLeftButtonDown;
+        controlsState->trigger     = false;
+    
+        mouseDeltaX = 0.0f;
+        mouseDeltaY = 0.0f;
+    }
+    else {
+        NSWindow *window = [self.view window];
+        if (window) {
+            [window setAcceptsMouseMovedEvents: YES];
+            CGAssociateMouseAndMouseCursorPosition(false);
+            mouseCaptured = true;
+            puts("mouse captured");
         }
     }
 

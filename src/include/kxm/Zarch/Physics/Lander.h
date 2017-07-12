@@ -48,6 +48,7 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Vectoid::Vector                headingVector_;
     Core::FloatModN                heading_,
                                    pitch_;
+    Vectoid::Vector                up_;
     bool                           killVelocity_;
     Vectoid::PointCollisionChecker collisionChecker_;
 };
