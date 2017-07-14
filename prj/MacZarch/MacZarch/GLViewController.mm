@@ -30,9 +30,10 @@ using namespace kxm::Zarch;
     GCControllerButtonInput   *rightTrigger,    // Valid <=> haveGamePad.
                               *buttonA;         // Valid <=> haveGamePad.
     bool                      mouseCaptured;
-    float                     mouseDeltaX,
-                              mouseDeltaY;
-    bool                      mouseLeftButtonDown;
+    float                     mouseX,
+                              mouseY;
+    bool                      mouseLeftButtonDown,
+                              mouseRightButtonDown;
 }
 
 @end
@@ -54,19 +55,23 @@ using namespace kxm::Zarch;
 - (void)mouseDown: (NSEvent *)event {
     mouseLeftButtonDown = true;
 }
-
 - (void)mouseUp: (NSEvent *)event {
     mouseLeftButtonDown = false;
 }
 
-- (void)mouseDragged: (NSEvent *)event {
-    mouseDeltaX += (float)event.deltaX;
-    mouseDeltaY += (float)event.deltaY;
+- (void)rightMouseDown: (NSEvent *)event {
+    mouseRightButtonDown = true;
+}
+- (void)rightMouseUp: (NSEvent *)event {
+    mouseRightButtonDown = false;
 }
 
+- (void)mouseDragged: (NSEvent *)event {
+    [self mouseMoved: event];
+}
 - (void)mouseMoved: (NSEvent *)event {
-    mouseDeltaX += (float)event.deltaX;
-    mouseDeltaY += (float)event.deltaY;
+    mouseX += (float)event.deltaX;
+    mouseY += (float)event.deltaY;
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -107,30 +112,18 @@ using namespace kxm::Zarch;
     */
     
     if (mouseCaptured) {
-        const float maxLength = 1000.0f;
-        
-        Vector direction(mouseDeltaX, mouseDeltaY, 0.0f);
-        float length = direction.Length();
-        if (length > 0.0f) {
-            float scale  = 1.0f/length;
-            if (length > maxLength) {
-                length = maxLength;
-            }
-            scale *= length/maxLength;
-        
-            controlsState->orientation = scale * direction;
-            
-            std::printf("length=%f\n", length/maxLength);
+        const float maxRadius = 400.0f;
+        Vector mouseVector(mouseX, -mouseY, 0.0f);
+        float length = mouseVector.Length();
+        if (length > maxRadius) {
+            mouseVector = (maxRadius/length) * mouseVector;
+            length = maxRadius;
+            mouseX =  mouseVector.x;
+            mouseY = -mouseVector.y;
         }
-        else {
-            controlsState->orientation = Vector();
-        }
-    
+        controlsState->orientation = (1.0f/maxRadius) * mouseVector;
         controlsState->thruster    = mouseLeftButtonDown;
-        controlsState->trigger     = false;
-    
-        mouseDeltaX = 0.0f;
-        mouseDeltaY = 0.0f;
+        controlsState->trigger     = mouseRightButtonDown;
     }
     else {
         NSWindow *window = [self.view window];

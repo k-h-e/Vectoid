@@ -18,6 +18,14 @@ class FloatModN {
     FloatModN(int modulus);
     // Default copy and move ok.
     
+    //! Returns the (always positive) distance to the specified other FloatModN, along the shorter way "around the
+    //! ring".
+    float Distance(const FloatModN &other) {
+        float distance      = value_ > other.value_ ? value_ - other.value_ : other.value_ - value_,
+              otherDistance = (float)modulus_ - distance;
+        return distance < otherDistance ? distance : otherDistance;
+    }
+    
     //! The specified number must lie in <c>[0, modulus)</c>.
     void SetValue(float number);
     //! Returns the current value, lying in <c>[0, modulus)</c>.

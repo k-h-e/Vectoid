@@ -117,7 +117,6 @@ void Lander::Handle(const ControlsEvent &event) {
     body_.SetOrientation(transform);
     */
     
-    /*
     // Game pad 2..
     FloatModN newHeading = heading_,
               newPitch   = pitch_;
@@ -126,7 +125,7 @@ void Lander::Handle(const ControlsEvent &event) {
     if (turnSpeed != 0.0f) {
         direction = (1.0f / turnSpeed) * direction;
         NumberTools::ClampMax(&turnSpeed, 1.0f);
-        turnSpeed *= turnSpeed;
+        //turnSpeed *= turnSpeed;
         
         float angle = (float)acos(axis1_) * 180.0f / NumberTools::piAsFloat;
         if (axis2_ < 0.0f) {
@@ -148,7 +147,6 @@ void Lander::Handle(const ControlsEvent &event) {
     Transform transform(YAxis, heading_.Value());
     transform.Prepend(Transform(XAxis, pitch_.Value()));
     body_.SetOrientation(transform);
-    */
     
     /*
     // Mouse...
@@ -182,69 +180,6 @@ void Lander::Handle(const ControlsEvent &event) {
         }
     }
     */
-    
-    // Mouse 2...
-    {
-        std::printf("controls=(%f, %f)\n", axis1_, axis2_);
-    
-        Vector u(axis1_, 0.0f, axis2_);
-        float length = u.Length();
-        if (length > 0.0f) {
-            u = (1.0f/length) * u;
-            Vector v(-u.z, 0.0f, u.x);
-            Transform transform(v, Vector(0.0f, 1.0f, 0.0f), -u),
-                      inverseTransform(Transform::InitAsInverseRotation, transform);
-            Transform rotation(XAxis, -length * data.updateDeltaTimeS * 10000.0f);
-            rotation.Prepend(inverseTransform);
-            rotation.Append(transform);
-            rotation.ApplyTo(&up_);
-            
-            std::printf("up=(%f, %f, %f)\n", up_.x, up_.y, up_.z);
-            
-            u   = up_;
-            u.y = 0.0f;
-            float length = u.Length();
-            if (length > 0.0f) {
-                u = (1.0f/length) * u;
-                v = Vector(-u.z, 0.0f, u.x);
-                Transform orientation(v, up_, CrossProduct(v, up_));
-                orientation.Prepend(Transform(YAxis, 180.0f));
-                body_.SetOrientation(orientation);
-            }
-        }
-        
-        FloatModN newHeading = heading_,
-                  newPitch   = pitch_;
-        Vector direction(axis1_, 0.0f, axis2_);
-        float turnSpeed = direction.Length();
-        if (turnSpeed != 0.0f) {
-            direction = (1.0f / turnSpeed) * direction;
-            NumberTools::ClampMax(&turnSpeed, 1.0f);
-            turnSpeed *= turnSpeed;
-            
-            float angle = (float)acos(axis1_) * 180.0f / NumberTools::piAsFloat;
-            if (axis2_ < 0.0f) {
-                angle = 360.0f - angle;
-            }
-            newHeading.SetValue(angle);
-            newHeading.Add(90.0f);
-            
-            
-            
-            newPitch.SetValue(turnSpeed * 100.0f);
-        }
-        else {
-            newPitch.SetValue(0.0f);
-        }
-        
-        float maxTurnAngle = 360.0f * data.updateDeltaTimeS;
-        heading_.MoveTo(newHeading, maxTurnAngle);
-        pitch_.MoveTo(newPitch, maxTurnAngle);
-        
-        Transform transform(YAxis, heading_.Value());
-        transform.Prepend(Transform(XAxis, pitch_.Value()));
-        body_.SetOrientation(transform);
-    }
     
     if (thrusterActive_ != oldThrusterActive_) {
         if (thrusterActive_) {
