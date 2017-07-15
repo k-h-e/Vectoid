@@ -114,6 +114,7 @@ using namespace kxm::Zarch;
     if (mouseCaptured) {
         const float maxRadius = 400.0f;
         Vector mouseVector(mouseX, -mouseY, 0.0f);
+        
         float length = mouseVector.Length();
         if (length > maxRadius) {
             mouseVector = (maxRadius/length) * mouseVector;
@@ -121,6 +122,9 @@ using namespace kxm::Zarch;
             mouseX =  mouseVector.x;
             mouseY = -mouseVector.y;
         }
+        
+        std::printf("mouse=(%f, %f), length=%f\n", mouseVector.x, mouseVector.y, length);
+        
         controlsState->orientation = (1.0f/maxRadius) * mouseVector;
         controlsState->thruster    = mouseLeftButtonDown;
         controlsState->trigger     = mouseRightButtonDown;

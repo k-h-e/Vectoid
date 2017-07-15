@@ -127,8 +127,8 @@ void Lander::Handle(const ControlsEvent &event) {
         NumberTools::ClampMax(&turnSpeed, 1.0f);
         //turnSpeed *= turnSpeed;
         
-        float angle = (float)acos(axis1_) * 180.0f / NumberTools::piAsFloat;
-        if (axis2_ < 0.0f) {
+        float angle = (float)acos(direction.x) * 180.0f / NumberTools::piAsFloat;
+        if (direction.z < 0.0f) {
             angle = 360.0f - angle;
         }
         newHeading.SetValue(angle);
