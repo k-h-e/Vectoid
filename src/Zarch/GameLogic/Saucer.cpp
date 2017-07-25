@@ -5,7 +5,6 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
-#include <kxm/Zarch/Events/CollisionEvent.h>
 
 using namespace std;
 using namespace kxm::Vectoid;
@@ -39,20 +38,26 @@ void Saucer::Handle(const ControlsRequestEvent &event) {
     }
 }
 
-void Saucer::Handle(const CollisionEvent &event) {
-   ActorInfo<Actor> *otherInfo = data_->actorMap.Get((event.actor == name_) ? event.otherActor : event.actor);
-   if (otherInfo) {
-       switch (otherInfo->Type()) {
-           case ShotActor:
-               data_->ScheduleActorForTermination(name_);
-               data_->ScheduleActorCreation(
-                          ActorCreationEvent(data_->actorNaming.Get(), SaucerActor,
-                          Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
-               break;
-           default:
-               break;
-       }
-   }
+void Saucer::HandleCollision(Actor *other) {
+    other->HandleCollision(this);
+}
+
+void Saucer::HandleCollision(Lander *lander) {
+    // Nop.
+}
+
+void Saucer::HandleCollision(Saucer *saucer) {
+    // Nop.
+}
+
+void Saucer::HandleCollision(Shot *shot) {
+    data_->ScheduleActorForTermination(name_);
+    data_->ScheduleActorCreation(ActorCreationEvent(data_->actorNaming.Get(), SaucerActor,
+                                 Transform(Vector(-1.0f, 3.0f, -2.0f)), Vector(), ActorName()));
+}
+
+void Saucer::HandleGroundCollision() {
+    // Nop.
 }
 
 void Saucer::ExecuteAction() {

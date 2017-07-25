@@ -14,6 +14,9 @@ class ActorCreationEvent;
 namespace GameLogic {
 
 class Data;
+class Lander;
+class Saucer;
+class Shot;
 
 //! Base class to actors inside the game logic sub system.
 /*!
@@ -24,6 +27,11 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
     // Default copy and move ok.
     void SetData(const std::shared_ptr<Data> &data);
     void Reset(const ActorCreationEvent &event);
+    virtual void HandleCollision(Actor *other) = 0;
+    virtual void HandleCollision(Lander *lander) = 0;
+    virtual void HandleCollision(Saucer *saucer) = 0;
+    virtual void HandleCollision(Shot *shot) = 0;
+    virtual void HandleGroundCollision() = 0;
     
   protected:
     Game::ActorName       name_;

@@ -8,7 +8,6 @@ namespace kxm {
 namespace Zarch {
 
 class ActorCreationEvent;
-class CollisionEvent;
 
 namespace GameLogic {
 
@@ -26,7 +25,11 @@ class Shot : public Actor {
     Shot(Shot &&other)                 = delete;
     Shot &operator=(Shot &&other)      = delete;
     void Handle(const ActorCreationEvent &event);
-    void Handle(const CollisionEvent &event);
+    void HandleCollision(Actor *other);
+    void HandleCollision(Lander *lander);
+    void HandleCollision(Saucer *saucer);
+    void HandleCollision(Shot *shot);
+    void HandleGroundCollision();
     void ExecuteAction();
     
   private:

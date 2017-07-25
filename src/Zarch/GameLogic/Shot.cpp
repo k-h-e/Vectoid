@@ -3,7 +3,6 @@
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
-#include <kxm/Zarch/Events/CollisionEvent.h>
 
 using namespace std;
 using namespace kxm::Game;
@@ -22,7 +21,24 @@ void Shot::Handle(const ActorCreationEvent &event) {
     ageS_ = 0.0f;
 }
 
-void Shot::Handle(const CollisionEvent &event) {
+void Shot::HandleCollision(Actor *other) {
+    other->HandleCollision(this);
+}
+
+void Shot::HandleCollision(Lander *lander) {
+    // Nop.
+}
+
+void Shot::HandleCollision(Saucer *saucer) {
+    // Nop.
+}
+
+void Shot::HandleCollision(Shot *shot) {
+    // Nop.
+}
+
+void Shot::HandleGroundCollision() {
+    // Nop.
 }
 
 void Shot::ExecuteAction() {

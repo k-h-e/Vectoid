@@ -65,11 +65,15 @@ void GameLogic::Handle(const ControlsRequestEvent &event) {
 void GameLogic::Handle(const CollisionEvent &event) {
     ActorInfo<Actor> *info      = data_->actorMap.Get(event.actor),
                      *otherInfo = data_->actorMap.Get(event.otherActor);
-    if (info) {
-        info->Actor()->Handle(event);
+    if (info && otherInfo) {
+        info->Actor()->HandleCollision(otherInfo->Actor());
+        otherInfo->Actor()->HandleCollision(info->Actor());
     }
-    if (otherInfo) {
-        otherInfo->Actor()->Handle(event);
+    else if (info && event.otherActor.IsNone()) {
+        info->Actor()->HandleGroundCollision();
+    }
+    else if (otherInfo && event.actor.IsNone()) {
+        otherInfo->Actor()->HandleGroundCollision();
     }
     FinalizeEventHandler();
 }

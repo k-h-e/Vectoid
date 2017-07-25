@@ -69,6 +69,9 @@ using namespace kxm::Zarch;
 - (void)mouseDragged: (NSEvent *)event {
     [self mouseMoved: event];
 }
+- (void)rightMouseDragged: (NSEvent *)event {
+    [self mouseMoved: event];
+}
 - (void)mouseMoved: (NSEvent *)event {
     mouseX += (float)event.deltaX;
     mouseY += (float)event.deltaY;
@@ -122,9 +125,6 @@ using namespace kxm::Zarch;
             mouseX =  mouseVector.x;
             mouseY = -mouseVector.y;
         }
-        
-        std::printf("mouse=(%f, %f), length=%f\n", mouseVector.x, mouseVector.y, length);
-        
         controlsState->orientation = (1.0f/maxRadius) * mouseVector;
         controlsState->thruster    = mouseLeftButtonDown;
         controlsState->trigger     = mouseRightButtonDown;

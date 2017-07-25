@@ -37,7 +37,8 @@ class ActorMap {
      *  instance.
      */
     void Unregister(const ActorName &name);
-    //! Returns the data associated with the specified actor name, or <c>nullptr</c> if such an actor is not present.
+    //! Returns the data associated with the specified actor name, or <c>nullptr</c> if such an actor is not present
+    //! (including the case where \ref ActorName::IsNone() ).
     /*!
      *  The data remains owned by the <c>ActorMap</c>. The pointer may get invalidated by further operations on the
      *  <c>ActorMap</c>.

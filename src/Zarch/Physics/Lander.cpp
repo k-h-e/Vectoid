@@ -8,6 +8,7 @@
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
+#include <kxm/Zarch/Events/CollisionEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 
 using namespace std;
@@ -208,6 +209,7 @@ void Lander::HandleBodyTransformUpdate(Transform *transform, bool *outVelocityUp
         position.y                 = terrainHeight;
         killVelocity_              = true;
         *outVelocityUpdateRequired = true;
+        data.eventLoop->Post(CollisionEvent(name_, ActorName()));
     }
     else {
         *outVelocityUpdateRequired = false;
