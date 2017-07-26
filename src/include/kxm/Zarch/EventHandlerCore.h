@@ -14,6 +14,7 @@ class MoveEvent;
 class VelocityEvent;
 class AccelerationEvent;
 class CollisionEvent;
+class GroundCollisionEvent;
 class ControlsRequestEvent;
 class ControlsEvent;
 class ControlsRejectionEvent;
@@ -35,6 +36,7 @@ class EventHandlerCore : public virtual Core::Interface {
     virtual void Handle(const VelocityEvent &event);
     virtual void Handle(const AccelerationEvent &event);
     virtual void Handle(const CollisionEvent &event);
+    virtual void Handle(const GroundCollisionEvent &event);
     virtual void Handle(const ControlsRequestEvent &event);
     virtual void Handle(const ControlsEvent &event);
     virtual void Handle(const ControlsRejectionEvent &event);

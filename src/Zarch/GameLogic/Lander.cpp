@@ -9,6 +9,7 @@
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
+#include <kxm/Zarch/Events/GroundCollisionEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/AccelerationEvent.h>
@@ -72,6 +73,18 @@ void Lander::Handle(const ControlsRequestEvent &event) {
     }
 }
 
+void Lander::Handle(const GroundCollisionEvent &event) {
+    Vector up(0.0f, 1.0f, 0.0f);
+    Transform transform(event.transform);
+    transform.SetTranslationPart(Vector());
+    transform.ApplyTo(&up);
+    if ((up.y < .96f) || (event.velocity.Length() > 2.0f)) {
+        std::printf("up.y=%f, v_len=%f\n", up.y, event.velocity.Length());
+        data_->ScheduleActorForTermination(name_);
+        data_->landerRespawnTimeS = 3.0f;
+    }
+}
+
 void Lander::HandleCollision(Actor *other) {
     other->HandleCollision(this);
 }
@@ -81,15 +94,11 @@ void Lander::HandleCollision(Lander *lander) {
 }
 
 void Lander::HandleCollision(Saucer *saucer) {
-    // Nop.
+    // Nop, for now.
 }
 
 void Lander::HandleCollision(Shot *shot) {
-    // Nop.
-}
-
-void Lander::HandleGroundCollision() {
-    std::puts("ground collision");
+    // Nop, for now.
 }
 
 void Lander::ExecuteAction() {

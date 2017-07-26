@@ -8,7 +8,7 @@
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
-#include <kxm/Zarch/Events/CollisionEvent.h>
+#include <kxm/Zarch/Events/GroundCollisionEvent.h>
 #include <kxm/Zarch/Physics/Data.h>
 
 using namespace std;
@@ -50,6 +50,7 @@ void Lander::Handle(const ActorCreationEvent &event) {
     Actor::Reset(event);
     axis1_             = 0.0f;
     axis2_             = 0.0f;
+    mouseVector_       = Vector();
     thrusterActive_    = false;
     oldThrusterActive_ = false;
     headingVector_     = Vector(0.0f, 0.0f, -1.0f);
@@ -118,6 +119,7 @@ void Lander::Handle(const ControlsEvent &event) {
     body_.SetOrientation(transform);
     */
     
+    /*
     // Game pad 2..
     FloatModN newHeading = heading_,
               newPitch   = pitch_;
@@ -148,6 +150,7 @@ void Lander::Handle(const ControlsEvent &event) {
     Transform transform(YAxis, heading_.Value());
     transform.Prepend(Transform(XAxis, pitch_.Value()));
     body_.SetOrientation(transform);
+    */
     
     /*
     // Mouse...
@@ -182,6 +185,44 @@ void Lander::Handle(const ControlsEvent &event) {
     }
     */
     
+    // Mouse 2..
+    mouseVector_.x += axis1_;
+    mouseVector_.y += axis2_;
+    float mouseVectorLength = mouseVector_.Length();
+    if (mouseVectorLength > 1.0f) {
+        mouseVector_ = (1.0f / mouseVectorLength) * mouseVector_;
+    }
+    
+    FloatModN newHeading = heading_,
+              newPitch   = pitch_;
+    Vector direction(mouseVector_.x, 0.0f, mouseVector_.y);
+    float turnSpeed = direction.Length();
+    if (turnSpeed != 0.0f) {
+        direction = (1.0f / turnSpeed) * direction;
+        NumberTools::ClampMax(&turnSpeed, 1.0f);
+        //turnSpeed *= turnSpeed;
+        
+        float angle = (float)acos(direction.x) * 180.0f / NumberTools::piAsFloat;
+        if (direction.z < 0.0f) {
+            angle = 360.0f - angle;
+        }
+        newHeading.SetValue(angle);
+        newHeading.Add(90.0f);
+        
+        newPitch.SetValue(turnSpeed * 100.0f);
+    }
+    else {
+        newPitch.SetValue(0.0f);
+    }
+    
+    float maxTurnAngle = 360.0f * data.updateDeltaTimeS;
+    heading_.MoveTo(newHeading, maxTurnAngle);
+    pitch_.MoveTo(newPitch, maxTurnAngle);
+    
+    Transform transform(YAxis, heading_.Value());
+    transform.Prepend(Transform(XAxis, pitch_.Value()));
+    body_.SetOrientation(transform);
+    
     if (thrusterActive_ != oldThrusterActive_) {
         if (thrusterActive_) {
             body_.EnableAcceleration(data_->mapParameters->landerThrust * Vector(0.0f, 1.0f, 0.0f), true);
@@ -209,7 +250,10 @@ void Lander::HandleBodyTransformUpdate(Transform *transform, bool *outVelocityUp
         position.y                 = terrainHeight;
         killVelocity_              = true;
         *outVelocityUpdateRequired = true;
-        data.eventLoop->Post(CollisionEvent(name_, ActorName()));
+        
+        Vector velocity;
+        body_.GetVelocity(&velocity);
+        data.eventLoop->Post(GroundCollisionEvent(name_, *transform, velocity));
     }
     else {
         *outVelocityUpdateRequired = false;

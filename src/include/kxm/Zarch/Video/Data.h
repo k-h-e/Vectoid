@@ -40,8 +40,6 @@ class TerrainRenderer;
  *  \ingroup ZarchVideo
  */
 struct Data {
-    Data()
-        : frameDeltaTimeS(0.0f) {}
     float                                           frameDeltaTimeS;
     Game::ActorName                                 focusLander;
     std::shared_ptr<Vectoid::PerspectiveProjection> projection;
@@ -54,6 +52,9 @@ struct Data {
     std::shared_ptr<MapParameters>                  mapParameters;
     std::shared_ptr<Terrain>                        terrain;
     Vectoid::Vector                                 statsConsolePosition;
+    
+    Data() : frameDeltaTimeS(0.0f) {}
+    void StartParticleExplosion(const Vectoid::Vector &position, int particleCount);
 };
 
 }    // Namespace Video.

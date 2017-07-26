@@ -26,6 +26,7 @@ class InitializationEvent;
 class ActorCreationEvent;
 class ControlsRequestEvent;
 class CollisionEvent;
+class GroundCollisionEvent;
 class TriggerEvent;
 
 namespace GameLogic {
@@ -47,6 +48,7 @@ class GameLogic : public EventHandlerCore {
     void Handle(const InitializationEvent &event);
     void Handle(const ControlsRequestEvent &event);
     void Handle(const CollisionEvent &event);
+    void Handle(const GroundCollisionEvent &event);
     void Handle(const TriggerEvent &event);
     
   private:

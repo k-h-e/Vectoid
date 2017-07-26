@@ -43,6 +43,7 @@ class Lander : public Actor, public virtual Body::BodyUpdateHandlerInterface {
     Body                           body_;
     float                          axis1_,
                                    axis2_;
+    Vectoid::Vector                mouseVector_;
     bool                           thrusterActive_,
                                    oldThrusterActive_;
     Vectoid::Vector                headingVector_;

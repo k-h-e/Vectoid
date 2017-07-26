@@ -12,6 +12,8 @@
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/ControlsRequestEvent.h>
 #include <kxm/Zarch/Events/CollisionEvent.h>
+#include <kxm/Zarch/Events/GroundCollisionEvent.h>
+#include <kxm/Zarch/Events/GroundCollisionEvent.h>
 #include <kxm/Zarch/GameLogic/Data.h>
 #include <kxm/Zarch/GameLogic/Lander.h>
 #include <kxm/Zarch/GameLogic/Shot.h>
@@ -43,6 +45,7 @@ GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &
     data_->eventLoop->RegisterHandler(ControlsRequestEvent::type, this);
     data_->eventLoop->RegisterHandler(TriggerEvent::type,         this);
     data_->eventLoop->RegisterHandler(CollisionEvent::type,       this);
+    data_->eventLoop->RegisterHandler(GroundCollisionEvent::type, this);
 }
 
 GameLogic::~GameLogic() {
@@ -67,21 +70,35 @@ void GameLogic::Handle(const CollisionEvent &event) {
                      *otherInfo = data_->actorMap.Get(event.otherActor);
     if (info && otherInfo) {
         info->Actor()->HandleCollision(otherInfo->Actor());
-        otherInfo->Actor()->HandleCollision(info->Actor());
+            // We're using a double dispatch scheme to execute the appropriate code for the pair of collision
+            // partners. It is enough to call HandleCollision() on one of them.
+        FinalizeEventHandler();
     }
-    else if (info && event.otherActor.IsNone()) {
-        info->Actor()->HandleGroundCollision();
+}
+
+void GameLogic::Handle(const GroundCollisionEvent &event) {
+    ActorInfo<Actor> *info = data_->actorMap.Get(event.actor);
+    if (info) {
+        info->Actor()->Handle(event);
+        FinalizeEventHandler();
     }
-    else if (otherInfo && event.actor.IsNone()) {
-        otherInfo->Actor()->HandleGroundCollision();
-    }
-    FinalizeEventHandler();
 }
 
 void GameLogic::Handle(const TriggerEvent &event) {
     if ((inTrigger_ != TriggerEvent::NoTrigger) && (event.trigger == inTrigger_)) {
         data_->deltaTimeS = event.deltaTime_s;
         actions_->Execute();
+        
+        if (data_->landerRespawnTimeS != 0.0f) {
+            if (data_->landerRespawnTimeS > data_->deltaTimeS) {
+                data_->landerRespawnTimeS -= data_->deltaTimeS;
+            }
+            else {
+                data_->landerRespawnTimeS = 0.0f;
+                data_->ScheduleActorCreation(ActorCreationEvent(data_->actorNaming.Get(), LanderActor, Transform(),
+                                                                Vector(), ActorName()));
+            }
+        }
         
         FinalizeEventHandler();    // It's okay here for this not to be last action in handler.
         

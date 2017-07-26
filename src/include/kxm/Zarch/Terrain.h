@@ -18,14 +18,12 @@ namespace Zarch {
 /*! 
  *  \ingroup Zarch
  *
- *  The terrain extents in the <c>x</c> and <c>z</c> directions, with the <c>y</c> direction
- *  corresponding to the concept of height. The terrain is composed of "cells", the projection into
- *  the <c>xz</c>-plane of which are squares of a fixed size. The heights of a cell's four vertices
- *  are given by the corresponding datapoints of a rectilinear grid, the dimensions of which match
- *  the numbers of cells in <c>x</c> and <c>z</c> directions respectively.
+ *  The terrain extends in the <c>x</c> and <c>z</c> directions, with the <c>y</c> direction corresponding to the
+ *  concept of height. The terrain is composed of "cells", the projection into the <c>xz</c>-plane of which are squares
+ *  of a fixed size. The heights of a cell's four vertices are given by the corresponding datapoints of a rectilinear
+ *  grid, the dimensions of which match the numbers of cells in <c>x</c> and <c>z</c> directions respectively.
  *
- *  The terrain has "modulo-characteristics" in <c>x</c>- and <c>z</c>-directions (it repeats
- *  itself). 
+ *  The terrain has "modulo-characteristics" in <c>x</c>- and <c>z</c>-directions (it repeats itself). 
  */ 
 class Terrain : public virtual Core::Interface {
   public:

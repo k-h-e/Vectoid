@@ -55,6 +55,10 @@ void Lander::Handle(const ActorTerminationEvent &event) {
     if (hasFocus_) {
         data_->focusLander = ActorName();
     }
+    
+    Vector position;
+    coordSys_->GetPosition(&position);
+    data_->StartParticleExplosion(position, 300);    
     data_->camera->RemoveChild(coordSys_);
 }
 

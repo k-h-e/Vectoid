@@ -31,7 +31,6 @@ class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
     virtual void HandleCollision(Lander *lander) = 0;
     virtual void HandleCollision(Saucer *saucer) = 0;
     virtual void HandleCollision(Shot *shot) = 0;
-    virtual void HandleGroundCollision() = 0;
     
   protected:
     Game::ActorName       name_;

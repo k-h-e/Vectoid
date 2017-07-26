@@ -73,20 +73,38 @@ void Terrain::GenerateTerrain() {
         }
     }
 
+    // TESTING: Base...
+    for (int x = -2; x <= 2; ++x) {
+        for (int z = -2; z <= 2; ++z) {
+            int xx = mapParameters_->numCellsX/2 + x,
+                zz = mapParameters_->numCellsZ/2 + z;
+            CellHeight(xx, zz) = 1.5f;
+        }
+    }
+    for (int x = -3; x <= 2; ++x) {
+        for (int z = -3; z <= 2; ++z) {
+            int xx = mapParameters_->numCellsX/2 + x,
+                zz = mapParameters_->numCellsZ/2 + z;
+            CellColor(xx, zz) = (xx + zz) % 2 ? Vector(.4f, .4f, .4f) : Vector(.6f, .6f, .6f);
+        }
+    }
+
     // Water...
-    vector<float> oldHeights = heights_;
     for (int x = 0; x < mapParameters_->numCellsX; x++) {
         for (int z = 0; z < mapParameters_->numCellsZ; z++) {
-            if (oldHeights[z*mapParameters_->numCellsX + x] <= 0.0f) {
-                CellColor(x, z) = Vector(.2f, .2f, .8f);
-                IntModN xMod(mapParameters_->numCellsX, 0);
-                xMod.SetValue(x);
-                IntModN zMod(mapParameters_->numCellsZ, 0);
-                zMod.SetValue(z);
+            IntModN xMod(mapParameters_->numCellsX, 0);
+            xMod.SetValue(x);
+            IntModN zMod(mapParameters_->numCellsZ, 0);
+            zMod.SetValue(z);
+            if (       (CellHeight(x, z)                                   <= 0.0f)
+                    && (CellHeight((xMod + 1).ToInt(), z)                  <= 0.0f)
+                    && (CellHeight(x, (zMod + 1).ToInt())                  <= 0.0f)
+                    && (CellHeight((xMod + 1).ToInt(), (zMod + 1).ToInt()) <= 0.0f)) {
                 CellHeight(x, z)                                   = 0.0f;
                 CellHeight((xMod + 1).ToInt(), z)                  = 0.0f;
                 CellHeight(x, (zMod + 1).ToInt())                  = 0.0f;
                 CellHeight((xMod + 1).ToInt(), (zMod + 1).ToInt()) = 0.0f;
+                CellColor(x, z) = Vector(.2f, .2f, .8f);
             }
         }
     }

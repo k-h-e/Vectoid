@@ -2,6 +2,8 @@
 
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/GameLogic/Data.h>
+#include <kxm/Zarch/GameLogic/Lander.h>
+#include <kxm/Zarch/GameLogic/Saucer.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 
 using namespace std;
@@ -26,18 +28,14 @@ void Shot::HandleCollision(Actor *other) {
 }
 
 void Shot::HandleCollision(Lander *lander) {
-    // Nop.
+    lander->HandleCollision(this);
 }
 
 void Shot::HandleCollision(Saucer *saucer) {
-    // Nop.
+    saucer->HandleCollision(this);
 }
 
 void Shot::HandleCollision(Shot *shot) {
-    // Nop.
-}
-
-void Shot::HandleGroundCollision() {
     // Nop.
 }
 

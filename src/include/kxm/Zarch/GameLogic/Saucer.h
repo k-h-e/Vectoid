@@ -28,7 +28,6 @@ class Saucer : public Actor {
     void HandleCollision(Lander *lander);
     void HandleCollision(Saucer *saucer);
     void HandleCollision(Shot *shot);
-    void HandleGroundCollision();
     void ExecuteAction();
     
   private:
