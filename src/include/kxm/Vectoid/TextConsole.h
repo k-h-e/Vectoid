@@ -34,9 +34,8 @@ class TextConsole : public virtual GeometryInterface {
     void WriteAt(int column, int row, const char *text);
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
-    void Render(RenderContext *context);
     
-  private:
+  protected:
     int                     width_, height_,
                             rowCursor_;
     float                   glyphWidth_, glyphHeight_;

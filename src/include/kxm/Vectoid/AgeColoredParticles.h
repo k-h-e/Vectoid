@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <memory>
-#include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/Vector.h>
 #include <kxm/Vectoid/GeometryInterface.h>
 
@@ -19,18 +18,13 @@ class Particles;
 class AgeColoredParticles : public virtual GeometryInterface {
  public:
     AgeColoredParticles(std::shared_ptr<Vectoid::Particles> particles);
+    AgeColoredParticles(const AgeColoredParticles &other) = delete;
+    AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
     
-    void Render(Vectoid::RenderContext *context);
-    
-  private:
-    AgeColoredParticles(const AgeColoredParticles &other);
-    AgeColoredParticles &operator=(const AgeColoredParticles &other);
-    
+  protected:
     std::shared_ptr<Vectoid::Particles> particles_;
     float                               highAge_;
     std::vector<Vectoid::Vector>        colors_;
-    std::vector<GLfloat>                vertexBuffer_,
-                                        colorBuffer_;
 };
 
 }    // Namespace Vectoid.

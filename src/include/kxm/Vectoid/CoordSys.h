@@ -6,20 +6,14 @@
 namespace kxm {
 namespace Vectoid {
 
-class RenderContext;
-
 //! This scene graph node sets up a local coordinate system for its children.
 /*! 
  *  \ingroup Vectoid
  */ 
 class CoordSys : public CoordSysCore {
   public:
-    CoordSys();
-    void Render(RenderContext *context);
-    
-  private:
-    CoordSys(const CoordSys &other);
-    CoordSys &operator=(const CoordSys &other);
+    CoordSys(const CoordSys &other) = delete;
+    CoordSys &operator=(const CoordSys &other) = delete;
 };
 
 }    // Namespace Vectoid.

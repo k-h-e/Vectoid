@@ -1,8 +1,9 @@
 #ifndef KXM_VECTOID_GLYPHS_H_
 #define KXM_VECTOID_GLYPHS_H_
 
+#include <kxm/Core/Interface.h>
 
-#include <kxm/Vectoid/OpenGL.h>
+#include <stdint.h>
 
 namespace kxm {
 namespace Vectoid {
@@ -11,7 +12,7 @@ namespace Vectoid {
 /*! 
  *  \ingroup Vectoid
  */
-class Glyphs {
+class Glyphs : public virtual Core::Interface {
   public:
     Glyphs();
     Glyphs(const Glyphs &other)            = delete;
@@ -20,20 +21,13 @@ class Glyphs {
     Glyphs &operator=(Glyphs &&other)      = delete;
     
     //! Binds the texture for the specified glyph, if present.
-    void BindGlyphTexture(uint8_t glyph);
+    virtual void BindGlyphTexture(uint8_t glyph) = 0;
     
-  private:
+  protected:
     static const int     numGlyphs,
                          glyphWidth, glyphHeight;
     static const uint8_t glyphData[],
                          glyphCodes[];
-  
-    void GenerateTextures();
-                         
-    GLuint  textures_[256];
-    uint8_t defaultGlyph_;
-    bool    glResourcesPresent_,
-            haveDefaultGlyph_;
 };
 
 }    // Namespace Vectoid.

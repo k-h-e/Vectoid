@@ -3,8 +3,6 @@
 
 #include <vector>
 #include <memory>
-
-#include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
 
 namespace kxm {
@@ -20,15 +18,11 @@ class Particles;
 class ParticlesRenderer : public virtual Vectoid::GeometryInterface {
   public:
     ParticlesRenderer(std::shared_ptr<Vectoid::Particles> particles);
+    ParticlesRenderer(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
     
-    void Render(Vectoid::RenderContext *context);
-    
-  private:
-    ParticlesRenderer(const ParticlesRenderer &other);
-    ParticlesRenderer &operator=(const ParticlesRenderer &other);
-    
+  protected:
     std::shared_ptr<Vectoid::Particles> particles_;
-    std::vector<GLfloat>                vertexBuffer_;
 };
 
 

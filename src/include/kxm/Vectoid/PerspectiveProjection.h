@@ -30,17 +30,19 @@ class PerspectiveProjection : public SceneGraphNode {
     void SetViewPort(float width, float height);
     //! Transforms a viewport point to camera coordinates.
     Vector TransformViewPortCoordinates(float x, float y) const;
-    void Render(RenderContext *context);
+    
+  protected:
+    void ComputeWindowDimensions(float *width, float *height) const;
+    float eyepointDistance_;
+    bool  parametersChanged_;    // Will get cleared by Render() implementations.
     
   private:
     static const float paramMin;
     PerspectiveProjection(const PerspectiveProjection &other);
     PerspectiveProjection &operator=(const PerspectiveProjection &other);
-    void ComputeWindowDimensions(float *width, float *height) const;
     
-    float windowSize_, eyepointDistance_, viewingDepth_,
+    float windowSize_, viewingDepth_,
           width_, height_;
-    bool  parametersChanged_;
 };
 
 }    // Namespace Vectoid.

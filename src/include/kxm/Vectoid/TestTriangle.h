@@ -1,7 +1,6 @@
 #ifndef KXM_VECTOID_TESTTRIANGLE_H_
 #define KXM_VECTOID_TESTTRIANGLE_H_
 
-#include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
 
 namespace kxm {
@@ -13,13 +12,8 @@ namespace Vectoid {
  */ 
 class TestTriangle : public virtual GeometryInterface {
   public:
-    TestTriangle();
-    void Render(RenderContext *context);
-    
-  private:
-    TestTriangle(const TestTriangle &other);
-    TestTriangle &operator=(const TestTriangle &other);
-    static const GLfloat vertices[9];
+    TestTriangle(const TestTriangle &other) = delete;
+    TestTriangle &operator=(const TestTriangle &other) = delete;
 };
 
 }    // Namespace Vectoid.

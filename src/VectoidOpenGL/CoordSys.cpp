@@ -1,13 +1,10 @@
-#include <kxm/Vectoid/CoordSys.h>
+#include <kxm/VectoidOpenGL/CoordSys.h>
 
-#include <kxm/Vectoid/OpenGL.h>
+#include <kxm/VectoidOpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {
-
-CoordSys::CoordSys() {
-    // Nop.
-}
+namespace OpenGL {
 
 void CoordSys::Render(RenderContext *context) {
     glPushMatrix();
@@ -16,5 +13,6 @@ void CoordSys::Render(RenderContext *context) {
     glPopMatrix();
 }
 
+}    // Namespace OpenGL.
 }    // Namespace Vectoid.
 }    // Namespace kxm.

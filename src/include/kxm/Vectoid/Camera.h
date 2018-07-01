@@ -6,20 +6,14 @@
 namespace kxm {
 namespace Vectoid {
 
-class RenderContext;
-
 //! This scene graph node represents a camera.
 /*! 
  *  \ingroup Vectoid
  */ 
 class Camera : public CoordSysCore {
   public:
-    Camera();
-    void Render(RenderContext *context);
-    
-  private:
-    Camera(const Camera &other);
-    Camera &operator=(const Camera &other);
+    Camera(const Camera &other) = delete;
+    Camera &operator=(const Camera &other) = delete;
 };
 
 }    // Namespace Vectoid.

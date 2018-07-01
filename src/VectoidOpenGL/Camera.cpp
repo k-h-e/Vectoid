@@ -1,12 +1,10 @@
-#include <kxm/Vectoid/Camera.h>
+#include <kxm/VectoidOpenGL/Camera.h>
 
-#include <kxm/Vectoid/OpenGL.h>
+#include <kxm/VectoidOpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {
-
-Camera::Camera() {
-}
+namespace OpenGL {
 
 void Camera::Render(RenderContext *context) {
     Transform inverse(Transform::InitAsInverse, transform_);
@@ -15,5 +13,6 @@ void Camera::Render(RenderContext *context) {
     CoordSysCore::Render(context);
 }
 
+}    // Namespace OpenGL.
 }    // Namespace Vectoid.
 }    // Namespace kxm.
