@@ -15,7 +15,7 @@ ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
     // Nop.
 }
 
-void ParticlesRenderer::Render(RenderContext *context) {
+void ParticlesRenderer::Render() {
     int num = particles_->Count();
     if (num == 0)
         return;

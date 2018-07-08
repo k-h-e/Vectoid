@@ -19,7 +19,7 @@ TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
     vertices_.resize(2 * 3 * 3);    // Two triangles.
 }
 
-void TerrainRenderer::Render(RenderContext *context) {
+void TerrainRenderer::Render() {
     glVertexPointer(3, GL_FLOAT, 0, &vertices_[0]);
     glEnableClientState(GL_VERTEX_ARRAY);
     

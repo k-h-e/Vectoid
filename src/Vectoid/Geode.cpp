@@ -12,9 +12,9 @@ Geode::Geode(const shared_ptr<GeometryInterface> &geometry) {
     geometry_ = geometry;
 }
 
-void Geode::Render(RenderContext *context) {
-    geometry_->Render(context);
-    SceneGraphNode::Render(context);
+void Geode::Render() {
+    geometry_->Render();
+    SceneGraphNode::Render();
 }
 
 }    // Namespace Vectoid.

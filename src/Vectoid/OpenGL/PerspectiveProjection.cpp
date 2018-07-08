@@ -10,7 +10,7 @@ PerspectiveProjection::PerspectiveProjection() {
     // Nop.
 }
 
-void PerspectiveProjection::Render(RenderContext *context) {
+void PerspectiveProjection::Render() {
     if (parametersChanged_) {
         float windowWidth, windowHeight;
         ComputeWindowDimensions(&windowWidth, &windowHeight);
@@ -29,7 +29,7 @@ void PerspectiveProjection::Render(RenderContext *context) {
         glMatrixMode(GL_MODELVIEW);
         parametersChanged_ = false;
     }
-    SceneGraphNode::Render(context);
+    SceneGraphNode::Render();
 }
 
 }    // Namespace OpenGL.

@@ -7,8 +7,7 @@
 
 namespace kxm {
 namespace Vectoid {
-    
-class RenderContext;
+
 class Particles;
 
 //! Renders particles.

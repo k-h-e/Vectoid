@@ -17,7 +17,7 @@ AgeColoredParticles::AgeColoredParticles(shared_ptr<Vectoid::Particles> particle
     // Nop.
 }
     
-void AgeColoredParticles::Render(Vectoid::RenderContext *context) {
+void AgeColoredParticles::Render() {
     int num = particles_->Count();
     if (num == 0)
         return;

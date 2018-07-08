@@ -20,7 +20,7 @@ class SimpleGeometryRenderer : public Video::SimpleGeometryRenderer {
     SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
     SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
-    void Render(Vectoid::RenderContext *context);
+    void Render();
     
   private:
     int                  numTriangles_;

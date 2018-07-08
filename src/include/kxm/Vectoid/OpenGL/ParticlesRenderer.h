@@ -19,7 +19,7 @@ class ParticlesRenderer : public Vectoid::ParticlesRenderer {
     ParticlesRenderer(std::shared_ptr<Vectoid::Particles> particles);
     ParticlesRenderer(const ParticlesRenderer &other) = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
-    void Render(Vectoid::RenderContext *context);
+    void Render();
     
   private:
     std::vector<GLfloat> vertexBuffer_;

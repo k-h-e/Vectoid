@@ -15,7 +15,7 @@ namespace Vectoid {
 class Geode : public SceneGraphNode {
   public:
     Geode(const std::shared_ptr<GeometryInterface> &geometry);
-    void Render(RenderContext *context);
+    void Render();
     
   private:
     Geode(const Geode &other);

@@ -281,7 +281,7 @@ void Video::Handle(const TriggerEvent &event) {
             fpsTimeS_        = 0.0f;
         }
         
-        data.projection->Render(0);
+        data.projection->Render();
         eventLoop_->Post(TriggerEvent(TriggerEvent::FrameRenderedTrigger, 0.0f));
     }
 }

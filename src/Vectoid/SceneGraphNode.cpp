@@ -42,12 +42,12 @@ void SceneGraphNode::RemoveAllChildren() {
     lastChild_.reset();
 }
 
-void SceneGraphNode::Render(RenderContext *context) {
+void SceneGraphNode::Render() {
     for (auto &child : children_) {
-        child->Render(context);
+        child->Render();
     }
     if (lastChild_) {
-        lastChild_->Render(context);
+        lastChild_->Render();
     }
 }
 

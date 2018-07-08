@@ -16,7 +16,7 @@ class Camera : public Vectoid::Camera {
     Camera();
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
-    void Render(RenderContext *context);
+    void Render();
 };
 
 }    // Namespace OpenGL.

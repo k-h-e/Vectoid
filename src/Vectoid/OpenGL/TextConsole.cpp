@@ -17,7 +17,7 @@ TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHei
     // Nop.
 }
 
-void TextConsole::Render(RenderContext *context) {
+void TextConsole::Render() {
     GLfloat vertices[]  = { 0.0f, 0.0f, 0.0f,
                             1.0f, 0.0f, 0.0f, 
                             1.0f, 1.0f, 0.0f,

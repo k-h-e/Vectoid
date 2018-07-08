@@ -16,7 +16,7 @@ class PerspectiveProjection : public Vectoid::PerspectiveProjection {
     PerspectiveProjection();
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
-    void Render(RenderContext *context);
+    void Render();
 };
 
 }    // Namespace OpenGL.

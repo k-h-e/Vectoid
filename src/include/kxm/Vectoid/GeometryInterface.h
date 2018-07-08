@@ -6,8 +6,6 @@
 namespace kxm {
 namespace Vectoid {
 
-class RenderContext;
-
 //! Interface to entities representing actual geometry.
 /*! 
  *  \ingroup Vectoid
@@ -15,7 +13,7 @@ class RenderContext;
 class GeometryInterface : public virtual Core::Interface {
   public:
     //! Renders the geometry.
-    virtual void Render(RenderContext *context) = 0;
+    virtual void Render() = 0;
 };
 
 }    // Namespace Vectoid.

@@ -16,7 +16,7 @@ class CoordSys : public Vectoid::CoordSys {
     CoordSys();
     CoordSys(const CoordSys &other) = delete;
     CoordSys &operator=(const CoordSys &other) = delete;
-    void Render(RenderContext *context);
+    void Render();
 };
 
 }    // Namespace OpenGL.

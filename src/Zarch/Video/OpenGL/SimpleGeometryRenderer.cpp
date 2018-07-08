@@ -21,7 +21,7 @@ SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<SimpleGeometry> 
     }
 }
 
-void SimpleGeometryRenderer::Render(RenderContext *context) {
+void SimpleGeometryRenderer::Render() {
     if (numTriangles_) {
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_COLOR_ARRAY);

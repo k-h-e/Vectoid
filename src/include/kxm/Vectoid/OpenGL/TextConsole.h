@@ -18,7 +18,7 @@ class TextConsole : public Vectoid::TextConsole {
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
     TextConsole &operator=(TextConsole &&other)      = delete;
-    void Render(RenderContext *context);
+    void Render();
 };
 
 }    // Namespace OpenGL.

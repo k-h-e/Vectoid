@@ -8,8 +8,6 @@
 
 namespace kxm {
 namespace Vectoid {
-    
-class RenderContext;
 
 //! Base class to all scene graph nodes.
 /*! 
@@ -36,8 +34,8 @@ class SceneGraphNode : public virtual Core::Interface {
     //! Removes all child nodes from the scene graph node.
     void RemoveAllChildren();
     //! Performs a render traversal of the sub scene graph rooted in the node. This is the only scene graph node
-    //! operation that is allowed to interact with <c>OpenGL</c>.
-    virtual void Render(RenderContext *context);
+    //! operation that is allowed to interact with the underlying graphics platform.
+    virtual void Render();
     
   private:
     std::vector<std::shared_ptr<SceneGraphNode>> children_;

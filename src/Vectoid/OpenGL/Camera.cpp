@@ -11,11 +11,11 @@ Camera::Camera()
     //Nop.
 }
 
-void Camera::Render(RenderContext *context) {
+void Camera::Render() {
     Transform inverse(Transform::InitAsInverse, transform_);
     glLoadIdentity();
     glMultMatrixf(inverse.MatrixElements());
-    CoordSysCore::Render(context);
+    CoordSysCore::Render();
 }
 
 }    // Namespace OpenGL.

@@ -20,7 +20,7 @@ class TerrainRenderer : public Video::TerrainRenderer {
                     std::shared_ptr<MapParameters> mapParameters);
     TerrainRenderer(const TerrainRenderer &other) = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
-    void Render(Vectoid::RenderContext *context);
+    void Render();
     
   private:
     std::vector<GLfloat> vertices_;

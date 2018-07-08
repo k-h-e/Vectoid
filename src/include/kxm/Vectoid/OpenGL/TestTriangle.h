@@ -18,7 +18,7 @@ class TestTriangle : public Vectoid::TestTriangle {
     TestTriangle();   
     TestTriangle(const TestTriangle &other) = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
-    void Render(RenderContext *context);
+    void Render();
     
   private:
     static const GLfloat vertices[9];

@@ -17,7 +17,7 @@ class AgeColoredParticles : public Vectoid::AgeColoredParticles {
     AgeColoredParticles(std::shared_ptr<Vectoid::Particles> particles);
     AgeColoredParticles(const AgeColoredParticles &other) = delete;
     AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
-    void Render(Vectoid::RenderContext *context);
+    void Render();
     
   private:
     std::vector<GLfloat> vertexBuffer_,
