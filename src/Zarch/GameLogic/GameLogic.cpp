@@ -30,11 +30,11 @@ namespace GameLogic {
 
 GameLogic::GameLogic(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
                      TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
-        : actions_(new Actions()),
-          landers_(actions_),
-          shots_(actions_),
-          saucers_(actions_),
-          data_(new Data()),
+        : data_(new Data()),
+          actions_(new Actions()),
+          landers_(actions_, data_),
+          shots_(actions_, data_),
+          saucers_(actions_, data_),
           inTrigger_(anInTrigger),
           outTrigger_(anOutTrigger) {
     data_->eventLoop     = eventLoop;
@@ -130,7 +130,6 @@ void GameLogic::FinalizeEventHandler() {
             assert(actor);
             data_->actorMap.Register(creationEvent.actor, ActorInfo<Actor>(creationEvent.actorType, storageId, actor));
             data_->eventLoop->Post(creationEvent);
-            actor->SetData(data_);
             actor->Handle(creationEvent);
         }
         data_->actorCreationEvents.clear();

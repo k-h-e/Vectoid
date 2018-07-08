@@ -3,6 +3,8 @@
 #include <kxm/Vectoid/Vector.h>
 
 using std::vector;
+using std::shared_ptr;
+using std::make_shared;
 using namespace kxm::Vectoid;
 
 namespace kxm {
@@ -17,7 +19,7 @@ SimpleGeometry::SimpleGeometry()
 void SimpleGeometry::GetBoundingBox(BoundingBox *outBoundingBox) {
     if (!boundingBoxValid_) {
         BoundingBox boundingBox;
-        GLfloat *coordPtr = &vertexArray_[0];
+        float *coordPtr = &vertexArray_[0];
         Vector point;
         for (int i = 0; i < numTriangles_ * 3; ++i) {
             point.x = *coordPtr++;
@@ -29,18 +31,6 @@ void SimpleGeometry::GetBoundingBox(BoundingBox *outBoundingBox) {
         boundingBoxValid_ = true;
     }
     *outBoundingBox = boundingBox_;
-}
-
-void SimpleGeometry::Render(RenderContext *context) {
-    if (numTriangles_) {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, &vertexArray_[0]);
-        glColorPointer(4, GL_FLOAT, 0, &colorArray_[0]);
-        glDrawArrays(GL_TRIANGLES, 0, numTriangles_ * 3);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_VERTEX_ARRAY);
-    }
 }
 
 void SimpleGeometry::AddTriangle(const Vector &vertex0, const Vector &vertex1, const Vector &vertex2,
@@ -71,7 +61,7 @@ void SimpleGeometry::AddTriangle(const Vector &vertex0, const Vector &vertex1, c
 }
 
 void SimpleGeometry::Move(const Vector &translation) {
-    for (vector<GLfloat>::iterator iter = vertexArray_.begin();
+    for (vector<float>::iterator iter = vertexArray_.begin();
          iter != vertexArray_.end(); ) {
         (*iter) += translation.x;
         ++iter;
@@ -84,10 +74,66 @@ void SimpleGeometry::Move(const Vector &translation) {
 }
 
 void SimpleGeometry::Scale(float factor) {
-    for (vector<GLfloat>::iterator iter = vertexArray_.begin(); iter != vertexArray_.end(); ++iter) {
-        (*iter) *= (GLfloat)factor;
+    for (vector<float>::iterator iter = vertexArray_.begin(); iter != vertexArray_.end(); ++iter) {
+        (*iter) *= (float)factor;
     }
     boundingBoxValid_ = false;
+}
+
+shared_ptr<SimpleGeometry> SimpleGeometry::NewLanderGeometry() {
+    shared_ptr<SimpleGeometry> geometry = make_shared<SimpleGeometry>();
+
+    geometry->AddTriangle(Vector( .5f, 0.0f,  .5f), Vector( -.5f, 0.0f,   .5f), Vector( 0.0f, 0.0f,  -1.0f),
+                          Vector( .8f,  .8f,  .2f));
+    geometry->AddTriangle(Vector(-.5f, 0.0f,  .5f), Vector(  .5f, 0.0f,   .5f), Vector( 0.0f,  .35f,  0.0f),
+                          Vector( .8f,  .8f,  .2f));
+    
+    geometry->AddTriangle(Vector(-.5f, 0.0f,  .5f), Vector( 0.0f,  .35f,  0.0f), Vector( 0.0f,  .5f, - .8f),
+                          Vector( .8f,  .5f,  .2f));
+    geometry->AddTriangle(Vector( .5f, 0.0f,  .5f), Vector( 0.0f,  .5f, - .8f), Vector( 0.0f,  .35f,  0.0f),
+                          Vector( .8f,  .5f,  .2f));
+    
+    geometry->AddTriangle(Vector(-.5f, 0.0f,  .5f), Vector( 0.0f,  .5f, - .8f), Vector(-1.0f,  .1f,  -1.0f),
+                          Vector( .5f,  .8f,  .2f));
+    geometry->AddTriangle(Vector( .5f, 0.0f,  .5f), Vector( 1.0f,  .1f, -1.0f), Vector( 0.0f,  .5f, - .8f),
+                          Vector( .5f,  .8f,  .2f));
+    
+    geometry->AddTriangle(Vector(-.5f, 0.0f,  .5f), Vector(-1.0f,  .1f, -1.0f), Vector( 0.0f, 0.0f,  -1.0f),
+                          Vector( .2f,  .5f,  .8f));
+    geometry->AddTriangle(Vector( .5f, 0.0f,  .5f), Vector( 0.0f, 0.0f,  -1.0f), Vector( 1.0f,  .1f, -1.0f),
+                          Vector( .2f,  .5f,  .8f));
+    
+    geometry->AddTriangle(Vector(0.0f,  .5f, -.8f), Vector( 0.0f, 0.0f,  -1.0f), Vector(-1.0f,  .1f, -1.0f),
+                          Vector(.8f,   .2f,  .3f));
+    geometry->AddTriangle(Vector(0.0f,  .5f, -.8f), Vector( 1.0f,  .1f, -1.0f), Vector( 0.0f, 0.0f,  -1.0f),
+                          Vector(.8f, .2f, .3f));
+    
+    geometry->Move(Vector(0.0f, 0.0f, .35f));
+    geometry->Scale(.65f);
+    return geometry;
+}
+
+shared_ptr<SimpleGeometry> SimpleGeometry::NewSaucerGeometry() {
+    shared_ptr<SimpleGeometry> geometry = make_shared<SimpleGeometry>();
+    
+    const float radius = 1.0f;
+    float lastX, lastZ;
+    for (int i = 0; i <= 8; ++i) {
+        float angle = -22.5f + (float)(i*45);
+        float x = radius * (float)cos(angle * 3.141592654f / 180.0f),
+              z = radius * (float)sin(angle * 3.141592654f / 180.0f);
+        if (i) {
+            geometry->AddTriangle(Vector(0.0f,  .3f, 0.0f), Vector(x, 0.0f, z), Vector(lastX, 0.0f, lastZ),
+                                  i % 2 ? Vector( .2f,  .2f,  .8f) : Vector( .2f,  .8f,  .8f));
+            geometry->AddTriangle(Vector(0.0f, -.3f, 0.0f), Vector(lastX, 0.0f, lastZ), Vector(x, 0.0f, z),
+                                  i % 2 ? Vector( .2f,  .8f,  .8f) : Vector( .2f,  .2f,  .8f));
+        }
+        lastX = x;
+        lastZ = z;
+    }
+    geometry->Scale(.7f);
+    
+    return geometry;
 }
 
 }    // Namespace Zarch.

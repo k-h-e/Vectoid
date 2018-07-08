@@ -15,7 +15,8 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-Saucer::Saucer() {
+Saucer::Saucer(const std::shared_ptr<Data> &data)
+        : Actor(data) {
     // Nop.
 }
 

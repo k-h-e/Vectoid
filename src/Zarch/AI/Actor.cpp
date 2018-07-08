@@ -8,10 +8,9 @@ namespace kxm {
 namespace Zarch {
 namespace AI {
 
-void Actor::SetData(const shared_ptr<Data> &data) {
-    if (data.get() != data_.get()) {    // Performance optimization.
-        data_ = data;
-    }
+Actor::Actor(const std::shared_ptr<Data> &data)
+    : data_(data) {
+    // Nop.
 }
 
 void Actor::Reset(const ActorCreationEvent &event) {

@@ -1,9 +1,9 @@
-#include <kxm/VectoidOpenGL/AgeColoredParticles.h>
+#include <kxm/Vectoid/OpenGL/AgeColoredParticles.h>
 
 #include <kxm/Core/logging.h>
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Particles.h>
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 using namespace std;
 using namespace kxm::Core;

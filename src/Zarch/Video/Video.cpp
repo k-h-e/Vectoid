@@ -15,10 +15,10 @@
 #include <kxm/Game/EventLoop.h>
 #include <kxm/Game/Actions.h>
 #include <kxm/Zarch/ControlsState.h>
-#include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/EventTools.h>
+#include <kxm/Zarch/Video/RenderTargetInterface.h>
 #include <kxm/Zarch/Video/Shot.h>
 #include <kxm/Zarch/Video/Saucer.h>
 #include <kxm/Zarch/Video/StarField.h>
@@ -43,12 +43,14 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
-        : eventLoop_(eventLoop),
+Video::Video(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
+             const shared_ptr<RenderTargetInterface> &renderTarget)
+        : data_(new Data()),
+          eventLoop_(eventLoop),
           actions_(new Actions()),
-          landers_(actions_),
-          shots_(actions_),
-          saucers_(actions_),
+          landers_(actions_, data_),
+          shots_(actions_, data_),
+          saucers_(actions_, data_),
           lastFrameTime_(steady_clock::now()),
           thruster_(false),
           trigger_(false),
@@ -62,30 +64,30 @@ Video::Video(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop)
     eventLoop_->RegisterHandler(TriggerEvent::type,          this);
     eventLoop_->RegisterHandler(PlayerStatsEvent::type,      this);
     
-    data_ = make_shared<Data>();
+    data_->renderTarget  = renderTarget;
     data_->mapParameters = make_shared<MapParameters>();
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     
     // Install scene graph...
-    data_->projection = make_shared<PerspectiveProjection>();
+    data_->projection = renderTarget->NewPerspectiveProjection();
     data_->projection->SetWindowSize(11.0f);
     data_->projection->SetViewingDepth(11.0f);
     data_->projection->SetEyepointDistance(11.0f);
-    data_->camera = make_shared<Camera>();
+    data_->camera = renderTarget->NewCamera();
     data_->projection->AddChild(data_->camera);
     
-    data_->terrainRenderer = make_shared<TerrainRenderer>(data_->terrain, data_->mapParameters);
+    data_->terrainRenderer = renderTarget->NewTerrainRenderer(data_->terrain, data_->mapParameters);
     data_->camera->AddChild(make_shared<Geode>(data_->terrainRenderer));
     
     data_->shotParticles = make_shared<Particles>();
-    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(data_->shotParticles)));
+    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewParticlesRenderer(data_->shotParticles)));
     data_->thrusterParticles = make_shared<Particles>();
-    data_->camera->AddChild(make_shared<Geode>(make_shared<AgeColoredParticles>(data_->thrusterParticles)));
+    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewAgeColoredParticles(data_->thrusterParticles)));
     shared_ptr<Particles> starFieldParticles(new Particles());
-    data_->camera->AddChild(make_shared<Geode>(make_shared<ParticlesRenderer>(starFieldParticles)));
+    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewParticlesRenderer(starFieldParticles)));
     
-    data_->statsConsole = make_shared<TextConsole>(20, 4, .2f, .2f, make_shared<Glyphs>());
-    data_->statsConsoleCoordSys = make_shared<CoordSys>();
+    data_->statsConsole = renderTarget->NewTextConsole(20, 4, .2f, .2f, renderTarget->NewGlyphs());
+    data_->statsConsoleCoordSys = renderTarget->NewCoordSys();
     Transform transform(YAxis, -40.0f);
     transform.Prepend(Transform(ZAxis, -12.0f));
     transform.Prepend(Transform(XAxis,  30.0f));
@@ -163,7 +165,6 @@ void Video::Handle(const ActorCreationEvent &event) {
             eventToUse = &cookedEvent;
         }
 
-        actor->SetData(data_);
         actor->Handle(*eventToUse);
         actorMap_.Register(eventToUse->actor, ActorInfo<Actor>(eventToUse->actorType, storageId, actor));
     }

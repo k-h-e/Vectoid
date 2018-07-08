@@ -12,8 +12,9 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Shot::Shot()
-        : particleStorageId_(-1) {
+Shot::Shot(const std::shared_ptr<Data> &data)
+        : Actor(data),
+          particleStorageId_(-1) {
     // Nop.
 }
 

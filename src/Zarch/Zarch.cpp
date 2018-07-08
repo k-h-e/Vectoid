@@ -27,10 +27,10 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Zarch::Zarch() {
+Zarch::Zarch(const shared_ptr<Video::RenderTargetInterface> &renderTarget) {
     eventLoopHub_ = shared_ptr<EventLoopHub>(new EventLoopHub());
     simulation_   = shared_ptr<Simulation>(new Simulation(eventLoopHub_));
-    presentation_ = shared_ptr<Presentation>(new Presentation(eventLoopHub_));
+    presentation_ = shared_ptr<Presentation>(new Presentation(eventLoopHub_, renderTarget));
     
     auto simulation = simulation_;
     simulationThread_ = shared_ptr<thread>(new thread([simulation]{ simulation->ExecuteAction(); }));
@@ -39,6 +39,18 @@ Zarch::Zarch() {
 Zarch::~Zarch() {
     eventLoopHub_->RequestShutdown();
     simulationThread_->join();
+}
+
+void Zarch::PrepareFrame(const ControlsState &controlsState) {
+    presentation_->PrepareFrame(controlsState);
+}
+
+void Zarch::SetViewPort(int width, int height) {
+    presentation_->SetViewPort(width, height);
+}
+
+void Zarch::RenderFrame() {
+    presentation_->RenderFrame();
 }
 
 void Zarch::RegisterEvents(Game::EventLoop<ZarchEvent, EventHandlerCore> *eventLoop) {

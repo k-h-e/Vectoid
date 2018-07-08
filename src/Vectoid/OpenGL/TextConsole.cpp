@@ -1,9 +1,9 @@
-#include <kxm/VectoidOpenGL/TextConsole.h>
+#include <kxm/Vectoid/OpenGL/TextConsole.h>
 
 #include <string>
 #include <cassert>
 #include <kxm/Vectoid/Glyphs.h>
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ namespace Vectoid {
 namespace OpenGL {
 
 TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                         shared_ptr<Glyphs> glyphs)
+                         shared_ptr<Vectoid::Glyphs> glyphs)
         : Vectoid::TextConsole(width, height, glyphWidth, glyphHeight, glyphs) {
     // Nop.
 }

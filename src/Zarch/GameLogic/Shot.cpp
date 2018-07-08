@@ -13,8 +13,9 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-Shot::Shot()
-        : ageS_(0.0f) {
+Shot::Shot(const std::shared_ptr<Data> &data)
+        : Actor(data),
+          ageS_(0.0f) {
     // Nop.
 }
 

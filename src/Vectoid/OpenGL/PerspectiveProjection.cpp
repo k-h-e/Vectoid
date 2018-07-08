@@ -1,10 +1,14 @@
-#include <kxm/VectoidOpenGL/PerspectiveProjection.h>
+#include <kxm/Vectoid/OpenGL/PerspectiveProjection.h>
 
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
+
+PerspectiveProjection::PerspectiveProjection() {
+    // Nop.
+}
 
 void PerspectiveProjection::Render(RenderContext *context) {
     if (parametersChanged_) {

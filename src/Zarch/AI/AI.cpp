@@ -19,11 +19,11 @@ namespace AI {
 
 AI::AI(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
        TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
-        : actions_(new Actions()),
-          saucers_(actions_),
+        : data_(make_shared<Data>()),
+          actions_(new Actions()),
+          saucers_(actions_, data_),
           inTrigger_(anInTrigger),
           outTrigger_(anOutTrigger) {
-    data_ = make_shared<Data>();
     data_->eventLoop     = eventLoop;
     data_->mapParameters = shared_ptr<MapParameters>(new MapParameters());
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
@@ -50,7 +50,6 @@ void AI::Handle(const ActorCreationEvent &event) {
     }
     
     if (actor) {
-        actor->SetData(data_);
         actor->Handle(event);
         actorMap_.Register(event.actor, ActorInfo<Actor>(event.actorType, storageId, actor));
     }

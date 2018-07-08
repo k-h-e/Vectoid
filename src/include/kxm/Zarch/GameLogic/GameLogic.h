@@ -44,6 +44,8 @@ class GameLogic : public EventHandlerCore {
   public:
     GameLogic(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
               TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
+    GameLogic(const GameLogic &other) = delete;
+    GameLogic &operator=(const GameLogic &other) = delete;
     ~GameLogic();
     void Handle(const InitializationEvent &event);
     void Handle(const ControlsRequestEvent &event);
@@ -52,18 +54,16 @@ class GameLogic : public EventHandlerCore {
     void Handle(const TriggerEvent &event);
     
   private:
-    GameLogic(const GameLogic &other);
-    GameLogic &operator=(const GameLogic &other);
     void FinalizeEventHandler();
     void PrepareMap();
     
-    std::shared_ptr<Game::Actions>   actions_;
-    Game::ReusableActors<Lander>     landers_;
-    Game::ReusableActors<Shot>       shots_;
-    Game::ReusableActors<Saucer>     saucers_;
-    std::shared_ptr<Data>            data_;
-    TriggerEvent::Trigger            inTrigger_,
-                                     outTrigger_;
+    std::shared_ptr<Data>              data_;
+    std::shared_ptr<Game::Actions>     actions_;
+    Game::ReusableActors<Lander, Data> landers_;
+    Game::ReusableActors<Shot, Data>   shots_;
+    Game::ReusableActors<Saucer, Data> saucers_;
+    TriggerEvent::Trigger              inTrigger_,
+                                       outTrigger_;
     
 };
 

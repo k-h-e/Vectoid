@@ -29,16 +29,16 @@ namespace Physics {
 
 Physics::Physics(shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
                  TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger)
-        : actions_(new Actions()),
+        : data_(new Data()),
+          actions_(new Actions()),
           collider_(CollisionGroupCount, this),
-          landers_(actions_),
-          shots_(actions_),
-          saucers_(actions_),
+          landers_(actions_, data_),
+          shots_(actions_, data_),
+          saucers_(actions_, data_),
           inTrigger_(anInTrigger),
           outTrigger_(anOutTrigger) {
     collider_.IncludeChecksForGroupPair(ShotsCollisionGroup, EnemiesCollisionGroup);
     
-    data_ = make_shared<Data>();
     data_->mapParameters = make_shared<MapParameters>();
     data_->terrain       = make_shared<Terrain>(data_->mapParameters);
     data_->eventLoop     = eventLoop;
@@ -104,7 +104,6 @@ void Physics::Handle(const ActorCreationEvent &event) {
             eventToUse = &cookedEvent;
         }
         
-        actor->SetData(data_);
         actor->Handle(*eventToUse);
         actorMap_.Register(eventToUse->actor, ActorInfo(eventToUse->actorType, storageId, collidableId, actor));
     }

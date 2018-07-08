@@ -1,10 +1,15 @@
-#include <kxm/VectoidOpenGL/Camera.h>
+#include <kxm/Vectoid/OpenGL/Camera.h>
 
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
+
+Camera::Camera()
+        : Vectoid::Camera() {
+    //Nop.
+}
 
 void Camera::Render(RenderContext *context) {
     Transform inverse(Transform::InitAsInverse, transform_);

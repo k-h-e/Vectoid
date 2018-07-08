@@ -2,6 +2,7 @@
 #define KXM_VECTOID_OPENGL_AGECOLOREDPARTICLES_H_
 
 #include <kxm/Vectoid/AgeColoredParticles.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {

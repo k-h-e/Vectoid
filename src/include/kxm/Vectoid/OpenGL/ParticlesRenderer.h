@@ -4,7 +4,7 @@
 #include <kxm/Vectoid/ParticlesRenderer.h>
 
 #include <vector>
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {

@@ -9,12 +9,12 @@
 #import "GLViewController.h"
 
 #include <memory>
+#import "GLView.h"
 #import <GameController/GameController.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
-#import "GLView.h"
-
+#include <kxm/Zarch/Video/OpenGL/RenderTarget.h>
 
 using namespace std;
 using namespace kxm::Vectoid;
@@ -43,7 +43,9 @@ using namespace kxm::Zarch;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    zarch         = make_shared<Zarch>();
+    shared_ptr<kxm::Zarch::Video::RenderTargetInterface> renderTarget = make_shared<Video::OpenGL::RenderTarget>();
+    
+    zarch         = make_shared<Zarch>(renderTarget);
     controlsState = make_shared<ControlsState>();
     [(GLView *)self.view setZarch: zarch controlsState: controlsState];
     

@@ -4,12 +4,14 @@
 #include <kxm/Vectoid/Camera.h>
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
-#include <kxm/Zarch/SaucerGeometry.h>
+#include <kxm/Zarch/SimpleGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Video/Data.h>
+#include <kxm/Zarch/Video/RenderTargetInterface.h>
+#include <kxm/Zarch/Video/SimpleGeometryRenderer.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 
 using namespace std;
@@ -19,9 +21,12 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Saucer::Saucer() {
-    coordSys_ = make_shared<CoordSys>();
-    coordSys_->AddChild(make_shared<Geode>(make_shared<SaucerGeometry>()));
+Saucer::Saucer(const std::shared_ptr<Data> &data)
+        : Actor(data) {
+    shared_ptr<SimpleGeometry> saucerGeometry = SimpleGeometry::NewSaucerGeometry();
+
+    coordSys_ = data_->renderTarget->NewCoordSys();
+    coordSys_->AddChild(make_shared<Geode>(data_->renderTarget->NewSimpleGeometryRenderer(saucerGeometry)));
 }
 
 void Saucer::GetTransform(Vectoid::Transform *outTransform) {

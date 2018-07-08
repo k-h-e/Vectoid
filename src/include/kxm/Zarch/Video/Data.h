@@ -33,6 +33,7 @@ class Terrain;
 
 namespace Video {
 
+class RenderTargetInterface;
 class TerrainRenderer;
 
 //! Holds together common data the video sub system's components work on.
@@ -52,6 +53,7 @@ struct Data {
     std::shared_ptr<MapParameters>                  mapParameters;
     std::shared_ptr<Terrain>                        terrain;
     Vectoid::Vector                                 statsConsolePosition;
+    std::shared_ptr<RenderTargetInterface>          renderTarget;
     
     Data() : frameDeltaTimeS(0.0f) {}
     void StartParticleExplosion(const Vectoid::Vector &position, int particleCount);

@@ -21,7 +21,7 @@ class Data;
  */
 class Shot : public Actor {
   public:
-    Shot();
+    Shot(const std::shared_ptr<Data> &data);
     Shot(const Shot &other)            = delete;
     Shot &operator=(const Shot &other) = delete;
     Shot(Shot &&other)                 = delete;

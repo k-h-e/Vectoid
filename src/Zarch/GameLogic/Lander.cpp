@@ -25,8 +25,9 @@ namespace kxm {
 namespace Zarch {
 namespace GameLogic {
 
-Lander::Lander()
-        : trigger_(false),
+Lander::Lander(const std::shared_ptr<Data> &data)
+        : Actor(data),
+          trigger_(false),
           thruster_(false),
           triggerTimeS_(0.0f),
           maxFuel_(2000.0f),

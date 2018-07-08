@@ -33,7 +33,8 @@ class PerspectiveProjection : public SceneGraphNode {
     
   protected:
     void ComputeWindowDimensions(float *width, float *height) const;
-    float eyepointDistance_;
+    float eyepointDistance_,
+          viewingDepth_;
     bool  parametersChanged_;    // Will get cleared by Render() implementations.
     
   private:
@@ -41,7 +42,7 @@ class PerspectiveProjection : public SceneGraphNode {
     PerspectiveProjection(const PerspectiveProjection &other);
     PerspectiveProjection &operator=(const PerspectiveProjection &other);
     
-    float windowSize_, viewingDepth_,
+    float windowSize_,
           width_, height_;
 };
 

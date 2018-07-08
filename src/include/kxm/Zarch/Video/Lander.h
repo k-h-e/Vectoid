@@ -30,7 +30,7 @@ struct Data;
  */
 class Lander : public Actor {
   public:
-    Lander();
+    Lander(const std::shared_ptr<Data> &data);
     Lander(const Lander &other)            = delete;
     Lander &operator=(const Lander &other) = delete;
     Lander(const Lander &&other)           = delete;

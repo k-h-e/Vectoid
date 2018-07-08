@@ -18,13 +18,18 @@ namespace Zarch {
 class ControlsState;
 class TriggerEvent;
 
+namespace Video {
+    class RenderTargetInterface;
+}
+
 //! Ties together the presentation subsystems, that together run on the main UI thread.
 /*!
  *  \ingroup Zarch
  */
 class Presentation : public EventHandlerCore {
   public:
-    Presentation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub);
+    Presentation(const std::shared_ptr<Game::EventLoopHub> &eventLoopHub,
+                 const std::shared_ptr<Video::RenderTargetInterface> &renderTarget);
     ~Presentation();
     void PrepareFrame(const ControlsState &controlsState);
     void SetViewPort(int width, int height);

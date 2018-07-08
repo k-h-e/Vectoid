@@ -6,14 +6,16 @@
 #include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/AgeColoredParticles.h>
-#include <kxm/Zarch/LanderGeometry.h>
 #include <kxm/Zarch/MapParameters.h>
+#include <kxm/Zarch/SimpleGeometry.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ActorTerminationEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
 #include <kxm/Zarch/Events/VelocityEvent.h>
 #include <kxm/Zarch/Video/Data.h>
+#include <kxm/Zarch/Video/RenderTargetInterface.h>
+#include <kxm/Zarch/Video/SimpleGeometryRenderer.h>
 #include <kxm/Zarch/Video/TerrainRenderer.h>
 
 using namespace std;
@@ -25,9 +27,12 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-Lander::Lander() {
-    coordSys_ = make_shared<CoordSys>();
-    coordSys_->AddChild(make_shared<Geode>(make_shared<LanderGeometry>()));
+Lander::Lander(const std::shared_ptr<Data> &data)
+        : Actor(data) {
+    shared_ptr<SimpleGeometry> landerGeometry = SimpleGeometry::NewLanderGeometry();
+    
+    coordSys_ = data_->renderTarget->NewCoordSys();
+    coordSys_->AddChild(make_shared<Geode>(data_->renderTarget->NewSimpleGeometryRenderer(landerGeometry)));
 }
 
 void Lander::GetTransform(Vectoid::Transform *outTransform) {

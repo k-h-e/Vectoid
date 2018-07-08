@@ -50,6 +50,8 @@ class Physics : public EventHandlerCore, public virtual Vectoid::Collider<Game::
   public:
     Physics(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop,
             TriggerEvent::Trigger anInTrigger, TriggerEvent::Trigger anOutTrigger);
+    Physics(const Physics &other) = delete;
+    Physics &operator=(const Physics &other) = delete;
     ~Physics();
     void ModifyOtherTransform(Vectoid::Transform *inOutOtherTransform, const Vectoid::Transform &ourTransform);
     void HandleCollision(const Game::ActorName &id, const Game::ActorName &otherId);
@@ -80,17 +82,14 @@ class Physics : public EventHandlerCore, public virtual Vectoid::Collider<Game::
               actor(anActor) {}
         // Default copy/move okay.
     };
-  
-    Physics(const Physics &other);
-    Physics &operator=(const Physics &other);
 
     std::shared_ptr<Data>              data_;
     Game::ActorMap<ActorInfo>          actorMap_;
     std::shared_ptr<Game::Actions>     actions_;
     Vectoid::Collider<Game::ActorName> collider_;
-    Game::ReusableActors<Lander>       landers_;
-    Game::ReusableActors<Shot>         shots_;
-    Game::ReusableActors<Saucer>       saucers_;
+    Game::ReusableActors<Lander, Data> landers_;
+    Game::ReusableActors<Shot, Data>   shots_;
+    Game::ReusableActors<Saucer, Data> saucers_;
     TriggerEvent::Trigger              inTrigger_,
                                        outTrigger_;
 };

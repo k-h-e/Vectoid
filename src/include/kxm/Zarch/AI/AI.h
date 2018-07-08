@@ -53,12 +53,12 @@ class AI : public EventHandlerCore {
     void Handle(const TriggerEvent &event);
     
   private:
-    Game::ActorMap<ActorInfo<Actor>> actorMap_;
-    std::shared_ptr<Game::Actions>   actions_;
-    Game::ReusableActors<Saucer>     saucers_;
-    std::shared_ptr<Data>            data_;
-    TriggerEvent::Trigger            inTrigger_,
-                                     outTrigger_;
+    std::shared_ptr<Data>              data_;
+    Game::ActorMap<ActorInfo<Actor>>   actorMap_;
+    std::shared_ptr<Game::Actions>     actions_;
+    Game::ReusableActors<Saucer, Data> saucers_;
+    TriggerEvent::Trigger              inTrigger_,
+                                       outTrigger_;
 };
 
 }    // Namespace AI.

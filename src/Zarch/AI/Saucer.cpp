@@ -20,8 +20,9 @@ namespace kxm {
 namespace Zarch {
 namespace AI {
 
-Saucer::Saucer()
-        : state_(ChooseDestinationState),
+Saucer::Saucer(const std::shared_ptr<Data> &data)
+        : Actor(data),
+          state_(ChooseDestinationState),
           randomDistribution_(0, INT_MAX) {
     // Nop.
 }

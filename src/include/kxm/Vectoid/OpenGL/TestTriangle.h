@@ -15,6 +15,7 @@ namespace OpenGL {
  */ 
 class TestTriangle : public Vectoid::TestTriangle {
   public:
+    TestTriangle();   
     TestTriangle(const TestTriangle &other) = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
     void Render(RenderContext *context);

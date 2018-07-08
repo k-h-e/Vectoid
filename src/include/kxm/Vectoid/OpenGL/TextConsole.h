@@ -13,7 +13,7 @@ namespace OpenGL {
  */
 class TextConsole : public Vectoid::TextConsole {
   public:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight, std::shared_ptr<Glyphs> glyphs);
+    TextConsole(int width, int height, float glyphWidth, float glyphHeight, std::shared_ptr<Vectoid::Glyphs> glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;

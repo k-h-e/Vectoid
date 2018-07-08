@@ -1,4 +1,4 @@
-#include <kxm/VectoidOpenGL/ParticlesRenderer.h>
+#include <kxm/Vectoid/OpenGL/ParticlesRenderer.h>
 
 #include <kxm/Vectoid/Particles.h>
 

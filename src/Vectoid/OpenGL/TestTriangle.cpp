@@ -1,6 +1,6 @@
-#include <kxm/VectoidOpenGL/TestTriangle.h>
+#include <kxm/Vectoid/OpenGL/TestTriangle.h>
 
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {
@@ -9,6 +9,11 @@ namespace OpenGL {
 const GLfloat TestTriangle::vertices[9] = { -1.0f, 0.0f, 0.0f,
                                              1.0f, 0.0f, 0.0f,
                                              0.0f, 1.0f, 0.0f  };
+
+TestTriangle::TestTriangle()
+        : Vectoid::TestTriangle() {
+    // Nop.
+}
 
 void TestTriangle::Render(RenderContext *context) {
     glColor4f(.8f, .8f, .2f, 1.0f);

@@ -3,7 +3,7 @@
 #include <kxm/Game/EventLoop.h>
 #include <kxm/Zarch/MapParameters.h>
 #include <kxm/Zarch/Terrain.h>
-#include <kxm/Zarch/SaucerGeometry.h>
+#include <kxm/Zarch/SimpleGeometry.h>
 #include <kxm/Zarch/Events/ActorCreationEvent.h>
 #include <kxm/Zarch/Events/ControlsEvent.h>
 #include <kxm/Zarch/Events/MoveEvent.h>
@@ -16,11 +16,11 @@ namespace kxm {
 namespace Zarch {
 namespace Physics {
 
-Saucer::Saucer()
-        : body_(this),
+Saucer::Saucer(const std::shared_ptr<Data> &data)
+        : Actor(data),
+          body_(this),
           collisionChecker_(boundingBox_) {
-    SaucerGeometry geometry;
-    geometry.GetBoundingBox(&boundingBox_);
+    SimpleGeometry::NewSaucerGeometry()->GetBoundingBox(&boundingBox_);
 }
 
 void Saucer::GetTransform(Transform *outTransform) const {

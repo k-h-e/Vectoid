@@ -7,7 +7,6 @@
 
 #include <kxm/Core/IntModN.h>
 #include <kxm/Core/Interface.h>
-#include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/Vector.h>
 #include <kxm/Zarch/MapParameters.h>
 

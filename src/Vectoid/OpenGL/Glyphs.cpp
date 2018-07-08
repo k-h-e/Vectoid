@@ -1,4 +1,4 @@
-#include <kxm/VectoidOpenGL/Glyphs.h>
+#include <kxm/Vectoid/OpenGL/Glyphs.h>
 
 namespace kxm {
 namespace Vectoid {

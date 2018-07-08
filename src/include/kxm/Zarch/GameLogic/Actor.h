@@ -18,14 +18,14 @@ class Lander;
 class Saucer;
 class Shot;
 
-//! Base class to actors inside the game logic sub system.
+//! Base class to actors inside the game logic subsystem.
 /*!
  *  \ingroup ZarchGameLogic
  */
 class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
+    Actor(const std::shared_ptr<Data> &data);
     // Default copy and move ok.
-    void SetData(const std::shared_ptr<Data> &data);
     void Reset(const ActorCreationEvent &event);
     virtual void HandleCollision(Actor *other) = 0;
     virtual void HandleCollision(Lander *lander) = 0;

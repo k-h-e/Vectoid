@@ -21,8 +21,8 @@ class Data;
  */
 class Actor : public EventHandlerCore, public virtual Core::ActionInterface {
   public:
+    Actor(const std::shared_ptr<Data> &data);
     // Default copy and move ok.
-    void SetData(const std::shared_ptr<Data> &data);
     void Reset(const ActorCreationEvent &event);
   
   protected:

@@ -42,6 +42,7 @@ namespace Video {
 
 class Actor;
 class Lander;
+class RenderTargetInterface;
 class Shot;
 class Saucer;
 class StarField;
@@ -52,7 +53,10 @@ class StarField;
  */
 class Video : public EventHandlerCore {
   public:
-    Video(std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop);
+    Video(const std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> &eventLoop,
+          const std::shared_ptr<RenderTargetInterface> &renderTarget);
+    Video(const Video &other) = delete;
+    Video &operator=(const Video &other) = delete;
     ~Video();
     //! Reconfigures the video system for the specified view port dimensions.
     void SetViewPort(int width, int height);
@@ -66,16 +70,13 @@ class Video : public EventHandlerCore {
     void Handle(const TriggerEvent &event);
   
   private:
-    Video(const Video &other);
-    Video &operator=(const Video &other);
-    
-    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     std::shared_ptr<Data>                                          data_;
+    std::shared_ptr<Game::EventLoop<ZarchEvent, EventHandlerCore>> eventLoop_;
     Game::ActorMap<ActorInfo<Actor>>                               actorMap_;
     std::shared_ptr<Game::Actions>                                 actions_;
-    Game::ReusableActors<Lander>                                   landers_;
-    Game::ReusableActors<Shot>                                     shots_;
-    Game::ReusableActors<Saucer>                                   saucers_;
+    Game::ReusableActors<Lander, Data>                             landers_;
+    Game::ReusableActors<Shot, Data>                               shots_;
+    Game::ReusableActors<Saucer, Data>                             saucers_;
     std::unique_ptr<StarField>                                     starField_;
     std::chrono::time_point<std::chrono::steady_clock>             lastFrameTime_;
     bool                                                           thruster_,

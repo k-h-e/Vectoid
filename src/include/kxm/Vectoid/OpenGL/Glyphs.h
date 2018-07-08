@@ -2,8 +2,7 @@
 #define KXM_VECTOID_OPENGL_GLYPHS_H_
 
 #include <kxm/Vectoid/Glyphs.h>
-
-#include <kxm/VectoidOpenGL/OpenGL.h>
+#include <kxm/Vectoid/OpenGL/OpenGL.h>
 
 namespace kxm {
 namespace Vectoid {

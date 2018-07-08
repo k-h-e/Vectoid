@@ -3,13 +3,11 @@
 
 #include <vector>
 #include <memory>
-#include <kxm/Vectoid/OpenGL.h>
 #include <kxm/Vectoid/GeometryInterface.h>
 
 namespace kxm {
 
 namespace Vectoid {
-    class RenderContext;
     class Vector;
 }
 
@@ -28,21 +26,17 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
   public:
     TerrainRenderer(std::shared_ptr<Terrain> terrain,
                     std::shared_ptr<MapParameters> mapParameters);
-    
+    TerrainRenderer(const TerrainRenderer &other) = delete;
+    TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
     //! Sets the observer's position in the <c>xz</c>-plane, ignoring the <c>y</c>-coordinate.
     void SetObserverPosition(const Vectoid::Vector &position);
     //! Gets the observer's position in the <c>xz</c>-plane, not affecting the output vector's <c>y</c>-coordinate.
     void GetObserverPosition(Vectoid::Vector *outPosition);
-    void Render(Vectoid::RenderContext *context);
     
-  private:
-    TerrainRenderer(const TerrainRenderer &other);
-    TerrainRenderer &operator=(const TerrainRenderer &other);
-    
+  protected:
     std::shared_ptr<Terrain>             terrain_;
     std::shared_ptr<const MapParameters> mapParameters_;
     float                                observerX_, observerZ_;
-    std::vector<GLfloat>                 vertices_;
 };
 
 }    // Namespace Video.

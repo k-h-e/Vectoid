@@ -14,7 +14,8 @@ namespace kxm {
 namespace Zarch {
 namespace Physics {
 
-Shot::Shot() {
+Shot::Shot(const std::shared_ptr<Data> &data)
+        : Actor(data) {
     // Nop.
 }
 

@@ -11,11 +11,12 @@ using namespace kxm::Game;
 namespace kxm {
 namespace Zarch {
 
-Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub)
+Presentation::Presentation(const shared_ptr<EventLoopHub> &eventLoopHub,
+                           const shared_ptr<Video::RenderTargetInterface> &renderTarget)
         : eventLoop_(new EventLoop<ZarchEvent, EventHandlerCore>(eventLoopHub)),
           lastTrigger_(TriggerEvent::NoTrigger) {
     Zarch::RegisterEvents(eventLoop_.get());
-    video_ = shared_ptr<Video::Video>(new Video::Video(eventLoop_));
+    video_ = shared_ptr<Video::Video>(new Video::Video(eventLoop_, renderTarget));
     
     eventLoop_->RegisterHandler(TriggerEvent::type, this);
 }

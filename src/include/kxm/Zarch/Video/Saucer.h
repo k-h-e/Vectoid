@@ -27,7 +27,7 @@ struct Data;
  */
 class Saucer : public Actor {
   public:
-    Saucer();
+    Saucer(const std::shared_ptr<Data> &data);
     Saucer(const Saucer &other)            = delete;
     Saucer &operator=(const Saucer &other) = delete;
     Saucer(const Saucer &&other)           = delete;

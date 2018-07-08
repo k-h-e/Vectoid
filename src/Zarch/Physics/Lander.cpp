@@ -20,8 +20,9 @@ namespace kxm {
 namespace Zarch {
 namespace Physics {
 
-Lander::Lander()
-        :  body_(this),
+Lander::Lander(const std::shared_ptr<Data> &data)
+        :  Actor(data),
+           body_(this),
            axis1_(0.0f),
            axis2_(0.0f),
            thrusterActive_(false),
