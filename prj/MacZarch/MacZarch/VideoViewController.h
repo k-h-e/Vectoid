@@ -1,5 +1,5 @@
 //
-//  GLViewController.h
+//  VideoViewController.h
 //  MacZarch
 //
 //  Created by Kai Hergenröther on 07.05.17.
@@ -8,6 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface GLViewController : NSViewController
+@interface VideoViewController : NSViewController
 
 @end

@@ -1,26 +1,25 @@
 //
-//  GLViewController.m
+//  VideoViewController.m
 //  MacZarch
 //
 //  Created by Kai Hergenröther on 07.05.17.
 //  Copyright © 2017 Kai Hergenröther. All rights reserved.
 //
 
-#import "GLViewController.h"
+#import "VideoViewController.h"
 
 #include <memory>
-#import "GLView.h"
 #import <GameController/GameController.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
-#include <kxm/Zarch/Video/OpenGL/RenderTarget.h>
+#import "VideoView.h"
 
 using namespace std;
 using namespace kxm::Vectoid;
 using namespace kxm::Zarch;
 
-@interface GLViewController () {
+@interface VideoViewController () {
     shared_ptr<Zarch>         zarch;
     shared_ptr<ControlsState> controlsState;
     NSTimer                   *timer;
@@ -38,16 +37,14 @@ using namespace kxm::Zarch;
 
 @end
 
-@implementation GLViewController
+@implementation VideoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    shared_ptr<kxm::Zarch::Video::RenderTargetInterface> renderTarget = make_shared<Video::OpenGL::RenderTarget>();
-    
-    zarch         = make_shared<Zarch>(renderTarget);
+    zarch         = make_shared<Zarch>([(id<VideoView>)self.view getRenderTarget]);
     controlsState = make_shared<ControlsState>();
-    [(GLView *)self.view setZarch: zarch controlsState: controlsState];
+    [(id<VideoView>)self.view setZarch: zarch controlsState: controlsState];
     
     timer = [NSTimer timerWithTimeInterval: 1.0/60.0 target: self selector: @selector(handleTimer) userInfo: nil
                      repeats: YES];
@@ -140,7 +137,7 @@ using namespace kxm::Zarch;
         }
     }
 
-    ((GLView *)self.view).needsDisplay = YES;
+    self.view.needsDisplay = YES;
 }
 
 @end

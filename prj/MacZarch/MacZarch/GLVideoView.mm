@@ -1,21 +1,22 @@
-#import "GLView.h"
+#import "GLVideoView.h"
 
-#include <OpenGL/gl.h>
 #include <memory>
+#include <OpenGL/gl.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
+#include <kxm/Zarch/Video/OpenGL/RenderTarget.h>
 
 using namespace std;
 using namespace kxm::Zarch;
 
-@interface GLView () {
+@interface GLVideoView () {
     shared_ptr<Zarch>         _zarch;
     shared_ptr<ControlsState> _controlsState;
     CGSize                    _size;
 }
 @end
 
-@implementation GLView
+@implementation GLVideoView
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -29,6 +30,10 @@ using namespace kxm::Zarch;
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(surfaceNeedsUpdate:)
                                           name: NSViewGlobalFrameDidChangeNotification object:self];
+}
+
+- (std::shared_ptr<kxm::Zarch::Video::RenderTargetInterface>)getRenderTarget {
+    return make_shared<Video::OpenGL::RenderTarget>();
 }
 
 - (void)setZarch: (const std::shared_ptr<kxm::Zarch::Zarch> &)aZarch
