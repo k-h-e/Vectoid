@@ -5,7 +5,7 @@ namespace Vectoid {
 
 using std::shared_ptr;
 
-AgeColoredParticles::AgeColoredParticles(shared_ptr<Vectoid::Particles> particles)
+AgeColoredParticles::AgeColoredParticles(const shared_ptr<Vectoid::Particles> &particles)
         : particles_(particles),
           highAge_(1.5f) {
     colors_.push_back(Vector(1.0f, 1.0f, 1.0f));

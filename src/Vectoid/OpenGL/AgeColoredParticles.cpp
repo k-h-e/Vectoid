@@ -12,7 +12,7 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
-AgeColoredParticles::AgeColoredParticles(shared_ptr<Vectoid::Particles> particles)
+AgeColoredParticles::AgeColoredParticles(const shared_ptr<Vectoid::Particles> &particles)
         : Vectoid::AgeColoredParticles(particles) {
     // Nop.
 }

@@ -1,11 +1,14 @@
 #include <kxm/Vectoid/Metal/TestTriangle.h>
 
+using namespace std;
+
 namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-TestTriangle::TestTriangle()
-        : Vectoid::TestTriangle() {
+TestTriangle::TestTriangle(const shared_ptr<Context> &context)
+        : Vectoid::TestTriangle(),
+          context_(context) {
     // Nop.
 }
 

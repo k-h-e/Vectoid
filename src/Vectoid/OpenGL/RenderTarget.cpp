@@ -19,7 +19,18 @@ RenderTarget::RenderTarget() {
     // Nop.
 }
 
-shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(shared_ptr<Particles> particles) {
+void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) {
+    sceneGraphRoot_ = sceneGraphRoot;
+}
+
+void RenderTarget::RenderFrame() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (sceneGraphRoot_) {
+        sceneGraphRoot_->Render();
+    }
+}
+
+shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {
     return std::make_shared<AgeColoredParticles>(particles);
 }
 
@@ -35,7 +46,7 @@ shared_ptr<Vectoid::Glyphs> RenderTarget::NewGlyphs() {
     return std::make_shared<Glyphs>();
 }
 
-shared_ptr<Vectoid::ParticlesRenderer> RenderTarget::NewParticlesRenderer(shared_ptr<Particles> particles) {
+shared_ptr<Vectoid::ParticlesRenderer> RenderTarget::NewParticlesRenderer(const shared_ptr<Particles> &particles) {
     return std::make_shared<ParticlesRenderer>(particles);
 }
 
@@ -47,8 +58,8 @@ shared_ptr<Vectoid::TestTriangle> RenderTarget::NewTestTriangle() {
     return std::make_shared<TestTriangle>();
 }
 
-shared_ptr<Vectoid::TextConsole> RenderTarget::NewTextConsole(int width, int height, float glyphWidth,
-                                                              float glyphHeight, shared_ptr<Vectoid::Glyphs> glyphs) {
+shared_ptr<Vectoid::TextConsole> RenderTarget::NewTextConsole(
+        int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Vectoid::Glyphs> &glyphs) {
     return std::make_shared<TextConsole>(width, height, glyphWidth, glyphHeight, glyphs);
 }
 

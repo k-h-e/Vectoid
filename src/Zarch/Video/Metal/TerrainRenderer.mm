@@ -11,9 +11,10 @@ namespace Zarch {
 namespace Video {
 namespace Metal {
 
-TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
-                                 shared_ptr<MapParameters> mapParameters)
-        : Video::TerrainRenderer(terrain, mapParameters) {
+TerrainRenderer::TerrainRenderer(const shared_ptr<Vectoid::Metal::Context> &context, const shared_ptr<Terrain> &terrain,
+                                 const shared_ptr<MapParameters> &mapParameters)
+        : Video::TerrainRenderer(terrain, mapParameters),
+          context_(context) {
 
 }
 

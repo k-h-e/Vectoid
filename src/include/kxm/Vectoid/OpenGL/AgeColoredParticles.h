@@ -14,7 +14,7 @@ namespace OpenGL {
  */
 class AgeColoredParticles : public Vectoid::AgeColoredParticles {
  public:
-    AgeColoredParticles(std::shared_ptr<Vectoid::Particles> particles);
+    AgeColoredParticles(const std::shared_ptr<Vectoid::Particles> &particles);
     AgeColoredParticles(const AgeColoredParticles &other) = delete;
     AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
     void Render();

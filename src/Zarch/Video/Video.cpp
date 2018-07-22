@@ -73,6 +73,8 @@ Video::Video(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoo
     data_->projection->SetWindowSize(11.0f);
     data_->projection->SetViewingDepth(11.0f);
     data_->projection->SetEyepointDistance(11.0f);
+    data_->renderTarget->SetSceneGraph(data_->projection);
+    
     data_->camera = renderTarget->NewCamera();
     data_->projection->AddChild(data_->camera);
     
@@ -281,7 +283,7 @@ void Video::Handle(const TriggerEvent &event) {
             fpsTimeS_        = 0.0f;
         }
         
-        data.projection->Render();
+        data.renderTarget->RenderFrame();
         eventLoop_->Post(TriggerEvent(TriggerEvent::FrameRenderedTrigger, 0.0f));
     }
 }

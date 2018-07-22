@@ -14,6 +14,7 @@ class Glyphs;
 class Particles;
 class ParticlesRenderer;
 class PerspectiveProjection;
+class SceneGraphNode;
 class TestTriangle;
 class TextConsole;
 
@@ -26,15 +27,20 @@ class TextConsole;
  */
 class RenderTargetInterface : public virtual Core::Interface {
   public:
-    virtual std::shared_ptr<AgeColoredParticles> NewAgeColoredParticles(std::shared_ptr<Particles> particles) = 0;
+    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) = 0;
+    //! Renders a frame using the current scene graph state.
+    virtual void RenderFrame() = 0;
+  
+    virtual std::shared_ptr<AgeColoredParticles> NewAgeColoredParticles(const std::shared_ptr<Particles> &particles)
+        = 0;
     virtual std::shared_ptr<Camera> NewCamera() = 0;
     virtual std::shared_ptr<CoordSys> NewCoordSys() = 0;
     virtual std::shared_ptr<Glyphs> NewGlyphs() = 0;
-    virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(std::shared_ptr<Particles> particles) = 0;
+    virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(const std::shared_ptr<Particles> &particles) = 0;
     virtual std::shared_ptr<PerspectiveProjection> NewPerspectiveProjection() = 0;
     virtual std::shared_ptr<TestTriangle> NewTestTriangle() = 0;
     virtual std::shared_ptr<TextConsole> NewTextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                                                        std::shared_ptr<Glyphs> glyphs) = 0;
+                                                        const std::shared_ptr<Glyphs> &glyphs) = 0;
 };
 
 }    // Namespace Vectoid.

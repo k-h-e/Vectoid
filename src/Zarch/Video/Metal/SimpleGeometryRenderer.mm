@@ -10,8 +10,10 @@ namespace Zarch {
 namespace Video {
 namespace Metal {
 
-SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<SimpleGeometry> &geometry)
-        : Video::SimpleGeometryRenderer(geometry) {
+SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<Vectoid::Metal::Context> &context,
+                                               const shared_ptr<SimpleGeometry> &geometry)
+        : Video::SimpleGeometryRenderer(geometry),
+          context_(context) {
 
 }
 

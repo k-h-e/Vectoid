@@ -13,8 +13,7 @@ namespace Zarch {
 namespace Video {
 namespace OpenGL {
 
-TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
-                                 shared_ptr<MapParameters> mapParameters)
+TerrainRenderer::TerrainRenderer(const shared_ptr<Terrain> &terrain, const shared_ptr<MapParameters> &mapParameters)
         : Video::TerrainRenderer(terrain, mapParameters) {
     vertices_.resize(2 * 3 * 3);    // Two triangles.
 }

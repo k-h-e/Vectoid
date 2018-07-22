@@ -1,11 +1,14 @@
 #include <kxm/Vectoid/Metal/Camera.h>
 
+using namespace std;
+
 namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-Camera::Camera()
-        : Vectoid::Camera() {
+Camera::Camera(const shared_ptr<Context> &context)
+        : Vectoid::Camera(),
+          context_(context) {
     //Nop.
 }
 

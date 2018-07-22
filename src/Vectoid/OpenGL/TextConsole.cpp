@@ -12,7 +12,7 @@ namespace Vectoid {
 namespace OpenGL {
 
 TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                         shared_ptr<Vectoid::Glyphs> glyphs)
+                         const shared_ptr<Vectoid::Glyphs> &glyphs)
         : Vectoid::TextConsole(width, height, glyphWidth, glyphHeight, glyphs) {
     // Nop.
 }

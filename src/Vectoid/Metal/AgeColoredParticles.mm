@@ -12,8 +12,10 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-AgeColoredParticles::AgeColoredParticles(shared_ptr<Vectoid::Particles> particles)
-        : Vectoid::AgeColoredParticles(particles) {
+AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context,
+                                         const shared_ptr<Vectoid::Particles> &particles)
+        : Vectoid::AgeColoredParticles(particles),
+          context_(context) {
     // Nop.
 }
     

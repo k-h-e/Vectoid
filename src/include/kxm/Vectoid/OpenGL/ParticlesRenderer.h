@@ -16,7 +16,7 @@ namespace OpenGL {
  */
 class ParticlesRenderer : public Vectoid::ParticlesRenderer {
   public:
-    ParticlesRenderer(std::shared_ptr<Vectoid::Particles> particles);
+    ParticlesRenderer(const std::shared_ptr<Vectoid::Particles> &particles);
     ParticlesRenderer(const ParticlesRenderer &other) = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
     void Render();

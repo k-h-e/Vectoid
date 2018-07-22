@@ -16,7 +16,7 @@ class Particles;
  */
 class ParticlesRenderer : public virtual Vectoid::GeometryInterface {
   public:
-    ParticlesRenderer(std::shared_ptr<Vectoid::Particles> particles);
+    ParticlesRenderer(const std::shared_ptr<Vectoid::Particles> &particles);
     ParticlesRenderer(const ParticlesRenderer &other) = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
     

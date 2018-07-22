@@ -6,6 +6,15 @@
 #include <vector>
 
 namespace kxm {
+
+namespace Vectoid {
+namespace Metal {
+
+class Context;
+
+}
+}
+
 namespace Zarch {
 namespace Video {
 namespace Metal {
@@ -16,10 +25,13 @@ namespace Metal {
  */
 class SimpleGeometryRenderer : public Video::SimpleGeometryRenderer {
   public:
-    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
+    SimpleGeometryRenderer(const std::shared_ptr<Vectoid::Metal::Context> &context, const std::shared_ptr<SimpleGeometry> &geometry);
     SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
     void Render();
+    
+  private:
+    std::shared_ptr<Vectoid::Metal::Context> context_;
 };
 
 }    // Namespace Metal.

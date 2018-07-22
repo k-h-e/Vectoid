@@ -1,10 +1,13 @@
 #include <kxm/Vectoid/Metal/Glyphs.h>
 
+using namespace std;
+
 namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-Glyphs::Glyphs() {
+Glyphs::Glyphs(const shared_ptr<Context> &context)
+    : context_(context) {
     
 }
 

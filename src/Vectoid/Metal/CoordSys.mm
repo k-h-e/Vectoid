@@ -1,11 +1,14 @@
 #include <kxm/Vectoid/Metal/CoordSys.h>
 
+using namespace std;
+
 namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-CoordSys::CoordSys()
-        : Vectoid::CoordSys() {
+CoordSys::CoordSys(const shared_ptr<Context> &context)
+        : Vectoid::CoordSys(),
+          context_(context) {
     // Nop.
 }
 

@@ -6,7 +6,7 @@ using namespace kxm::Vectoid;
 namespace kxm {
 namespace Vectoid {
 
-ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
+ParticlesRenderer::ParticlesRenderer(const shared_ptr<Particles> &particles)
         : particles_(particles) {
     // Nop.
 }

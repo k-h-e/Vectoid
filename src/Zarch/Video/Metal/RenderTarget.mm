@@ -10,19 +10,19 @@ namespace Zarch {
 namespace Video {
 namespace Metal {
 
-RenderTarget::RenderTarget()
-        : Vectoid::Metal::RenderTarget() {
-    // Nop.
+RenderTarget::RenderTarget(MTKView *metalView)
+        : Vectoid::Metal::RenderTarget(metalView) {
+
 }
 
 shared_ptr<Video::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
         const shared_ptr<SimpleGeometry> &geometry) {
-    return std::make_shared<SimpleGeometryRenderer>(geometry);
+    return std::make_shared<SimpleGeometryRenderer>(context_, geometry);
 }
 
-shared_ptr<Video::TerrainRenderer> RenderTarget::NewTerrainRenderer(shared_ptr<Terrain> terrain,
-                                                                    shared_ptr<MapParameters> mapParameters) {
-    return std::make_shared<TerrainRenderer>(terrain, mapParameters);
+shared_ptr<Video::TerrainRenderer> RenderTarget::NewTerrainRenderer(const shared_ptr<Terrain> &terrain,
+                                                                    const shared_ptr<MapParameters> &mapParameters) {
+    return std::make_shared<TerrainRenderer>(context_, terrain, mapParameters);
 }
 
 }    // Namespace Metal.

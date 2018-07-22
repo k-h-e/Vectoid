@@ -21,8 +21,8 @@ class RenderTarget : public virtual kxm::Zarch::Video::RenderTargetInterface,
     RenderTarget &operator=(const RenderTarget &other) = delete;
     virtual std::shared_ptr<SimpleGeometryRenderer> NewSimpleGeometryRenderer(
         const std::shared_ptr<SimpleGeometry> &geometry);
-    virtual std::shared_ptr<TerrainRenderer> NewTerrainRenderer(std::shared_ptr<Terrain> terrain,
-                                                                std::shared_ptr<MapParameters> mapParameters);
+    virtual std::shared_ptr<TerrainRenderer> NewTerrainRenderer(const std::shared_ptr<Terrain> &terrain,
+                                                                const std::shared_ptr<MapParameters> &mapParameters);
 };
 
 }    // Namespace OpenGL.

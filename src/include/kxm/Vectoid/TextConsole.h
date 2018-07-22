@@ -16,7 +16,7 @@ class Glyphs;
  */
 class TextConsole : public virtual GeometryInterface {
   public:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight, std::shared_ptr<Glyphs> glyphs);
+    TextConsole(int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;

@@ -9,8 +9,8 @@ namespace kxm {
 namespace Zarch {
 namespace Video {
 
-TerrainRenderer::TerrainRenderer(shared_ptr<Terrain> terrain,
-                                 shared_ptr<MapParameters> mapParameters)
+TerrainRenderer::TerrainRenderer(const shared_ptr<Terrain> &terrain,
+                                 const shared_ptr<MapParameters> &mapParameters)
         : terrain_(terrain),
           mapParameters_(mapParameters),
           observerX_(0.0f),

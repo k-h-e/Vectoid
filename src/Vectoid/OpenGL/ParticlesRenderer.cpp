@@ -10,7 +10,7 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
-ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
+ParticlesRenderer::ParticlesRenderer(const shared_ptr<Particles> &particles)
         : Vectoid::ParticlesRenderer(particles) {
     // Nop.
 }

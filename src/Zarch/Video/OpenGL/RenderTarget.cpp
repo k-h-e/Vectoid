@@ -20,8 +20,8 @@ shared_ptr<Video::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRendere
     return std::make_shared<SimpleGeometryRenderer>(geometry);
 }
 
-shared_ptr<Video::TerrainRenderer> RenderTarget::NewTerrainRenderer(shared_ptr<Terrain> terrain,
-                                                                    shared_ptr<MapParameters> mapParameters) {
+shared_ptr<Video::TerrainRenderer> RenderTarget::NewTerrainRenderer(
+        const shared_ptr<Terrain> &terrain, const shared_ptr<MapParameters> &mapParameters) {
     return std::make_shared<TerrainRenderer>(terrain, mapParameters);
 }
 

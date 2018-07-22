@@ -10,9 +10,10 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                         shared_ptr<Vectoid::Glyphs> glyphs)
-        : Vectoid::TextConsole(width, height, glyphWidth, glyphHeight, glyphs) {
+TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                         const shared_ptr<Vectoid::Glyphs> &glyphs)
+        : Vectoid::TextConsole(width, height, glyphWidth, glyphHeight, glyphs),
+          context_(context) {
     // Nop.
 }
 

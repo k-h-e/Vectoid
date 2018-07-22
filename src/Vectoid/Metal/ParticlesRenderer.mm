@@ -10,8 +10,9 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
-ParticlesRenderer::ParticlesRenderer(shared_ptr<Particles> particles)
-        : Vectoid::ParticlesRenderer(particles) {
+ParticlesRenderer::ParticlesRenderer(const shared_ptr<Context> &context, const shared_ptr<Particles> &particles)
+        : Vectoid::ParticlesRenderer(particles),
+          context_(context) {
     // Nop.
 }
 

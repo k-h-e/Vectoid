@@ -16,8 +16,8 @@ namespace OpenGL {
  */
 class TerrainRenderer : public Video::TerrainRenderer {
   public:
-    TerrainRenderer(std::shared_ptr<Terrain> terrain,
-                    std::shared_ptr<MapParameters> mapParameters);
+    TerrainRenderer(const std::shared_ptr<Terrain> &terrain,
+                    const std::shared_ptr<MapParameters> &mapParameters);
     TerrainRenderer(const TerrainRenderer &other) = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
     void Render();

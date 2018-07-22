@@ -7,18 +7,24 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
+class Context;
+
 //! Text console geometry.
 /*! 
  *  \ingroup VectoidMetal
  */
 class TextConsole : public Vectoid::TextConsole {
   public:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight, std::shared_ptr<Vectoid::Glyphs> glyphs);
+    TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
     TextConsole &operator=(TextConsole &&other)      = delete;
     void Render();
+    
+  private:
+    std::shared_ptr<Context> context_;
 };
 
 }    // Namespace Metal.

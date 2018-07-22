@@ -8,8 +8,7 @@ using namespace std;
 namespace kxm {
 namespace Vectoid {
 
-TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                         shared_ptr<Glyphs> glyphs)
+TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Glyphs> &glyphs)
         : glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
           glyphs_(glyphs) {
