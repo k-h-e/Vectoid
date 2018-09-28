@@ -10,6 +10,7 @@
 		2A01D14E20F26E8300907CE2 /* RenderTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A01D14D20F26E8300907CE2 /* RenderTarget.cpp */; };
 		2A02D70420F2672100B41322 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A02D70220F2672100B41322 /* TerrainRenderer.cpp */; };
 		2A02D70520F2672100B41322 /* SimpleGeometryRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A02D70320F2672100B41322 /* SimpleGeometryRenderer.cpp */; };
+		2A108544215DC2470098F060 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A108543215DC2470098F060 /* Geode.cpp */; };
 		2A2FC3C91F2931C700E0F96F /* GroundCollisionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */; };
 		2A2FC3CB1F29472B00E0F96F /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3CA1F29472B00E0F96F /* Data.cpp */; };
 		2A428580215DAEB00060B63E /* PerspectiveProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */; };
@@ -147,6 +148,8 @@
 		2A02D70320F2672100B41322 /* SimpleGeometryRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleGeometryRenderer.cpp; path = OpenGL/SimpleGeometryRenderer.cpp; sourceTree = "<group>"; };
 		2A02D70620F2673E00B41322 /* TerrainRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = ../../include/kxm/Zarch/Video/OpenGL/TerrainRenderer.h; sourceTree = "<group>"; };
 		2A02D70720F2673E00B41322 /* SimpleGeometryRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimpleGeometryRenderer.h; path = ../../include/kxm/Zarch/Video/OpenGL/SimpleGeometryRenderer.h; sourceTree = "<group>"; };
+		2A108542215DC0910098F060 /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../../src/include/kxm/Vectoid/Vulkan/Geode.h; sourceTree = "<group>"; };
+		2A108543215DC2470098F060 /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geode.cpp; path = ../../../src/Vectoid/Vulkan/Geode.cpp; sourceTree = "<group>"; };
 		2A2FC3C71F2931A800E0F96F /* GroundCollisionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroundCollisionEvent.h; path = ../../include/kxm/Zarch/Events/GroundCollisionEvent.h; sourceTree = "<group>"; };
 		2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroundCollisionEvent.cpp; sourceTree = "<group>"; };
 		2A2FC3CA1F29472B00E0F96F /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
@@ -439,6 +442,7 @@
 				2A42856E215D78FA0060B63E /* Camera.h */,
 				2A42856C215D78FA0060B63E /* Context.h */,
 				2A42856F215D78FA0060B63E /* CoordSys.h */,
+				2A108542215DC0910098F060 /* Geode.h */,
 				2A428575215D78FA0060B63E /* Glyphs.h */,
 				2A428570215D78FA0060B63E /* PerspectiveProjection.h */,
 				2A42856D215D78FA0060B63E /* ParticlesRenderer.h */,
@@ -456,6 +460,7 @@
 				2A42857D215DAEB00060B63E /* Camera.cpp */,
 				2A42857E215DAEB00060B63E /* Context.cpp */,
 				2A42857F215DAEB00060B63E /* CoordSys.cpp */,
+				2A108543215DC2470098F060 /* Geode.cpp */,
 				2A428577215DAEB00060B63E /* Glyphs.cpp */,
 				2A428579215DAEB00060B63E /* ParticlesRenderer.cpp */,
 				2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */,
@@ -1198,6 +1203,7 @@
 				2AEB271F1EBF69AE002F6733 /* ControlsRequestEvent.cpp in Sources */,
 				2AEB26D71EBF6987002F6733 /* Geode.cpp in Sources */,
 				2AEB271A1EBF69AE002F6733 /* ActorCreationEvent.cpp in Sources */,
+				2A108544215DC2470098F060 /* Geode.cpp in Sources */,
 				2A02D70420F2672100B41322 /* TerrainRenderer.cpp in Sources */,
 				2AEB27401EBF6E83002F6733 /* GLVideoView.mm in Sources */,
 				2AA8A3722104CE44003319CF /* SimpleGeometryRenderer.mm in Sources */,

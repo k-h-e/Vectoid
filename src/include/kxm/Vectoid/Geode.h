@@ -19,6 +19,9 @@ class Geode : public SceneGraphNode {
     Geode &operator=(const Geode &other) = delete;
     void Render();
     
+  protected:
+    
+    
   private:
     std::shared_ptr<GeometryInterface> geometry_;
 };

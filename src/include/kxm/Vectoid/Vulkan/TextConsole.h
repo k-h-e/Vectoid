@@ -7,6 +7,7 @@ namespace kxm {
 namespace Vectoid {
 namespace Vulkan {
 
+class RenderTarget;
 class Context;
 
 //! Text console geometry.
@@ -15,8 +16,8 @@ class Context;
  */
 class TextConsole : public Vectoid::TextConsole {
   public:
-    TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
-                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+    friend class RenderTarget;
+    
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -24,6 +25,9 @@ class TextConsole : public Vectoid::TextConsole {
     void Render();
     
   private:
+    TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+    
     std::shared_ptr<Context> context_;
 };
 

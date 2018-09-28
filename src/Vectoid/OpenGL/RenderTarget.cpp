@@ -44,7 +44,7 @@ shared_ptr<Vectoid::CoordSys> RenderTarget::NewCoordSys() {
 }
 
 shared_ptr<Vectoid::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
-    return make_shared<Geode>(geometry);
+    return shared_ptr<Geode>(new Geode(geometry));
 }
 
 shared_ptr<Vectoid::Glyphs> RenderTarget::NewGlyphs() {
