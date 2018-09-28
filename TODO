@@ -1,6 +1,6 @@
 Next
 ====
-- Require scene graph node instantiation via RenderTarget, for Metal and OpenGL.
+- make views hold a RenderTarget
 
 Zarch
 - implement collision check: bounding box <-> bounding box.

@@ -1,22 +1,22 @@
-#ifndef KXM_ZARCH_VIDEO_METAL_RENDERTARGET_H_
-#define KXM_ZARCH_VIDEO_METAL_RENDERTARGET_H_
+#ifndef KXM_ZARCH_VIDEO_VULKAN_RENDERTARGET_H_
+#define KXM_ZARCH_VIDEO_VULKAN_RENDERTARGET_H_
 
 #include <kxm/Zarch/Video/RenderTargetInterface.h>
-#include <kxm/Vectoid/Metal/RenderTarget.h>
+#include <kxm/Vectoid/Vulkan/RenderTarget.h>
 
 namespace kxm {
 namespace Zarch {
 namespace Video {
-namespace Metal {
+namespace Vulkan {
 
 //! Render target interface, extended to include Zarch-specific graphics resources.
 /*!
- *  \ingroup ZarchVideoMetal
+ *  \ingroup ZarchVideoVulkan
  */
 class RenderTarget : public virtual kxm::Zarch::Video::RenderTargetInterface,
-                     public Vectoid::Metal::RenderTarget {
+                     public Vectoid::Vulkan::RenderTarget {
   public:
-    RenderTarget(MTKView *metalView);
+    RenderTarget();
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
     virtual std::shared_ptr<kxm::Zarch::Video::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
@@ -25,10 +25,10 @@ class RenderTarget : public virtual kxm::Zarch::Video::RenderTargetInterface,
         const std::shared_ptr<Terrain> &terrain, const std::shared_ptr<MapParameters> &mapParameters);
 };
 
-}    // Namespace Metal.
+}    // Namespace Vulkan.
 }    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.
 
-#endif    // KXM_ZARCH_VIDEO_METAL_RENDERTARGET_H_
+#endif    KXM_ZARCH_VIDEO_VULKAN_RENDERTARGET_H_
 

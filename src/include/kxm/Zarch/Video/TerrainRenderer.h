@@ -24,8 +24,6 @@ namespace Video {
  */
 class TerrainRenderer : public virtual Vectoid::GeometryInterface {
   public:
-    TerrainRenderer(const std::shared_ptr<Terrain> &terrain,
-                    const std::shared_ptr<MapParameters> &mapParameters);
     TerrainRenderer(const TerrainRenderer &other) = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
     //! Sets the observer's position in the <c>xz</c>-plane, ignoring the <c>y</c>-coordinate.
@@ -34,6 +32,9 @@ class TerrainRenderer : public virtual Vectoid::GeometryInterface {
     void GetObserverPosition(Vectoid::Vector *outPosition);
     
   protected:
+    TerrainRenderer(const std::shared_ptr<Terrain> &terrain,
+                    const std::shared_ptr<MapParameters> &mapParameters);
+
     std::shared_ptr<Terrain>             terrain_;
     std::shared_ptr<const MapParameters> mapParameters_;
     float                                observerX_, observerZ_;

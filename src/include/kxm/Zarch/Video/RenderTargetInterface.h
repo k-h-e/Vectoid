@@ -12,7 +12,6 @@ class Terrain;
 
 namespace Video {
 
-
 class SimpleGeometryRenderer;
 class TerrainRenderer;
 
@@ -22,9 +21,9 @@ class TerrainRenderer;
  */
 class RenderTargetInterface : public virtual Vectoid::RenderTargetInterface {
   public:
-    virtual std::shared_ptr<SimpleGeometryRenderer> NewSimpleGeometryRenderer(
+    virtual std::shared_ptr<kxm::Zarch::Video::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
         const std::shared_ptr<SimpleGeometry> &geometry) = 0;
-    virtual std::shared_ptr<TerrainRenderer> NewTerrainRenderer(
+    virtual std::shared_ptr<kxm::Zarch::Video::TerrainRenderer> NewTerrainRenderer(
         const std::shared_ptr<Terrain> &terrain, const std::shared_ptr<MapParameters> &mapParameters) = 0;
 };
 

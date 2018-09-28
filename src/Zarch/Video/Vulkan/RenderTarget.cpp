@@ -1,17 +1,17 @@
-#include <kxm/Zarch/Video/Metal/RenderTarget.h>
+#include <kxm/Zarch/Video/Vulkan/RenderTarget.h>
 
-#include <kxm/Zarch/Video/Metal/SimpleGeometryRenderer.h>
-#include <kxm/Zarch/Video/Metal/TerrainRenderer.h>
+#include <kxm/Zarch/Video/Vulkan/SimpleGeometryRenderer.h>
+#include <kxm/Zarch/Video/Vulkan/TerrainRenderer.h>
 
 using namespace std;
 
 namespace kxm {
 namespace Zarch {
 namespace Video {
-namespace Metal {
+namespace Vulkan {
 
-RenderTarget::RenderTarget(MTKView *metalView)
-        : Vectoid::Metal::RenderTarget(metalView) {
+RenderTarget::RenderTarget()
+        : Vectoid::Vulkan::RenderTarget() {
 
 }
 
@@ -25,7 +25,7 @@ shared_ptr<Video::TerrainRenderer> RenderTarget::NewTerrainRenderer(const shared
     return shared_ptr<TerrainRenderer>(new TerrainRenderer(context_, terrain, mapParameters));
 }
 
-}    // Namespace Metal.
+}    // Namespace Vulkan.
 }    // Namespace Video.
 }    // Namespace Zarch.
 }    // Namespace kxm.

@@ -17,9 +17,11 @@ namespace Video {
  */
 class SimpleGeometryRenderer : public virtual Vectoid::GeometryInterface {
   public:
-    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
     SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
+    
+  protected:
+    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
     
   private:
     std::shared_ptr<SimpleGeometry> geometry_;

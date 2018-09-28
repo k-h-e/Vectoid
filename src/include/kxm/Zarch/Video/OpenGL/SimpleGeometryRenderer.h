@@ -11,18 +11,23 @@ namespace Zarch {
 namespace Video {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Renders simple geometry.
 /*!
  *  \ingroup ZarchVideoOpenGL
  */
 class SimpleGeometryRenderer : public Video::SimpleGeometryRenderer {
   public:
-    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
+    friend class RenderTarget;
+    
     SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
     void Render();
     
   private:
+    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
+  
     int                  numTriangles_;
     std::vector<GLfloat> vertexArray_,
                          colorArray_;
