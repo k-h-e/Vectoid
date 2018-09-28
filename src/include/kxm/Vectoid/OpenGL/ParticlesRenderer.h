@@ -10,18 +10,23 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Renders particles.
 /*!
  *  \ingroup VectoidOpenGL
  */
 class ParticlesRenderer : public Vectoid::ParticlesRenderer {
   public:
-    ParticlesRenderer(const std::shared_ptr<Vectoid::Particles> &particles);
+    friend class RenderTarget;
+    
     ParticlesRenderer(const ParticlesRenderer &other) = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
     void Render();
     
   private:
+    ParticlesRenderer(const std::shared_ptr<Vectoid::Particles> &particles);
+    
     std::vector<GLfloat> vertexBuffer_;
 };
 

@@ -10,6 +10,8 @@
 		2A01D14E20F26E8300907CE2 /* RenderTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A01D14D20F26E8300907CE2 /* RenderTarget.cpp */; };
 		2A02D70420F2672100B41322 /* TerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A02D70220F2672100B41322 /* TerrainRenderer.cpp */; };
 		2A02D70520F2672100B41322 /* SimpleGeometryRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A02D70320F2672100B41322 /* SimpleGeometryRenderer.cpp */; };
+		2A07447D215E51EF009BAFE5 /* Geode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A07447C215E51EF009BAFE5 /* Geode.mm */; };
+		2A07447F215E51F9009BAFE5 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A07447E215E51F9009BAFE5 /* Geode.cpp */; };
 		2A108544215DC2470098F060 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A108543215DC2470098F060 /* Geode.cpp */; };
 		2A2FC3C91F2931C700E0F96F /* GroundCollisionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */; };
 		2A2FC3CB1F29472B00E0F96F /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3CA1F29472B00E0F96F /* Data.cpp */; };
@@ -148,6 +150,10 @@
 		2A02D70320F2672100B41322 /* SimpleGeometryRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleGeometryRenderer.cpp; path = OpenGL/SimpleGeometryRenderer.cpp; sourceTree = "<group>"; };
 		2A02D70620F2673E00B41322 /* TerrainRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TerrainRenderer.h; path = ../../include/kxm/Zarch/Video/OpenGL/TerrainRenderer.h; sourceTree = "<group>"; };
 		2A02D70720F2673E00B41322 /* SimpleGeometryRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimpleGeometryRenderer.h; path = ../../include/kxm/Zarch/Video/OpenGL/SimpleGeometryRenderer.h; sourceTree = "<group>"; };
+		2A07447A215E51BC009BAFE5 /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../../src/include/kxm/Vectoid/OpenGL/Geode.h; sourceTree = "<group>"; };
+		2A07447B215E51C8009BAFE5 /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../../src/include/kxm/Vectoid/Metal/Geode.h; sourceTree = "<group>"; };
+		2A07447C215E51EF009BAFE5 /* Geode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Geode.mm; path = ../../../src/Vectoid/Metal/Geode.mm; sourceTree = "<group>"; };
+		2A07447E215E51F9009BAFE5 /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geode.cpp; path = ../../../src/Vectoid/OpenGL/Geode.cpp; sourceTree = "<group>"; };
 		2A108542215DC0910098F060 /* Geode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Geode.h; path = ../../../src/include/kxm/Vectoid/Vulkan/Geode.h; sourceTree = "<group>"; };
 		2A108543215DC2470098F060 /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geode.cpp; path = ../../../src/Vectoid/Vulkan/Geode.cpp; sourceTree = "<group>"; };
 		2A2FC3C71F2931A800E0F96F /* GroundCollisionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroundCollisionEvent.h; path = ../../include/kxm/Zarch/Events/GroundCollisionEvent.h; sourceTree = "<group>"; };
@@ -478,6 +484,7 @@
 				2A53C7ED2104C8410045E367 /* Camera.h */,
 				2A7A65032105134E00A92D02 /* Context.h */,
 				2A53C7EA2104C8400045E367 /* CoordSys.h */,
+				2A07447B215E51C8009BAFE5 /* Geode.h */,
 				2A53C7E72104C8400045E367 /* Glyphs.h */,
 				2A53C7EB2104C8400045E367 /* ParticlesRenderer.h */,
 				2A53C7E92104C8400045E367 /* PerspectiveProjection.h */,
@@ -495,6 +502,7 @@
 				2A53C7F12104C89C0045E367 /* Camera.mm */,
 				2A7A65042105142E00A92D02 /* Context.mm */,
 				2A53C7F52104C89C0045E367 /* CoordSys.mm */,
+				2A07447C215E51EF009BAFE5 /* Geode.mm */,
 				2A53C7F42104C89C0045E367 /* Glyphs.mm */,
 				2A53C7F22104C89C0045E367 /* ParticlesRenderer.mm */,
 				2A53C7F82104C89D0045E367 /* PerspectiveProjection.mm */,
@@ -523,6 +531,7 @@
 				2A993E4020F2636F0087B142 /* AgeColoredParticles.h */,
 				2A993E3D20F2636F0087B142 /* Camera.h */,
 				2A993E4620F263700087B142 /* CoordSys.h */,
+				2A07447A215E51BC009BAFE5 /* Geode.h */,
 				2A993E4520F263700087B142 /* Glyphs.h */,
 				2A993E4420F263700087B142 /* OpenGL.h */,
 				2A993E4120F2636F0087B142 /* ParticlesRenderer.h */,
@@ -540,6 +549,7 @@
 				2A993E4B20F2638F0087B142 /* AgeColoredParticles.cpp */,
 				2A993E4720F2638F0087B142 /* Camera.cpp */,
 				2A993E4920F2638F0087B142 /* CoordSys.cpp */,
+				2A07447E215E51F9009BAFE5 /* Geode.cpp */,
 				2A993E4820F2638F0087B142 /* Glyphs.cpp */,
 				2A993E4E20F263900087B142 /* ParticlesRenderer.cpp */,
 				2A993E4F20F263900087B142 /* PerspectiveProjection.cpp */,
@@ -1176,6 +1186,7 @@
 				2A428583215DAEB00060B63E /* ParticlesRenderer.cpp in Sources */,
 				2AEB272E1EBF69AE002F6733 /* Physics.cpp in Sources */,
 				2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */,
+				2A07447F215E51F9009BAFE5 /* Geode.cpp in Sources */,
 				2A993E5820F263900087B142 /* PerspectiveProjection.cpp in Sources */,
 				2AEB27151EBF69AE002F6733 /* Actor.cpp in Sources */,
 				2AEB271B1EBF69AE002F6733 /* ActorTerminationEvent.cpp in Sources */,
@@ -1201,6 +1212,7 @@
 				2AEB26D11EBF6987002F6733 /* BoundingBox.cpp in Sources */,
 				2AEB27181EBF69AE002F6733 /* EventHandlerCore.cpp in Sources */,
 				2AEB271F1EBF69AE002F6733 /* ControlsRequestEvent.cpp in Sources */,
+				2A07447D215E51EF009BAFE5 /* Geode.mm in Sources */,
 				2AEB26D71EBF6987002F6733 /* Geode.cpp in Sources */,
 				2AEB271A1EBF69AE002F6733 /* ActorCreationEvent.cpp in Sources */,
 				2A108544215DC2470098F060 /* Geode.cpp in Sources */,

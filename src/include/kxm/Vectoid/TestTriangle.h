@@ -12,9 +12,11 @@ namespace Vectoid {
  */ 
 class TestTriangle : public virtual GeometryInterface {
   public:
-    TestTriangle() {}
     TestTriangle(const TestTriangle &other) = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
+    
+  protected:
+    TestTriangle() {}
 };
 
 }    // Namespace Vectoid.

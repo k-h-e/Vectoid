@@ -7,16 +7,22 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! This scene graph node represents a camera.
 /*! 
  *  \ingroup VectoidOpenGL
  */ 
 class Camera : public Vectoid::Camera {
   public:
-    Camera();
+    friend class RenderTarget;
+    
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
     void Render();
+    
+  private:
+    Camera();
 };
 
 }    // Namespace OpenGL.

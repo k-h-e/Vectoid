@@ -7,16 +7,22 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
 /*! 
  *  \ingroup VectoidOpenGL
  */ 
 class PerspectiveProjection : public Vectoid::PerspectiveProjection {
   public:
-    PerspectiveProjection();
+    friend class RenderTarget;
+    
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
     void Render();
+    
+  private:
+    PerspectiveProjection();
 };
 
 }    // Namespace OpenGL.

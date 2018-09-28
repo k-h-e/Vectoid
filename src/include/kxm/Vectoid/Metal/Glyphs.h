@@ -8,6 +8,7 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
+class RenderTarget;
 class Context;
 
 //! Manages textures for text glyphs.
@@ -16,7 +17,8 @@ class Context;
  */
 class Glyphs : public Vectoid::Glyphs {
   public:
-    Glyphs(const std::shared_ptr<Context> &context);
+    friend class RenderTarget;
+    
     Glyphs(const Glyphs &other)            = delete;
     Glyphs &operator=(const Glyphs &other) = delete;
     Glyphs(Glyphs &&other)                 = delete;
@@ -26,6 +28,8 @@ class Glyphs : public Vectoid::Glyphs {
     void BindGlyphTexture(uint8_t glyph);
     
   private:
+    Glyphs(const std::shared_ptr<Context> &context);
+  
     std::shared_ptr<Context> context_;
 };
 

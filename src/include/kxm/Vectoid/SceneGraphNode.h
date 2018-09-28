@@ -15,7 +15,6 @@ namespace Vectoid {
  */ 
 class SceneGraphNode : public virtual Core::Interface {
   public:
-    SceneGraphNode();
     SceneGraphNode(const SceneGraphNode &other)            = delete;
     SceneGraphNode &operator=(const SceneGraphNode &other) = delete;
     SceneGraphNode(SceneGraphNode &&other)                 = delete;
@@ -36,6 +35,9 @@ class SceneGraphNode : public virtual Core::Interface {
     //! Performs a render traversal of the sub scene graph rooted in the node. This is the only scene graph node
     //! operation that is allowed to interact with the underlying graphics platform.
     virtual void Render();
+    
+  protected:
+    SceneGraphNode();
     
   private:
     std::vector<std::shared_ptr<SceneGraphNode>> children_;

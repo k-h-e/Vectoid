@@ -7,6 +7,7 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
+class RenderTarget;
 class Context;
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
@@ -15,12 +16,15 @@ class Context;
  */ 
 class PerspectiveProjection : public Vectoid::PerspectiveProjection {
   public:
-    PerspectiveProjection(const std::shared_ptr<Context> &context);
+    friend class RenderTarget;
+    
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
     void Render();
     
   private:
+    PerspectiveProjection(const std::shared_ptr<Context> &context);
+    
     std::shared_ptr<Context> context_;
 };
 

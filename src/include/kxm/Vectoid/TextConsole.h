@@ -16,7 +16,6 @@ class Glyphs;
  */
 class TextConsole : public virtual GeometryInterface {
   public:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -36,6 +35,8 @@ class TextConsole : public virtual GeometryInterface {
     void Resize(int width, int height);
     
   protected:
+    TextConsole(int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs);
+  
     int                     width_, height_,
                             rowCursor_;
     float                   glyphWidth_, glyphHeight_;

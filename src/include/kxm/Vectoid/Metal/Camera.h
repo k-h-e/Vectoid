@@ -7,6 +7,7 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
+class RenderTarget;
 class Context;
 
 //! This scene graph node represents a camera.
@@ -15,12 +16,15 @@ class Context;
  */ 
 class Camera : public Vectoid::Camera {
   public:
-    Camera(const std::shared_ptr<Context> &context);
+    friend class RenderTarget;
+    
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
     void Render();
     
   private:
+    Camera(const std::shared_ptr<Context> &context);
+  
     std::shared_ptr<Context> context_;
 };
 

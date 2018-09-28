@@ -13,7 +13,8 @@ namespace Vectoid {
  */ 
 class PerspectiveProjection : public SceneGraphNode {
   public:
-    PerspectiveProjection();
+    PerspectiveProjection(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
     //! Sets the length in camera space of that dimension of the rectangular "window" on the near clipping plane that correspoinds to the larger dimension of the viewport.
     void SetWindowSize(float windowSize);
     //! Retrieves the property set by SetWindowSize().
@@ -32,6 +33,8 @@ class PerspectiveProjection : public SceneGraphNode {
     Vector TransformViewPortCoordinates(float x, float y) const;
     
   protected:
+    PerspectiveProjection();
+  
     void ComputeWindowDimensions(float *width, float *height) const;
     float eyepointDistance_,
           viewingDepth_;
@@ -39,8 +42,6 @@ class PerspectiveProjection : public SceneGraphNode {
     
   private:
     static const float paramMin;
-    PerspectiveProjection(const PerspectiveProjection &other);
-    PerspectiveProjection &operator=(const PerspectiveProjection &other);
     
     float windowSize_,
           width_, height_;

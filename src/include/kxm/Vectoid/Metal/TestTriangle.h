@@ -8,6 +8,7 @@ namespace kxm {
 namespace Vectoid {
 namespace Metal {
 
+class RenderTarget;
 class Context;
 
 //! Simple triangle geometry for testing purposes.
@@ -16,12 +17,15 @@ class Context;
  */ 
 class TestTriangle : public Vectoid::TestTriangle {
   public:
-    TestTriangle(const std::shared_ptr<Context> &context);   
+    friend class RenderTarget;
+    
     TestTriangle(const TestTriangle &other) = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
     void Render();
     
   private:
+    TestTriangle(const std::shared_ptr<Context> &context);   
+  
     std::shared_ptr<Context> context_;
 };
 

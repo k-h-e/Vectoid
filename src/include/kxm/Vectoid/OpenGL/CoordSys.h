@@ -7,16 +7,22 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! This scene graph node sets up a local coordinate system for its children.
 /*! 
  *  \ingroup VectoidOpenGL
  */ 
 class CoordSys : public Vectoid::CoordSys {
   public:
-    CoordSys();
+    friend class RenderTarget;
+    
     CoordSys(const CoordSys &other) = delete;
     CoordSys &operator=(const CoordSys &other) = delete;
     void Render();
+    
+  private:
+    CoordSys();
 };
 
 }    // Namespace OpenGL.

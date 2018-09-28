@@ -14,7 +14,6 @@ namespace Vectoid {
  */
 class Glyphs : public virtual Core::Interface {
   public:
-    Glyphs();
     Glyphs(const Glyphs &other)            = delete;
     Glyphs &operator=(const Glyphs &other) = delete;
     Glyphs(Glyphs &&other)                 = delete;
@@ -24,6 +23,8 @@ class Glyphs : public virtual Core::Interface {
     virtual void BindGlyphTexture(uint8_t glyph) = 0;
     
   protected:
+    Glyphs();
+  
     static const int     numGlyphs,
                          glyphWidth, glyphHeight;
     static const uint8_t glyphData[],

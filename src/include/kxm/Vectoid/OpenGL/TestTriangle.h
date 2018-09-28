@@ -9,18 +9,23 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Simple triangle geometry for testing purposes.
 /*! 
  *  \ingroup VectoidOpenGL
  */ 
 class TestTriangle : public Vectoid::TestTriangle {
   public:
-    TestTriangle();   
+    friend class RenderTarget;
+    
     TestTriangle(const TestTriangle &other) = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
     void Render();
     
   private:
+    TestTriangle();
+  
     static const GLfloat vertices[9];
 };
 

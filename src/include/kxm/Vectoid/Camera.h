@@ -12,9 +12,11 @@ namespace Vectoid {
  */ 
 class Camera : public CoordSysCore {
   public:
-    Camera() {}
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
+    
+  protected:
+    Camera() {}
 };
 
 }    // Namespace Vectoid.

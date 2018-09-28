@@ -8,13 +8,16 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Manages textures for text glyphs.
 /*! 
  *  \ingroup VectoidOpenGL
  */
 class Glyphs : public Vectoid::Glyphs {
   public:
-    Glyphs();
+    friend class RenderTarget;
+    
     Glyphs(const Glyphs &other)            = delete;
     Glyphs &operator=(const Glyphs &other) = delete;
     Glyphs(Glyphs &&other)                 = delete;
@@ -24,6 +27,7 @@ class Glyphs : public Vectoid::Glyphs {
     void BindGlyphTexture(uint8_t glyph);
     
   private:
+    Glyphs();
     void GenerateTextures();
                          
     GLuint  textures_[256];

@@ -7,19 +7,26 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
+class RenderTarget;
+
 //! Text console geometry.
 /*! 
  *  \ingroup VectoidOpenGL
  */
 class TextConsole : public Vectoid::TextConsole {
   public:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+    friend class RenderTarget;
+    
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
     TextConsole &operator=(TextConsole &&other)      = delete;
     void Render();
+
+  private:
+    TextConsole(int width, int height, float glyphWidth, float glyphHeight,
+                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+    
 };
 
 }    // Namespace OpenGL.

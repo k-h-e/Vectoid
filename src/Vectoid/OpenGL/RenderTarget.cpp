@@ -1,9 +1,9 @@
 #include <kxm/Vectoid/OpenGL/RenderTarget.h>
 
-#include <kxm/Vectoid/Geode.h>
 #include <kxm/Vectoid/OpenGL/AgeColoredParticles.h>
 #include <kxm/Vectoid/OpenGL/Camera.h>
 #include <kxm/Vectoid/OpenGL/CoordSys.h>
+#include <kxm/Vectoid/OpenGL/Geode.h>
 #include <kxm/Vectoid/OpenGL/Glyphs.h>
 #include <kxm/Vectoid/OpenGL/ParticlesRenderer.h>
 #include <kxm/Vectoid/OpenGL/PerspectiveProjection.h>
@@ -32,15 +32,15 @@ void RenderTarget::RenderFrame() {
 }
 
 shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {
-    return make_shared<AgeColoredParticles>(particles);
+    return shared_ptr<AgeColoredParticles>(new AgeColoredParticles(particles));
 }
 
 shared_ptr<Vectoid::Camera> RenderTarget::NewCamera() {
-    return make_shared<Camera>();
+    return shared_ptr<Camera>(new Camera());
 }
 
 shared_ptr<Vectoid::CoordSys> RenderTarget::NewCoordSys() {
-    return make_shared<CoordSys>();
+    return shared_ptr<CoordSys>(new CoordSys());
 }
 
 shared_ptr<Vectoid::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
@@ -48,24 +48,24 @@ shared_ptr<Vectoid::Geode> RenderTarget::NewGeode(const std::shared_ptr<Geometry
 }
 
 shared_ptr<Vectoid::Glyphs> RenderTarget::NewGlyphs() {
-    return make_shared<Glyphs>();
+    return shared_ptr<Glyphs>(new Glyphs());
 }
 
 shared_ptr<Vectoid::ParticlesRenderer> RenderTarget::NewParticlesRenderer(const shared_ptr<Particles> &particles) {
-    return make_shared<ParticlesRenderer>(particles);
+    return shared_ptr<ParticlesRenderer>(new ParticlesRenderer(particles));
 }
 
 shared_ptr<Vectoid::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
-    return make_shared<PerspectiveProjection>();
+    return shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
 }
 
 shared_ptr<Vectoid::TestTriangle> RenderTarget::NewTestTriangle() {
-    return make_shared<TestTriangle>();
+    return shared_ptr<TestTriangle>(new TestTriangle());
 }
 
 shared_ptr<Vectoid::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Vectoid::Glyphs> &glyphs) {
-    return make_shared<TextConsole>(width, height, glyphWidth, glyphHeight, glyphs);
+    return shared_ptr<TextConsole>(new TextConsole(width, height, glyphWidth, glyphHeight, glyphs));
 }
 
 }    // Namespace OpenGL.

@@ -17,11 +17,12 @@ class Particles;
  */
 class AgeColoredParticles : public virtual GeometryInterface {
  public:
-    AgeColoredParticles(const std::shared_ptr<Vectoid::Particles> &particles);
     AgeColoredParticles(const AgeColoredParticles &other) = delete;
     AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
     
   protected:
+    AgeColoredParticles(const std::shared_ptr<Vectoid::Particles> &particles);
+  
     std::shared_ptr<Vectoid::Particles> particles_;
     float                               highAge_;
     std::vector<Vectoid::Vector>        colors_;
