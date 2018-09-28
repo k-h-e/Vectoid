@@ -15,12 +15,11 @@ namespace Vectoid {
 class Geode : public SceneGraphNode {
   public:
     Geode(const std::shared_ptr<GeometryInterface> &geometry);
+    Geode(const Geode &other) = delete;
+    Geode &operator=(const Geode &other) = delete;
     void Render();
     
   private:
-    Geode(const Geode &other);
-    Geode &operator=(const Geode &other);
-    
     std::shared_ptr<GeometryInterface> geometry_;
 };
 

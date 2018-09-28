@@ -79,14 +79,14 @@ Video::Video(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoo
     data_->projection->AddChild(data_->camera);
     
     data_->terrainRenderer = renderTarget->NewTerrainRenderer(data_->terrain, data_->mapParameters);
-    data_->camera->AddChild(make_shared<Geode>(data_->terrainRenderer));
+    data_->camera->AddChild(renderTarget->NewGeode(data_->terrainRenderer));
     
     data_->shotParticles = make_shared<Particles>();
-    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewParticlesRenderer(data_->shotParticles)));
+    data_->camera->AddChild(renderTarget->NewGeode(renderTarget->NewParticlesRenderer(data_->shotParticles)));
     data_->thrusterParticles = make_shared<Particles>();
-    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewAgeColoredParticles(data_->thrusterParticles)));
+    data_->camera->AddChild(renderTarget->NewGeode(renderTarget->NewAgeColoredParticles(data_->thrusterParticles)));
     shared_ptr<Particles> starFieldParticles(new Particles());
-    data_->camera->AddChild(make_shared<Geode>(renderTarget->NewParticlesRenderer(starFieldParticles)));
+    data_->camera->AddChild(renderTarget->NewGeode(renderTarget->NewParticlesRenderer(starFieldParticles)));
     
     data_->statsConsole = renderTarget->NewTextConsole(20, 4, .2f, .2f, renderTarget->NewGlyphs());
     data_->statsConsoleCoordSys = renderTarget->NewCoordSys();
@@ -94,7 +94,7 @@ Video::Video(const shared_ptr<EventLoop<ZarchEvent, EventHandlerCore>> &eventLoo
     transform.Prepend(Transform(ZAxis, -12.0f));
     transform.Prepend(Transform(XAxis,  30.0f));
     data_->statsConsoleCoordSys->SetTransform(transform);
-    data_->statsConsoleCoordSys->AddChild(make_shared<Geode>(data_->statsConsole));
+    data_->statsConsoleCoordSys->AddChild(renderTarget->NewGeode(data_->statsConsole));
     data_->camera->AddAsLastChild(data_->statsConsoleCoordSys);
     data_->statsConsole->WriteLine("      SCORE 00000000");
     data_->statsConsole->WriteLine("FPS   FUEL  00000000");

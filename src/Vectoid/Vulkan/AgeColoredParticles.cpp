@@ -1,4 +1,4 @@
-#include <kxm/Vectoid/Metal/AgeColoredParticles.h>
+#include <kxm/Vectoid/Vulkan/AgeColoredParticles.h>
 
 #include <kxm/Core/logging.h>
 #include <kxm/Core/NumberTools.h>
@@ -9,7 +9,7 @@ using namespace kxm::Core;
 
 namespace kxm {
 namespace Vectoid {
-namespace Metal {
+namespace Vulkan {
 
 AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context,
                                          const shared_ptr<Vectoid::Particles> &particles)
@@ -21,6 +21,6 @@ AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context,
 void AgeColoredParticles::Render() {
 }
 
-}    // Namespace Metal.
+}    // Namespace Vulkan.
 }    // Namespace Vectoid.
 }    // Namespace kxm.

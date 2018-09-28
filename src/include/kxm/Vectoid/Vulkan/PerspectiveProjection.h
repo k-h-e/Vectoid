@@ -1,0 +1,31 @@
+#ifndef KXM_VECTOID_VULKAN_PERSPECTIVEPROJECTION_H_
+#define KXM_VECTOID_VULKAN_PERSPECTIVEPROJECTION_H_
+
+#include <kxm/Vectoid/PerspectiveProjection.h>
+
+namespace kxm {
+namespace Vectoid {
+namespace Vulkan {
+
+class Context;
+
+//! Perspective screen projection, defining a frustum-shaped viewing volume.
+/*! 
+ *  \ingroup VectoidVulkan
+ */ 
+class PerspectiveProjection : public Vectoid::PerspectiveProjection {
+  public:
+    PerspectiveProjection(const std::shared_ptr<Context> &context);
+    PerspectiveProjection(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
+    void Render();
+    
+  private:
+    std::shared_ptr<Context> context_;
+};
+
+}    // Namespace Vulkan.
+}    // Namespace Vectoid.
+}    // Namespace kxm.
+
+#endif    // KXM_VECTOID_VULKAN_PERSPECTIVEPROJECTION_H_

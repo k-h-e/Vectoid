@@ -1,15 +1,17 @@
-#ifndef KXM_VECTOID_OPENGL_RENDERTARGET_H_
-#define KXM_VECTOID_OPENGL_RENDERTARGET_H_
+#ifndef KXM_VECTOID_VULKAN_RENDERTARGET_H_
+#define KXM_VECTOID_VULKAN_RENDERTARGET_H_
 
 #include <kxm/Vectoid/RenderTargetInterface.h>
 
 namespace kxm {
 namespace Vectoid {
-namespace OpenGL {
+namespace Vulkan {
 
-//! <c>Vectoid</c> render target for rendering via <c>OpenGL</c>.
+class Context;
+
+//! <c>Vectoid</c> render target for rendering via <c>Vulkan</c>.
 /*!
- *  \ingroup VectoidOpenGL
+ *  \ingroup VectoidVulkan
  */
 class RenderTarget : public virtual Vectoid::RenderTargetInterface {
   public:
@@ -31,12 +33,16 @@ class RenderTarget : public virtual Vectoid::RenderTargetInterface {
     virtual std::shared_ptr<Vectoid::TextConsole> NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Vectoid::Glyphs> &glyphs);
     
+  protected:
+    std::shared_ptr<Context> context_;
+    
   private:
     std::shared_ptr<SceneGraphNode> sceneGraphRoot_;
 };
 
-}    // Namespace OpenGL.
+}    // Namespace Vulkan.
 }    // Namespace Vectoid.
 }    // Namespace kxm.
 
-#endif    // KXM_VECTOID_OPENGL_RENDERTARGET_H_
+#endif    // KXM_VECTOID_VULKAN_RENDERTARGET_H_
+

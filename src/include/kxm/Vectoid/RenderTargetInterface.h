@@ -10,6 +10,8 @@ namespace Vectoid {
 class AgeColoredParticles;
 class Camera;
 class CoordSys;
+class GeometryInterface;
+class Geode;
 class Glyphs;
 class Particles;
 class ParticlesRenderer;
@@ -35,6 +37,7 @@ class RenderTargetInterface : public virtual Core::Interface {
         = 0;
     virtual std::shared_ptr<Camera> NewCamera() = 0;
     virtual std::shared_ptr<CoordSys> NewCoordSys() = 0;
+    virtual std::shared_ptr<Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry) = 0;
     virtual std::shared_ptr<Glyphs> NewGlyphs() = 0;
     virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(const std::shared_ptr<Particles> &particles) = 0;
     virtual std::shared_ptr<PerspectiveProjection> NewPerspectiveProjection() = 0;

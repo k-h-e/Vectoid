@@ -26,7 +26,7 @@ Saucer::Saucer(const std::shared_ptr<Data> &data)
     shared_ptr<SimpleGeometry> saucerGeometry = SimpleGeometry::NewSaucerGeometry();
 
     coordSys_ = data_->renderTarget->NewCoordSys();
-    coordSys_->AddChild(make_shared<Geode>(data_->renderTarget->NewSimpleGeometryRenderer(saucerGeometry)));
+    coordSys_->AddChild(data_->renderTarget->NewGeode(data_->renderTarget->NewSimpleGeometryRenderer(saucerGeometry)));
 }
 
 void Saucer::GetTransform(Vectoid::Transform *outTransform) {

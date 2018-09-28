@@ -32,7 +32,7 @@ Lander::Lander(const std::shared_ptr<Data> &data)
     shared_ptr<SimpleGeometry> landerGeometry = SimpleGeometry::NewLanderGeometry();
     
     coordSys_ = data_->renderTarget->NewCoordSys();
-    coordSys_->AddChild(make_shared<Geode>(data_->renderTarget->NewSimpleGeometryRenderer(landerGeometry)));
+    coordSys_->AddChild(data_->renderTarget->NewGeode(data_->renderTarget->NewSimpleGeometryRenderer(landerGeometry)));
 }
 
 void Lander::GetTransform(Vectoid::Transform *outTransform) {

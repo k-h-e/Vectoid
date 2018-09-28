@@ -12,6 +12,16 @@
 		2A02D70520F2672100B41322 /* SimpleGeometryRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A02D70320F2672100B41322 /* SimpleGeometryRenderer.cpp */; };
 		2A2FC3C91F2931C700E0F96F /* GroundCollisionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */; };
 		2A2FC3CB1F29472B00E0F96F /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3CA1F29472B00E0F96F /* Data.cpp */; };
+		2A428580215DAEB00060B63E /* PerspectiveProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */; };
+		2A428581215DAEB00060B63E /* Glyphs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428577215DAEB00060B63E /* Glyphs.cpp */; };
+		2A428582215DAEB00060B63E /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428578215DAEB00060B63E /* TestTriangle.cpp */; };
+		2A428583215DAEB00060B63E /* ParticlesRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428579215DAEB00060B63E /* ParticlesRenderer.cpp */; };
+		2A428584215DAEB00060B63E /* TextConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857A215DAEB00060B63E /* TextConsole.cpp */; };
+		2A428585215DAEB00060B63E /* AgeColoredParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857B215DAEB00060B63E /* AgeColoredParticles.cpp */; };
+		2A428586215DAEB00060B63E /* RenderTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857C215DAEB00060B63E /* RenderTarget.cpp */; };
+		2A428587215DAEB00060B63E /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857D215DAEB00060B63E /* Camera.cpp */; };
+		2A428588215DAEB00060B63E /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857E215DAEB00060B63E /* Context.cpp */; };
+		2A428589215DAEB00060B63E /* CoordSys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A42857F215DAEB00060B63E /* CoordSys.cpp */; };
 		2A53C7FA2104C89D0045E367 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A53C7F12104C89C0045E367 /* Camera.mm */; };
 		2A53C7FB2104C89D0045E367 /* ParticlesRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A53C7F22104C89C0045E367 /* ParticlesRenderer.mm */; };
 		2A53C7FC2104C89D0045E367 /* AgeColoredParticles.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A53C7F32104C89C0045E367 /* AgeColoredParticles.mm */; };
@@ -140,6 +150,26 @@
 		2A2FC3C71F2931A800E0F96F /* GroundCollisionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroundCollisionEvent.h; path = ../../include/kxm/Zarch/Events/GroundCollisionEvent.h; sourceTree = "<group>"; };
 		2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroundCollisionEvent.cpp; sourceTree = "<group>"; };
 		2A2FC3CA1F29472B00E0F96F /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
+		2A42856C215D78FA0060B63E /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Context.h; path = ../../../src/include/kxm/Vectoid/Vulkan/Context.h; sourceTree = "<group>"; };
+		2A42856D215D78FA0060B63E /* ParticlesRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticlesRenderer.h; path = ../../../src/include/kxm/Vectoid/Vulkan/ParticlesRenderer.h; sourceTree = "<group>"; };
+		2A42856E215D78FA0060B63E /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../../../src/include/kxm/Vectoid/Vulkan/Camera.h; sourceTree = "<group>"; };
+		2A42856F215D78FA0060B63E /* CoordSys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoordSys.h; path = ../../../src/include/kxm/Vectoid/Vulkan/CoordSys.h; sourceTree = "<group>"; };
+		2A428570215D78FA0060B63E /* PerspectiveProjection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PerspectiveProjection.h; path = ../../../src/include/kxm/Vectoid/Vulkan/PerspectiveProjection.h; sourceTree = "<group>"; };
+		2A428571215D78FA0060B63E /* AgeColoredParticles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AgeColoredParticles.h; path = ../../../src/include/kxm/Vectoid/Vulkan/AgeColoredParticles.h; sourceTree = "<group>"; };
+		2A428572215D78FA0060B63E /* TestTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../../src/include/kxm/Vectoid/Vulkan/TestTriangle.h; sourceTree = "<group>"; };
+		2A428573215D78FA0060B63E /* RenderTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderTarget.h; path = ../../../src/include/kxm/Vectoid/Vulkan/RenderTarget.h; sourceTree = "<group>"; };
+		2A428574215D78FA0060B63E /* TextConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextConsole.h; path = ../../../src/include/kxm/Vectoid/Vulkan/TextConsole.h; sourceTree = "<group>"; };
+		2A428575215D78FA0060B63E /* Glyphs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Glyphs.h; path = ../../../src/include/kxm/Vectoid/Vulkan/Glyphs.h; sourceTree = "<group>"; };
+		2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerspectiveProjection.cpp; path = ../../../src/Vectoid/Vulkan/PerspectiveProjection.cpp; sourceTree = "<group>"; };
+		2A428577215DAEB00060B63E /* Glyphs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Glyphs.cpp; path = ../../../src/Vectoid/Vulkan/Glyphs.cpp; sourceTree = "<group>"; };
+		2A428578215DAEB00060B63E /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTriangle.cpp; path = ../../../src/Vectoid/Vulkan/TestTriangle.cpp; sourceTree = "<group>"; };
+		2A428579215DAEB00060B63E /* ParticlesRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticlesRenderer.cpp; path = ../../../src/Vectoid/Vulkan/ParticlesRenderer.cpp; sourceTree = "<group>"; };
+		2A42857A215DAEB00060B63E /* TextConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextConsole.cpp; path = ../../../src/Vectoid/Vulkan/TextConsole.cpp; sourceTree = "<group>"; };
+		2A42857B215DAEB00060B63E /* AgeColoredParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AgeColoredParticles.cpp; path = ../../../src/Vectoid/Vulkan/AgeColoredParticles.cpp; sourceTree = "<group>"; };
+		2A42857C215DAEB00060B63E /* RenderTarget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderTarget.cpp; path = ../../../src/Vectoid/Vulkan/RenderTarget.cpp; sourceTree = "<group>"; };
+		2A42857D215DAEB00060B63E /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../../../src/Vectoid/Vulkan/Camera.cpp; sourceTree = "<group>"; };
+		2A42857E215DAEB00060B63E /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Context.cpp; path = ../../../src/Vectoid/Vulkan/Context.cpp; sourceTree = "<group>"; };
+		2A42857F215DAEB00060B63E /* CoordSys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoordSys.cpp; path = ../../../src/Vectoid/Vulkan/CoordSys.cpp; sourceTree = "<group>"; };
 		2A53C7E42104BE6F0045E367 /* VideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoView.h; sourceTree = "<group>"; };
 		2A53C7E62104C8400045E367 /* TestTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTriangle.h; path = ../../../src/include/kxm/Vectoid/Metal/TestTriangle.h; sourceTree = "<group>"; };
 		2A53C7E72104C8400045E367 /* Glyphs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Glyphs.h; path = ../../../src/include/kxm/Vectoid/Metal/Glyphs.h; sourceTree = "<group>"; };
@@ -402,6 +432,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A42856A215D77B60060B63E /* Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				2A428571215D78FA0060B63E /* AgeColoredParticles.h */,
+				2A42856E215D78FA0060B63E /* Camera.h */,
+				2A42856C215D78FA0060B63E /* Context.h */,
+				2A42856F215D78FA0060B63E /* CoordSys.h */,
+				2A428575215D78FA0060B63E /* Glyphs.h */,
+				2A428570215D78FA0060B63E /* PerspectiveProjection.h */,
+				2A42856D215D78FA0060B63E /* ParticlesRenderer.h */,
+				2A428573215D78FA0060B63E /* RenderTarget.h */,
+				2A428572215D78FA0060B63E /* TestTriangle.h */,
+				2A428574215D78FA0060B63E /* TextConsole.h */,
+			);
+			name = Vulkan;
+			sourceTree = "<group>";
+		};
+		2A42856B215D78060060B63E /* Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				2A42857B215DAEB00060B63E /* AgeColoredParticles.cpp */,
+				2A42857D215DAEB00060B63E /* Camera.cpp */,
+				2A42857E215DAEB00060B63E /* Context.cpp */,
+				2A42857F215DAEB00060B63E /* CoordSys.cpp */,
+				2A428577215DAEB00060B63E /* Glyphs.cpp */,
+				2A428579215DAEB00060B63E /* ParticlesRenderer.cpp */,
+				2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */,
+				2A42857C215DAEB00060B63E /* RenderTarget.cpp */,
+				2A428578215DAEB00060B63E /* TestTriangle.cpp */,
+				2A42857A215DAEB00060B63E /* TextConsole.cpp */,
+			);
+			name = Vulkan;
+			sourceTree = "<group>";
+		};
 		2A53C7E52104C81F0045E367 /* Metal */ = {
 			isa = PBXGroup;
 			children = (
@@ -708,6 +772,7 @@
 				2AF6591C1EC8CDDD001D6034 /* TextConsole.cpp */,
 				2A53C7F02104C8530045E367 /* Metal */,
 				2A993E3220F262E00087B142 /* OpenGL */,
+				2A42856B215D78060060B63E /* Vulkan */,
 			);
 			name = Vectoid;
 			sourceTree = "<group>";
@@ -775,6 +840,7 @@
 				2AEB26801EBF68CC002F6733 /* Vector.h */,
 				2A53C7E52104C81F0045E367 /* Metal */,
 				2A993E3120F262CE0087B142 /* OpenGL */,
+				2A42856A215D77B60060B63E /* Vulkan */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -1063,6 +1129,7 @@
 				2A993E3020EBEE7F0087B142 /* SimpleGeometryRenderer.cpp in Sources */,
 				2AEB27371EBF69AE002F6733 /* Lander.cpp in Sources */,
 				2AEB272B1EBF69AE002F6733 /* Actor.cpp in Sources */,
+				2A428580215DAEB00060B63E /* PerspectiveProjection.cpp in Sources */,
 				2AEB27231EBF69AE002F6733 /* VelocityEvent.cpp in Sources */,
 				2A53C8002104C89D0045E367 /* TextConsole.mm in Sources */,
 				2A7A650121050C2400A92D02 /* Shaders.metal in Sources */,
@@ -1077,6 +1144,8 @@
 				2AEB273B1EBF69AF002F6733 /* TerrainRenderer.cpp in Sources */,
 				2AEB27251EBF69AE002F6733 /* GameLogic.cpp in Sources */,
 				2AEB26D91EBF6987002F6733 /* ParticlesRenderer.cpp in Sources */,
+				2A428585215DAEB00060B63E /* AgeColoredParticles.cpp in Sources */,
+				2A428588215DAEB00060B63E /* Context.cpp in Sources */,
 				2AEB27261EBF69AE002F6733 /* Lander.cpp in Sources */,
 				2AEB27221EBF69AE002F6733 /* TriggerEvent.cpp in Sources */,
 				2A7A65052105142E00A92D02 /* Context.mm in Sources */,
@@ -1087,15 +1156,19 @@
 				2AEB27171EBF69AE002F6733 /* Saucer.cpp in Sources */,
 				2A53C7FC2104C89D0045E367 /* AgeColoredParticles.mm in Sources */,
 				2AA8A3732104CE44003319CF /* TerrainRenderer.mm in Sources */,
+				2A428586215DAEB00060B63E /* RenderTarget.cpp in Sources */,
 				2AEB26D81EBF6987002F6733 /* Particles.cpp in Sources */,
 				2AEB27211EBF69AE002F6733 /* MoveEvent.cpp in Sources */,
 				2AEB26D01EBF6987002F6733 /* AgeColoredParticles.cpp in Sources */,
 				2A2FC3C91F2931C700E0F96F /* GroundCollisionEvent.cpp in Sources */,
+				2A428581215DAEB00060B63E /* Glyphs.cpp in Sources */,
 				2AEB26D61EBF6987002F6733 /* CoordSysCore.cpp in Sources */,
 				2A53C8022104C89D0045E367 /* TestTriangle.mm in Sources */,
 				2AEB272D1EBF69AE002F6733 /* Lander.cpp in Sources */,
+				2A428587215DAEB00060B63E /* Camera.cpp in Sources */,
 				2AEB27271EBF69AE002F6733 /* Saucer.cpp in Sources */,
 				2ABC115E1EF728C400171924 /* PlayerStatsEvent.cpp in Sources */,
+				2A428583215DAEB00060B63E /* ParticlesRenderer.cpp in Sources */,
 				2AEB272E1EBF69AE002F6733 /* Physics.cpp in Sources */,
 				2A9F398F1EC78F4000D7B720 /* FloatModN.cpp in Sources */,
 				2A993E5820F263900087B142 /* PerspectiveProjection.cpp in Sources */,
@@ -1112,6 +1185,8 @@
 				2AEB26DD1EBF6987002F6733 /* SceneGraphNode.cpp in Sources */,
 				2AEB260D1EBF6651002F6733 /* AppDelegate.swift in Sources */,
 				2AEB263E1EBF6783002F6733 /* Interface.cpp in Sources */,
+				2A428582215DAEB00060B63E /* TestTriangle.cpp in Sources */,
+				2A428584215DAEB00060B63E /* TextConsole.cpp in Sources */,
 				2A53C7FF2104C89D0045E367 /* RenderTarget.mm in Sources */,
 				2AEB27241EBF69AE002F6733 /* Actor.cpp in Sources */,
 				2AEB272F1EBF69AE002F6733 /* Saucer.cpp in Sources */,
@@ -1128,6 +1203,7 @@
 				2AA8A3722104CE44003319CF /* SimpleGeometryRenderer.mm in Sources */,
 				2A993E5220F263900087B142 /* CoordSys.cpp in Sources */,
 				2AEB27331EBF69AE002F6733 /* SimpleGeometry.cpp in Sources */,
+				2A428589215DAEB00060B63E /* CoordSys.cpp in Sources */,
 				2A2FC3CB1F29472B00E0F96F /* Data.cpp in Sources */,
 				2AEB26E41EBF699B002F6733 /* ActorNaming.cpp in Sources */,
 				2AF6591B1EC8CDC9001D6034 /* Glyphs.cpp in Sources */,
