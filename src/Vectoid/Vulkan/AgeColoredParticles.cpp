@@ -19,6 +19,7 @@ AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context,
 }
     
 void AgeColoredParticles::Render() {
+    Core::Log().Stream() << "Vulkan::AgeColoredParticles::Render()" << endl;
 }
 
 }    // Namespace Vulkan.

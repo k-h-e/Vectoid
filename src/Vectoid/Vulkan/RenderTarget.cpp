@@ -1,5 +1,6 @@
 #include <kxm/Vectoid/Vulkan/RenderTarget.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/Vulkan/AgeColoredParticles.h>
 #include <kxm/Vectoid/Vulkan/Camera.h>
 #include <kxm/Vectoid/Vulkan/Context.h>
@@ -18,6 +19,8 @@ namespace Vectoid {
 namespace Vulkan {
 
 RenderTarget::RenderTarget() {
+    Core::Log().Stream() << "Vulkan render target" << endl;
+    
     context_ = make_shared<Context>();
 }
 
@@ -26,6 +29,9 @@ void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGra
 }
 
 void RenderTarget::RenderFrame() {
+    if (sceneGraphRoot_) {
+        sceneGraphRoot_->Render();
+    }
 }
 
 shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {

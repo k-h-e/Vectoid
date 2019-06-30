@@ -14,6 +14,12 @@
 		2A07447F215E51F9009BAFE5 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A07447E215E51F9009BAFE5 /* Geode.cpp */; };
 		2A108544215DC2470098F060 /* Geode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A108543215DC2470098F060 /* Geode.cpp */; };
 		2A181303215E704C00A60A83 /* VulkanVideoView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A181302215E704C00A60A83 /* VulkanVideoView.mm */; };
+		2A29D521215E835D0025CCC1 /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D520215E835D0025CCC1 /* MoltenVK.framework */; };
+		2A29D523215E83780025CCC1 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D522215E83780025CCC1 /* libc++.tbd */; };
+		2A29D525215E83A40025CCC1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D524215E83A40025CCC1 /* Foundation.framework */; };
+		2A29D527215E83B70025CCC1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D526215E83B70025CCC1 /* QuartzCore.framework */; };
+		2A29D529215E83C40025CCC1 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D528215E83C40025CCC1 /* IOKit.framework */; };
+		2A29D52B215E83D60025CCC1 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29D52A215E83D60025CCC1 /* IOSurface.framework */; };
 		2A2FC3C91F2931C700E0F96F /* GroundCollisionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */; };
 		2A2FC3CB1F29472B00E0F96F /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2FC3CA1F29472B00E0F96F /* Data.cpp */; };
 		2A428580215DAEB00060B63E /* PerspectiveProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A428576215DAEB00060B63E /* PerspectiveProjection.cpp */; };
@@ -162,6 +168,12 @@
 		2A108543215DC2470098F060 /* Geode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geode.cpp; path = ../../../src/Vectoid/Vulkan/Geode.cpp; sourceTree = "<group>"; };
 		2A181301215E704C00A60A83 /* VulkanVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VulkanVideoView.h; sourceTree = "<group>"; };
 		2A181302215E704C00A60A83 /* VulkanVideoView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VulkanVideoView.mm; sourceTree = "<group>"; };
+		2A29D520215E835D0025CCC1 /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MoltenVK.framework; path = ../../3rdparty/MoltenVK/macOS/MoltenVK.framework; sourceTree = "<group>"; };
+		2A29D522215E83780025CCC1 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		2A29D524215E83A40025CCC1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2A29D526215E83B70025CCC1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2A29D528215E83C40025CCC1 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		2A29D52A215E83D60025CCC1 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		2A2FC3C71F2931A800E0F96F /* GroundCollisionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroundCollisionEvent.h; path = ../../include/kxm/Zarch/Events/GroundCollisionEvent.h; sourceTree = "<group>"; };
 		2A2FC3C81F2931C700E0F96F /* GroundCollisionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroundCollisionEvent.cpp; sourceTree = "<group>"; };
 		2A2FC3CA1F29472B00E0F96F /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
@@ -429,10 +441,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A29D523215E83780025CCC1 /* libc++.tbd in Frameworks */,
 				2A7A64FF2105021000A92D02 /* Metal.framework in Frameworks */,
+				2A29D525215E83A40025CCC1 /* Foundation.framework in Frameworks */,
+				2A29D527215E83B70025CCC1 /* QuartzCore.framework in Frameworks */,
+				2A29D529215E83C40025CCC1 /* IOKit.framework in Frameworks */,
+				2A29D52B215E83D60025CCC1 /* IOSurface.framework in Frameworks */,
 				2A7A64FD210501FF00A92D02 /* MetalKit.framework in Frameworks */,
 				2A9F39871EC3B0AE00D7B720 /* GameController.framework in Frameworks */,
 				2A9890D71EBFA1910061F6F4 /* OpenGL.framework in Frameworks */,
+				2A29D521215E835D0025CCC1 /* MoltenVK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,6 +1035,12 @@
 		2AEB27411EBF6FD3002F6733 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A29D52A215E83D60025CCC1 /* IOSurface.framework */,
+				2A29D528215E83C40025CCC1 /* IOKit.framework */,
+				2A29D526215E83B70025CCC1 /* QuartzCore.framework */,
+				2A29D524215E83A40025CCC1 /* Foundation.framework */,
+				2A29D522215E83780025CCC1 /* libc++.tbd */,
+				2A29D520215E835D0025CCC1 /* MoltenVK.framework */,
 				2A7A64FE2105021000A92D02 /* Metal.framework */,
 				2A7A64FC210501FF00A92D02 /* MetalKit.framework */,
 				2A9F39861EC3B0AE00D7B720 /* GameController.framework */,
@@ -1117,6 +1141,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1421,13 +1446,17 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X4UCCTPJJ3;
-				HEADER_SEARCH_PATHS = ../../src/include;
+				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK/macOS;
+				HEADER_SEARCH_PATHS = (
+					../../src/include,
+					../../3rdparty/MoltenVK/include,
+				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kxm.MacZarch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1438,12 +1467,16 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X4UCCTPJJ3;
-				HEADER_SEARCH_PATHS = ../../src/include;
+				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK/macOS;
+				HEADER_SEARCH_PATHS = (
+					../../src/include,
+					../../3rdparty/MoltenVK/include,
+				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kxm.MacZarch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

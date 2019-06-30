@@ -19,6 +19,7 @@ class Geode : public Vectoid::Geode {
     
     Geode(const Geode &other) = delete;
     Geode &operator=(const Geode &other) = delete;
+    void Render();
     
   private:
     Geode(const std::shared_ptr<GeometryInterface> &geometry);

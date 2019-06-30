@@ -1,5 +1,6 @@
 #include <kxm/Vectoid/Vulkan/ParticlesRenderer.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/Particles.h>
 
 using namespace std;
@@ -17,6 +18,7 @@ ParticlesRenderer::ParticlesRenderer(const shared_ptr<Context> &context, const s
 }
 
 void ParticlesRenderer::Render() {
+    Core::Log().Stream() << "Vulkan::ParticlesRenderer::Render()" << endl;
 }
 
 }    // Namespace Vulkan.

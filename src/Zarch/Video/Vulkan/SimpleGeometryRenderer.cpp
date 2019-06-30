@@ -1,5 +1,6 @@
 #include <kxm/Zarch/Video/Vulkan/SimpleGeometryRenderer.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Zarch/SimpleGeometry.h>
 
 using namespace std;
@@ -18,7 +19,7 @@ SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<Vectoid::Vulkan:
 }
 
 void SimpleGeometryRenderer::Render() {
-    
+    Core::Log().Stream() << "Vulkan::SimpleGeometryRenderer::Render()" << endl;
 }
 
 }    // Namespace Vulkan.

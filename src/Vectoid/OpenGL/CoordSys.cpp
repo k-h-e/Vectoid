@@ -14,7 +14,7 @@ CoordSys::CoordSys()
 void CoordSys::Render() {
     glPushMatrix();
     glMultMatrixf(transform_.MatrixElements());
-    CoordSysCore::Render();
+    Vectoid::CoordSys::Render();
     glPopMatrix();
 }
 

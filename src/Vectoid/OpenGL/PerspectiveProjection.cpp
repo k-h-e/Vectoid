@@ -29,7 +29,7 @@ void PerspectiveProjection::Render() {
         glMatrixMode(GL_MODELVIEW);
         parametersChanged_ = false;
     }
-    SceneGraphNode::Render();
+    Vectoid::PerspectiveProjection::Render();
 }
 
 }    // Namespace OpenGL.

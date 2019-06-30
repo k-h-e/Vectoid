@@ -1,5 +1,7 @@
 #include <kxm/Vectoid/Vulkan/CoordSys.h>
 
+#include <kxm/Core/logging.h>
+
 using namespace std;
 
 namespace kxm {
@@ -13,6 +15,8 @@ CoordSys::CoordSys(const shared_ptr<Context> &context)
 }
 
 void CoordSys::Render() {
+    Core::Log().Stream() << "Vulkan::CoordSys::Render()" << endl;
+    Vectoid::CoordSys::Render();
 }
 
 }    // Namespace Vulkan.

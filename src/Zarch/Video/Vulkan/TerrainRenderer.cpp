@@ -1,5 +1,6 @@
 #include <kxm/Zarch/Video/Vulkan/TerrainRenderer.h>
 
+#include <kxm/Core/logging.h>
 #include <kxm/Core/IntModN.h>
 #include <kxm/Zarch/Terrain.h>
 #include <kxm/Zarch/MapParameters.h>
@@ -19,7 +20,7 @@ TerrainRenderer::TerrainRenderer(const shared_ptr<Vectoid::Vulkan::Context> &con
 }
 
 void TerrainRenderer::Render() {
-   
+   Core::Log().Stream() << "Vulkan::TerrainRenderer::Render()" << endl;
 }
 
 }    // Namespace Vulkan.

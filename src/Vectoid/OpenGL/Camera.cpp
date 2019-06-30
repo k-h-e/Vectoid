@@ -15,7 +15,7 @@ void Camera::Render() {
     Transform inverse(Transform::InitAsInverse, transform_);
     glLoadIdentity();
     glMultMatrixf(inverse.MatrixElements());
-    CoordSysCore::Render();
+    Vectoid::Camera::Render();
 }
 
 }    // Namespace OpenGL.

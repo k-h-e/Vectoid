@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cassert>
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/Glyphs.h>
 
 using namespace std;
@@ -18,6 +19,7 @@ TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int heig
 }
 
 void TextConsole::Render() {
+   Core::Log().Stream() << "Vulkan::TextConsole::Render()" << endl;
 }
 
 }    // Namespace Vulkan.

@@ -1,5 +1,7 @@
 #include <kxm/Vectoid/Vulkan/Camera.h>
 
+#include <kxm/Core/logging.h>
+
 using namespace std;
 
 namespace kxm {
@@ -13,6 +15,8 @@ Camera::Camera(const shared_ptr<Context> &context)
 }
 
 void Camera::Render() {
+    Core::Log().Stream() << "Vulkan::Camera::Render()" << endl;
+    Vectoid::Camera::Render();
 }
 
 }    // Namespace Vulkan.

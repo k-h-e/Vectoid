@@ -1,5 +1,7 @@
 #include <kxm/Vectoid/Vulkan/TestTriangle.h>
 
+#include <kxm/Core/logging.h>
+
 using namespace std;
 
 namespace kxm {
@@ -13,6 +15,7 @@ TestTriangle::TestTriangle(const shared_ptr<Context> &context)
 }
 
 void TestTriangle::Render() {
+    Core::Log().Stream() << "Vulkan::TestTriangle::Render()" << endl;
 }
 
 }    // Namespace Vulkan.
