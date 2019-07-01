@@ -10,9 +10,8 @@ namespace Zarch {
 namespace Video {
 namespace Vulkan {
 
-RenderTarget::RenderTarget()
-        : Vectoid::Vulkan::RenderTarget() {
-
+RenderTarget::RenderTarget(void *view)
+        : Vectoid::Vulkan::RenderTarget(view) {
 }
 
 shared_ptr<Video::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(

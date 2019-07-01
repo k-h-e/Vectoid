@@ -15,7 +15,7 @@ class Context;
  */
 class RenderTarget : public virtual Vectoid::RenderTargetInterface {
   public:
-    RenderTarget();
+    RenderTarget(void *view);
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
     virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot);

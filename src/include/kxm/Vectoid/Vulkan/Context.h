@@ -12,17 +12,36 @@ namespace Vulkan {
 //! Holds <c>Vulkan</c>-specific context for scene graph nodes.
 /*!
  *  \ingroup VectoidVulkan
+ *
+ *  Allocates Vulkan resources upon construction, and releases Vulkan resources upon destruction.
  */
 class Context {
   public:
-    Context();
+    Context(void *view);
     Context(const Context &other) = delete;
     Context &operator=(const Context &other) = delete;
+    ~Context();
     
-    VkInstance instance;
+    //! Tells whether the context is operative and can be used.
+    /*!
+     *  If it is not, it must not be used. Its destructor will properly clean things up, though.
+     */
+    bool Operative();
+    
+    VkInstance      instance;
+    VkSurfaceKHR    surface;
+    VkDevice        device;
+    uint32_t        queueFamilyIndex;     // Valid <=> device present.
+    VkCommandPool   commandBufferPool;
+    VkCommandBuffer commandBuffer;
     
   private:
     bool CreateInstance(const std::vector<std::string> &requiredExtensions);
+    bool CreateSurface(void *view);
+    bool CreateDevice(const std::vector<std::string> &requiredExtensions);
+    bool CreateCommandBufferPool();
+    
+    bool operative_;
 };
 
 }    // Namespace Vulkan.

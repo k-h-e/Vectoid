@@ -16,7 +16,7 @@ namespace Vulkan {
 class RenderTarget : public virtual kxm::Zarch::Video::RenderTargetInterface,
                      public Vectoid::Vulkan::RenderTarget {
   public:
-    RenderTarget();
+    RenderTarget(void *view);
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
     virtual std::shared_ptr<kxm::Zarch::Video::SimpleGeometryRenderer> NewSimpleGeometryRenderer(

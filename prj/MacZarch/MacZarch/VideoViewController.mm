@@ -10,6 +10,7 @@
 
 #include <memory>
 #import <GameController/GameController.h>
+#include <kxm/Core/logging.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
@@ -137,6 +138,7 @@ using namespace kxm::Zarch;
         }
     }
 
+    kxm::Core::Log().Stream() << "triggering redraw" << endl;
     self.view.needsDisplay = YES;
 }
 

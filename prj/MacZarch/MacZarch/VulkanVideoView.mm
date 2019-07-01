@@ -1,6 +1,7 @@
 #import "VulkanVideoView.h"
 
 #include <memory>
+#import <MetalKit/MetalKit.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Video/Vulkan/RenderTarget.h>
@@ -19,10 +20,13 @@ using namespace kxm::Zarch;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    self.layer = [[CAMetalLayer alloc] init];
+    self.wantsLayer = YES;
 }
 
 - (std::shared_ptr<kxm::Zarch::Video::RenderTargetInterface>)getRenderTarget {
-    return make_shared<Video::Vulkan::RenderTarget>();
+    return make_shared<Video::Vulkan::RenderTarget>((__bridge void *)self);
 }
 
 - (void)setZarch: (const std::shared_ptr<kxm::Zarch::Zarch> &)aZarch
