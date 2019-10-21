@@ -2,6 +2,7 @@
 
 #include <memory>
 #import <MetalKit/MetalKit.h>
+#include <kxm/Core/logging.h>
 #include <kxm/Zarch/Zarch.h>
 #include <kxm/Zarch/ControlsState.h>
 #include <kxm/Zarch/Video/Vulkan/RenderTarget.h>
@@ -18,13 +19,6 @@ using namespace kxm::Zarch;
 
 @implementation VulkanVideoView
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    self.layer = [[CAMetalLayer alloc] init];
-    self.wantsLayer = YES;
-}
-
 - (std::shared_ptr<kxm::Zarch::Video::RenderTargetInterface>)getRenderTarget {
     return make_shared<Video::Vulkan::RenderTarget>((__bridge void *)self);
 }
@@ -37,9 +31,9 @@ using namespace kxm::Zarch;
     _size.height = 0.0f;
 }
 
-- (void)drawRect: (NSRect)bounds {
+- (void)triggerFrame {
     if (_zarch) {
-        CGSize newSize = bounds.size;    // TODO: Better use self.frame.size?
+        CGSize newSize = self.bounds.size;    // TODO: Better use self.frame.size?
         if ((newSize.width != _size.width) || (newSize.height != _size.height)) {
             _size.width  = newSize.width;
             _size.height = newSize.height;
@@ -51,8 +45,22 @@ using namespace kxm::Zarch;
     }
 }
 
-- (BOOL)acceptsFirstResponder {
+// Indicates that the view wants to draw using the backing layer instead of using drawRect:.
+- (BOOL)wantsUpdateLayer {
     return YES;
+}
+
+// Returns a Metal-compatible layer.
++ (Class)layerClass {
+    return [CAMetalLayer class];
+}
+
+// If the wantsLayer property is set to YES, this method will be invoked to return a layer instance.
+- (CALayer *)makeBackingLayer {
+    CALayer *layer = [self.class.layerClass layer];
+    CGSize viewScale = [self convertSizeToBacking: CGSizeMake(1.0, 1.0)];
+    layer.contentsScale = MIN(viewScale.width, viewScale.height);
+    return layer;
 }
 
 @end

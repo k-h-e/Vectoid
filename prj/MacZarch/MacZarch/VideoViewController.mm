@@ -138,8 +138,7 @@ using namespace kxm::Zarch;
         }
     }
 
-    kxm::Core::Log().Stream() << "triggering redraw" << endl;
-    self.view.needsDisplay = YES;
+    [(id<VideoView>)self.view triggerFrame];
 }
 
 @end

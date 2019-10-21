@@ -35,19 +35,10 @@ void RenderTarget::RenderFrame() {
         return;
     }
     
-    Core::Log().Stream() << "creating command buffer" << endl;
-    
-    VkCommandBufferAllocateInfo info = {};
-    info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    info.pNext = NULL;
-    info.commandPool = context_->commandBufferPool;
-    info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    info.commandBufferCount = 1;
-    if (vkAllocateCommandBuffers(context_->device, &info, &context_->commandBuffer) == VK_SUCCESS) {
+    if (context_->CreateCommandBuffer()) {
         sceneGraphRoot_->Render();
-        vkFreeCommandBuffers(context_->device, context_->commandBufferPool, 1, &context_->commandBuffer);
     }
-    context_->commandBuffer = VK_NULL_HANDLE;
+    context_->FreeCommandBuffer();
 }
 
 shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {

@@ -1,7 +1,6 @@
 #ifndef KXM_VECTOID_VULKAN_CONTEXT_H_
 #define KXM_VECTOID_VULKAN_CONTEXT_H_
 
-#include <string>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -27,19 +26,36 @@ class Context {
      *  If it is not, it must not be used. Its destructor will properly clean things up, though.
      */
     bool Operative();
+    //! Creates the command buffer.
+    /*!
+     *  \return <c>true</c> in case of success.
+     */
+    bool CreateCommandBuffer();
+    //! Frees the command buffer if it is present.
+    void FreeCommandBuffer();
     
     VkInstance      instance;
     VkSurfaceKHR    surface;
     VkDevice        device;
-    uint32_t        queueFamilyIndex;     // Valid <=> device present.
+    uint32_t        queueFamilyCount;            // Valid <=> device present.
+    uint32_t        graphicsQueueFamilyIndex;    // Valid <=> device present.
+    uint32_t        presentQueueFamilyIndex;     // Valid <=> device present.
     VkCommandPool   commandBufferPool;
     VkCommandBuffer commandBuffer;
     
   private:
-    bool CreateInstance(const std::vector<std::string> &requiredExtensions);
+    bool CreateInstance();
+    // Frees the instance if it is present.
+    void FreeInstance();
     bool CreateSurface(void *view);
-    bool CreateDevice(const std::vector<std::string> &requiredExtensions);
+    // Frees the surface if it is present.
+    void FreeSurface();
+    bool CreateDevice();
+    // Frees the device if it is present.
+    void FreeDevice();
     bool CreateCommandBufferPool();
+    // Frees the command buffer pool if it is present.
+    void FreeCommandBufferPool();
     
     bool operative_;
 };

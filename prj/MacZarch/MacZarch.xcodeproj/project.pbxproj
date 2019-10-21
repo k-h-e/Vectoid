@@ -1446,10 +1446,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X4UCCTPJJ3;
-				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK/macOS;
+				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK;
 				HEADER_SEARCH_PATHS = (
 					../../src/include,
-					../../3rdparty/MoltenVK/include,
+					../../3rdparty/Vulkan/include,
 				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1467,10 +1467,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X4UCCTPJJ3;
-				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK/macOS;
+				FRAMEWORK_SEARCH_PATHS = ../../3rdparty/MoltenVK;
 				HEADER_SEARCH_PATHS = (
 					../../src/include,
-					../../3rdparty/MoltenVK/include,
+					../../3rdparty/Vulkan/include,
 				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

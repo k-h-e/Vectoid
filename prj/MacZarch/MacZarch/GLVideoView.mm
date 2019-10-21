@@ -44,6 +44,10 @@ using namespace kxm::Zarch;
     _size.height = 0.0f;
 }
 
+- (void)triggerFrame {
+    self.needsDisplay = YES;
+}
+
 - (void)prepareOpenGL {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);
