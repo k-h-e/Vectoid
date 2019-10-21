@@ -34,14 +34,15 @@ class Context {
     //! Frees the command buffer if it is present.
     void FreeCommandBuffer();
     
-    VkInstance      instance;
-    VkSurfaceKHR    surface;
-    VkDevice        device;
-    uint32_t        queueFamilyCount;            // Valid <=> device present.
-    uint32_t        graphicsQueueFamilyIndex;    // Valid <=> device present.
-    uint32_t        presentQueueFamilyIndex;     // Valid <=> device present.
-    VkCommandPool   commandBufferPool;
-    VkCommandBuffer commandBuffer;
+    VkInstance                    instance;
+    VkSurfaceKHR                  surface;
+    VkDevice                      device;
+    std::vector<VkPhysicalDevice> physicalDevices;             // Valid <=> device present.
+    uint32_t                      queueFamilyCount;            // Valid <=> device present.
+    uint32_t                      graphicsQueueFamilyIndex;    // Valid <=> device present.
+    uint32_t                      presentQueueFamilyIndex;     // Valid <=> device present.
+    VkCommandPool                 commandBufferPool;
+    VkCommandBuffer               commandBuffer;
     
   private:
     bool CreateInstance();
@@ -53,6 +54,7 @@ class Context {
     bool CreateDevice();
     // Frees the device if it is present.
     void FreeDevice();
+    bool CreateSwapChain();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();

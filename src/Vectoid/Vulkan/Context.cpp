@@ -33,6 +33,10 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create device" << endl;
         return;
     }
+    if (!CreateSwapChain()) {
+        Core::Log().Stream() << "failed to swap chain" << endl;
+        return;
+    }
     if (!CreateCommandBufferPool()) {
         Core::Log().Stream() << "failed to create command buffer pool" << endl;
         return;
@@ -241,6 +245,7 @@ bool Context::CreateDevice() {
     }
     
     device                   = aDevice;
+    physicalDevices          = devices;
     queueFamilyCount         = aQueueFamilyCount;
     graphicsQueueFamilyIndex = aGraphicsQueueFamilyIndex;
     presentQueueFamilyIndex  = aPresentQueueFamilyIndex;
@@ -255,6 +260,33 @@ void Context::FreeDevice() {
         vkDestroyDevice(device, nullptr);
         device = VK_NULL_HANDLE;
     }
+}
+
+bool Context::CreateSwapChain() {
+    uint32_t numFormats;
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, NULL) != VK_SUCCESS) {
+        return false;
+    }
+    Core::Log().Stream() << "num_formats=" << numFormats << endl;
+    
+    /*
+    VkSurfaceFormatKHR *surfFormats = (VkSurfaceFormatKHR *)malloc(formatCount * sizeof(VkSurfaceFormatKHR));
+    res = vkGetPhysicalDeviceSurfaceFormatsKHR(info.gpus[0], info.surface, &formatCount, surfFormats);
+    assert(res == VK_SUCCESS);
+    // If the format list includes just one entry of VK_FORMAT_UNDEFINED,
+    // the surface has no preferred format.  Otherwise, at least one
+    // supported format will be returned.
+    if (formatCount == 1 && surfFormats[0].format == VK_FORMAT_UNDEFINED) {
+        info.format = VK_FORMAT_B8G8R8A8_UNORM;
+    } else {
+        assert(formatCount >= 1);
+        info.format = surfFormats[0].format;
+    }
+    free(surfFormats);
+    */
+    
+    
+    return false;
 }
 
 bool Context::CreateCommandBufferPool() {
