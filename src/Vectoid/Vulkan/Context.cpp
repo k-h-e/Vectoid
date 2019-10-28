@@ -18,6 +18,7 @@ Context::Context(void *view)
           queueFamilyCount(0u),
           graphicsQueueFamilyIndex(0u),
           presentQueueFamilyIndex(0u),
+          swapChain(VK_NULL_HANDLE),
           commandBufferPool(VK_NULL_HANDLE),
           commandBuffer(VK_NULL_HANDLE),
           operative_(false) {
@@ -34,7 +35,7 @@ Context::Context(void *view)
         return;
     }
     if (!CreateSwapChain()) {
-        Core::Log().Stream() << "failed to swap chain" << endl;
+        Core::Log().Stream() << "failed to create swap chain" << endl;
         return;
     }
     if (!CreateCommandBufferPool()) {
@@ -48,6 +49,7 @@ Context::Context(void *view)
 Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
+    FreeSwapChain();
     FreeDevice();
     FreeSurface();
     FreeInstance();
@@ -58,6 +60,10 @@ bool Context::Operative() {
 }
 
 bool Context::CreateInstance() {
+    if (instance != VK_NULL_HANDLE) {
+        return false;
+    }
+
     vector<string> requiredExtensions;
     requiredExtensions.push_back("VK_MVK_macos_surface");
 
@@ -110,12 +116,10 @@ bool Context::CreateInstance() {
     instanceInfo.enabledLayerCount = 0;
     instanceInfo.ppEnabledLayerNames = nullptr;
     
-    VkInstance anInstance;
-    if (vkCreateInstance(&instanceInfo, nullptr, &anInstance) != VK_SUCCESS) {
+    if (vkCreateInstance(&instanceInfo, nullptr, &instance) != VK_SUCCESS) {
         return false;
     }
 
-    instance = anInstance;
     Core::Log().Stream() << "instance created" << endl;
     return true;
 }
@@ -129,18 +133,20 @@ void Context::FreeInstance() {
 }
 
 bool Context::CreateSurface(void *view) {
+    if ((surface != VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
+        return false;
+    }
+    
     VkMacOSSurfaceCreateInfoMVK info = {};
     info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
     info.pNext = nullptr;
     info.flags = 0;
     info.pView = view;
     
-    VkSurfaceKHR aSurface;
-    if (vkCreateMacOSSurfaceMVK(instance, &info, nullptr, &aSurface) != VK_SUCCESS) {
+    if (vkCreateMacOSSurfaceMVK(instance, &info, nullptr, &surface) != VK_SUCCESS) {
         return false;
     }
     
-    surface = aSurface;
     Core::Log().Stream() << "surface created" << endl;
     return true;
 }
@@ -154,6 +160,10 @@ void Context::FreeSurface() {
 }
 
 bool Context::CreateDevice() {
+    if ((device != VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
+        return false;
+    }
+
     vector<string> requiredExtensions;
     requiredExtensions.push_back("VK_KHR_swapchain");
 
@@ -161,52 +171,49 @@ bool Context::CreateDevice() {
     if ((vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr) != VK_SUCCESS) || (deviceCount == 0u)) {
         return false;
     }
-    vector<VkPhysicalDevice> devices(deviceCount);
-    if ((vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data()) != VK_SUCCESS) || (deviceCount == 0u)) {
+    physicalDevices.resize(deviceCount);
+    if ((vkEnumeratePhysicalDevices(instance, &deviceCount, physicalDevices.data()) != VK_SUCCESS)
+            || (deviceCount == 0u)) {
         return false;
     }
     Core::Log().Stream() << "detected " << deviceCount << " physical devices" << endl;
     
-    uint32_t aQueueFamilyCount;
-    vkGetPhysicalDeviceQueueFamilyProperties(devices[0], &aQueueFamilyCount, nullptr);
-    if (aQueueFamilyCount == 0u) {
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[0], &queueFamilyCount, nullptr);
+    if (queueFamilyCount == 0u) {
         return false;
     }
-    vector<VkQueueFamilyProperties> queueFamilyProperties(aQueueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(devices[0], &aQueueFamilyCount, queueFamilyProperties.data());
+    vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[0], &queueFamilyCount, queueFamilyProperties.data());
     
-    uint32_t aGraphicsQueueFamilyIndex = UINT32_MAX;
-    uint32_t aPresentQueueFamilyIndex  = UINT32_MAX;
-    VkBool32 *supportsPresent = (VkBool32 *)malloc(aQueueFamilyCount * sizeof(VkBool32));
-    if (supportsPresent) {
-        for (uint32_t i = 0; i < aQueueFamilyCount; i++) {
-            if (vkGetPhysicalDeviceSurfaceSupportKHR(devices[0], i, surface, &supportsPresent[i]) != VK_SUCCESS) {
-                supportsPresent[i] = VK_FALSE;
-            }
+    uint32_t graphicsQueueFamilyIndex = UINT32_MAX;
+    uint32_t presentQueueFamilyIndex  = UINT32_MAX;
+    vector<VkBool32> supportsPresent(queueFamilyCount);
+    for (uint32_t i = 0; i < queueFamilyCount; i++) {
+        if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevices[0], i, surface, &supportsPresent[i]) != VK_SUCCESS) {
+            supportsPresent[i] = VK_FALSE;
         }
-        for (uint32_t i = 0u; i < aQueueFamilyCount; ++i) {
-            if (queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-                if (aGraphicsQueueFamilyIndex == UINT32_MAX) {
-                    aGraphicsQueueFamilyIndex = i;
-                }
-                if (supportsPresent[i] == VK_TRUE) {
-                    aPresentQueueFamilyIndex = i;
-                    break;
-                }
-            }
-        }
-        if (aPresentQueueFamilyIndex == UINT32_MAX) {
-            for (uint32_t i = 0u; i < aQueueFamilyCount; ++i) {
-                if (supportsPresent[i] == VK_TRUE) {
-                    aPresentQueueFamilyIndex = i;
-                    break;
-                }
-            }
-        }
-        
-        free(supportsPresent);
     }
-    if ((aGraphicsQueueFamilyIndex == UINT32_MAX) || (aPresentQueueFamilyIndex == UINT32_MAX)) {
+    for (uint32_t i = 0u; i < queueFamilyCount; ++i) {
+        if (queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            if (graphicsQueueFamilyIndex == UINT32_MAX) {
+                graphicsQueueFamilyIndex = i;
+            }
+            if (supportsPresent[i] == VK_TRUE) {
+                presentQueueFamilyIndex = i;
+                break;
+            }
+        }
+    }
+    if (presentQueueFamilyIndex == UINT32_MAX) {
+        for (uint32_t i = 0u; i < queueFamilyCount; ++i) {
+            if (supportsPresent[i] == VK_TRUE) {
+                presentQueueFamilyIndex = i;
+                break;
+            }
+        }
+    }
+        
+    if ((graphicsQueueFamilyIndex == UINT32_MAX) || (presentQueueFamilyIndex == UINT32_MAX)) {
         return false;
     }
     
@@ -220,37 +227,46 @@ bool Context::CreateDevice() {
         extensionNamePointers.push_back(extensionName.c_str());
     }
     
-    float queuePriorities[1] = {0.0};
-    VkDeviceQueueCreateInfo queueInfo = {};
-    queueInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueInfo.pNext = nullptr;
-    queueInfo.queueCount = 1;
-    queueInfo.queueFamilyIndex = aGraphicsQueueFamilyIndex;
-    queueInfo.pQueuePriorities = queuePriorities;
-    
+    float graphicsPriorities[1] = { 0.0f };
+    float presentPriorities[1]  = { 0.0f };
+    VkDeviceQueueCreateInfo queueInfos[2];
+    uint32_t numQueues = 0u;
+
+    queueInfos[numQueues] = {};
+    queueInfos[numQueues].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueInfos[numQueues].pNext = nullptr;
+    queueInfos[numQueues].queueCount = 1;
+    queueInfos[numQueues].queueFamilyIndex = graphicsQueueFamilyIndex;
+    queueInfos[numQueues].pQueuePriorities = graphicsPriorities;
+    ++numQueues;
+
+    if (graphicsQueueFamilyIndex != presentQueueFamilyIndex) {
+        queueInfos[numQueues] = {};
+        queueInfos[numQueues].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueInfos[numQueues].pNext = nullptr;
+        queueInfos[numQueues].queueCount = 1;
+        queueInfos[numQueues].queueFamilyIndex = presentQueueFamilyIndex;
+        queueInfos[numQueues].pQueuePriorities = presentPriorities;
+        ++numQueues;
+    }
+
     VkDeviceCreateInfo deviceInfo = {};
     deviceInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceInfo.pNext = nullptr;
-    deviceInfo.queueCreateInfoCount = 1;
-    deviceInfo.pQueueCreateInfos = &queueInfo;
+    deviceInfo.queueCreateInfoCount = numQueues;
+    deviceInfo.pQueueCreateInfos = &queueInfos[0];
     deviceInfo.enabledExtensionCount = static_cast<uint32_t>(extensionNamePointers.size());
     deviceInfo.ppEnabledExtensionNames = extensionNamePointers.data();
     deviceInfo.enabledLayerCount = 0;
     deviceInfo.ppEnabledLayerNames = nullptr;
     deviceInfo.pEnabledFeatures = nullptr;
     
-    VkDevice aDevice;
-    if (vkCreateDevice(devices[0], &deviceInfo, nullptr, &aDevice) != VK_SUCCESS) {
+    if (vkCreateDevice(physicalDevices[0], &deviceInfo, nullptr, &device) != VK_SUCCESS) {
         return false;
     }
-    
-    device                   = aDevice;
-    physicalDevices          = devices;
-    queueFamilyCount         = aQueueFamilyCount;
-    graphicsQueueFamilyIndex = aGraphicsQueueFamilyIndex;
-    presentQueueFamilyIndex  = aPresentQueueFamilyIndex;
-    Core::Log().Stream() << "device created, graphics_queue=" << graphicsQueueFamilyIndex << ", present_queue="
-                         << presentQueueFamilyIndex << endl;
+   
+    Core::Log().Stream() << "device created, num_queues=" << numQueues << ", graphics_queue="
+                         << graphicsQueueFamilyIndex << ", present_queue=" << presentQueueFamilyIndex << endl;
     return true;
 }
 
@@ -263,45 +279,199 @@ void Context::FreeDevice() {
 }
 
 bool Context::CreateSwapChain() {
-    uint32_t numFormats;
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, NULL) != VK_SUCCESS) {
+    if ((buffers.size() != 0u) || (swapChain != VK_NULL_HANDLE) || (device == VK_NULL_HANDLE)
+            || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
         return false;
     }
-    Core::Log().Stream() << "num_formats=" << numFormats << endl;
-    
-    /*
-    VkSurfaceFormatKHR *surfFormats = (VkSurfaceFormatKHR *)malloc(formatCount * sizeof(VkSurfaceFormatKHR));
-    res = vkGetPhysicalDeviceSurfaceFormatsKHR(info.gpus[0], info.surface, &formatCount, surfFormats);
-    assert(res == VK_SUCCESS);
-    // If the format list includes just one entry of VK_FORMAT_UNDEFINED,
-    // the surface has no preferred format.  Otherwise, at least one
-    // supported format will be returned.
-    if (formatCount == 1 && surfFormats[0].format == VK_FORMAT_UNDEFINED) {
-        info.format = VK_FORMAT_B8G8R8A8_UNORM;
-    } else {
-        assert(formatCount >= 1);
-        info.format = surfFormats[0].format;
+
+    uint32_t numFormats;
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, nullptr) != VK_SUCCESS) {
+        return false;
     }
-    free(surfFormats);
-    */
+    vector<VkSurfaceFormatKHR> formats(numFormats);
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, formats.data()) != VK_SUCCESS) {
+        return false;
+    }
+    VkFormat format;
+    if ((numFormats == 1u) && (formats[0].format == VK_FORMAT_UNDEFINED)) {
+        format = VK_FORMAT_B8G8R8A8_UNORM;
+    } else if (numFormats >= 1u) {
+        format = formats[0].format;
+    } else {
+        return false;
+    }
+    Core::Log().Stream() << "selected surface format " << format << endl;
     
+    VkSurfaceCapabilitiesKHR capabilities;
+    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevices[0], surface, &capabilities) != VK_SUCCESS) {
+        return false;
+    }
+    uint32_t numPresentModes;
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevices[0], surface, &numPresentModes, nullptr)
+            != VK_SUCCESS) {
+        return false;
+    }
+    vector<VkPresentModeKHR> presentModes(numPresentModes);
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevices[0], surface, &numPresentModes, presentModes.data())
+            != VK_SUCCESS) {
+        return false;
+    }
+    Core::Log().Stream() << "num_present_modes=" << numPresentModes << endl;
     
-    return false;
+    VkExtent2D extent;
+    if (capabilities.currentExtent.width == 0xffffffffu) {    // Surface size undefined.
+        extent.width  = 64u;
+        extent.height = 64u;
+        if (extent.width < capabilities.minImageExtent.width) {
+            extent.width = capabilities.minImageExtent.width;
+        }
+        if (extent.width > capabilities.maxImageExtent.width) {
+            extent.width = capabilities.maxImageExtent.width;
+        }
+
+        if (extent.height < capabilities.minImageExtent.height) {
+            extent.height = capabilities.minImageExtent.height;
+        }
+        if (extent.height > capabilities.maxImageExtent.height) {
+            extent.height = capabilities.maxImageExtent.height;
+        }
+    } else {
+        extent = capabilities.currentExtent;
+    }
+    Core::Log().Stream() << "extent=" << extent.width << "x" << extent.height << endl;
+    
+    VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+    uint32_t desiredNumberOfSwapChainImages = capabilities.minImageCount;
+    
+    VkSurfaceTransformFlagBitsKHR preTransform;
+    if (capabilities.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) {
+        preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+    } else {
+        preTransform = capabilities.currentTransform;
+    }
+    
+    VkCompositeAlphaFlagBitsKHR compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    const int numCompositeAlphaFlags = 4;
+    VkCompositeAlphaFlagBitsKHR compositeAlphaFlags[numCompositeAlphaFlags] = {
+        VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR,
+        VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR,
+        VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR,
+    };
+    for (int i = 0; i < numCompositeAlphaFlags; ++i) {
+        if (capabilities.supportedCompositeAlpha & compositeAlphaFlags[i]) {
+            compositeAlpha = compositeAlphaFlags[i];
+            break;
+        }
+    }
+    
+    VkSwapchainCreateInfoKHR swapChainInfo = {};
+    swapChainInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapChainInfo.pNext = nullptr;
+    swapChainInfo.surface = surface;
+    swapChainInfo.minImageCount = desiredNumberOfSwapChainImages;
+    swapChainInfo.imageFormat = format;
+    swapChainInfo.imageExtent.width = extent.width;
+    swapChainInfo.imageExtent.height = extent.height;
+    swapChainInfo.preTransform = preTransform;
+    swapChainInfo.compositeAlpha = compositeAlpha;
+    swapChainInfo.imageArrayLayers = 1;
+    swapChainInfo.presentMode = swapchainPresentMode;
+    swapChainInfo.oldSwapchain = VK_NULL_HANDLE;
+    swapChainInfo.clipped = true;
+    swapChainInfo.imageColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    swapChainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    uint32_t queueFamilyIndices[2] = { graphicsQueueFamilyIndex, presentQueueFamilyIndex };
+    if (graphicsQueueFamilyIndex != presentQueueFamilyIndex) {
+        swapChainInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        swapChainInfo.queueFamilyIndexCount = 2;
+        swapChainInfo.pQueueFamilyIndices = queueFamilyIndices;
+    }
+    else {
+        swapChainInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        swapChainInfo.queueFamilyIndexCount = 0;
+        swapChainInfo.pQueueFamilyIndices = nullptr;
+    }
+    
+    if (vkCreateSwapchainKHR(device, &swapChainInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        return false;
+    }
+    
+    uint32_t numImages;
+    if (vkGetSwapchainImagesKHR(device, swapChain, &numImages, nullptr) != VK_SUCCESS) {
+        return false;
+    }
+    vector<VkImage> images(numImages);
+    if (vkGetSwapchainImagesKHR(device, swapChain, &numImages, images.data()) != VK_SUCCESS) {
+        return false;
+    }
+    buffers.clear();
+    for (uint32_t i = 0u; i < numImages; ++i) {
+        BufferInfo info;
+        info.image = images[i];
+        buffers.push_back(info);
+    }
+
+    for (uint32_t i = 0; i < numImages; ++i) {
+        VkImageViewCreateInfo imageViewInfo = {};
+        imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageViewInfo.pNext = nullptr;
+        imageViewInfo.flags = 0;
+        imageViewInfo.image = buffers[i].image;
+        imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        imageViewInfo.format = format;
+        imageViewInfo.components.r = VK_COMPONENT_SWIZZLE_R;
+        imageViewInfo.components.g = VK_COMPONENT_SWIZZLE_G;
+        imageViewInfo.components.b = VK_COMPONENT_SWIZZLE_B;
+        imageViewInfo.components.a = VK_COMPONENT_SWIZZLE_A;
+        imageViewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageViewInfo.subresourceRange.baseMipLevel = 0;
+        imageViewInfo.subresourceRange.levelCount = 1;
+        imageViewInfo.subresourceRange.baseArrayLayer = 0;
+        imageViewInfo.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(device, &imageViewInfo, nullptr, &buffers[i].view) != VK_SUCCESS) {
+            return false;
+        }
+    }
+
+    Core::Log().Stream() << "swap chain created" << endl;
+    return true;
+}
+
+void Context::FreeSwapChain() {
+    for (BufferInfo &info : buffers) {
+        if (info.view != VK_NULL_HANDLE) {
+            Core::Log().Stream() << "deleting image view" << endl;
+            vkDestroyImageView(device, info.view, nullptr);
+            info.view = VK_NULL_HANDLE;
+        }
+    }
+    buffers.clear();
+
+    if (swapChain != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "deleting swap chain" << endl;
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
+        swapChain = VK_NULL_HANDLE;
+    }
 }
 
 bool Context::CreateCommandBufferPool() {
+    if ((commandBufferPool != VK_NULL_HANDLE) || (buffers.size() == 0u) || (swapChain == VK_NULL_HANDLE)
+            || (device == VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
+        return false;
+    }
+
     VkCommandPoolCreateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     info.pNext = nullptr;
     info.queueFamilyIndex = graphicsQueueFamilyIndex;
     info.flags = 0;
     
-    VkCommandPool aCommandBufferPool;
-    if (vkCreateCommandPool(device, &info, nullptr, &aCommandBufferPool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(device, &info, nullptr, &commandBufferPool) != VK_SUCCESS) {
         return false;
     }
     
-    commandBufferPool = aCommandBufferPool;
     Core::Log().Stream() << "command buffer pool created" << endl;
     return true;
 }
@@ -315,22 +485,22 @@ void Context::FreeCommandBufferPool() {
 }
 
 bool Context::CreateCommandBuffer() {
-    if ((commandBuffer != VK_NULL_HANDLE) || (device == VK_NULL_HANDLE) || (commandBufferPool == VK_NULL_HANDLE)) {
+    if ((commandBuffer != VK_NULL_HANDLE) || (commandBufferPool == VK_NULL_HANDLE) || (buffers.size() == 0u)
+            || (swapChain == VK_NULL_HANDLE) || (device == VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE)
+            || (instance == VK_NULL_HANDLE)) {
         return false;
     }
 
     VkCommandBufferAllocateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    info.pNext = NULL;
+    info.pNext = nullptr;
     info.commandPool = commandBufferPool;
     info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     info.commandBufferCount = 1;
-    VkCommandBuffer aCommandBuffer;
-    if (vkAllocateCommandBuffers(device, &info, &aCommandBuffer) != VK_SUCCESS) {
+    if (vkAllocateCommandBuffers(device, &info, &commandBuffer) != VK_SUCCESS) {
         return false;
     }
-    
-    commandBuffer = aCommandBuffer;
+
     Core::Log().Stream() << "command buffer created" << endl;
     return true;
 }

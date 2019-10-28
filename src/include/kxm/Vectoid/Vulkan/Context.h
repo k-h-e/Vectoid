@@ -16,6 +16,13 @@ namespace Vulkan {
  */
 class Context {
   public:
+    struct BufferInfo {
+        VkImage image;
+        VkImageView view;
+        
+        BufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE) {}
+    };
+  
     Context(void *view);
     Context(const Context &other) = delete;
     Context &operator=(const Context &other) = delete;
@@ -41,6 +48,8 @@ class Context {
     uint32_t                      queueFamilyCount;            // Valid <=> device present.
     uint32_t                      graphicsQueueFamilyIndex;    // Valid <=> device present.
     uint32_t                      presentQueueFamilyIndex;     // Valid <=> device present.
+    VkSwapchainKHR                swapChain;
+    std::vector<BufferInfo>       buffers;
     VkCommandPool                 commandBufferPool;
     VkCommandBuffer               commandBuffer;
     
@@ -55,6 +64,8 @@ class Context {
     // Frees the device if it is present.
     void FreeDevice();
     bool CreateSwapChain();
+    // Frees the swap chain if it is present.
+    void FreeSwapChain();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();
