@@ -49,7 +49,8 @@ class Context {
     uint32_t                      graphicsQueueFamilyIndex;    // Valid <=> device present.
     uint32_t                      presentQueueFamilyIndex;     // Valid <=> device present.
     VkSwapchainKHR                swapChain;
-    std::vector<BufferInfo>       buffers;
+    std::vector<BufferInfo>       colorBuffers;
+    BufferInfo                    depthBuffer;
     VkCommandPool                 commandBufferPool;
     VkCommandBuffer               commandBuffer;
     
@@ -66,6 +67,9 @@ class Context {
     bool CreateSwapChain();
     // Frees the swap chain if it is present.
     void FreeSwapChain();
+    bool CreateDepthBuffer();
+    // Frees the depth buffer if it is present.
+    void FreeDepthBuffer();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();

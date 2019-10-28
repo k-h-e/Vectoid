@@ -38,6 +38,10 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create swap chain" << endl;
         return;
     }
+    if (!CreateDepthBuffer()) {
+        Core::Log().Stream() << "failed to create depth buffer" << endl;
+        return;
+    }
     if (!CreateCommandBufferPool()) {
         Core::Log().Stream() << "failed to create command buffer pool" << endl;
         return;
@@ -49,6 +53,7 @@ Context::Context(void *view)
 Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
+    FreeDepthBuffer();
     FreeSwapChain();
     FreeDevice();
     FreeSurface();
@@ -60,10 +65,6 @@ bool Context::Operative() {
 }
 
 bool Context::CreateInstance() {
-    if (instance != VK_NULL_HANDLE) {
-        return false;
-    }
-
     vector<string> requiredExtensions;
     requiredExtensions.push_back("VK_MVK_macos_surface");
 
@@ -133,10 +134,6 @@ void Context::FreeInstance() {
 }
 
 bool Context::CreateSurface(void *view) {
-    if ((surface != VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
-        return false;
-    }
-    
     VkMacOSSurfaceCreateInfoMVK info = {};
     info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
     info.pNext = nullptr;
@@ -160,10 +157,6 @@ void Context::FreeSurface() {
 }
 
 bool Context::CreateDevice() {
-    if ((device != VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
-        return false;
-    }
-
     vector<string> requiredExtensions;
     requiredExtensions.push_back("VK_KHR_swapchain");
 
@@ -279,11 +272,6 @@ void Context::FreeDevice() {
 }
 
 bool Context::CreateSwapChain() {
-    if ((buffers.size() != 0u) || (swapChain != VK_NULL_HANDLE) || (device == VK_NULL_HANDLE)
-            || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
-        return false;
-    }
-
     uint32_t numFormats;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, nullptr) != VK_SUCCESS) {
         return false;
@@ -405,11 +393,11 @@ bool Context::CreateSwapChain() {
     if (vkGetSwapchainImagesKHR(device, swapChain, &numImages, images.data()) != VK_SUCCESS) {
         return false;
     }
-    buffers.clear();
+    colorBuffers.clear();
     for (uint32_t i = 0u; i < numImages; ++i) {
         BufferInfo info;
         info.image = images[i];
-        buffers.push_back(info);
+        colorBuffers.push_back(info);
     }
 
     for (uint32_t i = 0; i < numImages; ++i) {
@@ -417,7 +405,7 @@ bool Context::CreateSwapChain() {
         imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         imageViewInfo.pNext = nullptr;
         imageViewInfo.flags = 0;
-        imageViewInfo.image = buffers[i].image;
+        imageViewInfo.image = colorBuffers[i].image;
         imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         imageViewInfo.format = format;
         imageViewInfo.components.r = VK_COMPONENT_SWIZZLE_R;
@@ -430,7 +418,7 @@ bool Context::CreateSwapChain() {
         imageViewInfo.subresourceRange.baseArrayLayer = 0;
         imageViewInfo.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(device, &imageViewInfo, nullptr, &buffers[i].view) != VK_SUCCESS) {
+        if (vkCreateImageView(device, &imageViewInfo, nullptr, &colorBuffers[i].view) != VK_SUCCESS) {
             return false;
         }
     }
@@ -440,14 +428,14 @@ bool Context::CreateSwapChain() {
 }
 
 void Context::FreeSwapChain() {
-    for (BufferInfo &info : buffers) {
+    for (BufferInfo &info : colorBuffers) {
         if (info.view != VK_NULL_HANDLE) {
             Core::Log().Stream() << "deleting image view" << endl;
             vkDestroyImageView(device, info.view, nullptr);
             info.view = VK_NULL_HANDLE;
         }
     }
-    buffers.clear();
+    colorBuffers.clear();
 
     if (swapChain != VK_NULL_HANDLE) {
         Core::Log().Stream() << "deleting swap chain" << endl;
@@ -456,12 +444,51 @@ void Context::FreeSwapChain() {
     }
 }
 
-bool Context::CreateCommandBufferPool() {
-    if ((commandBufferPool != VK_NULL_HANDLE) || (buffers.size() == 0u) || (swapChain == VK_NULL_HANDLE)
-            || (device == VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE) || (instance == VK_NULL_HANDLE)) {
+bool Context::CreateDepthBuffer() {
+    const VkFormat format = VK_FORMAT_D16_UNORM;
+    VkImageTiling tiling;
+    VkFormatProperties properties;
+    vkGetPhysicalDeviceFormatProperties(physicalDevices[0], format, &properties);
+    if (properties.linearTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+        tiling = VK_IMAGE_TILING_LINEAR;
+    }
+    else if (properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+        tiling = VK_IMAGE_TILING_OPTIMAL;
+    } else {
         return false;
     }
+    Core::Log().Stream() << "have tiling" << endl;
 
+    VkImageCreateInfo imageInfo = {};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext = nullptr;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.format = format;
+    imageInfo.extent.width = info.width;
+    imageInfo.extent.height = info.height;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    imageInfo.queueFamilyIndexCount = 0;
+    imageInfo.pQueueFamilyIndices = nullptr;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.flags = 0;
+    if (vkCreateImage(device, &imageInfo, nullptr, &depthBuffer.image) != VK_SUCCESS) {
+        return false;
+    }
+    
+
+    return false;
+}
+
+void Context::FreeDepthBuffer() {
+
+}
+
+bool Context::CreateCommandBufferPool() {
     VkCommandPoolCreateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     info.pNext = nullptr;
@@ -485,12 +512,6 @@ void Context::FreeCommandBufferPool() {
 }
 
 bool Context::CreateCommandBuffer() {
-    if ((commandBuffer != VK_NULL_HANDLE) || (commandBufferPool == VK_NULL_HANDLE) || (buffers.size() == 0u)
-            || (swapChain == VK_NULL_HANDLE) || (device == VK_NULL_HANDLE) || (surface == VK_NULL_HANDLE)
-            || (instance == VK_NULL_HANDLE)) {
-        return false;
-    }
-
     VkCommandBufferAllocateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     info.pNext = nullptr;
