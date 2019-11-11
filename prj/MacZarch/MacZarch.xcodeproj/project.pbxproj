@@ -1450,6 +1450,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../src/include,
 					../../3rdparty/Vulkan/include,
+					../../3rdparty/glm/include,
 				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1471,6 +1472,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../src/include,
 					../../3rdparty/Vulkan/include,
+					../../3rdparty/glm/include,
 				);
 				INFOPLIST_FILE = MacZarch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

@@ -16,12 +16,18 @@ namespace Vulkan {
  */
 class Context {
   public:
-    struct BufferInfo {
+    struct FrameBufferInfo {
         VkImage        image;
         VkImageView    view;
         VkDeviceMemory memory;
         
-        BufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
+        FrameBufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
+    };
+    struct BufferInfo {
+        VkBuffer       buffer;
+        VkDeviceMemory memory;
+        
+        BufferInfo() : buffer(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
     };
   
     Context(void *view);
@@ -53,8 +59,9 @@ class Context {
     VkSwapchainKHR                   swapChain;
     uint32_t                         width;                             // Valid <=> swap chain present.
     uint32_t                         height;                            // Valid <=> swap chain present.
-    std::vector<BufferInfo>          colorBuffers;
-    BufferInfo                       depthBuffer;
+    std::vector<FrameBufferInfo>     colorBuffers;
+    FrameBufferInfo                  depthBuffer;
+    BufferInfo                       uniformBuffer;
     VkCommandPool                    commandBufferPool;
     VkCommandBuffer                  commandBuffer;
     
@@ -74,11 +81,14 @@ class Context {
     bool CreateDepthBuffer();
     // Frees the depth buffer if it is present.
     void FreeDepthBuffer();
+    bool CreateUniformBuffer();
+    // Frees the uniform buffer if it is present.
+    void FreeUniformBuffer();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();
     
-    bool checkMemoryType(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
+    bool getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     
     bool operative_;
 };

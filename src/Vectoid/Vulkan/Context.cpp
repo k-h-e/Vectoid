@@ -3,6 +3,9 @@
 #include <unordered_set>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_macos.h>
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
 #include <kxm/Core/logging.h>
 
 using namespace std;
@@ -42,6 +45,10 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create depth buffer" << endl;
         return;
     }
+    if (!CreateUniformBuffer()) {
+        Core::Log().Stream() << "failed to create uniform buffer" << endl;
+        return;
+    }
     if (!CreateCommandBufferPool()) {
         Core::Log().Stream() << "failed to create command buffer pool" << endl;
         return;
@@ -53,6 +60,7 @@ Context::Context(void *view)
 Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
+    FreeUniformBuffer();
     FreeDepthBuffer();
     FreeSwapChain();
     FreeDevice();
@@ -398,7 +406,7 @@ bool Context::CreateSwapChain() {
     }
     colorBuffers.clear();
     for (uint32_t i = 0u; i < numImages; ++i) {
-        BufferInfo info;
+        FrameBufferInfo info;
         info.image = images[i];
         colorBuffers.push_back(info);
     }
@@ -431,7 +439,7 @@ bool Context::CreateSwapChain() {
 }
 
 void Context::FreeSwapChain() {
-    for (BufferInfo &info : colorBuffers) {
+    for (FrameBufferInfo &info : colorBuffers) {
         if (info.view != VK_NULL_HANDLE) {
             Core::Log().Stream() << "deleting image view" << endl;
             vkDestroyImageView(device, info.view, nullptr);
@@ -490,7 +498,7 @@ bool Context::CreateDepthBuffer() {
     memoryInfo.pNext = nullptr;
     memoryInfo.allocationSize = memoryRequirements.size;
     memoryInfo.memoryTypeIndex = 0;
-    if (!checkMemoryType(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+    if (!getMemoryIndex(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                         &memoryInfo.memoryTypeIndex)) {
         return false;
     }
@@ -543,6 +551,74 @@ void Context::FreeDepthBuffer() {
     }
 }
 
+bool Context::CreateUniformBuffer() {
+    VkBufferCreateInfo bufferInfo = {};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.pNext = nullptr;
+    bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    bufferInfo.size = sizeof(glm::mat4);
+    bufferInfo.queueFamilyIndexCount = 0;
+    bufferInfo.pQueueFamilyIndices = nullptr;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.flags = 0;
+    if (vkCreateBuffer(device, &bufferInfo, nullptr, &uniformBuffer.buffer) != VK_SUCCESS) {
+        return false;
+    }
+    
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(device, uniformBuffer.buffer, &memoryRequirements);
+    VkMemoryAllocateInfo memoryInfo = {};
+    memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryInfo.pNext = nullptr;
+    memoryInfo.memoryTypeIndex = 0;
+    memoryInfo.allocationSize = memoryRequirements.size;
+    if (!getMemoryIndex(memoryRequirements.memoryTypeBits,
+                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                        &memoryInfo.memoryTypeIndex)) {
+        return false;
+    }
+    if (vkAllocateMemory(device, &memoryInfo, nullptr, &uniformBuffer.memory) != VK_SUCCESS) {
+        return false;
+    }
+    
+    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+    glm::mat4 viewMatrix = glm::lookAt(glm::vec3(-5, 3, -10),    // Camera is at (-5 ,3, -10), in world space.
+                                       glm::vec3(0, 0, 0),       // Camera looks at the origin.
+                                       glm::vec3(0, -1, 0));     // Head is up (set to (0, -1, 0) to look upside-down).
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    glm::mat4 clippingMatrix = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+                                         0.0f,-1.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 0.5f, 0.0f,
+                                         0.0f, 0.0f, 0.5f, 1.0f);    // Vulkan clip space has inverted Y and half Z.
+    glm::mat4 modelViewProjectionMatrix = clippingMatrix * projectionMatrix * viewMatrix * modelMatrix;
+    uint8_t *mapped;
+    if (vkMapMemory(device, uniformBuffer.memory, 0, memoryRequirements.size, 0, (void **)&mapped) != VK_SUCCESS) {
+        return false;
+    }
+    memcpy(mapped, &modelViewProjectionMatrix, sizeof(modelViewProjectionMatrix));
+    vkUnmapMemory(device, uniformBuffer.memory);
+    
+    if (vkBindBufferMemory(device, uniformBuffer.buffer, uniformBuffer.memory, 0) != VK_SUCCESS) {
+        return false;
+    }
+
+    Core::Log().Stream() << "uniform buffer created" << endl;
+    return true;
+}
+
+void Context::FreeUniformBuffer() {
+    if (uniformBuffer.buffer != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing uniform buffer" << endl;
+        vkDestroyBuffer(device, uniformBuffer.buffer, nullptr);
+        uniformBuffer.buffer = VK_NULL_HANDLE;
+    }
+    if (uniformBuffer.memory != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing uniform buffer memory" << endl;
+        vkFreeMemory(device, uniformBuffer.memory, nullptr);
+        uniformBuffer.memory = VK_NULL_HANDLE;
+    }
+}
+
 bool Context::CreateCommandBufferPool() {
     VkCommandPoolCreateInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -589,7 +665,7 @@ void Context::FreeCommandBuffer() {
     }
 }
 
-bool Context::checkMemoryType(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex) {
+bool Context::getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex) {
     for (uint32_t i = 0u; i < physicalDeviceMemoryProperties.memoryTypeCount; ++i) {
         if ((typeBits & 1u) == 1u) {
             if ((physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & requirementsMask) == requirementsMask) {
