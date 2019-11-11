@@ -17,10 +17,11 @@ namespace Vulkan {
 class Context {
   public:
     struct BufferInfo {
-        VkImage image;
-        VkImageView view;
+        VkImage        image;
+        VkImageView    view;
+        VkDeviceMemory memory;
         
-        BufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE) {}
+        BufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
     };
   
     Context(void *view);
@@ -41,18 +42,21 @@ class Context {
     //! Frees the command buffer if it is present.
     void FreeCommandBuffer();
     
-    VkInstance                    instance;
-    VkSurfaceKHR                  surface;
-    VkDevice                      device;
-    std::vector<VkPhysicalDevice> physicalDevices;             // Valid <=> device present.
-    uint32_t                      queueFamilyCount;            // Valid <=> device present.
-    uint32_t                      graphicsQueueFamilyIndex;    // Valid <=> device present.
-    uint32_t                      presentQueueFamilyIndex;     // Valid <=> device present.
-    VkSwapchainKHR                swapChain;
-    std::vector<BufferInfo>       colorBuffers;
-    BufferInfo                    depthBuffer;
-    VkCommandPool                 commandBufferPool;
-    VkCommandBuffer               commandBuffer;
+    VkInstance                       instance;
+    VkSurfaceKHR                     surface;
+    VkDevice                         device;
+    VkPhysicalDevice                 physicalDevice;                    // Valid <=> device present.
+    VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;    // Valid <=> device present.
+    uint32_t                         queueFamilyCount;                  // Valid <=> device present.
+    uint32_t                         graphicsQueueFamilyIndex;          // Valid <=> device present.
+    uint32_t                         presentQueueFamilyIndex;           // Valid <=> device present.
+    VkSwapchainKHR                   swapChain;
+    uint32_t                         width;                             // Valid <=> swap chain present.
+    uint32_t                         height;                            // Valid <=> swap chain present.
+    std::vector<BufferInfo>          colorBuffers;
+    BufferInfo                       depthBuffer;
+    VkCommandPool                    commandBufferPool;
+    VkCommandBuffer                  commandBuffer;
     
   private:
     bool CreateInstance();
@@ -73,6 +77,8 @@ class Context {
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();
+    
+    bool checkMemoryType(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     
     bool operative_;
 };

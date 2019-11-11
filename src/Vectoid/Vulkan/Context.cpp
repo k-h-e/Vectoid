@@ -164,25 +164,28 @@ bool Context::CreateDevice() {
     if ((vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr) != VK_SUCCESS) || (deviceCount == 0u)) {
         return false;
     }
-    physicalDevices.resize(deviceCount);
-    if ((vkEnumeratePhysicalDevices(instance, &deviceCount, physicalDevices.data()) != VK_SUCCESS)
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    if ((vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data()) != VK_SUCCESS)
             || (deviceCount == 0u)) {
         return false;
     }
+    physicalDevice = devices[0];
     Core::Log().Stream() << "detected " << deviceCount << " physical devices" << endl;
     
-    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[0], &queueFamilyCount, nullptr);
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &physicalDeviceMemoryProperties);
+    
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
     if (queueFamilyCount == 0u) {
         return false;
     }
     vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[0], &queueFamilyCount, queueFamilyProperties.data());
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilyProperties.data());
     
     uint32_t graphicsQueueFamilyIndex = UINT32_MAX;
     uint32_t presentQueueFamilyIndex  = UINT32_MAX;
     vector<VkBool32> supportsPresent(queueFamilyCount);
     for (uint32_t i = 0; i < queueFamilyCount; i++) {
-        if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevices[0], i, surface, &supportsPresent[i]) != VK_SUCCESS) {
+        if (vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &supportsPresent[i]) != VK_SUCCESS) {
             supportsPresent[i] = VK_FALSE;
         }
     }
@@ -254,7 +257,7 @@ bool Context::CreateDevice() {
     deviceInfo.ppEnabledLayerNames = nullptr;
     deviceInfo.pEnabledFeatures = nullptr;
     
-    if (vkCreateDevice(physicalDevices[0], &deviceInfo, nullptr, &device) != VK_SUCCESS) {
+    if (vkCreateDevice(physicalDevice, &deviceInfo, nullptr, &device) != VK_SUCCESS) {
         return false;
     }
    
@@ -273,11 +276,11 @@ void Context::FreeDevice() {
 
 bool Context::CreateSwapChain() {
     uint32_t numFormats;
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, nullptr) != VK_SUCCESS) {
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &numFormats, nullptr) != VK_SUCCESS) {
         return false;
     }
     vector<VkSurfaceFormatKHR> formats(numFormats);
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevices[0], surface, &numFormats, formats.data()) != VK_SUCCESS) {
+    if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &numFormats, formats.data()) != VK_SUCCESS) {
         return false;
     }
     VkFormat format;
@@ -291,42 +294,42 @@ bool Context::CreateSwapChain() {
     Core::Log().Stream() << "selected surface format " << format << endl;
     
     VkSurfaceCapabilitiesKHR capabilities;
-    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevices[0], surface, &capabilities) != VK_SUCCESS) {
+    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities) != VK_SUCCESS) {
         return false;
     }
     uint32_t numPresentModes;
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevices[0], surface, &numPresentModes, nullptr)
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &numPresentModes, nullptr)
             != VK_SUCCESS) {
         return false;
     }
     vector<VkPresentModeKHR> presentModes(numPresentModes);
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevices[0], surface, &numPresentModes, presentModes.data())
+    if (vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &numPresentModes, presentModes.data())
             != VK_SUCCESS) {
         return false;
     }
     Core::Log().Stream() << "num_present_modes=" << numPresentModes << endl;
     
-    VkExtent2D extent;
     if (capabilities.currentExtent.width == 0xffffffffu) {    // Surface size undefined.
-        extent.width  = 64u;
-        extent.height = 64u;
-        if (extent.width < capabilities.minImageExtent.width) {
-            extent.width = capabilities.minImageExtent.width;
+        width  = 64u;
+        height = 64u;
+        if (width < capabilities.minImageExtent.width) {
+            width = capabilities.minImageExtent.width;
         }
-        if (extent.width > capabilities.maxImageExtent.width) {
-            extent.width = capabilities.maxImageExtent.width;
+        if (width > capabilities.maxImageExtent.width) {
+            width = capabilities.maxImageExtent.width;
         }
 
-        if (extent.height < capabilities.minImageExtent.height) {
-            extent.height = capabilities.minImageExtent.height;
+        if (height < capabilities.minImageExtent.height) {
+            height = capabilities.minImageExtent.height;
         }
-        if (extent.height > capabilities.maxImageExtent.height) {
-            extent.height = capabilities.maxImageExtent.height;
+        if (height > capabilities.maxImageExtent.height) {
+            height = capabilities.maxImageExtent.height;
         }
     } else {
-        extent = capabilities.currentExtent;
+        width  = capabilities.currentExtent.width;
+        height = capabilities.currentExtent.height;
     }
-    Core::Log().Stream() << "extent=" << extent.width << "x" << extent.height << endl;
+    Core::Log().Stream() << "extent=" << width << "x" << height << endl;
     
     VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
     uint32_t desiredNumberOfSwapChainImages = capabilities.minImageCount;
@@ -359,8 +362,8 @@ bool Context::CreateSwapChain() {
     swapChainInfo.surface = surface;
     swapChainInfo.minImageCount = desiredNumberOfSwapChainImages;
     swapChainInfo.imageFormat = format;
-    swapChainInfo.imageExtent.width = extent.width;
-    swapChainInfo.imageExtent.height = extent.height;
+    swapChainInfo.imageExtent.width = width;
+    swapChainInfo.imageExtent.height = height;
     swapChainInfo.preTransform = preTransform;
     swapChainInfo.compositeAlpha = compositeAlpha;
     swapChainInfo.imageArrayLayers = 1;
@@ -448,7 +451,7 @@ bool Context::CreateDepthBuffer() {
     const VkFormat format = VK_FORMAT_D16_UNORM;
     VkImageTiling tiling;
     VkFormatProperties properties;
-    vkGetPhysicalDeviceFormatProperties(physicalDevices[0], format, &properties);
+    vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &properties);
     if (properties.linearTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
         tiling = VK_IMAGE_TILING_LINEAR;
     }
@@ -464,8 +467,8 @@ bool Context::CreateDepthBuffer() {
     imageInfo.pNext = nullptr;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
     imageInfo.format = format;
-    imageInfo.extent.width = info.width;
-    imageInfo.extent.height = info.height;
+    imageInfo.extent.width = width;
+    imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
     imageInfo.arrayLayers = 1;
@@ -480,12 +483,64 @@ bool Context::CreateDepthBuffer() {
         return false;
     }
     
+    VkMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(device, depthBuffer.image, &memoryRequirements);
+    VkMemoryAllocateInfo memoryInfo = {};
+    memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryInfo.pNext = nullptr;
+    memoryInfo.allocationSize = memoryRequirements.size;
+    memoryInfo.memoryTypeIndex = 0;
+    if (!checkMemoryType(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                        &memoryInfo.memoryTypeIndex)) {
+        return false;
+    }
+    if (vkAllocateMemory(device, &memoryInfo, nullptr, &depthBuffer.memory) != VK_SUCCESS) {
+        return false;
+    }
+    if (vkBindImageMemory(device, depthBuffer.image, depthBuffer.memory, 0) != VK_SUCCESS) {
+        return false;
+    }
 
-    return false;
+    VkImageViewCreateInfo viewInfo = {};
+    viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.pNext = nullptr;
+    viewInfo.image = depthBuffer.image;
+    viewInfo.format = format;
+    viewInfo.components.r = VK_COMPONENT_SWIZZLE_R;
+    viewInfo.components.g = VK_COMPONENT_SWIZZLE_G;
+    viewInfo.components.b = VK_COMPONENT_SWIZZLE_B;
+    viewInfo.components.a = VK_COMPONENT_SWIZZLE_A;
+    viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    viewInfo.subresourceRange.baseMipLevel = 0;
+    viewInfo.subresourceRange.levelCount = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount = 1;
+    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.flags = 0;
+    if (vkCreateImageView(device, &viewInfo, nullptr, &depthBuffer.view) != VK_SUCCESS) {
+        return false;
+    }
+    
+    Core::Log().Stream() << "depth buffer created" << endl;
+    return true;
 }
 
 void Context::FreeDepthBuffer() {
-
+    if (depthBuffer.view != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing depth buffer view" << endl;
+        vkDestroyImageView(device, depthBuffer.view, nullptr);
+        depthBuffer.view = VK_NULL_HANDLE;
+    }
+    if (depthBuffer.image != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing depth buffer image" << endl;
+        vkDestroyImage(device, depthBuffer.image, nullptr);
+        depthBuffer.image = VK_NULL_HANDLE;
+    }
+    if (depthBuffer.memory != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing depth buffer memory" << endl;
+        vkFreeMemory(device, depthBuffer.memory, nullptr);
+        depthBuffer.memory = VK_NULL_HANDLE;
+    }
 }
 
 bool Context::CreateCommandBufferPool() {
@@ -532,6 +587,20 @@ void Context::FreeCommandBuffer() {
         vkFreeCommandBuffers(device, commandBufferPool, 1, &commandBuffer);
         commandBuffer = VK_NULL_HANDLE;
     }
+}
+
+bool Context::checkMemoryType(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex) {
+    for (uint32_t i = 0u; i < physicalDeviceMemoryProperties.memoryTypeCount; ++i) {
+        if ((typeBits & 1u) == 1u) {
+            if ((physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & requirementsMask) == requirementsMask) {
+                *typeIndex = i;
+                return true;
+            }
+        }
+        typeBits >>= 1;
+    }
+
+    return false;
 }
 
 }    // Namespace Vulkan.
