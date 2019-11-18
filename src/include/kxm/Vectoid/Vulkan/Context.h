@@ -22,12 +22,19 @@ class Context {
         VkDeviceMemory memory;
         
         FrameBufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
+        // Default copy okay.
     };
     struct BufferInfo {
-        VkBuffer       buffer;
-        VkDeviceMemory memory;
+        VkBuffer               buffer;
+        VkDeviceMemory         memory;
+        VkDescriptorBufferInfo info;
         
-        BufferInfo() : buffer(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
+        BufferInfo() : buffer(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {
+            info.buffer = VK_NULL_HANDLE;
+            info.offset = 0u;
+            info.range  = 0u;
+        }
+        // Default copy okay.
     };
   
     Context(void *view);
@@ -60,8 +67,19 @@ class Context {
     uint32_t                         width;                             // Valid <=> swap chain present.
     uint32_t                         height;                            // Valid <=> swap chain present.
     std::vector<FrameBufferInfo>     colorBuffers;
+    VkFormat                         colorFormat;                       // Valid <=> swap chain present.
+    uint32_t                         currentBuffer;
     FrameBufferInfo                  depthBuffer;
+    VkFormat                         depthFormat;                       // Valid <=> depth buffer present.
     BufferInfo                       uniformBuffer;
+    VkDescriptorSetLayout            descriptorSetLayout;
+    VkPipelineLayout                 pipelineLayout;
+    VkDescriptorPool                 descriptorPool;
+    VkDescriptorSet                  descriptorSet;
+    VkSemaphore                      imageAcquiredSemaphore;
+    VkRenderPass                     renderPass;
+    VkShaderModule                   vertexShader;
+    VkShaderModule                   fragmentShader;
     VkCommandPool                    commandBufferPool;
     VkCommandBuffer                  commandBuffer;
     
@@ -84,11 +102,24 @@ class Context {
     bool CreateUniformBuffer();
     // Frees the uniform buffer if it is present.
     void FreeUniformBuffer();
+    bool CreateLayouts();
+    // Frees the layouts if they are present.
+    void FreeLayouts();
+    bool CreateDescriptorSets();
+    // Frees the descriptor sets if they are present.
+    void FreeDescriptorSets();
+    bool CreateRenderPass();
+    // Frees the render pass if it is present.
+    void FreeRenderPass();
+    bool CreateShaders();
+    // Frees the shaders if they are present.
+    void FreeShaders();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();
     
     bool getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
+    static bool GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv);
     
     bool operative_;
 };

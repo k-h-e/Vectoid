@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_macos.h>
+#include <MoltenVKGLSLToSPIRVConverter/GLSLToSPIRVConverter.h>
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -22,6 +23,17 @@ Context::Context(void *view)
           graphicsQueueFamilyIndex(0u),
           presentQueueFamilyIndex(0u),
           swapChain(VK_NULL_HANDLE),
+          width(0u),
+          height(0u),
+          currentBuffer(0u),
+          descriptorSetLayout(VK_NULL_HANDLE),
+          pipelineLayout(VK_NULL_HANDLE),
+          descriptorPool(VK_NULL_HANDLE),
+          descriptorSet(VK_NULL_HANDLE),
+          imageAcquiredSemaphore(VK_NULL_HANDLE),
+          renderPass(VK_NULL_HANDLE),
+          vertexShader(VK_NULL_HANDLE),
+          fragmentShader(VK_NULL_HANDLE),
           commandBufferPool(VK_NULL_HANDLE),
           commandBuffer(VK_NULL_HANDLE),
           operative_(false) {
@@ -49,6 +61,22 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create uniform buffer" << endl;
         return;
     }
+    if (!CreateLayouts()) {
+        Core::Log().Stream() << "failed to create layouts" << endl;
+        return;
+    }
+    if (!CreateDescriptorSets()) {
+        Core::Log().Stream() << "failed to create descriptor sets" << endl;
+        return;
+    }
+    if (!CreateRenderPass()) {
+        Core::Log().Stream() << "failed to create render pass" << endl;
+        return;
+    }
+    if (!CreateShaders()) {
+        Core::Log().Stream() << "failed to create shaders" << endl;
+        return;
+    }
     if (!CreateCommandBufferPool()) {
         Core::Log().Stream() << "failed to create command buffer pool" << endl;
         return;
@@ -60,6 +88,10 @@ Context::Context(void *view)
 Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
+    FreeShaders();
+    FreeRenderPass();
+    FreeDescriptorSets();
+    FreeLayouts();
     FreeUniformBuffer();
     FreeDepthBuffer();
     FreeSwapChain();
@@ -291,15 +323,14 @@ bool Context::CreateSwapChain() {
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &numFormats, formats.data()) != VK_SUCCESS) {
         return false;
     }
-    VkFormat format;
     if ((numFormats == 1u) && (formats[0].format == VK_FORMAT_UNDEFINED)) {
-        format = VK_FORMAT_B8G8R8A8_UNORM;
+        colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
     } else if (numFormats >= 1u) {
-        format = formats[0].format;
+        colorFormat = formats[0].format;
     } else {
         return false;
     }
-    Core::Log().Stream() << "selected surface format " << format << endl;
+    Core::Log().Stream() << "selected surface format " << colorFormat << endl;
     
     VkSurfaceCapabilitiesKHR capabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities) != VK_SUCCESS) {
@@ -369,7 +400,7 @@ bool Context::CreateSwapChain() {
     swapChainInfo.pNext = nullptr;
     swapChainInfo.surface = surface;
     swapChainInfo.minImageCount = desiredNumberOfSwapChainImages;
-    swapChainInfo.imageFormat = format;
+    swapChainInfo.imageFormat = colorFormat;
     swapChainInfo.imageExtent.width = width;
     swapChainInfo.imageExtent.height = height;
     swapChainInfo.preTransform = preTransform;
@@ -418,7 +449,7 @@ bool Context::CreateSwapChain() {
         imageViewInfo.flags = 0;
         imageViewInfo.image = colorBuffers[i].image;
         imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        imageViewInfo.format = format;
+        imageViewInfo.format = colorFormat;
         imageViewInfo.components.r = VK_COMPONENT_SWIZZLE_R;
         imageViewInfo.components.g = VK_COMPONENT_SWIZZLE_G;
         imageViewInfo.components.b = VK_COMPONENT_SWIZZLE_B;
@@ -456,10 +487,10 @@ void Context::FreeSwapChain() {
 }
 
 bool Context::CreateDepthBuffer() {
-    const VkFormat format = VK_FORMAT_D16_UNORM;
+    depthFormat = VK_FORMAT_D16_UNORM;
     VkImageTiling tiling;
     VkFormatProperties properties;
-    vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &properties);
+    vkGetPhysicalDeviceFormatProperties(physicalDevice, depthFormat, &properties);
     if (properties.linearTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
         tiling = VK_IMAGE_TILING_LINEAR;
     }
@@ -474,7 +505,7 @@ bool Context::CreateDepthBuffer() {
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext = nullptr;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageInfo.format = format;
+    imageInfo.format = depthFormat;
     imageInfo.extent.width = width;
     imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
@@ -513,7 +544,7 @@ bool Context::CreateDepthBuffer() {
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.pNext = nullptr;
     viewInfo.image = depthBuffer.image;
-    viewInfo.format = format;
+    viewInfo.format = depthFormat;
     viewInfo.components.r = VK_COMPONENT_SWIZZLE_R;
     viewInfo.components.g = VK_COMPONENT_SWIZZLE_G;
     viewInfo.components.b = VK_COMPONENT_SWIZZLE_B;
@@ -602,6 +633,10 @@ bool Context::CreateUniformBuffer() {
         return false;
     }
 
+    uniformBuffer.info.buffer = uniformBuffer.buffer;
+    uniformBuffer.info.offset = 0u;
+    uniformBuffer.info.range  = sizeof(modelViewProjectionMatrix);
+
     Core::Log().Stream() << "uniform buffer created" << endl;
     return true;
 }
@@ -617,6 +652,256 @@ void Context::FreeUniformBuffer() {
         vkFreeMemory(device, uniformBuffer.memory, nullptr);
         uniformBuffer.memory = VK_NULL_HANDLE;
     }
+    uniformBuffer = BufferInfo();
+}
+
+bool Context::CreateLayouts() {
+    VkDescriptorSetLayoutBinding binding = {};
+    binding.binding = 0;
+    binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    binding.descriptorCount = 1;
+    binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    binding.pImmutableSamplers = nullptr;
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.pNext = NULL;
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &binding;
+    if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+        return false;
+    }
+
+    VkPipelineLayoutCreateInfo pipelineInfo = {};
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineInfo.pNext = nullptr;
+    pipelineInfo.pushConstantRangeCount = 0;
+    pipelineInfo.pPushConstantRanges = nullptr;
+    pipelineInfo.setLayoutCount = 1;
+    pipelineInfo.pSetLayouts = &descriptorSetLayout;
+    if (vkCreatePipelineLayout(device, &pipelineInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        return false;
+    }
+    
+    Core::Log().Stream() << "layouts created" << endl;
+    return true;
+}
+
+void Context::FreeLayouts() {
+    if (pipelineLayout != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing pipeline layout" << endl;
+        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        pipelineLayout = VK_NULL_HANDLE;
+    }
+    if (descriptorSetLayout != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing descriptor set layout" << endl;
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+        descriptorSetLayout = VK_NULL_HANDLE;
+    }
+}
+
+bool Context::CreateDescriptorSets() {
+    VkDescriptorPoolSize poolSize;
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = 1;
+
+    VkDescriptorPoolCreateInfo poolInfo = {};
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.pNext = nullptr;
+    poolInfo.maxSets = 1;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        return false;
+    }
+
+    VkDescriptorSetAllocateInfo setInfo;
+    setInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    setInfo.pNext = nullptr;
+    setInfo.descriptorPool = descriptorPool;
+    setInfo.descriptorSetCount = 1;
+    setInfo.pSetLayouts = &descriptorSetLayout;
+    if (vkAllocateDescriptorSets(device, &setInfo, &descriptorSet) != VK_SUCCESS) {
+        return false;
+    }
+
+    VkWriteDescriptorSet write = {};
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.pNext = nullptr;
+    write.dstSet = descriptorSet;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    write.pBufferInfo = &uniformBuffer.info;
+    write.dstArrayElement = 0;
+    write.dstBinding = 0;
+    vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+
+    Core::Log().Stream() << "descriptor sets created" << endl;
+    return true;
+}
+
+void Context::FreeDescriptorSets() {
+    descriptorSet = VK_NULL_HANDLE;
+    if (descriptorPool != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing descriptor pool" << endl;
+        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+        descriptorPool = VK_NULL_HANDLE;
+    }
+}
+
+bool Context::CreateRenderPass() {
+    VkSemaphoreCreateInfo semaphoreInfo;
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    semaphoreInfo.pNext = nullptr;
+    semaphoreInfo.flags = 0;
+    if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAcquiredSemaphore) != VK_SUCCESS) {
+        return false;
+    }
+
+    if (vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBuffer)
+            != VK_SUCCESS) {
+        return false;
+    }
+    // Do we really need to do this here?
+    
+    VkAttachmentDescription attachments[2];
+    attachments[0].format = colorFormat;
+    attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    attachments[0].flags = 0;
+    
+    attachments[1].format = depthFormat;
+    attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    attachments[1].flags = 0;
+    
+    VkAttachmentReference colorReference = {};
+    colorReference.attachment = 0;
+    colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthReference = {};
+    depthReference.attachment = 1;
+    depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    
+    VkSubpassDescription subPass = {};
+    subPass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subPass.flags = 0;
+    subPass.inputAttachmentCount = 0;
+    subPass.pInputAttachments = nullptr;
+    subPass.colorAttachmentCount = 1;
+    subPass.pColorAttachments = &colorReference;
+    subPass.pResolveAttachments = nullptr;
+    subPass.pDepthStencilAttachment = &depthReference;
+    subPass.preserveAttachmentCount = 0;
+    subPass.pPreserveAttachments = nullptr;
+    
+    VkRenderPassCreateInfo renderPassInfo = {};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.pNext = nullptr;
+    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.pAttachments = attachments;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subPass;
+    renderPassInfo.dependencyCount = 0;
+    renderPassInfo.pDependencies = nullptr;
+    if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        return false;
+    }
+    
+    Core::Log().Stream() << "render pass created" << endl;
+    return true;
+}
+
+void Context::FreeRenderPass() {
+    if (renderPass != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing render pass" << endl;
+        vkDestroyRenderPass(device, renderPass, nullptr);
+        renderPass = VK_NULL_HANDLE;
+    }
+    if (imageAcquiredSemaphore != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing image acquired semaphore" << endl;
+        vkDestroySemaphore(device, imageAcquiredSemaphore, nullptr);
+        imageAcquiredSemaphore = VK_NULL_HANDLE;
+    }
+}
+
+bool Context::CreateShaders() {
+    static const char *vertexShaderText =
+        "#version 400\n"
+        "#extension GL_ARB_separate_shader_objects : enable\n"
+        "#extension GL_ARB_shading_language_420pack : enable\n"
+        "layout (std140, binding = 0) uniform bufferVals {\n"
+        "    mat4 mvp;\n"
+        "} myBufferVals;\n"
+        "layout (location = 0) in vec4 pos;\n"
+        "layout (location = 1) in vec4 inColor;\n"
+        "layout (location = 0) out vec4 outColor;\n"
+        "void main() {\n"
+        "   outColor = inColor;\n"
+        "   gl_Position = myBufferVals.mvp * pos;\n"
+        "}\n";
+    std::vector<unsigned int> vertexSpv;
+    if (!GLSLtoSPV(VK_SHADER_STAGE_VERTEX_BIT, vertexShaderText, vertexSpv)) {
+        return false;
+    }
+    VkShaderModuleCreateInfo vertexShaderInfo;
+    vertexShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    vertexShaderInfo.pNext = nullptr;
+    vertexShaderInfo.flags = 0;
+    vertexShaderInfo.codeSize = vertexSpv.size() * sizeof(unsigned int);
+    vertexShaderInfo.pCode = vertexSpv.data();
+    if (vkCreateShaderModule(device, &vertexShaderInfo, nullptr, &vertexShader) != VK_SUCCESS) {
+        return false;
+    }
+  
+    static const char *fragmentShaderText =
+        "#version 400\n"
+        "#extension GL_ARB_separate_shader_objects : enable\n"
+        "#extension GL_ARB_shading_language_420pack : enable\n"
+        "layout (location = 0) in vec4 color;\n"
+        "layout (location = 0) out vec4 outColor;\n"
+        "void main() {\n"
+        "   outColor = color;\n"
+        "}\n";
+    std::vector<unsigned int> fragmentSpv;
+    if (!GLSLtoSPV(VK_SHADER_STAGE_FRAGMENT_BIT, fragmentShaderText, fragmentSpv)) {
+        return false;
+    }
+    VkShaderModuleCreateInfo fragmentShaderInfo;
+    fragmentShaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    fragmentShaderInfo.pNext = nullptr;
+    fragmentShaderInfo.flags = 0;
+    fragmentShaderInfo.codeSize = fragmentSpv.size() * sizeof(unsigned int);
+    fragmentShaderInfo.pCode = fragmentSpv.data();
+    if (vkCreateShaderModule(device, &fragmentShaderInfo, nullptr, &fragmentShader) != VK_SUCCESS) {
+        return false;
+    }
+    
+    Core::Log().Stream() << "shaders created" << endl;
+    return true;
+}
+
+void Context::FreeShaders() {
+   if (fragmentShader != VK_NULL_HANDLE) {
+       Core::Log().Stream() << "freeing fragment shader" << endl;
+       vkDestroyShaderModule(device, fragmentShader, nullptr);
+       fragmentShader = VK_NULL_HANDLE;
+   }
+   if (vertexShader != VK_NULL_HANDLE) {
+       Core::Log().Stream() << "freeing vertex shader" << endl;
+       vkDestroyShaderModule(device, vertexShader, nullptr);
+       vertexShader = VK_NULL_HANDLE;
+   }
 }
 
 bool Context::CreateCommandBufferPool() {
@@ -677,6 +962,41 @@ bool Context::getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32
     }
 
     return false;
+}
+
+bool Context::GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv) {
+    MVKGLSLConversionShaderStage shaderStage;
+    switch (shaderType) {
+        case VK_SHADER_STAGE_VERTEX_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageVertex;
+            break;
+        case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageTessControl;
+            break;
+        case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageTessEval;
+            break;
+        case VK_SHADER_STAGE_GEOMETRY_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageGeometry;
+            break;
+        case VK_SHADER_STAGE_FRAGMENT_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageFragment;
+            break;
+        case VK_SHADER_STAGE_COMPUTE_BIT:
+            shaderStage = kMVKGLSLConversionShaderStageCompute;
+            break;
+        default:
+            shaderStage = kMVKGLSLConversionShaderStageAuto;
+            break;
+    }
+
+    mvk::GLSLToSPIRVConverter glslConverter;
+    glslConverter.setGLSL(shader);
+    bool wasConverted = glslConverter.convert(shaderStage, false, false);
+    if (wasConverted) {
+        spirv = glslConverter.getSPIRV();
+    }
+    return wasConverted;
 }
 
 }    // Namespace Vulkan.
