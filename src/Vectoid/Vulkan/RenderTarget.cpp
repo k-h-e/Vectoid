@@ -35,10 +35,113 @@ void RenderTarget::RenderFrame() {
         return;
     }
     
-    if (context_->CreateCommandBuffer()) {
-        sceneGraphRoot_->Render();
+    VkResult acquireResult = vkAcquireNextImageKHR(
+        context_->device, context_->swapChain, UINT64_MAX, context_->imageAcquiredSemaphore, VK_NULL_HANDLE,
+        &context_->currentBuffer);
+    if (acquireResult == VK_SUBOPTIMAL_KHR) {
+        Core::Log().Stream() << "image suboptimal" << endl;
     }
-    context_->FreeCommandBuffer();
+    else if (acquireResult == VK_ERROR_OUT_OF_DATE_KHR) {
+        Core::Log().Stream() << "image out of date" << endl;
+        context_->RecoverFromOutOfDateImage();
+    }
+    else if (acquireResult == VK_SUCCESS) {
+        Core::Log().Stream() << "image acquired" << endl;
+        if (context_->CreateCommandBuffer()) {
+            VkCommandBufferBeginInfo bufferBeginInfo = {};
+            bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+            bufferBeginInfo.pNext = nullptr;
+            bufferBeginInfo.flags = 0;
+            bufferBeginInfo.pInheritanceInfo = nullptr;
+            if (vkBeginCommandBuffer(context_->commandBuffer, &bufferBeginInfo) == VK_SUCCESS) {
+                VkClearValue clearValues[2];
+                clearValues[0] = {};
+                clearValues[0].color.float32[0] = 0.2f;
+                clearValues[0].color.float32[1] = 0.2f;
+                clearValues[0].color.float32[2] = 0.2f;
+                clearValues[0].color.float32[3] = 0.2f;
+                clearValues[1] = {};
+                clearValues[1].depthStencil.depth = 1.0f;
+                clearValues[1].depthStencil.stencil = 0;
+                
+                VkRenderPassBeginInfo passBeginInfo;
+                passBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+                passBeginInfo.pNext = nullptr;
+                passBeginInfo.renderPass = context_->renderPass;
+                passBeginInfo.framebuffer = context_->frameBuffers[context_->currentBuffer];
+                passBeginInfo.renderArea.offset.x = 0;
+                passBeginInfo.renderArea.offset.y = 0;
+                passBeginInfo.renderArea.extent.width = context_->width;
+                passBeginInfo.renderArea.extent.height = context_->height;
+                passBeginInfo.clearValueCount = 2;
+                passBeginInfo.pClearValues = clearValues;
+                vkCmdBeginRenderPass(context_->commandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+                
+                vkCmdBindPipeline(context_->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, context_->pipeline);
+                vkCmdBindDescriptorSets(context_->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, context_->pipelineLayout,
+                                        0, 1, &context_->descriptorSet, 0, nullptr);
+                const VkDeviceSize offsets[1] = { 0 };
+                vkCmdBindVertexBuffers(context_->commandBuffer, 0, 1, &context_->vertexBuffer.buffer, offsets);
+                
+                VkViewport viewPort = {};
+                viewPort.height = (float)context_->height;
+                viewPort.width = (float)context_->width;
+                viewPort.minDepth = 0.0f;
+                viewPort.maxDepth = 1.0f;
+                viewPort.x = 0;
+                viewPort.y = 0;
+                vkCmdSetViewport(context_->commandBuffer, 0, 1, &viewPort);
+
+                VkRect2D scissors = {};
+                scissors.extent.width = context_->width;
+                scissors.extent.height = context_->height;
+                scissors.offset.x = 0;
+                scissors.offset.y = 0;
+                vkCmdSetScissor(context_->commandBuffer, 0, 1, &scissors);
+
+                vkCmdDraw(context_->commandBuffer, 12 * 3, 1, 0, 0);
+                
+                sceneGraphRoot_->Render();
+                
+                vkCmdEndRenderPass(context_->commandBuffer);
+                
+                if (vkEndCommandBuffer(context_->commandBuffer) == VK_SUCCESS) {
+                    VkPipelineStageFlags flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                    VkSubmitInfo submitInfo = {};
+                    submitInfo.pNext = nullptr;
+                    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                    submitInfo.waitSemaphoreCount = 1;
+                    submitInfo.pWaitSemaphores = &context_->imageAcquiredSemaphore;
+                    submitInfo.pWaitDstStageMask = &flags;
+                    submitInfo.commandBufferCount = 1;
+                    submitInfo.pCommandBuffers = &context_->commandBuffer;
+                    submitInfo.signalSemaphoreCount = 0;
+                    submitInfo.pSignalSemaphores = nullptr;
+                    if (vkQueueSubmit(context_->graphicsQueue, 1, &submitInfo, context_->drawFence) == VK_SUCCESS) {
+                        VkResult fenceResult;
+                        do {
+                            fenceResult = vkWaitForFences(context_->device, 1, &context_->drawFence, VK_TRUE, 100000000);
+                        } while (fenceResult == VK_TIMEOUT);
+                        if (fenceResult == VK_SUCCESS) {
+                            VkPresentInfoKHR presentInfo = {};
+                            presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+                            presentInfo.pNext = nullptr;
+                            presentInfo.swapchainCount = 1;
+                            presentInfo.pSwapchains = &context_->swapChain;
+                            presentInfo.pImageIndices = &context_->currentBuffer;
+                            presentInfo.pWaitSemaphores = nullptr;
+                            presentInfo.waitSemaphoreCount = 0;
+                            presentInfo.pResults = nullptr;
+                            if (vkQueuePresentKHR(context_->presentQueue, &presentInfo) == VK_SUCCESS) {
+                                Core::Log().Stream() << "frame presented" << endl;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        context_->FreeCommandBuffer();
+    }
 }
 
 shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {

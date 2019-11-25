@@ -54,34 +54,44 @@ class Context {
     bool CreateCommandBuffer();
     //! Frees the command buffer if it is present.
     void FreeCommandBuffer();
+    //! Recovers from out-of-date image condition.
+    void RecoverFromOutOfDateImage();
     
-    VkInstance                       instance;
-    VkSurfaceKHR                     surface;
-    VkDevice                         device;
-    VkPhysicalDevice                 physicalDevice;                    // Valid <=> device present.
-    VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;    // Valid <=> device present.
-    uint32_t                         queueFamilyCount;                  // Valid <=> device present.
-    uint32_t                         graphicsQueueFamilyIndex;          // Valid <=> device present.
-    uint32_t                         presentQueueFamilyIndex;           // Valid <=> device present.
-    VkSwapchainKHR                   swapChain;
-    uint32_t                         width;                             // Valid <=> swap chain present.
-    uint32_t                         height;                            // Valid <=> swap chain present.
-    std::vector<FrameBufferInfo>     colorBuffers;
-    VkFormat                         colorFormat;                       // Valid <=> swap chain present.
-    uint32_t                         currentBuffer;
-    FrameBufferInfo                  depthBuffer;
-    VkFormat                         depthFormat;                       // Valid <=> depth buffer present.
-    BufferInfo                       uniformBuffer;
-    VkDescriptorSetLayout            descriptorSetLayout;
-    VkPipelineLayout                 pipelineLayout;
-    VkDescriptorPool                 descriptorPool;
-    VkDescriptorSet                  descriptorSet;
-    VkSemaphore                      imageAcquiredSemaphore;
-    VkRenderPass                     renderPass;
-    VkShaderModule                   vertexShader;
-    VkShaderModule                   fragmentShader;
-    VkCommandPool                    commandBufferPool;
-    VkCommandBuffer                  commandBuffer;
+    VkInstance                        instance;
+    VkSurfaceKHR                      surface;
+    VkDevice                          device;
+    VkPhysicalDevice                  physicalDevice;                    // Valid <=> device present.
+    VkPhysicalDeviceMemoryProperties  physicalDeviceMemoryProperties;    // Valid <=> device present.
+    uint32_t                          queueFamilyCount;                  // Valid <=> device present.
+    uint32_t                          graphicsQueueFamilyIndex;          // Valid <=> device present.
+    uint32_t                          presentQueueFamilyIndex;           // Valid <=> device present.
+    VkQueue                           graphicsQueue;                     // Valid <=> device present.
+    VkQueue                           presentQueue;                      // Valid <=> device present.
+    VkSwapchainKHR                    swapChain;
+    uint32_t                          width;                             // Valid <=> swap chain present.
+    uint32_t                          height;                            // Valid <=> swap chain present.
+    std::vector<FrameBufferInfo>      colorBuffers;
+    VkFormat                          colorFormat;                       // Valid <=> swap chain present.
+    uint32_t                          currentBuffer;
+    FrameBufferInfo                   depthBuffer;
+    VkFormat                          depthFormat;                       // Valid <=> depth buffer present.
+    BufferInfo                        uniformBuffer;
+    VkDescriptorSetLayout             descriptorSetLayout;
+    VkPipelineLayout                  pipelineLayout;
+    VkDescriptorPool                  descriptorPool;
+    VkDescriptorSet                   descriptorSet;
+    VkSemaphore                       imageAcquiredSemaphore;
+    VkFence                           drawFence;
+    VkRenderPass                      renderPass;
+    VkShaderModule                    vertexShader;
+    VkShaderModule                    fragmentShader;
+    std::vector<VkFramebuffer>        frameBuffers;
+    BufferInfo                        vertexBuffer;
+    VkVertexInputBindingDescription   vertexInputBinding;                // Valid <=> vertex buffer present.
+    VkVertexInputAttributeDescription vertexInputAttributes[2];          // Valid <=> vertex buffer present.
+    VkPipeline                        pipeline;
+    VkCommandPool                     commandBufferPool;
+    VkCommandBuffer                   commandBuffer;
     
   private:
     bool CreateInstance();
@@ -114,6 +124,15 @@ class Context {
     bool CreateShaders();
     // Frees the shaders if they are present.
     void FreeShaders();
+    bool CreateFrameBuffers();
+    // Frees the frame buffers if they are present.
+    void FreeFrameBuffers();
+    bool CreateVertexBuffer();
+    // Frees the vertex buffer if it is present.
+    void FreeVertexBuffer();
+    bool CreatePipeline();
+    // Frees the pipeline if it is present.
+    void FreePipeline();
     bool CreateCommandBufferPool();
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();

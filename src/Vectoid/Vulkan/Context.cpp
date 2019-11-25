@@ -22,6 +22,8 @@ Context::Context(void *view)
           queueFamilyCount(0u),
           graphicsQueueFamilyIndex(0u),
           presentQueueFamilyIndex(0u),
+          graphicsQueue(VK_NULL_HANDLE),
+          presentQueue(VK_NULL_HANDLE),
           swapChain(VK_NULL_HANDLE),
           width(0u),
           height(0u),
@@ -31,9 +33,11 @@ Context::Context(void *view)
           descriptorPool(VK_NULL_HANDLE),
           descriptorSet(VK_NULL_HANDLE),
           imageAcquiredSemaphore(VK_NULL_HANDLE),
+          drawFence(VK_NULL_HANDLE),
           renderPass(VK_NULL_HANDLE),
           vertexShader(VK_NULL_HANDLE),
           fragmentShader(VK_NULL_HANDLE),
+          pipeline(VK_NULL_HANDLE),
           commandBufferPool(VK_NULL_HANDLE),
           commandBuffer(VK_NULL_HANDLE),
           operative_(false) {
@@ -77,6 +81,18 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create shaders" << endl;
         return;
     }
+    if (!CreateFrameBuffers()) {
+        Core::Log().Stream() << "failed to create frame buffers" << endl;
+        return;
+    }
+    if (!CreateVertexBuffer()) {
+        Core::Log().Stream() << "failed to create vertex buffer" << endl;
+        return;
+    }
+    if (!CreatePipeline()) {
+        Core::Log().Stream() << "failed to create pipeline" << endl;
+        return;
+    }
     if (!CreateCommandBufferPool()) {
         Core::Log().Stream() << "failed to create command buffer pool" << endl;
         return;
@@ -88,6 +104,9 @@ Context::Context(void *view)
 Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
+    FreePipeline();
+    FreeVertexBuffer();
+    FreeFrameBuffers();
     FreeShaders();
     FreeRenderPass();
     FreeDescriptorSets();
@@ -102,6 +121,70 @@ Context::~Context() {
 
 bool Context::Operative() {
     return operative_;
+}
+
+void Context::RecoverFromOutOfDateImage() {
+    FreeCommandBuffer();
+    FreeCommandBufferPool();
+    FreePipeline();
+    FreeVertexBuffer();
+    FreeFrameBuffers();
+    FreeShaders();
+    FreeRenderPass();
+    FreeDescriptorSets();
+    FreeLayouts();
+    FreeUniformBuffer();
+    FreeDepthBuffer();
+    FreeSwapChain();
+    
+    operative_ = false;
+    
+    if (!CreateSwapChain()) {
+        Core::Log().Stream() << "failed to create swap chain" << endl;
+        return;
+    }
+    if (!CreateDepthBuffer()) {
+        Core::Log().Stream() << "failed to create depth buffer" << endl;
+        return;
+    }
+    if (!CreateUniformBuffer()) {
+        Core::Log().Stream() << "failed to create uniform buffer" << endl;
+        return;
+    }
+    if (!CreateLayouts()) {
+        Core::Log().Stream() << "failed to create layouts" << endl;
+        return;
+    }
+    if (!CreateDescriptorSets()) {
+        Core::Log().Stream() << "failed to create descriptor sets" << endl;
+        return;
+    }
+    if (!CreateRenderPass()) {
+        Core::Log().Stream() << "failed to create render pass" << endl;
+        return;
+    }
+    if (!CreateShaders()) {
+        Core::Log().Stream() << "failed to create shaders" << endl;
+        return;
+    }
+    if (!CreateFrameBuffers()) {
+        Core::Log().Stream() << "failed to create frame buffers" << endl;
+        return;
+    }
+    if (!CreateVertexBuffer()) {
+        Core::Log().Stream() << "failed to create vertex buffer" << endl;
+        return;
+    }
+    if (!CreatePipeline()) {
+        Core::Log().Stream() << "failed to create pipeline" << endl;
+        return;
+    }
+    if (!CreateCommandBufferPool()) {
+        Core::Log().Stream() << "failed to create command buffer pool" << endl;
+        return;
+    }
+    
+    operative_ = true;
 }
 
 bool Context::CreateInstance() {
@@ -300,6 +383,9 @@ bool Context::CreateDevice() {
     if (vkCreateDevice(physicalDevice, &deviceInfo, nullptr, &device) != VK_SUCCESS) {
         return false;
     }
+   
+    vkGetDeviceQueue(device, graphicsQueueFamilyIndex, 0, &graphicsQueue);
+    vkGetDeviceQueue(device, presentQueueFamilyIndex, 0, &presentQueue);
    
     Core::Log().Stream() << "device created, num_queues=" << numQueues << ", graphics_queue="
                          << graphicsQueueFamilyIndex << ", present_queue=" << presentQueueFamilyIndex << endl;
@@ -750,11 +836,19 @@ void Context::FreeDescriptorSets() {
 }
 
 bool Context::CreateRenderPass() {
-    VkSemaphoreCreateInfo semaphoreInfo;
+    VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreInfo.pNext = nullptr;
     semaphoreInfo.flags = 0;
     if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAcquiredSemaphore) != VK_SUCCESS) {
+        return false;
+    }
+
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = nullptr;
+    fenceInfo.flags = 0;
+    if (vkCreateFence(device, &fenceInfo, nullptr, &drawFence) != VK_SUCCESS) {
         return false;
     }
 
@@ -827,6 +921,11 @@ void Context::FreeRenderPass() {
         Core::Log().Stream() << "freeing render pass" << endl;
         vkDestroyRenderPass(device, renderPass, nullptr);
         renderPass = VK_NULL_HANDLE;
+    }
+    if (drawFence != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing draw fence" << endl;
+        vkDestroyFence(device, drawFence, nullptr);
+        drawFence = VK_NULL_HANDLE;
     }
     if (imageAcquiredSemaphore != VK_NULL_HANDLE) {
         Core::Log().Stream() << "freeing image acquired semaphore" << endl;
@@ -902,6 +1001,325 @@ void Context::FreeShaders() {
        vkDestroyShaderModule(device, vertexShader, nullptr);
        vertexShader = VK_NULL_HANDLE;
    }
+}
+
+bool Context::CreateFrameBuffers() {
+    frameBuffers.clear();
+    for (FrameBufferInfo &info : colorBuffers) {
+        VkImageView attachments[2];
+        attachments[0] = info.view;
+        attachments[1] = depthBuffer.view;
+        
+        VkFramebufferCreateInfo frameBufferInfo = {};
+        frameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        frameBufferInfo.pNext = nullptr;
+        frameBufferInfo.renderPass = renderPass;
+        frameBufferInfo.attachmentCount = 2;
+        frameBufferInfo.pAttachments = attachments;
+        frameBufferInfo.width = width;
+        frameBufferInfo.height = height;
+        frameBufferInfo.layers = 1;
+        VkFramebuffer frameBuffer;
+        if (vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &frameBuffer) != VK_SUCCESS) {
+            return false;
+        }
+        frameBuffers.push_back(frameBuffer);
+    }
+    
+    Core::Log().Stream() << frameBuffers.size() << " frame buffers created" << endl;
+    return true;
+}
+
+void Context::FreeFrameBuffers() {
+    for (VkFramebuffer &frameBuffer : frameBuffers) {
+        Core::Log().Stream() << "freeing frame buffer" << endl;
+        vkDestroyFramebuffer(device, frameBuffer, nullptr);
+    }
+    frameBuffers.clear();
+}
+
+bool Context::CreateVertexBuffer() {
+    struct Vertex {
+        float posX, posY, posZ, posW;  // Position data
+        float r, g, b, a;              // Color
+    };
+    #define XYZ1(_x_, _y_, _z_) (_x_), (_y_), (_z_), 1.f
+    static const Vertex solidFaceColorsData[] = {
+        // red face
+        {XYZ1(-1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
+        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
+        {XYZ1(1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
+        {XYZ1(1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
+        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
+        {XYZ1(1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
+        // green face
+        {XYZ1(-1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
+        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
+        {XYZ1(-1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
+        {XYZ1(-1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
+        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
+        {XYZ1(1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
+        // blue face
+        {XYZ1(-1, 1, 1), XYZ1(0.f, 0.f, 1.f)},
+        {XYZ1(-1, -1, 1), XYZ1(0.f, 0.f, 1.f)},
+        {XYZ1(-1, 1, -1), XYZ1(0.f, 0.f, 1.f)},
+        {XYZ1(-1, 1, -1), XYZ1(0.f, 0.f, 1.f)},
+        {XYZ1(-1, -1, 1), XYZ1(0.f, 0.f, 1.f)},
+        {XYZ1(-1, -1, -1), XYZ1(0.f, 0.f, 1.f)},
+        // yellow face
+        {XYZ1(1, 1, 1), XYZ1(1.f, 1.f, 0.f)},
+        {XYZ1(1, 1, -1), XYZ1(1.f, 1.f, 0.f)},
+        {XYZ1(1, -1, 1), XYZ1(1.f, 1.f, 0.f)},
+        {XYZ1(1, -1, 1), XYZ1(1.f, 1.f, 0.f)},
+        {XYZ1(1, 1, -1), XYZ1(1.f, 1.f, 0.f)},
+        {XYZ1(1, -1, -1), XYZ1(1.f, 1.f, 0.f)},
+        // magenta face
+        {XYZ1(1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
+        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
+        {XYZ1(1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
+        {XYZ1(1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
+        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
+        {XYZ1(-1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
+        // cyan face
+        {XYZ1(1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
+        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
+        {XYZ1(-1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
+        {XYZ1(-1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
+        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
+        {XYZ1(-1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
+    };
+
+    VkBufferCreateInfo vertexBufferInfo = {};
+    vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    vertexBufferInfo.pNext = nullptr;
+    vertexBufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    vertexBufferInfo.size = sizeof(solidFaceColorsData);
+    vertexBufferInfo.queueFamilyIndexCount = 0;
+    vertexBufferInfo.pQueueFamilyIndices = nullptr;
+    vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    vertexBufferInfo.flags = 0;
+    if (vkCreateBuffer(device, &vertexBufferInfo, nullptr, &vertexBuffer.buffer) != VK_SUCCESS) {
+        return false;
+    }
+    
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(device, vertexBuffer.buffer, &memoryRequirements);
+
+    VkMemoryAllocateInfo memoryInfo = {};
+    memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryInfo.pNext = nullptr;
+    memoryInfo.memoryTypeIndex = 0;
+    memoryInfo.allocationSize = memoryRequirements.size;
+    if (!getMemoryIndex(memoryRequirements.memoryTypeBits,
+                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                        &memoryInfo.memoryTypeIndex)) {
+        return false;
+    }
+    if (vkAllocateMemory(device, &memoryInfo, nullptr, &vertexBuffer.memory) != VK_SUCCESS) {
+        return false;
+    }
+
+    uint8_t *mapped;
+    if (vkMapMemory(device, vertexBuffer.memory, 0, memoryRequirements.size, 0, (void **)&mapped) != VK_SUCCESS) {
+        return false;
+    }
+    memcpy(mapped, solidFaceColorsData, sizeof(solidFaceColorsData));
+    vkUnmapMemory(device, vertexBuffer.memory);
+
+    if (vkBindBufferMemory(device, vertexBuffer.buffer, vertexBuffer.memory, 0) != VK_SUCCESS) {
+        return false;
+    }
+    
+    vertexInputBinding = {};
+    vertexInputBinding.binding = 0;
+    vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+    vertexInputBinding.stride = sizeof(solidFaceColorsData[0]);
+    
+    vertexInputAttributes[0] = {};
+    vertexInputAttributes[0].binding = 0;
+    vertexInputAttributes[0].location = 0;
+    vertexInputAttributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    vertexInputAttributes[0].offset = 0;
+    vertexInputAttributes[1] = {};
+    vertexInputAttributes[1].binding = 0;
+    vertexInputAttributes[1].location = 1;
+    vertexInputAttributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    vertexInputAttributes[1].offset = 16;
+    
+    Core::Log().Stream() << "vertex buffer created" << endl;
+    return true;
+}
+
+void Context::FreeVertexBuffer() {
+    if (vertexBuffer.buffer != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing vertex buffer" << endl;
+        vkDestroyBuffer(device, vertexBuffer.buffer, nullptr);
+        vertexBuffer.buffer = VK_NULL_HANDLE;
+    }
+    if (vertexBuffer.memory != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing vertex buffer memory" << endl;
+        vkFreeMemory(device, vertexBuffer.memory, nullptr);
+        vertexBuffer.memory = VK_NULL_HANDLE;
+    }
+    vertexBuffer = BufferInfo();
+}
+
+bool Context::CreatePipeline() {
+    VkDynamicState dynamicStateEnables[VK_DYNAMIC_STATE_RANGE_SIZE];
+    memset(dynamicStateEnables, 0, sizeof(dynamicStateEnables));
+    VkPipelineDynamicStateCreateInfo dynamicStateInfo = {};
+    dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicStateInfo.pNext = nullptr;
+    dynamicStateInfo.pDynamicStates = dynamicStateEnables;
+    dynamicStateInfo.dynamicStateCount = 0;    // Individual dynamic states will be enabled below.
+    
+    VkPipelineShaderStageCreateInfo shaderStageInfos[2];
+    shaderStageInfos[0] = {};
+    shaderStageInfos[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStageInfos[0].pNext = nullptr;
+    shaderStageInfos[0].pSpecializationInfo = nullptr;
+    shaderStageInfos[0].flags = 0;
+    shaderStageInfos[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
+    shaderStageInfos[0].pName = "main";
+    shaderStageInfos[0].module = vertexShader;
+    shaderStageInfos[1] = {};
+    shaderStageInfos[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStageInfos[1].pNext = nullptr;
+    shaderStageInfos[1].pSpecializationInfo = nullptr;
+    shaderStageInfos[1].flags = 0;
+    shaderStageInfos[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    shaderStageInfos[1].pName = "main";
+    shaderStageInfos[1].module = fragmentShader;
+    
+    VkPipelineVertexInputStateCreateInfo vertexInputStateInfo = {};
+    vertexInputStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vertexInputStateInfo.pNext = nullptr;
+    vertexInputStateInfo.flags = 0;
+    vertexInputStateInfo.vertexBindingDescriptionCount = 1;
+    vertexInputStateInfo.pVertexBindingDescriptions = &vertexInputBinding;
+    vertexInputStateInfo.vertexAttributeDescriptionCount = 2;
+    vertexInputStateInfo.pVertexAttributeDescriptions = vertexInputAttributes;
+    
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateInfo = {};
+    inputAssemblyStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssemblyStateInfo.pNext = nullptr;
+    inputAssemblyStateInfo.flags = 0;
+    inputAssemblyStateInfo.primitiveRestartEnable = VK_FALSE;
+    inputAssemblyStateInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    
+    VkPipelineRasterizationStateCreateInfo rasterizationStateInfo = {};
+    rasterizationStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    rasterizationStateInfo.pNext = nullptr;
+    rasterizationStateInfo.flags = 0;
+    rasterizationStateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+    rasterizationStateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizationStateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    rasterizationStateInfo.depthClampEnable = VK_FALSE;
+    rasterizationStateInfo.rasterizerDiscardEnable = VK_FALSE;
+    rasterizationStateInfo.depthBiasEnable = VK_FALSE;
+    rasterizationStateInfo.depthBiasConstantFactor = 0;
+    rasterizationStateInfo.depthBiasClamp = 0;
+    rasterizationStateInfo.depthBiasSlopeFactor = 0;
+    rasterizationStateInfo.lineWidth = 1.0f;
+
+    VkPipelineColorBlendAttachmentState attachmentState[1];
+    attachmentState[0].colorWriteMask = 0xf;
+    attachmentState[0].blendEnable = VK_FALSE;
+    attachmentState[0].alphaBlendOp = VK_BLEND_OP_ADD;
+    attachmentState[0].colorBlendOp = VK_BLEND_OP_ADD;
+    attachmentState[0].srcColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    attachmentState[0].dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    attachmentState[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    attachmentState[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    VkPipelineColorBlendStateCreateInfo colorBlendStateInfo = {};
+    colorBlendStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    colorBlendStateInfo.pNext = nullptr;
+    colorBlendStateInfo.flags = 0;
+    colorBlendStateInfo.attachmentCount = 1;
+    colorBlendStateInfo.pAttachments = attachmentState;
+    colorBlendStateInfo.logicOpEnable = VK_FALSE;
+    colorBlendStateInfo.logicOp = VK_LOGIC_OP_NO_OP;
+    colorBlendStateInfo.blendConstants[0] = 1.0f;
+    colorBlendStateInfo.blendConstants[1] = 1.0f;
+    colorBlendStateInfo.blendConstants[2] = 1.0f;
+    colorBlendStateInfo.blendConstants[3] = 1.0f;
+    
+    VkPipelineViewportStateCreateInfo viewPortStateInfo = {};
+    viewPortStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewPortStateInfo.pNext = nullptr;
+    viewPortStateInfo.flags = 0;
+    viewPortStateInfo.viewportCount = 1;
+    dynamicStateEnables[dynamicStateInfo.dynamicStateCount++] = VK_DYNAMIC_STATE_VIEWPORT;
+    viewPortStateInfo.scissorCount = 1;
+    dynamicStateEnables[dynamicStateInfo.dynamicStateCount++] = VK_DYNAMIC_STATE_SCISSOR;
+    viewPortStateInfo.pScissors = nullptr;
+    viewPortStateInfo.pViewports = nullptr;
+    
+    VkPipelineDepthStencilStateCreateInfo depthStencilStateInfo = {};
+    depthStencilStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencilStateInfo.pNext = nullptr;
+    depthStencilStateInfo.flags = 0;
+    depthStencilStateInfo.depthTestEnable = VK_TRUE;
+    depthStencilStateInfo.depthWriteEnable = VK_TRUE;
+    depthStencilStateInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+    depthStencilStateInfo.depthBoundsTestEnable = VK_FALSE;
+    depthStencilStateInfo.minDepthBounds = 0;
+    depthStencilStateInfo.maxDepthBounds = 0;
+    depthStencilStateInfo.stencilTestEnable = VK_FALSE;
+    depthStencilStateInfo.back.failOp = VK_STENCIL_OP_KEEP;
+    depthStencilStateInfo.back.passOp = VK_STENCIL_OP_KEEP;
+    depthStencilStateInfo.back.compareOp = VK_COMPARE_OP_ALWAYS;
+    depthStencilStateInfo.back.compareMask = 0;
+    depthStencilStateInfo.back.reference = 0;
+    depthStencilStateInfo.back.depthFailOp = VK_STENCIL_OP_KEEP;
+    depthStencilStateInfo.back.writeMask = 0;
+    depthStencilStateInfo.front = depthStencilStateInfo.back;
+
+    VkPipelineMultisampleStateCreateInfo multiSampleStateInfo = {};
+    multiSampleStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    multiSampleStateInfo.pNext = nullptr;
+    multiSampleStateInfo.flags = 0;
+    multiSampleStateInfo.pSampleMask = nullptr;
+    multiSampleStateInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    multiSampleStateInfo.sampleShadingEnable = VK_FALSE;
+    multiSampleStateInfo.alphaToCoverageEnable = VK_FALSE;
+    multiSampleStateInfo.alphaToOneEnable = VK_FALSE;
+    multiSampleStateInfo.minSampleShading = 0.0;
+
+    VkGraphicsPipelineCreateInfo pipelineInfo = {};
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineInfo.pNext = nullptr;
+    pipelineInfo.layout = pipelineLayout;
+    pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+    pipelineInfo.basePipelineIndex = 0;
+    pipelineInfo.flags = 0;
+    pipelineInfo.pDynamicState = &dynamicStateInfo;
+    pipelineInfo.pStages = shaderStageInfos;
+    pipelineInfo.stageCount = 2;
+    pipelineInfo.pVertexInputState = &vertexInputStateInfo;
+    pipelineInfo.pInputAssemblyState = &inputAssemblyStateInfo;
+    pipelineInfo.pRasterizationState = &rasterizationStateInfo;
+    pipelineInfo.pColorBlendState = &colorBlendStateInfo;
+    pipelineInfo.pTessellationState = nullptr;
+    pipelineInfo.pMultisampleState = &multiSampleStateInfo;
+    pipelineInfo.pViewportState = &viewPortStateInfo;
+    pipelineInfo.pDepthStencilState = &depthStencilStateInfo;
+    pipelineInfo.renderPass = renderPass;
+    pipelineInfo.subpass = 0;
+    if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline) != VK_SUCCESS) {
+        return false;
+    }
+
+    Core::Log().Stream() << "pipeline created" << endl;
+    return true;
+}
+
+void Context::FreePipeline() {
+    if (pipeline != VK_NULL_HANDLE) {
+        Core::Log().Stream() << "freeing pipeline" << endl;
+        vkDestroyPipeline(device, pipeline, nullptr);
+        pipeline = VK_NULL_HANDLE;
+    }
 }
 
 bool Context::CreateCommandBufferPool() {
