@@ -437,6 +437,8 @@
 		2AF6591C1EC8CDDD001D6034 /* TextConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextConsole.cpp; path = ../../../src/Vectoid/TextConsole.cpp; sourceTree = "<group>"; };
 		2AF6591E1EC8CDF2001D6034 /* Glyphs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Glyphs.h; path = ../../../src/include/kxm/Vectoid/Glyphs.h; sourceTree = "<group>"; };
 		2AF6591F1EC8CDFD001D6034 /* TextConsole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TextConsole.h; path = ../../../src/include/kxm/Vectoid/TextConsole.h; sourceTree = "<group>"; };
+		2AF82ACC2395760200449730 /* TransformCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransformCore.h; path = ../../../src/include/kxm/Vectoid/TransformCore.h; sourceTree = "<group>"; };
+		2AF82ACD2395761A00449730 /* FullTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FullTransform.h; path = ../../../src/include/kxm/Vectoid/FullTransform.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -894,6 +896,7 @@
 				2AEB26701EBF68CC002F6733 /* CoordSys.h */,
 				2AEB26711EBF68CC002F6733 /* CoordSysCore.h */,
 				2AEB26721EBF68CC002F6733 /* CoordSysInterface.h */,
+				2AF82ACD2395761A00449730 /* FullTransform.h */,
 				2AEB26731EBF68CC002F6733 /* Geode.h */,
 				2AF6591E1EC8CDF2001D6034 /* Glyphs.h */,
 				2AEB26741EBF68CC002F6733 /* GeometryInterface.h */,
@@ -908,6 +911,7 @@
 				2AEB267D1EBF68CC002F6733 /* SceneGraphNode.h */,
 				2AEB267E1EBF68CC002F6733 /* TestTriangle.h */,
 				2AF6591F1EC8CDFD001D6034 /* TextConsole.h */,
+				2AF82ACC2395760200449730 /* TransformCore.h */,
 				2AEB267F1EBF68CC002F6733 /* Transform.h */,
 				2AEB26801EBF68CC002F6733 /* Vector.h */,
 				2A53C7E52104C81F0045E367 /* Metal */,

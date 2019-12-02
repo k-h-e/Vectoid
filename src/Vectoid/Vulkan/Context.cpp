@@ -28,10 +28,7 @@ Context::Context(void *view)
           width(0u),
           height(0u),
           currentBuffer(0u),
-          descriptorSetLayout(VK_NULL_HANDLE),
           pipelineLayout(VK_NULL_HANDLE),
-          descriptorPool(VK_NULL_HANDLE),
-          descriptorSet(VK_NULL_HANDLE),
           imageAcquiredSemaphore(VK_NULL_HANDLE),
           drawFence(VK_NULL_HANDLE),
           renderPass(VK_NULL_HANDLE),
@@ -61,16 +58,8 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create depth buffer" << endl;
         return;
     }
-    if (!CreateUniformBuffer()) {
-        Core::Log().Stream() << "failed to create uniform buffer" << endl;
-        return;
-    }
     if (!CreateLayouts()) {
         Core::Log().Stream() << "failed to create layouts" << endl;
-        return;
-    }
-    if (!CreateDescriptorSets()) {
-        Core::Log().Stream() << "failed to create descriptor sets" << endl;
         return;
     }
     if (!CreateRenderPass()) {
@@ -109,9 +98,7 @@ Context::~Context() {
     FreeFrameBuffers();
     FreeShaders();
     FreeRenderPass();
-    FreeDescriptorSets();
     FreeLayouts();
-    FreeUniformBuffer();
     FreeDepthBuffer();
     FreeSwapChain();
     FreeDevice();
@@ -131,9 +118,7 @@ void Context::RecoverFromOutOfDateImage() {
     FreeFrameBuffers();
     FreeShaders();
     FreeRenderPass();
-    FreeDescriptorSets();
     FreeLayouts();
-    FreeUniformBuffer();
     FreeDepthBuffer();
     FreeSwapChain();
     
@@ -147,16 +132,8 @@ void Context::RecoverFromOutOfDateImage() {
         Core::Log().Stream() << "failed to create depth buffer" << endl;
         return;
     }
-    if (!CreateUniformBuffer()) {
-        Core::Log().Stream() << "failed to create uniform buffer" << endl;
-        return;
-    }
     if (!CreateLayouts()) {
         Core::Log().Stream() << "failed to create layouts" << endl;
-        return;
-    }
-    if (!CreateDescriptorSets()) {
-        Core::Log().Stream() << "failed to create descriptor sets" << endl;
         return;
     }
     if (!CreateRenderPass()) {
@@ -551,7 +528,7 @@ bool Context::CreateSwapChain() {
         }
     }
 
-    Core::Log().Stream() << "swap chain created" << endl;
+    Core::Log().Stream() << "swap chain created, num_images=" << colorBuffers.size() << endl;
     return true;
 }
 
@@ -668,103 +645,20 @@ void Context::FreeDepthBuffer() {
     }
 }
 
-bool Context::CreateUniformBuffer() {
-    VkBufferCreateInfo bufferInfo = {};
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.pNext = nullptr;
-    bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-    bufferInfo.size = sizeof(glm::mat4);
-    bufferInfo.queueFamilyIndexCount = 0;
-    bufferInfo.pQueueFamilyIndices = nullptr;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferInfo.flags = 0;
-    if (vkCreateBuffer(device, &bufferInfo, nullptr, &uniformBuffer.buffer) != VK_SUCCESS) {
-        return false;
-    }
-    
-    VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(device, uniformBuffer.buffer, &memoryRequirements);
-    VkMemoryAllocateInfo memoryInfo = {};
-    memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memoryInfo.pNext = nullptr;
-    memoryInfo.memoryTypeIndex = 0;
-    memoryInfo.allocationSize = memoryRequirements.size;
-    if (!getMemoryIndex(memoryRequirements.memoryTypeBits,
-                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                        &memoryInfo.memoryTypeIndex)) {
-        return false;
-    }
-    if (vkAllocateMemory(device, &memoryInfo, nullptr, &uniformBuffer.memory) != VK_SUCCESS) {
-        return false;
-    }
-    
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
-    glm::mat4 viewMatrix = glm::lookAt(glm::vec3(-5, 3, -10),    // Camera is at (-5 ,3, -10), in world space.
-                                       glm::vec3(0, 0, 0),       // Camera looks at the origin.
-                                       glm::vec3(0, -1, 0));     // Head is up (set to (0, -1, 0) to look upside-down).
-    glm::mat4 modelMatrix = glm::mat4(1.0f);
-    glm::mat4 clippingMatrix = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
-                                         0.0f,-1.0f, 0.0f, 0.0f,
-                                         0.0f, 0.0f, 0.5f, 0.0f,
-                                         0.0f, 0.0f, 0.5f, 1.0f);    // Vulkan clip space has inverted Y and half Z.
-    glm::mat4 modelViewProjectionMatrix = clippingMatrix * projectionMatrix * viewMatrix * modelMatrix;
-    uint8_t *mapped;
-    if (vkMapMemory(device, uniformBuffer.memory, 0, memoryRequirements.size, 0, (void **)&mapped) != VK_SUCCESS) {
-        return false;
-    }
-    memcpy(mapped, &modelViewProjectionMatrix, sizeof(modelViewProjectionMatrix));
-    vkUnmapMemory(device, uniformBuffer.memory);
-    
-    if (vkBindBufferMemory(device, uniformBuffer.buffer, uniformBuffer.memory, 0) != VK_SUCCESS) {
-        return false;
-    }
-
-    uniformBuffer.info.buffer = uniformBuffer.buffer;
-    uniformBuffer.info.offset = 0u;
-    uniformBuffer.info.range  = sizeof(modelViewProjectionMatrix);
-
-    Core::Log().Stream() << "uniform buffer created" << endl;
-    return true;
-}
-
-void Context::FreeUniformBuffer() {
-    if (uniformBuffer.buffer != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing uniform buffer" << endl;
-        vkDestroyBuffer(device, uniformBuffer.buffer, nullptr);
-        uniformBuffer.buffer = VK_NULL_HANDLE;
-    }
-    if (uniformBuffer.memory != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing uniform buffer memory" << endl;
-        vkFreeMemory(device, uniformBuffer.memory, nullptr);
-        uniformBuffer.memory = VK_NULL_HANDLE;
-    }
-    uniformBuffer = BufferInfo();
-}
 
 bool Context::CreateLayouts() {
-    VkDescriptorSetLayoutBinding binding = {};
-    binding.binding = 0;
-    binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    binding.descriptorCount = 1;
-    binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    binding.pImmutableSamplers = nullptr;
-
-    VkDescriptorSetLayoutCreateInfo layoutInfo = {};
-    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.pNext = NULL;
-    layoutInfo.bindingCount = 1;
-    layoutInfo.pBindings = &binding;
-    if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
-        return false;
-    }
+    VkPushConstantRange pushConstantRange = {};
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(glm::mat4);
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     VkPipelineLayoutCreateInfo pipelineInfo = {};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineInfo.pNext = nullptr;
-    pipelineInfo.pushConstantRangeCount = 0;
-    pipelineInfo.pPushConstantRanges = nullptr;
-    pipelineInfo.setLayoutCount = 1;
-    pipelineInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineInfo.pushConstantRangeCount = 1;
+    pipelineInfo.pPushConstantRanges = &pushConstantRange;
+    pipelineInfo.setLayoutCount = 0;
+    pipelineInfo.pSetLayouts = nullptr;
     if (vkCreatePipelineLayout(device, &pipelineInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         return false;
     }
@@ -778,60 +672,6 @@ void Context::FreeLayouts() {
         Core::Log().Stream() << "freeing pipeline layout" << endl;
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         pipelineLayout = VK_NULL_HANDLE;
-    }
-    if (descriptorSetLayout != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing descriptor set layout" << endl;
-        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
-        descriptorSetLayout = VK_NULL_HANDLE;
-    }
-}
-
-bool Context::CreateDescriptorSets() {
-    VkDescriptorPoolSize poolSize;
-    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize.descriptorCount = 1;
-
-    VkDescriptorPoolCreateInfo poolInfo = {};
-    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.pNext = nullptr;
-    poolInfo.maxSets = 1;
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
-    if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
-        return false;
-    }
-
-    VkDescriptorSetAllocateInfo setInfo;
-    setInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    setInfo.pNext = nullptr;
-    setInfo.descriptorPool = descriptorPool;
-    setInfo.descriptorSetCount = 1;
-    setInfo.pSetLayouts = &descriptorSetLayout;
-    if (vkAllocateDescriptorSets(device, &setInfo, &descriptorSet) != VK_SUCCESS) {
-        return false;
-    }
-
-    VkWriteDescriptorSet write = {};
-    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    write.pNext = nullptr;
-    write.dstSet = descriptorSet;
-    write.descriptorCount = 1;
-    write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    write.pBufferInfo = &uniformBuffer.info;
-    write.dstArrayElement = 0;
-    write.dstBinding = 0;
-    vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
-
-    Core::Log().Stream() << "descriptor sets created" << endl;
-    return true;
-}
-
-void Context::FreeDescriptorSets() {
-    descriptorSet = VK_NULL_HANDLE;
-    if (descriptorPool != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing descriptor pool" << endl;
-        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
-        descriptorPool = VK_NULL_HANDLE;
     }
 }
 
@@ -852,12 +692,6 @@ bool Context::CreateRenderPass() {
         return false;
     }
 
-    if (vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBuffer)
-            != VK_SUCCESS) {
-        return false;
-    }
-    // Do we really need to do this here?
-    
     VkAttachmentDescription attachments[2];
     attachments[0].format = colorFormat;
     attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
@@ -935,6 +769,7 @@ void Context::FreeRenderPass() {
 }
 
 bool Context::CreateShaders() {
+    /*
     static const char *vertexShaderText =
         "#version 400\n"
         "#extension GL_ARB_separate_shader_objects : enable\n"
@@ -949,6 +784,22 @@ bool Context::CreateShaders() {
         "   outColor = inColor;\n"
         "   gl_Position = myBufferVals.mvp * pos;\n"
         "}\n";
+    */
+    static const char *vertexShaderText =
+    "#version 400\n"
+    "#extension GL_ARB_separate_shader_objects : enable\n"
+    "#extension GL_ARB_shading_language_420pack : enable\n"
+    "layout (push_constant) uniform bufferVals {\n"
+    "    mat4 mvp;\n"
+    "} myBufferVals;\n"
+    "layout (location = 0) in vec4 pos;\n"
+    "layout (location = 1) in vec4 inColor;\n"
+    "layout (location = 0) out vec4 outColor;\n"
+    "void main() {\n"
+    "   outColor = inColor;\n"
+    "   gl_Position = myBufferVals.mvp * pos;\n"
+    "}\n";
+    
     std::vector<unsigned int> vertexSpv;
     if (!GLSLtoSPV(VK_SHADER_STAGE_VERTEX_BIT, vertexShaderText, vertexSpv)) {
         return false;

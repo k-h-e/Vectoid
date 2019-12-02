@@ -2,6 +2,7 @@
 #define KXM_VECTOID_TRANSFORM_H_
 
 #include <kxm/Core/NumberTools.h>
+#include <kxm/Vectoid/TransformCore.h>
 #include <kxm/Vectoid/Vector.h>
 
 namespace kxm {
@@ -18,7 +19,7 @@ enum Axis { XAxis, YAxis, ZAxis };
 /*! 
  *  \ingroup Vectoid
  */ 
-class Transform {
+class Transform : public TransformCore {
   public:
     //! To be used with the constructor variant Transform(InitFromOtherMode initMode, const
     //! Transform &other).
@@ -76,24 +77,12 @@ class Transform {
      *  the original transform is applied first, and the other transform second.
      */
     inline void Append(const Transform &other);
-    //! Provides read access to the elements of the encapsuled 4x4 matrix in
-    //! <c>OpenGL</c>-compatible layout.
-    inline const float *MatrixElements() const;       
     
   private:
     //! After that many multiplications as specified here a transform will get its rotation
     //! part re-orthonormalized in order to compensate for accumulating roundoff error.
     static const int AutoReorthonormalizationInterval = 200;
-    //! Helper method mutliplying the (partial) matrix representations of two transforms,
-    //! thereby effectively concatenating the transforms.
-    static inline void Multiply(const Transform &t1, const Transform &t2, Transform *result);
     
-    float matrix_[4][4];    // We represent the transformation as 4x4 matrix in a way compatible
-                            // with OpenGL, but we will never update the entries not involved in
-                            // rotation or translation. Note that as a result, the matrix's memory
-                            // layout is actually the transpose of the German convention for such
-                            // transform matrices. When in the following we talk about matrix
-                            // columns and rows, we refer to the conventions used in Germany.
     int   multCount_;
 };
 
@@ -316,10 +305,6 @@ void Transform::Prepend(const Transform &other) {
 void Transform::Append(const Transform &other) {
     Transform result(other, *this);
     *this = result;
-}
-
-const float *Transform::MatrixElements() const {
-    return &matrix_[0][0];
 }
     
 }    // Namespace Vectoid.

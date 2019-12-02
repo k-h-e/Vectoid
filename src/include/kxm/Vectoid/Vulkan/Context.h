@@ -75,21 +75,23 @@ class Context {
     uint32_t                          currentBuffer;
     FrameBufferInfo                   depthBuffer;
     VkFormat                          depthFormat;                       // Valid <=> depth buffer present.
-    BufferInfo                        uniformBuffer;
-    VkDescriptorSetLayout             descriptorSetLayout;
+    
     VkPipelineLayout                  pipelineLayout;
-    VkDescriptorPool                  descriptorPool;
-    VkDescriptorSet                   descriptorSet;
+    
     VkSemaphore                       imageAcquiredSemaphore;
     VkFence                           drawFence;
+    
     VkRenderPass                      renderPass;
     VkShaderModule                    vertexShader;
     VkShaderModule                    fragmentShader;
     std::vector<VkFramebuffer>        frameBuffers;
+    
     BufferInfo                        vertexBuffer;
     VkVertexInputBindingDescription   vertexInputBinding;                // Valid <=> vertex buffer present.
     VkVertexInputAttributeDescription vertexInputAttributes[2];          // Valid <=> vertex buffer present.
+    
     VkPipeline                        pipeline;
+    
     VkCommandPool                     commandBufferPool;
     VkCommandBuffer                   commandBuffer;
     
@@ -109,15 +111,9 @@ class Context {
     bool CreateDepthBuffer();
     // Frees the depth buffer if it is present.
     void FreeDepthBuffer();
-    bool CreateUniformBuffer();
-    // Frees the uniform buffer if it is present.
-    void FreeUniformBuffer();
     bool CreateLayouts();
     // Frees the layouts if they are present.
     void FreeLayouts();
-    bool CreateDescriptorSets();
-    // Frees the descriptor sets if they are present.
-    void FreeDescriptorSets();
     bool CreateRenderPass();
     // Frees the render pass if it is present.
     void FreeRenderPass();

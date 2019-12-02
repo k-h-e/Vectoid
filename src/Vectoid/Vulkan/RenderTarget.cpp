@@ -78,10 +78,6 @@ void RenderTarget::RenderFrame() {
                 vkCmdBeginRenderPass(context_->commandBuffer, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
                 
                 vkCmdBindPipeline(context_->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, context_->pipeline);
-                vkCmdBindDescriptorSets(context_->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, context_->pipelineLayout,
-                                        0, 1, &context_->descriptorSet, 0, nullptr);
-                const VkDeviceSize offsets[1] = { 0 };
-                vkCmdBindVertexBuffers(context_->commandBuffer, 0, 1, &context_->vertexBuffer.buffer, offsets);
                 
                 VkViewport viewPort = {};
                 viewPort.height = (float)context_->height;
@@ -98,8 +94,6 @@ void RenderTarget::RenderFrame() {
                 scissors.offset.x = 0;
                 scissors.offset.y = 0;
                 vkCmdSetScissor(context_->commandBuffer, 0, 1, &scissors);
-
-                vkCmdDraw(context_->commandBuffer, 12 * 3, 1, 0, 0);
                 
                 sceneGraphRoot_->Render();
                 
