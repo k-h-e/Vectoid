@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <vulkan/vulkan.h>
+#include <kxm/Vectoid/Transform.h>
+#include <kxm/Vectoid/FullTransform.h>
 
 namespace kxm {
 namespace Vectoid {
@@ -135,6 +137,10 @@ class Context {
     
     bool getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     static bool GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv);
+    
+    FullTransform clippingTransform_;
+    FullTransform perspectiveTransform_;
+    Transform     modelViewTransform_;
     
     bool operative_;
 };
