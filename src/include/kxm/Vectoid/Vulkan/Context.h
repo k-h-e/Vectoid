@@ -5,6 +5,7 @@
 #include <vulkan/vulkan.h>
 #include <kxm/Vectoid/Transform.h>
 #include <kxm/Vectoid/FullTransform.h>
+#include <kxm/Vectoid/Vulkan/FrameBufferInfo.h>
 
 namespace kxm {
 namespace Vectoid {
@@ -18,27 +19,6 @@ namespace Vulkan {
  */
 class Context {
   public:
-    struct FrameBufferInfo {
-        VkImage        image;
-        VkImageView    view;
-        VkDeviceMemory memory;
-        
-        FrameBufferInfo() : image(VK_NULL_HANDLE), view(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {}
-        // Default copy okay.
-    };
-    struct BufferInfo {
-        VkBuffer               buffer;
-        VkDeviceMemory         memory;
-        VkDescriptorBufferInfo info;
-        
-        BufferInfo() : buffer(VK_NULL_HANDLE), memory(VK_NULL_HANDLE) {
-            info.buffer = VK_NULL_HANDLE;
-            info.offset = 0u;
-            info.range  = 0u;
-        }
-        // Default copy okay.
-    };
-  
     Context(void *view);
     Context(const Context &other) = delete;
     Context &operator=(const Context &other) = delete;
@@ -58,6 +38,12 @@ class Context {
     void FreeCommandBuffer();
     //! Recovers from out-of-date image condition.
     void RecoverFromOutOfDateImage();
+    
+    void UpdateObjectTransform(const FullTransform &transform);
+    void ApplyObjectTransform();
+    const FullTransform &ObjectTransform();
+    
+    bool GetMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     
     VkInstance                        instance;
     VkSurfaceKHR                      surface;
@@ -87,10 +73,6 @@ class Context {
     VkShaderModule                    vertexShader;
     VkShaderModule                    fragmentShader;
     std::vector<VkFramebuffer>        frameBuffers;
-    
-    BufferInfo                        vertexBuffer;
-    VkVertexInputBindingDescription   vertexInputBinding;                // Valid <=> vertex buffer present.
-    VkVertexInputAttributeDescription vertexInputAttributes[2];          // Valid <=> vertex buffer present.
     
     VkPipeline                        pipeline;
     
@@ -125,9 +107,6 @@ class Context {
     bool CreateFrameBuffers();
     // Frees the frame buffers if they are present.
     void FreeFrameBuffers();
-    bool CreateVertexBuffer();
-    // Frees the vertex buffer if it is present.
-    void FreeVertexBuffer();
     bool CreatePipeline();
     // Frees the pipeline if it is present.
     void FreePipeline();
@@ -135,14 +114,11 @@ class Context {
     // Frees the command buffer pool if it is present.
     void FreeCommandBufferPool();
     
-    bool getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     static bool GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv);
     
-    FullTransform clippingTransform_;
-    FullTransform perspectiveTransform_;
-    Transform     modelViewTransform_;
-    
-    bool operative_;
+    bool          operative_;
+    FullTransform currentObjectTransform_;
+    bool          currentObjectTransformChanged_;
 };
 
 }    // Namespace Vulkan.

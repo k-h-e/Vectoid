@@ -40,7 +40,10 @@ class Transform : public TransformCore {
     //! other transform's information.
     inline Transform(InitFromOtherMode initMode, const Transform &other);
     //! Initializes the transform as the matrix product of the two specified other transforms.
-    inline Transform(const Transform &t1, const Transform &t2);
+    inline Transform(const Transform &left, const Transform &right);
+    
+    // Default copy, ok.
+    
     //! Only updates the transform's translation part as specified.
     inline void SetTranslationPart(const Vector &translation);
     //! Retrieves the transform's translation part.
@@ -83,14 +86,11 @@ class Transform : public TransformCore {
     //! part re-orthonormalized in order to compensate for accumulating roundoff error.
     static const int AutoReorthonormalizationInterval = 200;
     
-    int   multCount_;
+    int multCount_;
 };
 
 Transform::Transform() {
-    matrix_[0][0] = 1.0f;  matrix_[0][1] = 0.0f;  matrix_[0][2] = 0.0f;  matrix_[0][3] = 0.0f;
-    matrix_[1][0] = 0.0f;  matrix_[1][1] = 1.0f;  matrix_[1][2] = 0.0f;  matrix_[1][3] = 0.0f;
-    matrix_[2][0] = 0.0f;  matrix_[2][1] = 0.0f;  matrix_[2][2] = 1.0f;  matrix_[2][3] = 0.0f;
-    matrix_[3][0] = 0.0f;  matrix_[3][1] = 0.0f;  matrix_[3][2] = 0.0f;  matrix_[3][3] = 1.0f;
+    InitAsIdentity();
     multCount_ = 0;
 }
 
@@ -207,50 +207,56 @@ Transform::Transform(InitFromOtherMode initMode, const Transform &other) {
     }
 }
 
-Transform::Transform(const Transform &t1, const Transform &t2) {
-    matrix_[0][0] =   t1.matrix_[0][0] * t2.matrix_[0][0]
-                    + t1.matrix_[1][0] * t2.matrix_[0][1]
-                    + t1.matrix_[2][0] * t2.matrix_[0][2];
-    matrix_[0][1] =   t1.matrix_[0][1] * t2.matrix_[0][0]
-                    + t1.matrix_[1][1] * t2.matrix_[0][1]
-                    + t1.matrix_[2][1] * t2.matrix_[0][2];
-    matrix_[0][2] =   t1.matrix_[0][2] * t2.matrix_[0][0]
-                    + t1.matrix_[1][2] * t2.matrix_[0][1]
-                    + t1.matrix_[2][2] * t2.matrix_[0][2];
+Transform::Transform(const Transform &left, const Transform &right) {
+
+    // Remember storage is column-major.
+
+    matrix_[0][0] =   left.matrix_[0][0] * right.matrix_[0][0]
+                    + left.matrix_[1][0] * right.matrix_[0][1]
+                    + left.matrix_[2][0] * right.matrix_[0][2];
+    matrix_[0][1] =   left.matrix_[0][1] * right.matrix_[0][0]
+                    + left.matrix_[1][1] * right.matrix_[0][1]
+                    + left.matrix_[2][1] * right.matrix_[0][2];
+    matrix_[0][2] =   left.matrix_[0][2] * right.matrix_[0][0]
+                    + left.matrix_[1][2] * right.matrix_[0][1]
+                    + left.matrix_[2][2] * right.matrix_[0][2];
     
-    matrix_[1][0] =   t1.matrix_[0][0] * t2.matrix_[1][0]
-                    + t1.matrix_[1][0] * t2.matrix_[1][1]
-                    + t1.matrix_[2][0] * t2.matrix_[1][2];
-    matrix_[1][1] =   t1.matrix_[0][1] * t2.matrix_[1][0]
-                    + t1.matrix_[1][1] * t2.matrix_[1][1]
-                    + t1.matrix_[2][1] * t2.matrix_[1][2];
-    matrix_[1][2] =   t1.matrix_[0][2] * t2.matrix_[1][0]
-                    + t1.matrix_[1][2] * t2.matrix_[1][1]
-                    + t1.matrix_[2][2] * t2.matrix_[1][2];
+    matrix_[1][0] =   left.matrix_[0][0] * right.matrix_[1][0]
+                    + left.matrix_[1][0] * right.matrix_[1][1]
+                    + left.matrix_[2][0] * right.matrix_[1][2];
+    matrix_[1][1] =   left.matrix_[0][1] * right.matrix_[1][0]
+                    + left.matrix_[1][1] * right.matrix_[1][1]
+                    + left.matrix_[2][1] * right.matrix_[1][2];
+    matrix_[1][2] =   left.matrix_[0][2] * right.matrix_[1][0]
+                    + left.matrix_[1][2] * right.matrix_[1][1]
+                    + left.matrix_[2][2] * right.matrix_[1][2];
     
-    matrix_[2][0] =   t1.matrix_[0][0] * t2.matrix_[2][0]
-                    + t1.matrix_[1][0] * t2.matrix_[2][1]
-                    + t1.matrix_[2][0] * t2.matrix_[2][2];
-    matrix_[2][1] =   t1.matrix_[0][1] * t2.matrix_[2][0]
-                    + t1.matrix_[1][1] * t2.matrix_[2][1]
-                    + t1.matrix_[2][1] * t2.matrix_[2][2];
-    matrix_[2][2] =   t1.matrix_[0][2] * t2.matrix_[2][0]
-                    + t1.matrix_[1][2] * t2.matrix_[2][1]
-                    + t1.matrix_[2][2] * t2.matrix_[2][2];
+    matrix_[2][0] =   left.matrix_[0][0] * right.matrix_[2][0]
+                    + left.matrix_[1][0] * right.matrix_[2][1]
+                    + left.matrix_[2][0] * right.matrix_[2][2];
+    matrix_[2][1] =   left.matrix_[0][1] * right.matrix_[2][0]
+                    + left.matrix_[1][1] * right.matrix_[2][1]
+                    + left.matrix_[2][1] * right.matrix_[2][2];
+    matrix_[2][2] =   left.matrix_[0][2] * right.matrix_[2][0]
+                    + left.matrix_[1][2] * right.matrix_[2][1]
+                    + left.matrix_[2][2] * right.matrix_[2][2];
     
-    matrix_[3][0] =   t1.matrix_[0][0] * t2.matrix_[3][0]
-                    + t1.matrix_[1][0] * t2.matrix_[3][1]
-                    + t1.matrix_[2][0] * t2.matrix_[3][2] + t1.matrix_[3][0];
-    matrix_[3][1] =   t1.matrix_[0][1] * t2.matrix_[3][0]
-                    + t1.matrix_[1][1] * t2.matrix_[3][1]
-                    + t1.matrix_[2][1] * t2.matrix_[3][2] + t1.matrix_[3][1];
-    matrix_[3][2] =   t1.matrix_[0][2] * t2.matrix_[3][0]
-                    + t1.matrix_[1][2] * t2.matrix_[3][1]
-                    + t1.matrix_[2][2] * t2.matrix_[3][2] + t1.matrix_[3][2];
+    matrix_[3][0] =   left.matrix_[0][0] * right.matrix_[3][0]
+                    + left.matrix_[1][0] * right.matrix_[3][1]
+                    + left.matrix_[2][0] * right.matrix_[3][2]
+                    + left.matrix_[3][0];
+    matrix_[3][1] =   left.matrix_[0][1] * right.matrix_[3][0]
+                    + left.matrix_[1][1] * right.matrix_[3][1]
+                    + left.matrix_[2][1] * right.matrix_[3][2]
+                    + left.matrix_[3][1];
+    matrix_[3][2] =   left.matrix_[0][2] * right.matrix_[3][0]
+                    + left.matrix_[1][2] * right.matrix_[3][1]
+                    + left.matrix_[2][2] * right.matrix_[3][2]
+                    + left.matrix_[3][2];
     
     matrix_[0][3] = matrix_[1][3] = matrix_[2][3] = 0.0f;  matrix_[3][3] = 1.0f;
     
-    multCount_ = t1.multCount_ + t2.multCount_ + 1;
+    multCount_ = left.multCount_ + right.multCount_ + 1;
     if (multCount_ >= AutoReorthonormalizationInterval)
         ReorthonormalizeRotationPart();
 }

@@ -4,9 +4,6 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_macos.h>
 #include <MoltenVKGLSLToSPIRVConverter/GLSLToSPIRVConverter.h>
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/ext/matrix_clip_space.hpp>
 #include <kxm/Core/logging.h>
 
 using namespace std;
@@ -37,7 +34,8 @@ Context::Context(void *view)
           pipeline(VK_NULL_HANDLE),
           commandBufferPool(VK_NULL_HANDLE),
           commandBuffer(VK_NULL_HANDLE),
-          operative_(false) {
+          operative_(false),
+          currentObjectTransformChanged_(true) {
     if (!CreateInstance()) {
         Core::Log().Stream() << "failed to create instance" << endl;
         return;
@@ -74,10 +72,6 @@ Context::Context(void *view)
         Core::Log().Stream() << "failed to create frame buffers" << endl;
         return;
     }
-    if (!CreateVertexBuffer()) {
-        Core::Log().Stream() << "failed to create vertex buffer" << endl;
-        return;
-    }
     if (!CreatePipeline()) {
         Core::Log().Stream() << "failed to create pipeline" << endl;
         return;
@@ -94,7 +88,6 @@ Context::~Context() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
     FreePipeline();
-    FreeVertexBuffer();
     FreeFrameBuffers();
     FreeShaders();
     FreeRenderPass();
@@ -110,11 +103,41 @@ bool Context::Operative() {
     return operative_;
 }
 
+void Context::UpdateObjectTransform(const FullTransform &transform) {
+    currentObjectTransform_        = transform;
+    currentObjectTransformChanged_ = true;
+}
+
+void Context::ApplyObjectTransform() {
+    if (currentObjectTransformChanged_) {
+        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0,
+                           currentObjectTransform_.MatrixSize(), currentObjectTransform_.MatrixElements());
+        currentObjectTransformChanged_ = false;
+    }
+}
+
+const FullTransform &Context::ObjectTransform() {
+    return currentObjectTransform_;
+}
+
+bool Context::GetMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex) {
+    for (uint32_t i = 0u; i < physicalDeviceMemoryProperties.memoryTypeCount; ++i) {
+        if ((typeBits & 1u) == 1u) {
+            if ((physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & requirementsMask) == requirementsMask) {
+                *typeIndex = i;
+                return true;
+            }
+        }
+        typeBits >>= 1;
+    }
+
+    return false;
+}
+
 void Context::RecoverFromOutOfDateImage() {
     FreeCommandBuffer();
     FreeCommandBufferPool();
     FreePipeline();
-    FreeVertexBuffer();
     FreeFrameBuffers();
     FreeShaders();
     FreeRenderPass();
@@ -146,10 +169,6 @@ void Context::RecoverFromOutOfDateImage() {
     }
     if (!CreateFrameBuffers()) {
         Core::Log().Stream() << "failed to create frame buffers" << endl;
-        return;
-    }
-    if (!CreateVertexBuffer()) {
-        Core::Log().Stream() << "failed to create vertex buffer" << endl;
         return;
     }
     if (!CreatePipeline()) {
@@ -592,7 +611,7 @@ bool Context::CreateDepthBuffer() {
     memoryInfo.pNext = nullptr;
     memoryInfo.allocationSize = memoryRequirements.size;
     memoryInfo.memoryTypeIndex = 0;
-    if (!getMemoryIndex(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+    if (!GetMemoryIndex(memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                         &memoryInfo.memoryTypeIndex)) {
         return false;
     }
@@ -649,7 +668,7 @@ void Context::FreeDepthBuffer() {
 bool Context::CreateLayouts() {
     VkPushConstantRange pushConstantRange = {};
     pushConstantRange.offset = 0;
-    pushConstantRange.size = sizeof(glm::mat4);
+    pushConstantRange.size = currentObjectTransform_.MatrixSize();
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
     VkPipelineLayoutCreateInfo pipelineInfo = {};
@@ -769,12 +788,11 @@ void Context::FreeRenderPass() {
 }
 
 bool Context::CreateShaders() {
-    /*
     static const char *vertexShaderText =
         "#version 400\n"
         "#extension GL_ARB_separate_shader_objects : enable\n"
         "#extension GL_ARB_shading_language_420pack : enable\n"
-        "layout (std140, binding = 0) uniform bufferVals {\n"
+        "layout (push_constant) uniform bufferVals {\n"
         "    mat4 mvp;\n"
         "} myBufferVals;\n"
         "layout (location = 0) in vec4 pos;\n"
@@ -784,21 +802,6 @@ bool Context::CreateShaders() {
         "   outColor = inColor;\n"
         "   gl_Position = myBufferVals.mvp * pos;\n"
         "}\n";
-    */
-    static const char *vertexShaderText =
-    "#version 400\n"
-    "#extension GL_ARB_separate_shader_objects : enable\n"
-    "#extension GL_ARB_shading_language_420pack : enable\n"
-    "layout (push_constant) uniform bufferVals {\n"
-    "    mat4 mvp;\n"
-    "} myBufferVals;\n"
-    "layout (location = 0) in vec4 pos;\n"
-    "layout (location = 1) in vec4 inColor;\n"
-    "layout (location = 0) out vec4 outColor;\n"
-    "void main() {\n"
-    "   outColor = inColor;\n"
-    "   gl_Position = myBufferVals.mvp * pos;\n"
-    "}\n";
     
     std::vector<unsigned int> vertexSpv;
     if (!GLSLtoSPV(VK_SHADER_STAGE_VERTEX_BIT, vertexShaderText, vertexSpv)) {
@@ -889,132 +892,6 @@ void Context::FreeFrameBuffers() {
     frameBuffers.clear();
 }
 
-bool Context::CreateVertexBuffer() {
-    struct Vertex {
-        float posX, posY, posZ, posW;  // Position data
-        float r, g, b, a;              // Color
-    };
-    #define XYZ1(_x_, _y_, _z_) (_x_), (_y_), (_z_), 1.f
-    static const Vertex solidFaceColorsData[] = {
-        // red face
-        {XYZ1(-1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
-        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
-        {XYZ1(1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
-        {XYZ1(1, -1, 1), XYZ1(1.f, 0.f, 0.f)},
-        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
-        {XYZ1(1, 1, 1), XYZ1(1.f, 0.f, 0.f)},
-        // green face
-        {XYZ1(-1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
-        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
-        {XYZ1(-1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
-        {XYZ1(-1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
-        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 0.f)},
-        {XYZ1(1, 1, -1), XYZ1(0.f, 1.f, 0.f)},
-        // blue face
-        {XYZ1(-1, 1, 1), XYZ1(0.f, 0.f, 1.f)},
-        {XYZ1(-1, -1, 1), XYZ1(0.f, 0.f, 1.f)},
-        {XYZ1(-1, 1, -1), XYZ1(0.f, 0.f, 1.f)},
-        {XYZ1(-1, 1, -1), XYZ1(0.f, 0.f, 1.f)},
-        {XYZ1(-1, -1, 1), XYZ1(0.f, 0.f, 1.f)},
-        {XYZ1(-1, -1, -1), XYZ1(0.f, 0.f, 1.f)},
-        // yellow face
-        {XYZ1(1, 1, 1), XYZ1(1.f, 1.f, 0.f)},
-        {XYZ1(1, 1, -1), XYZ1(1.f, 1.f, 0.f)},
-        {XYZ1(1, -1, 1), XYZ1(1.f, 1.f, 0.f)},
-        {XYZ1(1, -1, 1), XYZ1(1.f, 1.f, 0.f)},
-        {XYZ1(1, 1, -1), XYZ1(1.f, 1.f, 0.f)},
-        {XYZ1(1, -1, -1), XYZ1(1.f, 1.f, 0.f)},
-        // magenta face
-        {XYZ1(1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
-        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
-        {XYZ1(1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
-        {XYZ1(1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
-        {XYZ1(-1, 1, 1), XYZ1(1.f, 0.f, 1.f)},
-        {XYZ1(-1, 1, -1), XYZ1(1.f, 0.f, 1.f)},
-        // cyan face
-        {XYZ1(1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
-        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
-        {XYZ1(-1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
-        {XYZ1(-1, -1, 1), XYZ1(0.f, 1.f, 1.f)},
-        {XYZ1(1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
-        {XYZ1(-1, -1, -1), XYZ1(0.f, 1.f, 1.f)},
-    };
-
-    VkBufferCreateInfo vertexBufferInfo = {};
-    vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vertexBufferInfo.pNext = nullptr;
-    vertexBufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    vertexBufferInfo.size = sizeof(solidFaceColorsData);
-    vertexBufferInfo.queueFamilyIndexCount = 0;
-    vertexBufferInfo.pQueueFamilyIndices = nullptr;
-    vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    vertexBufferInfo.flags = 0;
-    if (vkCreateBuffer(device, &vertexBufferInfo, nullptr, &vertexBuffer.buffer) != VK_SUCCESS) {
-        return false;
-    }
-    
-    VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(device, vertexBuffer.buffer, &memoryRequirements);
-
-    VkMemoryAllocateInfo memoryInfo = {};
-    memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memoryInfo.pNext = nullptr;
-    memoryInfo.memoryTypeIndex = 0;
-    memoryInfo.allocationSize = memoryRequirements.size;
-    if (!getMemoryIndex(memoryRequirements.memoryTypeBits,
-                        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                        &memoryInfo.memoryTypeIndex)) {
-        return false;
-    }
-    if (vkAllocateMemory(device, &memoryInfo, nullptr, &vertexBuffer.memory) != VK_SUCCESS) {
-        return false;
-    }
-
-    uint8_t *mapped;
-    if (vkMapMemory(device, vertexBuffer.memory, 0, memoryRequirements.size, 0, (void **)&mapped) != VK_SUCCESS) {
-        return false;
-    }
-    memcpy(mapped, solidFaceColorsData, sizeof(solidFaceColorsData));
-    vkUnmapMemory(device, vertexBuffer.memory);
-
-    if (vkBindBufferMemory(device, vertexBuffer.buffer, vertexBuffer.memory, 0) != VK_SUCCESS) {
-        return false;
-    }
-    
-    vertexInputBinding = {};
-    vertexInputBinding.binding = 0;
-    vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-    vertexInputBinding.stride = sizeof(solidFaceColorsData[0]);
-    
-    vertexInputAttributes[0] = {};
-    vertexInputAttributes[0].binding = 0;
-    vertexInputAttributes[0].location = 0;
-    vertexInputAttributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    vertexInputAttributes[0].offset = 0;
-    vertexInputAttributes[1] = {};
-    vertexInputAttributes[1].binding = 0;
-    vertexInputAttributes[1].location = 1;
-    vertexInputAttributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    vertexInputAttributes[1].offset = 16;
-    
-    Core::Log().Stream() << "vertex buffer created" << endl;
-    return true;
-}
-
-void Context::FreeVertexBuffer() {
-    if (vertexBuffer.buffer != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing vertex buffer" << endl;
-        vkDestroyBuffer(device, vertexBuffer.buffer, nullptr);
-        vertexBuffer.buffer = VK_NULL_HANDLE;
-    }
-    if (vertexBuffer.memory != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing vertex buffer memory" << endl;
-        vkFreeMemory(device, vertexBuffer.memory, nullptr);
-        vertexBuffer.memory = VK_NULL_HANDLE;
-    }
-    vertexBuffer = BufferInfo();
-}
-
 bool Context::CreatePipeline() {
     VkDynamicState dynamicStateEnables[VK_DYNAMIC_STATE_RANGE_SIZE];
     memset(dynamicStateEnables, 0, sizeof(dynamicStateEnables));
@@ -1043,13 +920,29 @@ bool Context::CreatePipeline() {
     shaderStageInfos[1].module = fragmentShader;
     
     VkPipelineVertexInputStateCreateInfo vertexInputStateInfo = {};
+    // TODO: This currently is set to match SimpleGeometryRenderer.
+    VkVertexInputBindingDescription binding = {};
+    binding.binding = 0;
+    binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+    binding.stride = 32;
+    VkVertexInputAttributeDescription attributes[2];
+    attributes[0] = {};
+    attributes[0].binding = 0;
+    attributes[0].location = 0;
+    attributes[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    attributes[0].offset = 0;
+    attributes[1] = {};
+    attributes[1].binding = 0;
+    attributes[1].location = 1;
+    attributes[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+    attributes[1].offset = 16;
     vertexInputStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputStateInfo.pNext = nullptr;
     vertexInputStateInfo.flags = 0;
     vertexInputStateInfo.vertexBindingDescriptionCount = 1;
-    vertexInputStateInfo.pVertexBindingDescriptions = &vertexInputBinding;
+    vertexInputStateInfo.pVertexBindingDescriptions = &binding;
     vertexInputStateInfo.vertexAttributeDescriptionCount = 2;
-    vertexInputStateInfo.pVertexAttributeDescriptions = vertexInputAttributes;
+    vertexInputStateInfo.pVertexAttributeDescriptions = attributes;
     
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateInfo = {};
     inputAssemblyStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -1217,20 +1110,6 @@ void Context::FreeCommandBuffer() {
         vkFreeCommandBuffers(device, commandBufferPool, 1, &commandBuffer);
         commandBuffer = VK_NULL_HANDLE;
     }
-}
-
-bool Context::getMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex) {
-    for (uint32_t i = 0u; i < physicalDeviceMemoryProperties.memoryTypeCount; ++i) {
-        if ((typeBits & 1u) == 1u) {
-            if ((physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & requirementsMask) == requirementsMask) {
-                *typeIndex = i;
-                return true;
-            }
-        }
-        typeBits >>= 1;
-    }
-
-    return false;
 }
 
 bool Context::GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv) {

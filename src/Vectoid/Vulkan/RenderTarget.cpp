@@ -95,6 +95,15 @@ void RenderTarget::RenderFrame() {
                 scissors.offset.y = 0;
                 vkCmdSetScissor(context_->commandBuffer, 0, 1, &scissors);
                 
+                // Re-init object transform as Vulkan clipping transform...
+                // Note that Vulkan clip space has inverted y and half z.
+                FullTransform clippingTransform;    // Identity.
+                clippingTransform.Element(1, 1) = -1.0f;
+                clippingTransform.Element(2, 2) =   .5f;
+                clippingTransform.Element(3, 2) =   .5f;
+                context_->UpdateObjectTransform(clippingTransform);
+                context_->ApplyObjectTransform();
+                
                 sceneGraphRoot_->Render();
                 
                 vkCmdEndRenderPass(context_->commandBuffer);
@@ -114,7 +123,8 @@ void RenderTarget::RenderFrame() {
                     if (vkQueueSubmit(context_->graphicsQueue, 1, &submitInfo, context_->drawFence) == VK_SUCCESS) {
                         VkResult fenceResult;
                         do {
-                            fenceResult = vkWaitForFences(context_->device, 1, &context_->drawFence, VK_TRUE, 100000000);
+                            fenceResult = vkWaitForFences(context_->device, 1, &context_->drawFence, VK_TRUE,
+                                                          100000000);
                         } while (fenceResult == VK_TIMEOUT);
                         if (fenceResult == VK_SUCCESS) {
                             VkPresentInfoKHR presentInfo = {};

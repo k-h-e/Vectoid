@@ -3,6 +3,8 @@
 
 #include <kxm/Vectoid/PerspectiveProjection.h>
 
+#include <kxm/Vectoid/FullTransform.h>
+
 namespace kxm {
 namespace Vectoid {
 namespace Vulkan {
@@ -26,6 +28,7 @@ class PerspectiveProjection : public Vectoid::PerspectiveProjection {
     PerspectiveProjection(const std::shared_ptr<Context> &context);
     
     std::shared_ptr<Context> context_;
+    FullTransform transform_;
 };
 
 }    // Namespace Vulkan.

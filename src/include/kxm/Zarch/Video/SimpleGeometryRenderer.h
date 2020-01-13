@@ -22,8 +22,6 @@ class SimpleGeometryRenderer : public virtual Vectoid::GeometryInterface {
     
   protected:
     SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
-    
-  private:
     std::shared_ptr<SimpleGeometry> geometry_;
 };
 

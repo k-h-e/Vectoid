@@ -17,6 +17,9 @@ namespace Video {
 namespace OpenGL {
     class SimpleGeometryRenderer;
 }
+namespace Vulkan {
+    class SimpleGeometryRenderer;
+}
 }
 
 //! Simple triangle-soup geometry.
@@ -26,6 +29,7 @@ namespace OpenGL {
 class SimpleGeometry : public virtual Vectoid::HasBoundingBoxInterface {
   public:
     friend class Video::OpenGL::SimpleGeometryRenderer;
+    friend class Video::Vulkan::SimpleGeometryRenderer;
   
     SimpleGeometry();
     SimpleGeometry(const SimpleGeometry &other) = delete;

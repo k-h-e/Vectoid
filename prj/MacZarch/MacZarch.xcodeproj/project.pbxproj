@@ -221,6 +221,8 @@
 		2A6C3BA11F0D727900844EAF /* CollisionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CollisionEvent.cpp; sourceTree = "<group>"; };
 		2A6E1AF52382F22700B8FA91 /* MoltenVKGLSLToSPIRVConverter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MoltenVKGLSLToSPIRVConverter.framework; path = ../../3rdparty/MoltenVKGLSLToSPIRVConverter/MoltenVKGLSLToSPIRVConverter.framework; sourceTree = "<group>"; };
 		2A6E1AF72382F33300B8FA91 /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MoltenVK.framework; path = ../../3rdparty/MoltenVK/MoltenVK.framework; sourceTree = "<group>"; };
+		2A7074AC23CCBE1F0099CB36 /* FrameBufferInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameBufferInfo.h; path = ../../../src/include/kxm/Vectoid/Vulkan/FrameBufferInfo.h; sourceTree = "<group>"; };
+		2A7074AD23CCBE2F0099CB36 /* BufferInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BufferInfo.h; path = ../../../src/include/kxm/Vectoid/Vulkan/BufferInfo.h; sourceTree = "<group>"; };
 		2A7A64F92105009F00A92D02 /* MetalVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalVideoView.h; sourceTree = "<group>"; };
 		2A7A64FA2105009F00A92D02 /* MetalVideoView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MetalVideoView.mm; sourceTree = "<group>"; };
 		2A7A64FC210501FF00A92D02 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
@@ -481,9 +483,11 @@
 			isa = PBXGroup;
 			children = (
 				2A428571215D78FA0060B63E /* AgeColoredParticles.h */,
+				2A7074AD23CCBE2F0099CB36 /* BufferInfo.h */,
 				2A42856E215D78FA0060B63E /* Camera.h */,
 				2A42856C215D78FA0060B63E /* Context.h */,
 				2A42856F215D78FA0060B63E /* CoordSys.h */,
+				2A7074AC23CCBE1F0099CB36 /* FrameBufferInfo.h */,
 				2A108542215DC0910098F060 /* Geode.h */,
 				2A428575215D78FA0060B63E /* Glyphs.h */,
 				2A428570215D78FA0060B63E /* PerspectiveProjection.h */,

@@ -34,7 +34,7 @@ class RenderTarget : public virtual Vectoid::RenderTargetInterface {
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Vectoid::Glyphs> &glyphs);
     
   protected:
-    std::shared_ptr<Context> context_;
+    std::shared_ptr<Context>        context_;
     
   private:
     std::shared_ptr<SceneGraphNode> sceneGraphRoot_;

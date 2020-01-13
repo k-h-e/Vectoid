@@ -4,6 +4,7 @@
 #include <kxm/Zarch/Video/SimpleGeometryRenderer.h>
 
 #include <vector>
+#include <kxm/Vectoid/Vulkan/BufferInfo.h>
 
 namespace kxm {
 
@@ -31,13 +32,20 @@ class SimpleGeometryRenderer : public Video::SimpleGeometryRenderer {
   
     SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
+    ~SimpleGeometryRenderer();
     void Render();
+    static void GetVertexInputInfo(VkVertexInputBindingDescription *binding,
+                                   VkVertexInputAttributeDescription *attributes);
     
   private:
     SimpleGeometryRenderer(const std::shared_ptr<Vectoid::Vulkan::Context> &context,
                            const std::shared_ptr<SimpleGeometry> &geometry);
+    void createResources();
+    void freeResources();
     
     std::shared_ptr<Vectoid::Vulkan::Context> context_;
+    kxm::Vectoid::Vulkan::BufferInfo          vertexBuffer_;
+    bool                                      haveResources_;
 };
 
 }    // Namespace Vulkan.
