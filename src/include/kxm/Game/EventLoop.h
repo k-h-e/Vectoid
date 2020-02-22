@@ -5,10 +5,10 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-
 #include <kxm/Core/logging.h>
 #include <kxm/Core/Buffer.h>
 #include <kxm/Game/Event.h>
+#include <kxm/Game/EventReceiverInterface.h>
 #include <kxm/Game/EventLoopHub.h>
 
 namespace kxm {
@@ -24,13 +24,14 @@ namespace Game {
  *  \ingroup Game
  */
 template<class EventClass, class EventHandlerClass>
-class EventLoop {
+class EventLoop : public virtual EventReceiverInterface {
   public:
     EventLoop(std::shared_ptr<EventLoopHub> hub);
     EventLoop(const EventLoop &other)            = delete;
     EventLoop &operator=(const EventLoop &other) = delete;
     EventLoop(EventLoop &&other)                 = delete;
     EventLoop &operator=(EventLoop &&other)      = delete;
+
     //! Registers the specified event.
     void RegisterEvent(std::unique_ptr<EventClass> protoType);
     //! Registers a handler for the specified event, as a weak reference.
@@ -49,12 +50,13 @@ class EventLoop {
      *  \return <c>false</c> in case shutdown has been requested.
      */
     bool RunUntilEventOfType(const Event::EventType *eventType);
+
     //! Posts the specified event for execution on the loop.
     /*!
      *  This is the only method that may be called while any \ref Run() method executes, that is: from event handlers
      *  invoked by the loop.
      */
-    void Post(const EventClass &event);
+    virtual void Post(const Event &event);
         
   private:
     struct EventInfo {
@@ -65,8 +67,7 @@ class EventLoop {
     
     std::vector<EventInfo>          events_;
     std::unordered_map<size_t, int> idToSlotMap_;
-    std::unique_ptr<Core::Buffer>   eventsToDispatch_,
-                                    eventsToSchedule_;
+    std::unique_ptr<Core::Buffer>   eventsToDispatch_;
     kxm::Core::Buffer::Reader       reader_;
     std::shared_ptr<EventLoopHub>   hub_;
     int                             hubClientId_;
@@ -76,7 +77,6 @@ class EventLoop {
 template<class EventClass, class EventHandlerClass>
 EventLoop<EventClass, EventHandlerClass>::EventLoop(std::shared_ptr<EventLoopHub> hub)
     : eventsToDispatch_(new kxm::Core::Buffer()),
-      eventsToSchedule_(new kxm::Core::Buffer()),
       reader_(eventsToDispatch_->GetReader()),
       hub_(hub),
       hubClientId_(hub->AddEventLoop()),
@@ -90,13 +90,16 @@ void EventLoop<EventClass, EventHandlerClass>::RegisterEvent(std::unique_ptr<Eve
     assert(protoType.get() != nullptr);
     size_t id             = protoType->Type().id;
     bool   alreadyPresent = (idToSlotMap_.find(id) != idToSlotMap_.end());
-    if (alreadyPresent)
+    if (alreadyPresent) {
         kxm::Core::Log().Stream() << "hash collision while registering event \""
                                   << protoType->Type().name << "\"" << std::endl;
+    }
     assert(!alreadyPresent);
     int slot = (int)events_.size();
     events_.push_back(EventInfo(std::move(protoType)));
     idToSlotMap_[id] = slot;
+    bool mappingRegistered = hub_->RegisterIdToSlotMapping(id, slot);
+    assert(mappingRegistered);
 }
 
 template<class EventClass, class EventHandlerClass>
@@ -153,14 +156,8 @@ bool EventLoop<EventClass, EventHandlerClass>::RunUntilEventOfType(const kxm::Ga
 }
 
 template<class EventClass, class EventHandlerClass>
-void EventLoop<EventClass, EventHandlerClass>::Post(const EventClass &event) {
-    auto iter = idToSlotMap_.find(event.Type().id);
-    assert(iter != idToSlotMap_.end());
-    int slot = iter->second;
-    eventsToSchedule_->Append(&slot, sizeof(slot));
-    event.Serialize(eventsToSchedule_.get());
-    hub_->Post(eventsToSchedule_);
-    eventsToSchedule_->Clear();
+void EventLoop<EventClass, EventHandlerClass>::Post(const Event &event) {
+    hub_->Post(event);
 }
     
 }    // Namespace Game.

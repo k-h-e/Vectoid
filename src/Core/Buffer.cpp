@@ -21,7 +21,11 @@ void *Buffer::Data() {
     return &buffer_.front();
 }
 
-int Buffer::DataSize() {
+const void *Buffer::Data() const {
+    return &buffer_.front();
+}
+
+int Buffer::DataSize() const {
     return bufferFill_;
 }
 

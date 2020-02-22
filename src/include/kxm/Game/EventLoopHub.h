@@ -4,8 +4,10 @@
 #include <memory>
 #include <queue>
 #include <thread>
+#include <unordered_map>
 #include <condition_variable>
 #include <kxm/Core/Buffer.h>
+#include <kxm/Game/EventReceiverInterface.h>
 
 namespace kxm {
 namespace Game {
@@ -13,8 +15,10 @@ namespace Game {
 //! Hub joining together multiple \ref EventLoop s where each lives in an individual thread.
 /*!
  *  \ingroup Game
+ *
+ *  The class is threadsafe (i.e. all public methods).
  */
-class EventLoopHub {
+class EventLoopHub : public virtual EventReceiverInterface {
   public:
     EventLoopHub();
     EventLoopHub(const EventLoopHub &other)            = delete;
@@ -22,14 +26,17 @@ class EventLoopHub {
     EventLoopHub(EventLoopHub &&other)                 = delete;
     EventLoopHub &operator=(EventLoopHub &&other)      = delete;
     
-    //! <b>[Thread-safe]</b> Allocates the resources for another client \ref EventLoop and returns a unique client id
-    //! for it.
+    //! Allocates the resources for another client \ref EventLoop and returns a unique client id for it.
     int AddEventLoop();
-    
-    //! <b>[Thread-safe]</b> Posts the events represented by the serialized event data in the specified buffer.
-    void Post(const std::unique_ptr<Core::Buffer> &buffer);
-    
-    //! <b>[Thread-safe]</b> Allows a client \ref EventLoop (thread) to retrieve all events currently scheduled for it.
+    //! Registers the specified id-to-slot mapping.
+    /*!
+     *  \return
+     *  <c>false</c> in case of failure. In this case, the operation had no effect.
+     */
+    bool RegisterIdToSlotMapping(size_t id, int slot);
+    //! Posts the events represented by the serialized event data in the specified buffer.
+    void Post(const Core::Buffer &buffer);
+    //! Allows a client \ref EventLoop (thread) to retrieve all events currently scheduled for it.
     /*!
      *  If currently there are no more events schedlued for the calling client \ref EventLoop, the method blocks the
      *  client loop's thread until new events arrive for it (or shutdown is requested).
@@ -41,14 +48,14 @@ class EventLoopHub {
      *  \return <c>false</c> in case shutdown has been requested.
      */
     bool GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *buffer);
-    
-    //! <b>[Thread-safe]</b> Asks all participating client \ref EventLoop s to finish running (but does not wait until
-    //! that has happened).
+    //! Asks all participating client \ref EventLoop s to finish running (but does not wait until that has happened).
     /*!
      *  Participating client \ref EventLoop s can check for whether shutdown is requested by inspecting the return
      *  value of \ref GetEvents().
      */
     void RequestShutdown();
+
+    virtual void Post(const Event &event);
     
   private:
     struct LoopInfo {
@@ -61,11 +68,15 @@ class EventLoopHub {
               waiting(false) {}
     };
     
-    std::mutex                lock_;
+    void DoPost(const Core::Buffer &buffer);
+
+    std::mutex                          lock_;
     struct {
-        std::vector<LoopInfo> loops;
-        bool                  shutdownRequested;
-    }                         shared_;    // Protected by lock_.
+        std::vector<LoopInfo>           loops;
+        std::unordered_map<size_t, int> idToSlotMap;
+        Core::Buffer                    eventsToSchedule;
+        bool                            shutdownRequested;
+    }                                   shared_;    // Protected by lock_.
 };
 
 }    // Namespace Game.

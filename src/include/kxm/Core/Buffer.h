@@ -53,8 +53,11 @@ class Buffer {
 	//! Grants access to the buffer's data. Note that the handed-out memory location gets
 	//! invalidated by subsequent calls to \ref Append().
 	void *Data();
+    //! Grants read access to the buffer's data. Note that the handed-out memory location gets
+    //! invalidated by subsequent calls to \ref Append().
+    const void *Data() const;
 	//! Tells the current data size, in bytes.
-	int DataSize();
+    int DataSize() const;
 	//! Clears the buffer, which allows you to begin a new composition via \ref Append().
 	/*!
 	 *  All readers get invalidated.

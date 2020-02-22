@@ -48,5 +48,4 @@ class Event : public virtual Core::Interface {
 }    // Namespace Game.
 }    // Namespace kxm.
 
-
 #endif    // KXM_GAME_EVENT_H_
