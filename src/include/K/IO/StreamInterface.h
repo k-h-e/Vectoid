@@ -18,7 +18,7 @@ class StreamInterface : public virtual kxm::Core::Interface {
      *
      *  Once the stream has entered error state, it does not automatically leave it again.
      */
-    virtual bool Error() = 0;
+    virtual bool IOError() = 0;
 };
 
 }    // Namespace IO.

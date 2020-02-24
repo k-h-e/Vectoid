@@ -20,13 +20,11 @@ class SocketStream : public virtual StreamIOInterface {
     SocketStream(const SocketStream &other)            = delete;
     SocketStream &operator=(const SocketStream &other) = delete;
     ~SocketStream();
-    //! Closes the socket if it is still open.
-    void CloseSocket();
 
     virtual int Read(void *outBuffer, int bufferSize);
     virtual int Write(const void *data, int dataSize);
     virtual bool EndOfStream();
-    virtual bool Error();
+    virtual bool IOError();
 
     //! Establishes a network stream connection to a host given by name and port, separated by a <c>':'</c>.
     /*!
@@ -48,8 +46,13 @@ class SocketStream : public virtual StreamIOInterface {
     static bool ResolveHostName(const std::string &hostName, uint32_t *outIp4Address);
 
   private:
+    // Expects the lock to be held.
+    void CloseSocket();
+
     std::mutex lock_;
     int        fd_;
+    bool       eof_;
+    bool       error_;
 };
 
 }    // Namespace IO.

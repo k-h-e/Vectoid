@@ -34,11 +34,12 @@ class EventLoopHub : public virtual EventReceiverInterface {
      *  <c>false</c> in case of failure. In this case, the operation had no effect.
      */
     bool RegisterIdToSlotMapping(size_t id, int slot);
-    //! Posts the events represented by the serialized event data in the specified buffer.
-    void Post(const Core::Buffer &buffer);
+    //! Allows a client \ref EventLoop (thread) to post the events represented by the serialized event data in the
+    //! specified buffer.
+    void Post(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);
     //! Allows a client \ref EventLoop (thread) to retrieve all events currently scheduled for it.
     /*!
-     *  If currently there are no more events schedlued for the calling client \ref EventLoop, the method blocks the
+     *  If currently there are no more events scheduled for the calling client \ref EventLoop, the method blocks the
      *  client loop's thread until new events arrive for it (or shutdown is requested).
      *
      *  \param buffer
@@ -68,7 +69,7 @@ class EventLoopHub : public virtual EventReceiverInterface {
               waiting(false) {}
     };
     
-    void DoPost(const Core::Buffer &buffer);
+    void DoPost(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);
 
     std::mutex                          lock_;
     struct {

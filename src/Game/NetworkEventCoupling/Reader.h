@@ -3,6 +3,12 @@
 
 #include <kxm/Game/NetworkEventCoupling.h>
 
+namespace K {
+namespace IO {
+    class SocketStream;
+}
+}
+
 namespace kxm {
 namespace Game {
 
@@ -14,12 +20,16 @@ class EventLoopHub;
  */
 class NetworkEventCoupling::Reader {
   public:
-    Reader(const std::shared_ptr<kxm::Game::EventLoopHub> &hub, std::shared_ptr<SharedState> sharedState);
+    Reader(const std::shared_ptr<K::IO::SocketStream> &stream, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
+           int hubClientId, std::shared_ptr<SharedState> sharedState);
     void Run();
 
   private:
     std::shared_ptr<SharedState>             sharedState_;
+    std::shared_ptr<K::IO::SocketStream>     stream_;
     std::shared_ptr<kxm::Game::EventLoopHub> hub_;
+
+    int hubClientId_;
 };
 
 }    // Namespace Game.

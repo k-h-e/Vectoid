@@ -1,13 +1,8 @@
 #ifndef KXM_GAME_NETWORKEVENTCOUPLING_SHAREDSTATE_H_
 #define KXM_GAME_NETWORKEVENTCOUPLING_SHAREDSTATE_H_
 
+#include <mutex>
 #include <kxm/Game/NetworkEventCoupling.h>
-
-namespace K {
-namespace IO {
-    class SocketStream;
-}
-}
 
 namespace kxm {
 namespace Game {
@@ -20,11 +15,9 @@ namespace Game {
  */
 class NetworkEventCoupling::SharedState {
   public:
-    std::shared_ptr<K::IO::SocketStream> GetStream();
 
   private:
     std::mutex lock_;
-    std::shared_ptr<K::IO::SocketStream> stream_;
 };
 
 }    // Namespace Game.

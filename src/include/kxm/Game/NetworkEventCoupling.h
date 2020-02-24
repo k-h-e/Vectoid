@@ -4,6 +4,12 @@
 #include <memory>
 #include <thread>
 
+namespace K {
+namespace IO {
+    class SocketStream;
+}
+}
+
 namespace kxm {
 namespace Game {
 
@@ -15,7 +21,8 @@ class EventLoopHub;
  */
 class NetworkEventCoupling {
   public:
-    NetworkEventCoupling(const std::shared_ptr<kxm::Game::EventLoopHub> &hub);
+    NetworkEventCoupling(const std::shared_ptr<K::IO::SocketStream> &stream,
+                         const std::shared_ptr<kxm::Game::EventLoopHub> &hub);
     ~NetworkEventCoupling();
 
   private:

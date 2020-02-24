@@ -21,17 +21,21 @@ using kxm::Core::Log;
 namespace K {
 namespace IO {
 
-SocketStream::SocketStream(int fd) {
+SocketStream::SocketStream(int fd)
+        : eof_(false),
+          error_(false) {
     if (fd < 0) {
         fd = -1;
+        error_ = true;
     }
 
     fd_ = fd;
 }
 
 SocketStream::~SocketStream() {
+    unique_lock<mutex> critical(lock_);    // Critical section...
     CloseSocket();
-}
+}    // ... critical section, end.
 
 int SocketStream::Read(void *outBuffer, int bufferSize) {
     int fd;
@@ -43,11 +47,18 @@ int SocketStream::Read(void *outBuffer, int bufferSize) {
         fd = fd_;
     }    // ... critical section, end.
 
-    int num = read(fd_, outBuffer, bufferSize);
-    if (num == -1) {
+    int num = read(fd, outBuffer, bufferSize);
+    if (num == 0) {
+        unique_lock<mutex> critical(lock_);    // Critical section...
         CloseSocket();
+        eof_ = true;
+    }    // ... critical section, end.
+    else if (num == -1) {
+        unique_lock<mutex> critical(lock_);    // Critical section...
+        CloseSocket();
+        error_ = true;
         num = 0;
-    }
+    }    // ... critical section, end.
     return num;
 }
 
@@ -56,35 +67,32 @@ int SocketStream::Write(const void *data, int dataSize) {
     {
         unique_lock<mutex> critical(lock_);    // Critical section...
         if (fd_ == -1) {
+            if (eof_) {
+                error_ = true;
+            }
             return 0;
         }
         fd = fd_;
     }    // ... critical section, end.
 
-    int num = write(fd_, data, dataSize);
+    int num = write(fd, data, dataSize);
     if (num == -1) {
+        unique_lock<mutex> critical(lock_);    // Critical section...
         CloseSocket();
+        error_ = true;
         num = 0;
-    }
+    }    // ... critical section, end.
     return num;
 }
 
 bool SocketStream::EndOfStream() {
-    return false;
-}
-
-bool SocketStream::Error() {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    return (fd_ == -1);
+    return eof_;
 }    // ... critical section, end.
 
-void SocketStream::CloseSocket() {
+bool SocketStream::IOError() {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    if (fd_ != -1) {
-        close(fd_);
-        Log().Stream() << "socket " << fd_ << " closed" << endl;
-        fd_ = -1;
-    }
+    return error_;
 }    // ... critical section, end.
 
 shared_ptr<SocketStream> SocketStream::ConnectToHost(const string &host) {
@@ -117,7 +125,7 @@ shared_ptr<SocketStream> SocketStream::ConnectToHost(uint32_t ip4Address, int po
             return make_shared<SocketStream>(fd);
         }
 
-        close (fd);
+        close(fd);
     }
 
     return nullptr;
@@ -148,6 +156,14 @@ bool SocketStream::ResolveHostName(const string &hostName, uint32_t *outIp4Addre
     }
 
     return false;
+}
+
+void SocketStream::CloseSocket() {
+    if (fd_ != -1) {
+        close(fd_);
+        Log().Stream() << "socket " << fd_ << " closed" << endl;
+        fd_ = -1;
+    }
 }
 
 }    // Namesapce IO.
