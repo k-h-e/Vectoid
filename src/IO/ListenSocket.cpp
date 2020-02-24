@@ -3,6 +3,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <kxm/Core/logging.h>
+#include <K/IO/SocketStream.h>
+
+using std::shared_ptr;
+using std::make_shared;
+using std::endl;
+using kxm::Core::Log;
 
 namespace K {
 namespace IO {
@@ -18,8 +25,12 @@ ListenSocket::ListenSocket(int port) {
         address.sin_port        = htons(static_cast<uint16_t>(port));
         if (!bind(fd_, (struct sockaddr *)&address, sizeof(address))) {
             if (!listen(fd_, 4)) {
+                Log().Stream() << "socket " << fd_ << " listening on port " << port << endl;
                 success = true;
             }
+        }
+        else {
+            Log().Stream() << "failed to bind socket " << fd_ << " to port " << port << ", errno=" << errno << endl;
         }
     }
 
@@ -32,21 +43,23 @@ ListenSocket::~ListenSocket() {
     Close();
 }
 
-int ListenSocket::Accept() {
+shared_ptr<SocketStream> ListenSocket::Accept() {
     if (fd_ != -1) {
         struct sockaddr_in clientAddress;
         socklen_t clientAddressSize = sizeof(clientAddress);
         int connectionFD = accept(fd_, (struct sockaddr *)&clientAddress, &clientAddressSize);
         if (connectionFD != -1) {
-            return connectionFD;
+            Log().Stream() << "socket " << connectionFD << " accepted connection" << endl;
+            return make_shared<SocketStream>(connectionFD);
         }
     }
 
-    return -1;
+    return nullptr;
 }
 
 void ListenSocket::Close() {
     if (fd_ != -1) {
+        Log().Stream() << "closing listen socket " << fd_ << endl;
         close(fd_);
         fd_ = -1;
     }

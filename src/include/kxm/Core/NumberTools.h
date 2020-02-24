@@ -3,45 +3,19 @@
 
 namespace kxm {
 namespace Core {
-namespace NumberTools {
 
-static const float piAsFloat = 3.141592654f;
+class NumberTools {
+  public:
+    static const float piAsFloat;
 
-inline void Clamp(int *numba, int min, int max) {
-    if (*numba < min)
-        *numba = min;
-    else if (*numba > max)
-        *numba = max;
-}
+    static void Clamp(int *numba, int min, int max);
+    static void Clamp(float *numba, float min, float max);
+    static void ClampMin(int *numba, int min);
+    static void ClampMax(int *numba, int max);
+    static void ClampMin(float *numba, float min);
+    static void ClampMax(float *numba, float max);
+};
 
-inline void Clamp(float *numba, float min, float max) {
-    if (*numba < min)
-        *numba = min;
-    else if (*numba > max)
-        *numba = max;
-}
-
-inline void ClampMin(int *numba, int min) {
-    if (*numba < min)
-        *numba = min;
-}
-
-inline void ClampMax(int *numba, int max) {
-    if (*numba > max)
-        *numba = max;
-}
-
-inline void ClampMin(float *numba, float min) {
-    if (*numba < min)
-        *numba = min;
-}
-
-inline void ClampMax(float *numba, float max) {
-    if (*numba > max)
-        *numba = max;
-}
-
-}    // Namespace NumberTools.
 }    // Namespace Core.
 }    // namespace kxm.
 

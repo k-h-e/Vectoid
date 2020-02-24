@@ -6,8 +6,12 @@
 #ifndef K_IO_LISTENSOCKET_H_
 #define K_IO_LISTENSOCKET_H_
 
+#include <memory>
+
 namespace K {
 namespace IO {
+
+class SocketStream;
 
 //! Listen socket.
 /*!
@@ -20,7 +24,12 @@ class ListenSocket {
     ListenSocket &operator=(const ListenSocket &other) = delete;
     ~ListenSocket();
 
-    int Accept();
+    //! Accepts a new connection from the listen socket.
+    /*!
+     *  \return
+     *  <c>null</c> handle in case of failure.
+     */
+    std::shared_ptr<SocketStream> Accept();
 
   private:
     void Close();
