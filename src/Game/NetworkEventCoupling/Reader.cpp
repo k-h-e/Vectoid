@@ -1,4 +1,5 @@
 #include "Reader.h"
+#include "SharedState.h"
 
 #include <kxm/Core/Buffer.h>
 #include <kxm/Core/logging.h>
@@ -45,6 +46,7 @@ void NetworkEventCoupling::Reader::Run() {
             }
         }
     }
+    sharedState_->OnReaderFinished();
 
     Log().Stream() << "reader thread terminating" << endl;
 }

@@ -1,4 +1,5 @@
 #include "Writer.h"
+#include "SharedState.h"
 
 #include <kxm/Core/logging.h>
 #include <kxm/Game/EventLoopHub.h>
@@ -37,6 +38,7 @@ void NetworkEventCoupling::Writer::Run() {
             WriteItem(stream_.get(), buffer->Data(), dataSize);
         }
     }
+    sharedState_->OnWriterFinished();
 
     Log().Stream() << "writer thread terminating" << endl;
 }

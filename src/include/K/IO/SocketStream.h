@@ -21,6 +21,9 @@ class SocketStream : public virtual StreamIOInterface {
     SocketStream &operator=(const SocketStream &other) = delete;
     ~SocketStream();
 
+    //! Closes the stream if it is still open.
+    void Close();
+
     virtual int Read(void *outBuffer, int bufferSize);
     virtual int Write(const void *data, int dataSize);
     virtual bool EndOfStream();

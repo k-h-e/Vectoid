@@ -1,5 +1,6 @@
 #include "Worker.h"
 
+#include "SharedState.h"
 #include <kxm/Game/NetworkEventCoupling.h>
 #include <kxm/Core/logging.h>
 
@@ -24,12 +25,15 @@ NetworkEventCouplingServer::Worker::Worker(int port, const shared_ptr<EventLoopH
 void NetworkEventCouplingServer::Worker::Run() {
     Log().Stream() << "worker thread spawning..." << endl;
 
-    unique_ptr<NetworkEventCoupling> coupling;
     while (true) {
         Log().Stream() << "waiting for client to connect..." << endl;
         shared_ptr<SocketStream> stream = listenSocket_->Accept();
         if (stream) {
-            coupling = unique_ptr<NetworkEventCoupling>(new NetworkEventCoupling(stream, hub_));
+            auto coupling = unique_ptr<NetworkEventCoupling>(new NetworkEventCoupling(stream, hub_));
+            coupling->RegisterCompletionHandler(*sharedState_.get(), 666);
+            Log().Stream() << "waiting for coupling to finish..." << endl;
+            sharedState_->WaitForCouplingFinished();
+            coupling->UnregisterCompletionHandler(*sharedState_.get());
         }
     }
 

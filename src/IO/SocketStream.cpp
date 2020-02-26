@@ -24,6 +24,7 @@ namespace IO {
 SocketStream::SocketStream(int fd)
         : eof_(false),
           error_(false) {
+    Log().Stream() << "fd=" << fd << endl;
     if (fd < 0) {
         fd = -1;
         error_ = true;
@@ -35,6 +36,14 @@ SocketStream::SocketStream(int fd)
 SocketStream::~SocketStream() {
     unique_lock<mutex> critical(lock_);    // Critical section...
     CloseSocket();
+}    // ... critical section, end.
+
+void SocketStream::Close() {
+    unique_lock<mutex> critical(lock_);    // Critical section...
+    CloseSocket();
+    if (!error_) {
+        eof_ = true;
+    }
 }    // ... critical section, end.
 
 int SocketStream::Read(void *outBuffer, int bufferSize) {
@@ -67,9 +76,7 @@ int SocketStream::Write(const void *data, int dataSize) {
     {
         unique_lock<mutex> critical(lock_);    // Critical section...
         if (fd_ == -1) {
-            if (eof_) {
-                error_ = true;
-            }
+            error_ = true;
             return 0;
         }
         fd = fd_;
@@ -160,7 +167,9 @@ bool SocketStream::ResolveHostName(const string &hostName, uint32_t *outIp4Addre
 
 void SocketStream::CloseSocket() {
     if (fd_ != -1) {
-        close(fd_);
+        if (!close(fd_)) {
+            error_ = true;
+        }
         Log().Stream() << "socket " << fd_ << " closed" << endl;
         fd_ = -1;
     }
