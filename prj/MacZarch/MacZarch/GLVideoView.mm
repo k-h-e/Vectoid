@@ -48,14 +48,6 @@ using namespace kxm::Zarch;
     self.needsDisplay = YES;
 }
 
-- (void)prepareOpenGL {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-}
-
 - (void)drawRect: (NSRect)bounds {
     if (_zarch.get()) {
         [self.openGLContext makeCurrentContext];

@@ -16,7 +16,8 @@ namespace kxm {
 namespace Vectoid {
 namespace OpenGL {
 
-RenderTarget::RenderTarget() {
+RenderTarget::RenderTarget()
+        : glInitialized_(false) {
     // Nop.
 }
 
@@ -25,6 +26,11 @@ void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGra
 }
 
 void RenderTarget::RenderFrame() {
+    if (!glInitialized_) {
+        initializeGL();
+        glInitialized_ = true;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (sceneGraphRoot_) {
         sceneGraphRoot_->Render();
@@ -66,6 +72,14 @@ shared_ptr<Vectoid::TestTriangle> RenderTarget::NewTestTriangle() {
 shared_ptr<Vectoid::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Vectoid::Glyphs> &glyphs) {
     return shared_ptr<TextConsole>(new TextConsole(width, height, glyphWidth, glyphHeight, glyphs));
+}
+
+void RenderTarget::initializeGL() {
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
 }
 
 }    // Namespace OpenGL.

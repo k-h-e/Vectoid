@@ -32,7 +32,10 @@ class RenderTarget : public virtual Vectoid::RenderTargetInterface {
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Vectoid::Glyphs> &glyphs);
     
   private:
+    void initializeGL();
+
     std::shared_ptr<SceneGraphNode> sceneGraphRoot_;
+    bool                            glInitialized_;
 };
 
 }    // Namespace OpenGL.
