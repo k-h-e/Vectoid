@@ -16,7 +16,7 @@ namespace kxm {
 namespace Game {
 
 NetworkEventCouplingServer::Worker::Worker(int port, const shared_ptr<EventLoopHub> &hub,
-                                           shared_ptr<SharedState> sharedState)
+                                           const shared_ptr<SharedState> &sharedState)
         : sharedState_(sharedState),
           hub_(hub) {
     listenSocket_ = unique_ptr<ListenSocket>(new ListenSocket(port));

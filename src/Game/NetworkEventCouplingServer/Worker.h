@@ -15,7 +15,8 @@ class EventLoopHub;
  */
 class NetworkEventCouplingServer::Worker {
   public:
-    Worker(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub, std::shared_ptr<SharedState> sharedState);
+    Worker(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
+           const std::shared_ptr<SharedState> &sharedState);
     void Run();
 
   private:

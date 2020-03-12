@@ -19,6 +19,9 @@ NetworkEventCouplingServer::NetworkEventCouplingServer(int port, const shared_pt
 }
 
 NetworkEventCouplingServer::~NetworkEventCouplingServer() {
+
+    // TODO: Ask worker to terminate.
+
     workerThread_->join();
 }
 
