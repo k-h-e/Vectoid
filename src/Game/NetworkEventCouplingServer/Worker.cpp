@@ -29,11 +29,9 @@ void NetworkEventCouplingServer::Worker::Run() {
         Log().Stream() << "waiting for client to connect..." << endl;
         shared_ptr<SocketStream> stream = listenSocket_->Accept();
         if (stream) {
-            auto coupling = unique_ptr<NetworkEventCoupling>(new NetworkEventCoupling(stream, hub_));
-            coupling->RegisterCompletionHandler(*sharedState_.get(), 666);
+            auto coupling = unique_ptr<NetworkEventCoupling>(new NetworkEventCoupling(stream, hub_, sharedState_, 666));
             Log().Stream() << "waiting for coupling to finish..." << endl;
             sharedState_->WaitForCouplingFinished();
-            coupling->UnregisterCompletionHandler(*sharedState_.get());
         }
     }
 

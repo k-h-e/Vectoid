@@ -1,6 +1,7 @@
 #ifndef KXM_GAME_NETWORKEVENTCOUPLING_READER_H_
 #define KXM_GAME_NETWORKEVENTCOUPLING_READER_H_
 
+#include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/NetworkEventCoupling.h>
 
 namespace K {
@@ -18,11 +19,11 @@ class EventLoopHub;
 /*!
  *  \ingroup Game
  */
-class NetworkEventCoupling::Reader {
+class NetworkEventCoupling::Reader : public virtual kxm::Core::ActionInterface {
   public:
     Reader(const std::shared_ptr<K::IO::SocketStream> &stream, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
            int hubClientId, std::shared_ptr<SharedState> sharedState);
-    void Run();
+    void ExecuteAction();
 
   private:
     std::shared_ptr<SharedState>             sharedState_;

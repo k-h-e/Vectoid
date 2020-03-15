@@ -10,17 +10,20 @@ namespace K {
 namespace Core {
 
 ThreadPool::SharedRunnerState::SharedRunnerState()
-        : shutDownRequested_(false) {
+        : completionId_(0),
+          shutDownRequested_(false) {
     // Nop.
 }
 
-bool ThreadPool::SharedRunnerState::WaitForWork(shared_ptr<ActionInterface> *outAction,
-                                                shared_ptr<CompletionHandlerInterface> *outCompletionHandler) {
+bool ThreadPool::SharedRunnerState::WaitForWork(
+        shared_ptr<ActionInterface> *outAction, shared_ptr<CompletionHandlerInterface> *outCompletionHandler,
+        int *outCompletionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     while (!shutDownRequested_) {
         if (action_) {
             *outAction            = action_;
             *outCompletionHandler = completionHandler_;
+            *outCompletionId      = completionId_;
             action_.reset();
             completionHandler_.reset();
             return true;
@@ -32,11 +35,13 @@ bool ThreadPool::SharedRunnerState::WaitForWork(shared_ptr<ActionInterface> *out
     return false;
 }    // ... critical section, end.
 
-void ThreadPool::SharedRunnerState::Execute(const shared_ptr<ActionInterface> &action,
-                                            const shared_ptr<CompletionHandlerInterface> &completionHandler) {
+void ThreadPool::SharedRunnerState::Execute(
+        const shared_ptr<ActionInterface> &action, const shared_ptr<CompletionHandlerInterface> &completionHandler,
+        int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     action_            = action;
     completionHandler_ = completionHandler;
+    completionId_      = completionId;
     stateChanged_.notify_all();
 }    // ... critical section, end.
 

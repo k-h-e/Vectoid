@@ -3,6 +3,7 @@
 #include <K/Core/CompletionHandlerInterface.h>
 #include <kxm/Core/logging.h>
 
+using std::shared_ptr;
 using std::unique_lock;
 using std::mutex;
 using std::endl;
@@ -12,51 +13,40 @@ using kxm::Core::Log;
 namespace kxm {
 namespace Game {
 
-NetworkEventCoupling::SharedState::SharedState()
-        : readerFinished_(false),
+NetworkEventCoupling::SharedState::SharedState(const shared_ptr<CompletionHandlerInterface> &completionHandler,
+                                               int completionId)
+        : completionHandler_(completionHandler),
+          completionId_(completionId),
+          readerFinished_(false),
           writerFinished_(false) {
     // Nop.
 }
 
-void NetworkEventCoupling::SharedState::RegisterCompletionHandler(CompletionHandlerInterface &handler,
-                                                                  int operationId) {
+void NetworkEventCoupling::SharedState::WaitForThreadsFinished() {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    completionHandlers_[&handler] = operationId;
-    Log().Stream() << "added completion handler, num=" << completionHandlers_.size() << endl;
+    while (!readerFinished_ || !writerFinished_) {
+        stateChanged_.wait(critical);
+    }
 }    // ... critical section, end.
 
-void NetworkEventCoupling::SharedState::UnregisterCompletionHandler(CompletionHandlerInterface &handler) {
+void NetworkEventCoupling::SharedState::OnCompletion(int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    completionHandlers_.erase(&handler);
-    Log().Stream() << "removed completion handler, num=" << completionHandlers_.size() << endl;
-}    // ... critical section, end.
-
-void NetworkEventCoupling::SharedState::OnReaderFinished() {
-    unique_lock<mutex> critical(lock_);    // Critical section...
-    if (!readerFinished_) {
+    if (completionId == ReaderCompletionId) {
         readerFinished_ = true;
-        ProcessCompletionHandlers();
     }
-}    // ... critical section, end.
-
-void NetworkEventCoupling::SharedState::OnWriterFinished() {
-    unique_lock<mutex> critical(lock_);    // Critical section...
-    if (!writerFinished_) {
+    else if (completionId == WriterCompletionId) {
         writerFinished_ = true;
-        ProcessCompletionHandlers();
     }
-}    // ... critical section, end.
 
-// Expects lock to be held.
-void NetworkEventCoupling::SharedState::ProcessCompletionHandlers() {
     if (readerFinished_ && writerFinished_) {
-        for (auto &pair : completionHandlers_) {
-            Log().Stream() << "notifying..." << endl;
-            pair.first->OnCompletion(pair.second);
+        if (completionHandler_) {
+            completionHandler_->OnCompletion(completionId_);
+            completionHandler_.reset();
         }
-        Log().Stream() << "notified " << completionHandlers_.size() << " completion handlers" << endl;
     }
-}
+
+    stateChanged_.notify_all();
+}    // ... critical section, end.
 
 }    // Namespace Game.
 }    // Namespace kxm.

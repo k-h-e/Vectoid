@@ -13,7 +13,7 @@ namespace Core {
 class CompletionHandlerInterface : public virtual kxm::Core::Interface {
   public:
     //! Called upon completion of the specified operation.
-    virtual void OnCompletion(int operationId) = 0;
+    virtual void OnCompletion(int completionId) = 0;
 };
 
 }    // Namespace Core.

@@ -1,9 +1,9 @@
 #ifndef KXM_GAME_NETWORKEVENTCOUPLING_SHAREDSTATE_H_
 #define KXM_GAME_NETWORKEVENTCOUPLING_SHAREDSTATE_H_
 
-#include <unordered_map>
 #include <mutex>
-#include <K/Core/CompletionNotifierInterface.h>
+#include <condition_variable>
+#include <K/Core/CompletionHandlerInterface.h>
 #include <kxm/Game/NetworkEventCoupling.h>
 
 namespace kxm {
@@ -15,21 +15,20 @@ namespace Game {
  *
  *  The class is thread-safe (i.e. all public methods).
  */
-class NetworkEventCoupling::SharedState : public K::Core::CompletionNotifierInterface {
+class NetworkEventCoupling::SharedState : public virtual K::Core::CompletionHandlerInterface {
   public:
-    SharedState();
-    virtual void RegisterCompletionHandler(K::Core::CompletionHandlerInterface &handler, int operationId);
-    virtual void UnregisterCompletionHandler(K::Core::CompletionHandlerInterface &handler);
-    void OnReaderFinished();
-    void OnWriterFinished();
+    SharedState(const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler,
+                int completionId);
+    void WaitForThreadsFinished();
+    void OnCompletion(int completionId);
 
   private:
-    void ProcessCompletionHandlers();
-
-    std::mutex                                                     lock_;
-    std::unordered_map<K::Core::CompletionHandlerInterface *, int> completionHandlers_;
-    bool                                                           readerFinished_;
-    bool                                                           writerFinished_;
+    std::mutex                                           lock_;
+    std::condition_variable                              stateChanged_;
+    std::shared_ptr<K::Core::CompletionHandlerInterface> completionHandler_;
+    int                                                  completionId_;
+    bool                                                 readerFinished_;
+    bool                                                 writerFinished_;
 };
 
 }    // Namespace Game.

@@ -21,9 +21,9 @@ class ThreadPool::SharedRunnerState {
   public:
     SharedRunnerState();
     bool WaitForWork(std::shared_ptr<kxm::Core::ActionInterface> *outAction,
-                     std::shared_ptr<K::Core::CompletionHandlerInterface> *outCompletionHandler);
+                     std::shared_ptr<K::Core::CompletionHandlerInterface> *outCompletionHandler, int *outCompletionId);
     void Execute(const std::shared_ptr<kxm::Core::ActionInterface> &action,
-                 const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler);
+                 const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler, int completionId);
     void RequestShutDown();
 
   private:
@@ -31,6 +31,7 @@ class ThreadPool::SharedRunnerState {
     std::condition_variable                              stateChanged_;
     std::shared_ptr<kxm::Core::ActionInterface>          action_;               // Present <=> exec request.
     std::shared_ptr<K::Core::CompletionHandlerInterface> completionHandler_;    // Valid <=> exec request.
+    int                                                  completionId_;         // Valid <=> exec request.
     bool                                                 shutDownRequested_;
 };
 

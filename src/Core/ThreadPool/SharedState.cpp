@@ -18,7 +18,7 @@ namespace K {
 namespace Core {
 
 void ThreadPool::SharedState::Run(const shared_ptr<ActionInterface> &action,
-                                  const shared_ptr<CompletionHandlerInterface> &completionHandler) {
+                                  const shared_ptr<CompletionHandlerInterface> &completionHandler, int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     int slot;
     if (idleThreads_.size()) {
@@ -38,15 +38,15 @@ void ThreadPool::SharedState::Run(const shared_ptr<ActionInterface> &action,
 
     Log().Stream() << "dispatching action to thread " << slot << endl;
     ThreadInfo &info = threads_[slot];
-    info.sharedRunnerState->Execute(action, completionHandler);
+    info.sharedRunnerState->Execute(action, completionHandler, completionId);
     Log().Stream() << idleThreads_.size() << " threads now idle" << endl;
 }    // ... critical section, end.
 
-void ThreadPool::SharedState::OnCompletion(int operationId) {
+void ThreadPool::SharedState::OnCompletion(int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    idleThreads_.insert(operationId);
+    idleThreads_.insert(completionId);
     stateChanged_.notify_all();
-    Log().Stream() << "thread " << operationId << " idle" << endl;
+    Log().Stream() << "thread " << completionId << " idle" << endl;
     Log().Stream() << idleThreads_.size() << " threads now idle" << endl;
 }    // ... critical section, end.
 

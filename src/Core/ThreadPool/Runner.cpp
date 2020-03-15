@@ -27,15 +27,12 @@ void ThreadPool::Runner::Run() {
 
     shared_ptr<ActionInterface>            action;
     shared_ptr<CompletionHandlerInterface> completionHandler;
-    while (sharedState_->WaitForWork(&action, &completionHandler)) {
-        Log(this).Stream() << "runner calling action..." << endl;
-        if (action) {    // TODO: remove!
-            action->ExecuteAction();
-        }
+    int                                    completionId;
+    while (sharedState_->WaitForWork(&action, &completionHandler, &completionId)) {
+        action->ExecuteAction();
         action.reset();
         if (completionHandler) {
-            Log(this).Stream() << "runner calling completion handler..." << endl;
-            completionHandler->OnCompletion(0);
+            completionHandler->OnCompletion(completionId);
             completionHandler.reset();
         }
         completionHandler_.OnCompletion(thread_);

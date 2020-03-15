@@ -29,8 +29,8 @@ class CompletionHandlerInterface;
 class ThreadPool::SharedState : public virtual K::Core::CompletionHandlerInterface {
   public:
     void Run(const std::shared_ptr<kxm::Core::ActionInterface> &action,
-             const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler);
-    void OnCompletion(int operationId);
+             const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler, int completionId);
+    void OnCompletion(int completionId);
     void ShutDown();
 
   private:

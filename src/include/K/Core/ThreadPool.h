@@ -30,7 +30,7 @@ class ThreadPool {
      *  If given, the completion handler will get called on an arbitrary pool thread when the action has completed.
      */
     void Run(const std::shared_ptr<kxm::Core::ActionInterface> &action,
-             const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler);
+             const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler, int completionId);
 
   private:
     class SharedState;

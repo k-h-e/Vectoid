@@ -25,7 +25,7 @@ NetworkEventCoupling::Reader::Reader(const shared_ptr<SocketStream> &stream, con
     // Nop.
 }
 
-void NetworkEventCoupling::Reader::Run() {
+void NetworkEventCoupling::Reader::ExecuteAction() {
     Log().Stream() << "reader thread spawning..." << endl;
 
     Buffer buffer;
@@ -46,7 +46,6 @@ void NetworkEventCoupling::Reader::Run() {
             }
         }
     }
-    sharedState_->OnReaderFinished();
 
     Log().Stream() << "reader thread terminating" << endl;
 }

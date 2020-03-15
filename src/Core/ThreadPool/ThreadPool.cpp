@@ -22,8 +22,8 @@ ThreadPool::~ThreadPool() {
 }
 
 void ThreadPool::Run(const shared_ptr<ActionInterface> &action,
-                     const shared_ptr<CompletionHandlerInterface> &completionHandler) {
-    sharedState_->Run(action, completionHandler);
+                     const shared_ptr<CompletionHandlerInterface> &completionHandler, int completionId) {
+    sharedState_->Run(action, completionHandler, completionId);
 }
 
 }    // Namespace Core.

@@ -15,11 +15,11 @@ NetworkEventCouplingServer::SharedState::SharedState()
     // Nop.
 }
 
-void NetworkEventCouplingServer::SharedState::OnCompletion(int operationId) {
+void NetworkEventCouplingServer::SharedState::OnCompletion(int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     couplingFinished_ = true;
     stateChanged_.notify_all();
-    Log().Stream() << "coupling signalled completion, operation_id=" << operationId << endl;
+    Log().Stream() << "coupling signalled completion, operation_id=" << completionId << endl;
 }    // ... critical section, end.
 
 void NetworkEventCouplingServer::SharedState::WaitForCouplingFinished() {

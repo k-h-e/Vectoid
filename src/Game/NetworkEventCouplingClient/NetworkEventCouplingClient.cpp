@@ -7,7 +7,6 @@
 
 using std::shared_ptr;
 using std::make_shared;
-using std::thread;
 using std::endl;
 using K::Core::ThreadPool;
 using kxm::Core::Log;
@@ -19,21 +18,23 @@ NetworkEventCouplingClient::NetworkEventCouplingClient(const shared_ptr<EventLoo
                                                        const shared_ptr<ThreadPool> &threadPool)
         : threadPool_(threadPool) {
     sharedState_ = make_shared<SharedState>();
-    worker_      = make_shared<Worker>(hub, sharedState_);
+    worker_      = make_shared<Worker>(hub, threadPool_, sharedState_);
 }
 
 NetworkEventCouplingClient::~NetworkEventCouplingClient() {
-    sharedState_->WaitForConnection();
+    Disconnect();
 }
 
 void NetworkEventCouplingClient::Connect(uint32_t ip4Address, int port) {
-    sharedState_->WaitForConnection();
+    sharedState_->WaitForWorker();
     sharedState_->PrepareToConnect();
-    threadPool_->Run(worker_, sharedState_);
+    worker_->SetHost(ip4Address, port);
+    threadPool_->Run(worker_, sharedState_, 0);
 }
 
 void NetworkEventCouplingClient::Disconnect() {
-
+    sharedState_->WaitForWorker();
+    sharedState_->Disconnect();
 }
 
 }    // Namespace Game.

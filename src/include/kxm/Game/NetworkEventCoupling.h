@@ -2,10 +2,12 @@
 #define KXM_GAME_NETWORKEVENTCOUPLING_H_
 
 #include <memory>
-#include <thread>
-#include <K/Core/CompletionNotifierInterface.h>
 
 namespace K {
+namespace Core {
+    class CompletionHandlerInterface;
+    class ThreadPool;
+}
 namespace IO {
     class SocketStream;
 }
@@ -20,13 +22,23 @@ class EventLoopHub;
 /*!
  *  \ingroup Game
  */
-class NetworkEventCoupling : public virtual K::Core::CompletionNotifierInterface {
+class NetworkEventCoupling {
   public:
+    static const int ReaderCompletionId = 0;
+    static const int WriterCompletionId = 1;
+
+    //! Well, constructor.
+    /*!
+     *  \param completionHandler
+     *  Optional. If given, it will be called with the completion id as parameter when the network event coupling has
+     *  shut down.
+     */
     NetworkEventCoupling(const std::shared_ptr<K::IO::SocketStream> &stream,
-                         const std::shared_ptr<kxm::Game::EventLoopHub> &hub);
+                         const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
+                         const std::shared_ptr<K::Core::CompletionHandlerInterface> &completionHandler,
+                         int completionId,
+                         const std::shared_ptr<K::Core::ThreadPool> &threadPool);
     ~NetworkEventCoupling();
-    virtual void RegisterCompletionHandler(K::Core::CompletionHandlerInterface &handler, int operationId);
-    virtual void UnregisterCompletionHandler(K::Core::CompletionHandlerInterface &handler);
 
   private:
     class SharedState;
@@ -37,9 +49,6 @@ class NetworkEventCoupling : public virtual K::Core::CompletionNotifierInterface
     std::shared_ptr<K::IO::SocketStream> stream_;
     std::shared_ptr<Reader>              reader_;
     std::shared_ptr<Writer>              writer_;
-
-    std::shared_ptr<std::thread> readerThread_;
-    std::shared_ptr<std::thread> writerThread_;
 };
 
 }    // Namespace Game.

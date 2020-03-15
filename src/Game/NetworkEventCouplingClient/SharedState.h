@@ -21,13 +21,15 @@ class NetworkEventCouplingClient::SharedState : public virtual K::Core::Completi
   public:
     SharedState();
     void PrepareToConnect();
-    void WaitForConnection();
-    void OnCompletion(int operationId);
+    void WaitForWorker();
+    void Disconnect();
+    void OnCouplingCreated(const std::shared_ptr<NetworkEventCoupling> &coupling);
+    void OnCompletion(int completionId);
 
   private:
     std::mutex                            lock_;
     std::condition_variable               stateChanged_;
-    std::unique_ptr<NetworkEventCoupling> coupling_;
+    std::shared_ptr<NetworkEventCoupling> coupling_;
     bool                                  connecting_;
 };
 

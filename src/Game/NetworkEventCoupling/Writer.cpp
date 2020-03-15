@@ -26,7 +26,7 @@ NetworkEventCoupling::Writer::Writer(const shared_ptr<SocketStream> &stream, con
     // Nop.
 }
 
-void NetworkEventCoupling::Writer::Run() {
+void NetworkEventCoupling::Writer::ExecuteAction() {
     Log().Stream() << "writer thread spawning..." << endl;
 
     unique_ptr<Buffer> buffer(new Buffer());
@@ -38,7 +38,6 @@ void NetworkEventCoupling::Writer::Run() {
             WriteItem(stream_.get(), buffer->Data(), dataSize);
         }
     }
-    sharedState_->OnWriterFinished();
 
     Log().Stream() << "writer thread terminating" << endl;
 }
