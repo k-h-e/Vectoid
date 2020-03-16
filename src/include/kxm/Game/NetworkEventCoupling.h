@@ -46,10 +46,14 @@ class NetworkEventCoupling : public virtual kxm::Core::Interface {
     class Reader;
     class Writer;
 
-    std::shared_ptr<SharedState>         sharedState_;
-    std::shared_ptr<K::IO::SocketStream> stream_;
-    std::shared_ptr<Reader>              reader_;
-    std::shared_ptr<Writer>              writer_;
+    std::shared_ptr<SharedState>             sharedState_;
+
+    std::shared_ptr<K::IO::SocketStream>     stream_;
+    std::shared_ptr<kxm::Game::EventLoopHub> hub_;
+
+    std::shared_ptr<Reader>                  reader_;
+    std::shared_ptr<Writer>                  writer_;
+    int                                      hubClientId_;
 };
 
 }    // Namespace Game.

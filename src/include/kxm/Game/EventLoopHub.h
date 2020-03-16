@@ -49,15 +49,21 @@ class EventLoopHub : public virtual EventReceiverInterface {
      *  Some buffer no longer needed by the client \ref EventLoop. It will be swapped with another buffer containing all
      *  event data the hub currently has for the calling client \ref EventLoop.
      *
-     *  \return <c>false</c> in case shutdown has been requested.
+     *  \return <c>false</c> in case shutdown has been requested. The returned buffer's content will then be undefined.
      */
     bool GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *buffer);
     //! Asks all participating client \ref EventLoop s to finish running (but does not wait until that has happened).
     /*!
-     *  Participating client \ref EventLoop s can check for whether shutdown is requested by inspecting the return
-     *  value of \ref GetEvents().
+     *  Client \ref EventLoop s can check for whether shutdown is requested for them by inspecting the return value of
+     *  \ref GetEvents().
      */
-    void RequestShutdown();
+    void RequestShutDown();
+    //! Asks the specified client \ref EventLoop to finish running (but does not wait until that has happened).
+    /*!
+     *  Client \ref EventLoop s can check for whether shutdown is requested for them by inspecting the return value of
+     *  \ref GetEvents().
+     */
+    void RequestShutDown(int clientLoopId);
 
     virtual void Post(const Event &event);
     
@@ -66,22 +72,25 @@ class EventLoopHub : public virtual EventReceiverInterface {
         std::unique_ptr<Core::Buffer>            buffer;
         std::unique_ptr<std::condition_variable> stateChanged;
         bool                                     waiting;
+        bool                                     shutDownRequested;
         bool                                     inUse;
         LoopInfo()
             : buffer(new Core::Buffer()),
               stateChanged(new std::condition_variable()),
               waiting(false),
+              shutDownRequested(false),
               inUse(false) {}
     };
     
     void DoPost(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);
+    LoopInfo *GetLoopInfo(int clientLoopId);
 
     std::mutex                      lock_;
     std::vector<LoopInfo>           loops_;
     std::stack<int>                 unusedLoopSlots_;
     std::unordered_map<size_t, int> eventIdToSlotMap_;
     Core::Buffer                    eventsToSchedule_;
-    bool                            shutdownRequested_;
+    bool                            shutDownRequested_;
 };
 
 }    // Namespace Game.

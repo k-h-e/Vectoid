@@ -22,12 +22,14 @@ NetworkEventCoupling::NetworkEventCoupling(
         const shared_ptr<SocketStream> &stream, const shared_ptr<EventLoopHub> &hub,
         const shared_ptr<CompletionHandlerInterface> &completionHandler, int completionId,
         const std::shared_ptr<K::Core::ThreadPool> &threadPool) {
-    int hubClientId = hub->RegisterEventLoop();
-
     sharedState_ = make_shared<SharedState>(completionHandler, completionId);
+
     stream_      = stream;
-    reader_      = make_shared<Reader>(stream, hub, hubClientId, sharedState_);
-    writer_      = make_shared<Writer>(stream, hub, hubClientId, sharedState_);
+    hub_         = hub;
+
+    hubClientId_ = hub_->RegisterEventLoop();
+    reader_      = make_shared<Reader>(stream_, hub_, hubClientId_, sharedState_);
+    writer_      = make_shared<Writer>(stream_, hub_, hubClientId_, sharedState_);
 
     threadPool->Run(reader_, sharedState_, readerCompletionId);
     threadPool->Run(writer_, sharedState_, writerCompletionId);
@@ -38,7 +40,9 @@ NetworkEventCoupling::NetworkEventCoupling(
 NetworkEventCoupling::~NetworkEventCoupling() {
     Log::Print(Log::Level::Debug, this, []{ return "shutting down..."; });
     stream_->ShutDown();
+    hub_->RequestShutDown(hubClientId_);
     sharedState_->WaitForThreadsFinished();
+    hub_->UnregisterEventLoop(hubClientId_);
     Log::Print(Log::Level::Debug, this, []{ return "uninstalled"; });
 }
 

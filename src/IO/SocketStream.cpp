@@ -198,7 +198,7 @@ bool SocketStream::ResolveHostName(const string &hostName, uint32_t *outIp4Addre
 
 string SocketStream::Ip4ToString(uint32_t ip4Address) {
     uint8_t *ip = reinterpret_cast<uint8_t *>(&ip4Address);
-    return to_string(ip[0]) + "." + to_string(ip[1]) + "." + to_string(ip[2]) + "." + to_string(ip[3]);
+    return to_string(ip[3]) + "." + to_string(ip[2]) + "." + to_string(ip[1]) + "." + to_string(ip[0]);
 }
 
 // Expects the lock to be held.

@@ -15,7 +15,7 @@ namespace kxm {
 namespace Game {
 
 EventLoopHub::EventLoopHub()
-        : shutdownRequested_(false) {
+        : shutDownRequested_(false) {
     // Nop.
 }
 
@@ -30,16 +30,19 @@ int EventLoopHub::RegisterEventLoop() {
         id = unusedLoopSlots_.top();
         unusedLoopSlots_.pop();
     }
-    loops_[id].inUse = true;
+
+    LoopInfo &loopInfo = loops_[id];
+    loopInfo.inUse             = true;
+    loopInfo.shutDownRequested = false;
     Log::Print(Log::Level::Debug, this, [=]{ return "registered event loop, id=" + to_string(id); });
     return id;
 }    // ......................................................................................... critical section, end.
 
 void EventLoopHub::UnregisterEventLoop(int clientLoopId) {
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
-    LoopInfo &info = loops_[clientLoopId];
-    if (info.inUse) {
-        info.inUse = false;
+    LoopInfo *info = GetLoopInfo(clientLoopId);
+    if (info) {
+        info->inUse = false;
         unusedLoopSlots_.push(clientLoopId);
         Log::Print(Log::Level::Debug, this, [=]{ return "deregistered event loop " + to_string(clientLoopId); });
     }
@@ -69,30 +72,39 @@ void EventLoopHub::Post(int clientLoopId, const Core::Buffer &buffer, bool onlyP
 bool EventLoopHub::GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *buffer) {
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     while (true) {
-        LoopInfo &info = loops_[clientLoopId];
-        if (shutdownRequested_) {
+        LoopInfo *info = GetLoopInfo(clientLoopId);
+        if (!info || info->shutDownRequested || shutDownRequested_) {
             return false;
         }
-        else if (!info.buffer->DataSize()) {
+        else if (info->buffer->DataSize()) {
             (*buffer)->Clear();
-            info.buffer.swap(*buffer);
+            info->buffer.swap(*buffer);
             return true;
         }
         else {
-            info.waiting = true;
-            info.stateChanged->wait(critical);
-            info.waiting = false;
+            info->waiting = true;
+            info->stateChanged->wait(critical);
+            info->waiting = false;
         }
     }
 }    // ......................................................................................... critical section, end.
 
-void EventLoopHub::RequestShutdown() {
+void EventLoopHub::RequestShutDown() {
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
-    shutdownRequested_ = true;
+    shutDownRequested_ = true;
     for (auto &loopInfo : loops_) {
         if (loopInfo.inUse) {
             loopInfo.stateChanged->notify_all();
         }
+    }
+}    // ......................................................................................... critical section, end.
+
+void EventLoopHub::RequestShutDown(int clientLoopId) {
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
+    LoopInfo *loopInfo = GetLoopInfo(clientLoopId);
+    if (loopInfo) {
+        loopInfo->shutDownRequested = true;
+        loopInfo->stateChanged->notify_all();
     }
 }    // ......................................................................................... critical section, end.
  
@@ -125,6 +137,18 @@ void EventLoopHub::DoPost(int clientLoopId, const Core::Buffer &buffer, bool onl
             loopInfo.stateChanged->notify_all();
         }
     }
+}
+
+// Expects lock to be held.
+EventLoopHub::LoopInfo *EventLoopHub::GetLoopInfo(int clientLoopId) {
+    if ((clientLoopId >= 0) && (clientLoopId < static_cast<int>(loops_.size()))) {
+        LoopInfo &info = loops_[clientLoopId];
+        if (info.inUse) {
+            return &info;
+        }
+    }
+
+    return nullptr;
 }
 
 }    // Namespace Game.
