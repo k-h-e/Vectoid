@@ -5,6 +5,7 @@
 #include <queue>
 #include <thread>
 #include <unordered_map>
+#include <stack>
 #include <condition_variable>
 #include <kxm/Core/Buffer.h>
 #include <kxm/Game/EventReceiverInterface.h>
@@ -27,13 +28,15 @@ class EventLoopHub : public virtual EventReceiverInterface {
     EventLoopHub &operator=(EventLoopHub &&other)      = delete;
     
     //! Allocates the resources for another client \ref EventLoop and returns a unique client id for it.
-    int AddEventLoop();
-    //! Registers the specified id-to-slot mapping.
+    int RegisterEventLoop();
+    //! Unregisters the specified client loop (if such is registered).
+    void UnregisterEventLoop(int clientLoopId);
+    //! Registers the specified event id-to-slot mapping.
     /*!
      *  \return
      *  <c>false</c> in case of failure. In this case, the operation had no effect.
      */
-    bool RegisterIdToSlotMapping(size_t id, int slot);
+    bool RegisterEventIdToSlotMapping(size_t id, int slot);
     //! Allows a client \ref EventLoop (thread) to post the events represented by the serialized event data in the
     //! specified buffer.
     void Post(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);
@@ -63,21 +66,22 @@ class EventLoopHub : public virtual EventReceiverInterface {
         std::unique_ptr<Core::Buffer>            buffer;
         std::unique_ptr<std::condition_variable> stateChanged;
         bool                                     waiting;
+        bool                                     inUse;
         LoopInfo()
             : buffer(new Core::Buffer()),
               stateChanged(new std::condition_variable()),
-              waiting(false) {}
+              waiting(false),
+              inUse(false) {}
     };
     
     void DoPost(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);
 
-    std::mutex                          lock_;
-    struct {
-        std::vector<LoopInfo>           loops;
-        std::unordered_map<size_t, int> idToSlotMap;
-        Core::Buffer                    eventsToSchedule;
-        bool                            shutdownRequested;
-    }                                   shared_;    // Protected by lock_.
+    std::mutex                      lock_;
+    std::vector<LoopInfo>           loops_;
+    std::stack<int>                 unusedLoopSlots_;
+    std::unordered_map<size_t, int> eventIdToSlotMap_;
+    Core::Buffer                    eventsToSchedule_;
+    bool                            shutdownRequested_;
 };
 
 }    // Namespace Game.

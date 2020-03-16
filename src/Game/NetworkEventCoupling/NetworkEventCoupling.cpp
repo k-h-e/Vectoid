@@ -22,7 +22,7 @@ NetworkEventCoupling::NetworkEventCoupling(
         const shared_ptr<SocketStream> &stream, const shared_ptr<EventLoopHub> &hub,
         const shared_ptr<CompletionHandlerInterface> &completionHandler, int completionId,
         const std::shared_ptr<K::Core::ThreadPool> &threadPool) {
-    int hubClientId = hub->AddEventLoop();
+    int hubClientId = hub->RegisterEventLoop();
 
     sharedState_ = make_shared<SharedState>(completionHandler, completionId);
     stream_      = stream;

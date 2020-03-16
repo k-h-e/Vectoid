@@ -79,7 +79,7 @@ EventLoop<EventClass, EventHandlerClass>::EventLoop(std::shared_ptr<EventLoopHub
     : eventsToDispatch_(new kxm::Core::Buffer()),
       reader_(eventsToDispatch_->GetReader()),
       hub_(hub),
-      hubClientId_(hub->AddEventLoop()),
+      hubClientId_(hub->RegisterEventLoop()),
       running_(false) {
     // Nop.
 }
@@ -98,7 +98,7 @@ void EventLoop<EventClass, EventHandlerClass>::RegisterEvent(std::unique_ptr<Eve
     int slot = (int)events_.size();
     events_.push_back(EventInfo(std::move(protoType)));
     idToSlotMap_[id] = slot;
-    bool mappingRegistered = hub_->RegisterIdToSlotMapping(id, slot);
+    bool mappingRegistered = hub_->RegisterEventIdToSlotMapping(id, slot);
     assert(mappingRegistered);
 }
 
