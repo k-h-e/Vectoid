@@ -16,13 +16,16 @@ namespace IO {
  */
 class SocketStream : public virtual StreamIOInterface {
   public:
+    //! The socket stream takes ownership over the UNIX file descriptor.
     SocketStream(int fd);
-    SocketStream(const SocketStream &other)            = delete;
-    SocketStream &operator=(const SocketStream &other) = delete;
+    SocketStream(const SocketStream &other)             = delete;
+    SocketStream &operator=(const SocketStream &other)  = delete;
+    SocketStream(const SocketStream &&other)            = delete;
+    SocketStream &operator=(const SocketStream &&other) = delete;
     ~SocketStream();
 
-    //! Closes the stream if it is still open.
-    void Close();
+    //! Shuts down the underlying socket if it is still up.
+    void ShutDown();
 
     virtual int Read(void *outBuffer, int bufferSize);
     virtual int Write(const void *data, int dataSize);
@@ -51,11 +54,11 @@ class SocketStream : public virtual StreamIOInterface {
     static std::string Ip4ToString(uint32_t ip4Address);
 
   private:
-    // Expects the lock to be held.
-    void CloseSocket();
+    void ShutDownSocket();
 
     std::mutex lock_;
     int        fd_;
+    bool       socketDown_;
     bool       eof_;
     bool       error_;
 };

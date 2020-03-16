@@ -28,8 +28,8 @@ class NetworkEventCoupling : public virtual kxm::Core::Interface {
     //! Well, constructor.
     /*!
      *  \param completionHandler
-     *  Optional. If given, it will be called with the completion id as parameter when the network event coupling has
-     *  shut down.
+     *  Optional. If given, it will be called on an arbitrary thread and with the completion id as parameter when the
+     *  network event coupling has shut down.
      */
     NetworkEventCoupling(const std::shared_ptr<K::IO::SocketStream> &stream,
                          const std::shared_ptr<kxm::Game::EventLoopHub> &hub,

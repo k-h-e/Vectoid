@@ -37,7 +37,7 @@ NetworkEventCoupling::NetworkEventCoupling(
 
 NetworkEventCoupling::~NetworkEventCoupling() {
     Log::Print(Log::Level::Debug, this, []{ return "shutting down..."; });
-    stream_->Close();
+    stream_->ShutDown();
     sharedState_->WaitForThreadsFinished();
     Log::Print(Log::Level::Debug, this, []{ return "uninstalled"; });
 }
