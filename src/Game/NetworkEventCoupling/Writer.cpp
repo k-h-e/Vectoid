@@ -1,7 +1,7 @@
 #include "Writer.h"
 #include "SharedState.h"
 
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include <kxm/Game/EventLoopHub.h>
 #include <K/IO/SocketStream.h>
 #include <K/IO/IOTools.h>
@@ -9,9 +9,8 @@
 using std::shared_ptr;
 using std::make_shared;
 using std::unique_ptr;
-using std::endl;
 using kxm::Core::Buffer;
-using kxm::Core::Log;
+using K::Core::Log;
 using K::IO::SocketStream;
 
 namespace kxm {
@@ -27,7 +26,7 @@ NetworkEventCoupling::Writer::Writer(const shared_ptr<SocketStream> &stream, con
 }
 
 void NetworkEventCoupling::Writer::ExecuteAction() {
-    Log().Stream() << "writer thread spawning..." << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "spawning..."; });
 
     unique_ptr<Buffer> buffer(new Buffer());
     while (!stream_->IOError() && hub_->GetEvents(hubClientId_, &buffer)) {
@@ -39,7 +38,7 @@ void NetworkEventCoupling::Writer::ExecuteAction() {
         }
     }
 
-    Log().Stream() << "writer thread terminating" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "terminating"; });
 }
 
 }    // Namespace Game.

@@ -1,16 +1,15 @@
 #include "Worker.h"
 
 #include "SharedState.h"
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include <K/IO/SocketStream.h>
 #include <kxm/Game/NetworkEventCoupling.h>
 
 using std::shared_ptr;
 using std::make_shared;
 using std::unique_ptr;
-using std::endl;
 using K::Core::ThreadPool;
-using kxm::Core::Log;
+using K::Core::Log;
 using K::IO::SocketStream;
 using kxm::Game::NetworkEventCoupling;
 
@@ -33,7 +32,7 @@ void NetworkEventCouplingClient::Worker::SetHost(uint32_t ip4Address, int port) 
 }
 
 void NetworkEventCouplingClient::Worker::ExecuteAction() {
-    Log().Stream() << "connector spawning..." << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "spawning..."; });
 
     shared_ptr<NetworkEventCoupling> coupling;
     shared_ptr<SocketStream> socketStream = SocketStream::ConnectToHost(hostIp4Address_, hostPort_);
@@ -42,7 +41,7 @@ void NetworkEventCouplingClient::Worker::ExecuteAction() {
     }
     sharedState_->OnCouplingCreated(coupling);
 
-    Log().Stream() << "connector terminating" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "terminating"; });
 }
 
 }    // Namespace Game.

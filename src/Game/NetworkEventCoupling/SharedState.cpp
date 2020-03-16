@@ -1,14 +1,11 @@
 #include "SharedState.h"
 
 #include <K/Core/CompletionHandlerInterface.h>
-#include <kxm/Core/logging.h>
 
 using std::shared_ptr;
 using std::unique_lock;
 using std::mutex;
-using std::endl;
 using K::Core::CompletionHandlerInterface;
-using kxm::Core::Log;
 
 namespace kxm {
 namespace Game {
@@ -31,10 +28,10 @@ void NetworkEventCoupling::SharedState::WaitForThreadsFinished() {
 
 void NetworkEventCoupling::SharedState::OnCompletion(int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
-    if (completionId == ReaderCompletionId) {
+    if (completionId == readerCompletionId) {
         readerFinished_ = true;
     }
-    else if (completionId == WriterCompletionId) {
+    else if (completionId == writerCompletionId) {
         writerFinished_ = true;
     }
 

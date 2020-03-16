@@ -2,14 +2,13 @@
 
 #include <kxm/Core/ActionInterface.h>
 #include <K/Core/CompletionHandlerInterface.h>
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include "SharedRunnerState.h"
 
 using std::shared_ptr;
-using std::endl;
 using kxm::Core::ActionInterface;
 using K::Core::CompletionHandlerInterface;
-using kxm::Core::Log;
+using K::Core::Log;
 
 namespace K {
 namespace Core {
@@ -23,7 +22,7 @@ ThreadPool::Runner::Runner(int thread, CompletionHandlerInterface &completionHan
 }
 
 void ThreadPool::Runner::Run() {
-    Log(this).Stream() << "runner spawning..." << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "spawning..."; });
 
     shared_ptr<ActionInterface>            action;
     shared_ptr<CompletionHandlerInterface> completionHandler;
@@ -38,7 +37,7 @@ void ThreadPool::Runner::Run() {
         completionHandler_.OnCompletion(thread_);
     }
 
-    Log(this).Stream() << "runner terminating" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "terminating"; });
 }
 
 }    // Namespace Core.

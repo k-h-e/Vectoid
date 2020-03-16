@@ -2,14 +2,13 @@
 #include "SharedState.h"
 
 #include <kxm/Core/Buffer.h>
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include <K/IO/SocketStream.h>
 #include <K/IO/IOTools.h>
 #include <kxm/Game/EventLoopHub.h>
 
 using std::shared_ptr;
-using std::endl;
-using kxm::Core::Log;
+using K::Core::Log;
 using kxm::Core::Buffer;
 using K::IO::SocketStream;
 
@@ -26,7 +25,7 @@ NetworkEventCoupling::Reader::Reader(const shared_ptr<SocketStream> &stream, con
 }
 
 void NetworkEventCoupling::Reader::ExecuteAction() {
-    Log().Stream() << "reader thread spawning..." << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "spawning..."; });
 
     Buffer buffer;
     bool   badSize = false;
@@ -47,7 +46,7 @@ void NetworkEventCoupling::Reader::ExecuteAction() {
         }
     }
 
-    Log().Stream() << "reader thread terminating" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "terminating"; });
 }
 
 }    // Namespace Game.

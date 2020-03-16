@@ -7,6 +7,7 @@
 #define K_IO_LISTENSOCKET_H_
 
 #include <memory>
+#include <kxm/Core/Interface.h>
 
 namespace K {
 namespace IO {
@@ -17,7 +18,7 @@ class SocketStream;
 /*!
  *  \ingroup IO
  */
-class ListenSocket {
+class ListenSocket : public virtual kxm::Core::Interface {
   public:
     ListenSocket(int port);
     ListenSocket(const ListenSocket &other) = delete;

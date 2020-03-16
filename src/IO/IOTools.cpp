@@ -1,7 +1,6 @@
 #include <K/IO/IOTools.h>
 
 #include <stdint.h>
-#include <kxm/Core/logging.h>
 #include <K/IO/StreamInputInterface.h>
 #include <K/IO/StreamOutputInterface.h>
 

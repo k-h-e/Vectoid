@@ -20,11 +20,13 @@ class NetworkEventCouplingServer::SharedState : public K::Core::CompletionHandle
     SharedState();
     virtual void OnCompletion(int operationId);
     void WaitForCouplingFinished();
+    void WaitForWorkerFinished();
 
   private:
     std::mutex              lock_;
     std::condition_variable stateChanged_;
     bool                    couplingFinished_;
+    bool                    workerFinished_;
 };
 
 }    // Namespace Game.

@@ -1,15 +1,12 @@
 #include <kxm/Game/NetworkEventCouplingClient.h>
 
 #include <K/Core/ThreadPool.h>
-#include <kxm/Core/logging.h>
 #include "SharedState.h"
 #include "Worker.h"
 
 using std::shared_ptr;
 using std::make_shared;
-using std::endl;
 using K::Core::ThreadPool;
-using kxm::Core::Log;
 
 namespace kxm {
 namespace Game {

@@ -1,6 +1,6 @@
 #include "SharedState.h"
 
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include "Runner.h"
 #include "SharedRunnerState.h"
 
@@ -9,10 +9,10 @@ using std::make_shared;
 using std::mutex;
 using std::thread;
 using std::unique_lock;
-using std::endl;
+using std::to_string;
 using kxm::Core::ActionInterface;
 using K::Core::CompletionHandlerInterface;
-using kxm::Core::Log;
+using K::Core::Log;
 
 namespace K {
 namespace Core {
@@ -33,21 +33,21 @@ void ThreadPool::SharedState::Run(const shared_ptr<ActionInterface> &action,
         info.runner            = make_shared<Runner>(slot, *this, info.sharedRunnerState);
         auto aRunner = info.runner;
         info.thread.reset(new thread([=]{ aRunner->Run(); }));
-        Log().Stream() << "spawned thread " << slot << endl;
+        Log::Print(Log::Level::Debug, this, [=]{ return "spawned thread " + to_string(slot); });
     }
 
-    Log().Stream() << "dispatching action to thread " << slot << endl;
+    Log::Print(Log::Level::Debug, this, [=]{ return "dispatching action to thread " + to_string(slot); });
     ThreadInfo &info = threads_[slot];
     info.sharedRunnerState->Execute(action, completionHandler, completionId);
-    Log().Stream() << idleThreads_.size() << " threads now idle" << endl;
+    Log::Print(Log::Level::Debug, this, [=]{ return to_string(idleThreads_.size()) + " threads now idle"; });
 }    // ... critical section, end.
 
 void ThreadPool::SharedState::OnCompletion(int completionId) {
     unique_lock<mutex> critical(lock_);    // Critical section...
     idleThreads_.insert(completionId);
     stateChanged_.notify_all();
-    Log().Stream() << "thread " << completionId << " idle" << endl;
-    Log().Stream() << idleThreads_.size() << " threads now idle" << endl;
+    Log::Print(Log::Level::Debug, this, [=]{ return "thread " + to_string(completionId) + " idle"; });
+    Log::Print(Log::Level::Debug, this, [=]{ return to_string(idleThreads_.size()) + " threads now idle"; });
 }    // ... critical section, end.
 
 void ThreadPool::SharedState::ShutDown() {
@@ -61,7 +61,7 @@ void ThreadPool::SharedState::ShutDown() {
     for (ThreadInfo &info : threads_) {
         info.thread->join();
     }
-    Log().Stream() << "all pool threads terminated" << endl;
+    Log::Print(Log::Level::Debug, this, [=]{ return "all pool threads terminated"; });
 }    // ... critical section, end.
 
 }    // Namespace Core.

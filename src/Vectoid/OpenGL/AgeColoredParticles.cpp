@@ -1,6 +1,5 @@
 #include <kxm/Vectoid/OpenGL/AgeColoredParticles.h>
 
-#include <kxm/Core/logging.h>
 #include <kxm/Core/NumberTools.h>
 #include <kxm/Vectoid/Particles.h>
 #include <kxm/Vectoid/OpenGL/OpenGL.h>

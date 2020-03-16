@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include <kxm/Core/Buffer.h>
 #include <kxm/Game/Event.h>
 #include <kxm/Game/EventReceiverInterface.h>
@@ -91,8 +91,8 @@ void EventLoop<EventClass, EventHandlerClass>::RegisterEvent(std::unique_ptr<Eve
     size_t id             = protoType->Type().id;
     bool   alreadyPresent = (idToSlotMap_.find(id) != idToSlotMap_.end());
     if (alreadyPresent) {
-        kxm::Core::Log().Stream() << "hash collision while registering event \""
-                                  << protoType->Type().name << "\"" << std::endl;
+        K::Core::Log::Print(K::Core::Log::Level::Warning, this, [&]{
+            return std::string("hash collision while registering event \"") + protoType->Type().name + "\""; });
     }
     assert(!alreadyPresent);
     int slot = (int)events_.size();

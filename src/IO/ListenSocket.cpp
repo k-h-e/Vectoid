@@ -3,13 +3,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <kxm/Core/logging.h>
 #include <K/IO/SocketStream.h>
+#include <K/Core/Log.h>
 
 using std::shared_ptr;
 using std::make_shared;
-using std::endl;
-using kxm::Core::Log;
+using std::to_string;
+using K::Core::Log;
 
 namespace K {
 namespace IO {
@@ -25,12 +25,14 @@ ListenSocket::ListenSocket(int port) {
         address.sin_port        = htons(static_cast<uint16_t>(port));
         if (!bind(fd_, (struct sockaddr *)&address, sizeof(address))) {
             if (!listen(fd_, 4)) {
-                Log().Stream() << "socket " << fd_ << " listening on port " << port << endl;
+                Log::Print(Log::Level::Debug, this, [=]{ return "socket " + to_string(fd_) + " listening on port "
+                    + to_string(port); });
                 success = true;
             }
         }
         else {
-            Log().Stream() << "failed to bind socket " << fd_ << " to port " << port << ", errno=" << errno << endl;
+            Log::Print(Log::Level::Warning, this, [=]{ return "failed to bind socket " + to_string(fd_) + " to port "
+                + to_string(port); });
         }
     }
 
@@ -49,7 +51,8 @@ shared_ptr<SocketStream> ListenSocket::Accept() {
         socklen_t clientAddressSize = sizeof(clientAddress);
         int connectionFD = accept(fd_, (struct sockaddr *)&clientAddress, &clientAddressSize);
         if (connectionFD != -1) {
-            Log().Stream() << "socket " << connectionFD << " accepted connection" << endl;
+            Log::Print(Log::Level::Debug, this, [=]{ return "socket " + to_string(connectionFD)
+                + " accepted connection"; });
             return make_shared<SocketStream>(connectionFD);
         }
     }
@@ -59,7 +62,7 @@ shared_ptr<SocketStream> ListenSocket::Accept() {
 
 void ListenSocket::Close() {
     if (fd_ != -1) {
-        Log().Stream() << "closing listen socket " << fd_ << endl;
+        Log::Print(Log::Level::Debug, this, [=]{ return "closing listen socket " + to_string(fd_); });
         close(fd_);
         fd_ = -1;
     }

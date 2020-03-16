@@ -4,19 +4,17 @@
 #include <netdb.h>
 #include <vector>
 #include <kxm/Core/StringTools.h>
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 
 using std::shared_ptr;
 using std::make_shared;
+using std::to_string;
 using std::mutex;
 using std::unique_lock;
 using std::string;
 using std::vector;
-using std::hex;
-using std::dec;
-using std::endl;
 using kxm::Core::StringTools;
-using kxm::Core::Log;
+using K::Core::Log;
 
 namespace K {
 namespace IO {
@@ -24,7 +22,7 @@ namespace IO {
 SocketStream::SocketStream(int fd)
         : eof_(false),
           error_(false) {
-    Log().Stream() << "fd=" << fd << endl;
+    Log::Print(Log::Level::Debug, this, [=]{ return "fd=" + to_string(fd); });
     if (fd < 0) {
         fd = -1;
         error_ = true;
@@ -108,7 +106,7 @@ shared_ptr<SocketStream> SocketStream::ConnectToHost(const string &host) {
     if (tokens.size() == 2) {
         int port;
         if (StringTools::Parse(tokens[1], &port)) {
-            Log().Stream() << "port is " << port << endl;
+            Log::Print(Log::Level::Debug, nullptr, [=]{ return "port is " + to_string(port); });
             uint32_t ip4Address;
             if (ResolveHostName(tokens[0], &ip4Address)) {
                 return ConnectToHost(ip4Address, port);
@@ -127,8 +125,8 @@ shared_ptr<SocketStream> SocketStream::ConnectToHost(uint32_t ip4Address, int po
         address.sin_addr.s_addr = htonl(ip4Address);
         address.sin_port        = htons(static_cast<uint16_t>(port));
         if (!connect(fd, (struct sockaddr *)&address, sizeof(address))) {
-            Log().Stream() << "socket " << fd << " connected to ip4=0x" << hex << (unsigned int)ip4Address << ", port="
-                           << dec << port << endl;
+            Log::Print(Log::Level::Debug, nullptr, [=]{ return "socket " + to_string(fd) + " connected to ip4="
+                + Ip4ToString(ip4Address) + ", port=" + to_string(port); });
             return make_shared<SocketStream>(fd);
         }
 
@@ -139,7 +137,7 @@ shared_ptr<SocketStream> SocketStream::ConnectToHost(uint32_t ip4Address, int po
 }
 
 bool SocketStream::ResolveHostName(const string &hostName, uint32_t *outIp4Address) {
-    Log().Stream() << "resolving host name \"" << hostName << "\"..." << endl;
+    Log::Print(Log::Level::Debug, nullptr, [=]{ return "resolving host name \"" + hostName + "\"..."; });
 
     struct addrinfo *result = nullptr;
     struct addrinfo hints   = { };
@@ -165,12 +163,17 @@ bool SocketStream::ResolveHostName(const string &hostName, uint32_t *outIp4Addre
     return false;
 }
 
+string SocketStream::Ip4ToString(uint32_t ip4Address) {
+    uint8_t *ip = reinterpret_cast<uint8_t *>(&ip4Address);
+    return to_string(ip[0]) + "." + to_string(ip[1]) + "." + to_string(ip[2]) + "." + to_string(ip[3]);
+}
+
 void SocketStream::CloseSocket() {
     if (fd_ != -1) {
         if (!close(fd_)) {
             error_ = true;
         }
-        Log().Stream() << "socket " << fd_ << " closed" << endl;
+        Log::Print(Log::Level::Debug, nullptr, [=]{ return "socket " + to_string(fd_) + " closed"; });
         fd_ = -1;
     }
 }

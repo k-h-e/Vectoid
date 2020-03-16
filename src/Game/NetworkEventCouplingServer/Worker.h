@@ -2,6 +2,7 @@
 #define KXM_GAME_NETWORKEVENTCOUPLINGSERVER_WORKER_H_
 
 #include <K/IO/ListenSocket.h>
+#include <kxm/Core/ActionInterface.h>
 #include <kxm/Game/NetworkEventCouplingServer.h>
 
 namespace kxm {
@@ -13,17 +14,18 @@ class EventLoopHub;
 /*!
  *  \ingroup Game
  */
-class NetworkEventCouplingServer::Worker {
+class NetworkEventCouplingServer::Worker : public virtual kxm::Core::ActionInterface {
   public:
     Worker(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
-           const std::shared_ptr<SharedState> &sharedState);
-    void Run();
+           const std::shared_ptr<K::Core::ThreadPool> &threadPool, const std::shared_ptr<SharedState> &sharedState);
+    void ExecuteAction();
 
   private:
     std::shared_ptr<SharedState>             sharedState_;
-    std::shared_ptr<kxm::Game::EventLoopHub> hub_;
 
-    std::unique_ptr<K::IO::ListenSocket> listenSocket_;
+    std::shared_ptr<kxm::Game::EventLoopHub> hub_;
+    std::shared_ptr<K::Core::ThreadPool>     threadPool_;
+    std::unique_ptr<K::IO::ListenSocket>     listenSocket_;
 };
 
 }    // Namespace Game.

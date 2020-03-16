@@ -2,6 +2,7 @@
 #define KXM_GAME_NETWORKEVENTCOUPLING_H_
 
 #include <memory>
+#include <kxm/Core/Interface.h>
 
 namespace K {
 namespace Core {
@@ -22,11 +23,8 @@ class EventLoopHub;
 /*!
  *  \ingroup Game
  */
-class NetworkEventCoupling {
+class NetworkEventCoupling : public virtual kxm::Core::Interface {
   public:
-    static const int ReaderCompletionId = 0;
-    static const int WriterCompletionId = 1;
-
     //! Well, constructor.
     /*!
      *  \param completionHandler
@@ -41,6 +39,9 @@ class NetworkEventCoupling {
     ~NetworkEventCoupling();
 
   private:
+    static const int readerCompletionId = 0;
+    static const int writerCompletionId = 1;
+
     class SharedState;
     class Reader;
     class Writer;

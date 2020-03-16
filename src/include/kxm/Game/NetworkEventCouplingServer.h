@@ -2,7 +2,12 @@
 #define KXM_GAME_NETWORKEVENTCOUPLINGSERVER_H_
 
 #include <memory>
-#include <thread>
+
+namespace K {
+namespace Core {
+    class ThreadPool;
+}
+}
 
 namespace kxm {
 namespace Game {
@@ -15,17 +20,19 @@ class EventLoopHub;
  */
 class NetworkEventCouplingServer {
   public:
-    NetworkEventCouplingServer(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub);
+    NetworkEventCouplingServer(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
+                               const std::shared_ptr<K::Core::ThreadPool> &threadPool);
     ~NetworkEventCouplingServer();
 
   private:
+    static const int couplingCompletionId = 0;
+    static const int workerCompletionId   = 1;
+
     class SharedState;
     class Worker;
 
     std::shared_ptr<SharedState> sharedState_;
     std::shared_ptr<Worker>      worker_;
-
-    std::shared_ptr<std::thread> workerThread_;
 };
 
 }    // Namespace Game.

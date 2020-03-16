@@ -1,14 +1,11 @@
 #include <K/Core/ThreadPool.h>
 
-#include <kxm/Core/logging.h>
 #include "SharedState.h"
 
 using std::shared_ptr;
 using std::make_shared;
-using std::endl;
 using kxm::Core::ActionInterface;
 using K::Core::CompletionHandlerInterface;
-using kxm::Core::Log;
 
 namespace K {
 namespace Core {
