@@ -19,7 +19,7 @@ namespace Core {
 
 void ThreadPool::SharedState::Run(const shared_ptr<ActionInterface> &action,
                                   const shared_ptr<CompletionHandlerInterface> &completionHandler, int completionId) {
-    unique_lock<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     int slot;
     if (idleThreads_.size()) {
         slot = *idleThreads_.begin();
@@ -33,25 +33,24 @@ void ThreadPool::SharedState::Run(const shared_ptr<ActionInterface> &action,
         info.runner            = make_shared<Runner>(slot, *this, info.sharedRunnerState);
         auto aRunner = info.runner;
         info.thread.reset(new thread([=]{ aRunner->Run(); }));
-        Log::Print(Log::Level::Debug, this, [=]{ return "spawned thread " + to_string(slot); });
     }
 
     Log::Print(Log::Level::Debug, this, [=]{ return "dispatching action to thread " + to_string(slot); });
     ThreadInfo &info = threads_[slot];
     info.sharedRunnerState->Execute(action, completionHandler, completionId);
-    Log::Print(Log::Level::Debug, this, [=]{ return to_string(idleThreads_.size()) + " threads now idle"; });
-}    // ... critical section, end.
+    LogStats();
+}    // ......................................................................................... critical section, end.
 
 void ThreadPool::SharedState::OnCompletion(int completionId) {
-    unique_lock<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     idleThreads_.insert(completionId);
     stateChanged_.notify_all();
     Log::Print(Log::Level::Debug, this, [=]{ return "thread " + to_string(completionId) + " idle"; });
-    Log::Print(Log::Level::Debug, this, [=]{ return to_string(idleThreads_.size()) + " threads now idle"; });
-}    // ... critical section, end.
+    LogStats();
+}    // ......................................................................................... critical section, end.
 
 void ThreadPool::SharedState::ShutDown() {
-    unique_lock<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     while (idleThreads_.size() < threads_.size()) {
         stateChanged_.wait(critical);
     }
@@ -62,7 +61,13 @@ void ThreadPool::SharedState::ShutDown() {
         info.thread->join();
     }
     Log::Print(Log::Level::Debug, this, [=]{ return "all pool threads terminated"; });
-}    // ... critical section, end.
+}    // ......................................................................................... critical section, end.
+
+// Expects lock to be held.
+void ThreadPool::SharedState::LogStats() {
+    Log::Print(Log::Level::Debug, this, [=]{ return to_string(threads_.size()) + " threads, "
+        + to_string(idleThreads_.size()) + " idle"; });
+}
 
 }    // Namespace Core.
 }    // Namespace K.

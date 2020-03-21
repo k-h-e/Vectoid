@@ -20,14 +20,14 @@ NetworkEventCoupling::SharedState::SharedState(const shared_ptr<CompletionHandle
 }
 
 void NetworkEventCoupling::SharedState::WaitForThreadsFinished() {
-    unique_lock<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     while (!readerFinished_ || !writerFinished_) {
         stateChanged_.wait(critical);
     }
-}    // ... critical section, end.
+}    // ......................................................................................... critical section, end.
 
 void NetworkEventCoupling::SharedState::OnCompletion(int completionId) {
-    unique_lock<mutex> critical(lock_);    // Critical section...
+    unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     if (completionId == readerCompletionId) {
         readerFinished_ = true;
     }
@@ -43,7 +43,7 @@ void NetworkEventCoupling::SharedState::OnCompletion(int completionId) {
     }
 
     stateChanged_.notify_all();
-}    // ... critical section, end.
+}    // ......................................................................................... critical section, end.
 
 }    // Namespace Game.
 }    // Namespace kxm.

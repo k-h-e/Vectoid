@@ -18,15 +18,19 @@ namespace Game {
 class NetworkEventCouplingServer::SharedState : public K::Core::CompletionHandlerInterface {
   public:
     SharedState();
-    virtual void OnCompletion(int operationId);
+    void RequestShutDown();
+    bool ShutDownRequested();
+    void PrepareForCoupling();
     void WaitForCouplingFinished();
     void WaitForWorkerFinished();
+    virtual void OnCompletion(int operationId);
 
   private:
     std::mutex              lock_;
     std::condition_variable stateChanged_;
     bool                    couplingFinished_;
     bool                    workerFinished_;
+    bool                    shutDownRequested_;
 };
 
 }    // Namespace Game.

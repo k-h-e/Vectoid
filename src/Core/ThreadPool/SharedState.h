@@ -40,6 +40,8 @@ class ThreadPool::SharedState : public virtual K::Core::CompletionHandlerInterfa
         std::shared_ptr<SharedRunnerState> sharedRunnerState;
     };
 
+    void LogStats();
+
     std::mutex              lock_;
     std::condition_variable stateChanged_;
     std::vector<ThreadInfo> threads_;

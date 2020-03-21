@@ -7,6 +7,7 @@
 #define K_IO_LISTENSOCKET_H_
 
 #include <memory>
+#include <mutex>
 #include <kxm/Core/Interface.h>
 
 namespace K {
@@ -17,12 +18,16 @@ class SocketStream;
 //! Listen socket.
 /*!
  *  \ingroup IO
+ *
+ * Thread-safe (i.e. all public methods).
  */
 class ListenSocket : public virtual kxm::Core::Interface {
   public:
     ListenSocket(int port);
-    ListenSocket(const ListenSocket &other) = delete;
-    ListenSocket &operator=(const ListenSocket &other) = delete;
+    ListenSocket(const ListenSocket &other)             = delete;
+    ListenSocket &operator=(const ListenSocket &other)  = delete;
+    ListenSocket(const ListenSocket &&other)            = delete;
+    ListenSocket &operator=(const ListenSocket &&other) = delete;
     ~ListenSocket();
 
     //! Accepts a new connection from the listen socket.
@@ -31,11 +36,15 @@ class ListenSocket : public virtual kxm::Core::Interface {
      *  <c>null</c> handle in case of failure.
      */
     std::shared_ptr<SocketStream> Accept();
+    //! Shuts down the listen socket, causing active <c>Accept()</c> calls to return and fail.
+    void ShutDown();
 
   private:
     void Close();
 
-    int fd_;
+    std::mutex lock_;
+    int        fd_;
+    bool       socketDown_;
 };
 
 }    // Namespace IO.

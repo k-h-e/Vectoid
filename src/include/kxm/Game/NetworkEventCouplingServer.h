@@ -6,6 +6,10 @@
 namespace K {
 namespace Core {
     class ThreadPool;
+
+}
+namespace IO {
+    class ListenSocket;
 }
 }
 
@@ -31,8 +35,10 @@ class NetworkEventCouplingServer {
     class SharedState;
     class Worker;
 
-    std::shared_ptr<SharedState> sharedState_;
-    std::shared_ptr<Worker>      worker_;
+    std::shared_ptr<SharedState>         sharedState_;
+
+    std::shared_ptr<K::IO::ListenSocket> listenSocket_;
+    std::shared_ptr<Worker>              worker_;
 };
 
 }    // Namespace Game.

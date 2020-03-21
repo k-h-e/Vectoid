@@ -3,6 +3,7 @@
 #include "SharedState.h"
 #include <kxm/Game/NetworkEventCoupling.h>
 #include <K/Core/Log.h>
+#include <K/IO/ListenSocket.h>
 
 using std::shared_ptr;
 using std::unique_ptr;
@@ -16,21 +17,23 @@ namespace kxm {
 namespace Game {
 
 NetworkEventCouplingServer::Worker::Worker(
-    int port, const shared_ptr<EventLoopHub> &hub, const shared_ptr<ThreadPool> &threadPool,
-    const shared_ptr<SharedState> &sharedState)
+    const shared_ptr<ListenSocket> &listenSocket, const shared_ptr<EventLoopHub> &hub,
+    const shared_ptr<ThreadPool> &threadPool, const shared_ptr<SharedState> &sharedState)
         : sharedState_(sharedState),
+          listenSocket_(listenSocket),
           hub_(hub),
           threadPool_(threadPool) {
-    listenSocket_ = unique_ptr<ListenSocket>(new ListenSocket(port));
+    // Nop.
 }
 
 void NetworkEventCouplingServer::Worker::ExecuteAction() {
     Log::Print(Log::Level::Debug, this, []{ return "spawning..."; });
 
-    while (true) {
+    while (!sharedState_->ShutDownRequested()) {
         Log::Print(Log::Level::Debug, this, []{ return "waiting for client to connect..."; });
         shared_ptr<SocketStream> stream = listenSocket_->Accept();
-        if (stream) {
+        if (stream && !sharedState_->ShutDownRequested()) {
+            sharedState_->PrepareForCoupling();
             auto coupling = unique_ptr<NetworkEventCoupling>(
                 new NetworkEventCoupling(stream, hub_, sharedState_, couplingCompletionId, threadPool_));
             Log::Print(Log::Level::Debug, this, []{ return "waiting for coupling to finish..."; });
