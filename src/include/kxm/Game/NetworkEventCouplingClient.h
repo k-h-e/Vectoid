@@ -29,17 +29,21 @@ class NetworkEventCouplingClient {
   public:
     //! Constructor.
     /*!
-     *  \param onConnectAction
-     *  Optional. If present, gets called on an arbitrary thread whenever a connection is established.
+     *  \param onConnectedAction
+     *  Optional. If present, gets called on an arbitrary thread when a connection has successfully been established.
      *
-     *  \param onDisconnectAction
-     *  Optional. If present, gets called on an arbitrary thread whenever a connection has been closed or has broken
+     *  \param onFailedToConnectAction
+     *  Optional. If present, gets called on an arbitrary thread when an attempt to establish a connection has failed.
+     *
+     *  \param onDisconnectedAction
+     *  Optional. If present, gets called on an arbitrary thread when a connection has been closed or has broken
      *  down.
      */
     NetworkEventCouplingClient(
         const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
-        const std::shared_ptr<kxm::Core::ActionInterface> &onConnectAction,
-        const std::shared_ptr<kxm::Core::ActionInterface> &onDisconnectAction,
+        const std::shared_ptr<kxm::Core::ActionInterface> &onConnectedAction,
+        const std::shared_ptr<kxm::Core::ActionInterface> &onFailedToConnectAction,
+        const std::shared_ptr<kxm::Core::ActionInterface> &onDisconnectedAction,
         const std::shared_ptr<K::Core::ThreadPool> &threadPool);
     ~NetworkEventCouplingClient();
     //! Establishes a network event coupling connection to the specified host.

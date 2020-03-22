@@ -29,6 +29,10 @@ NetworkEventCouplingServer::~NetworkEventCouplingServer() {
     sharedState_->WaitForWorkerFinished();
 }
 
+bool NetworkEventCouplingServer::Error() {
+    return listenSocket_->Error();
+}
+
 }    // Namespace Game.
 }    // Namespace kxm.
 

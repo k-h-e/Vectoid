@@ -121,7 +121,7 @@ bool SocketStream::EndOfStream() {
     return eof_;
 }    // ......................................................................................... critical section, end.
 
-bool SocketStream::IOError() {
+bool SocketStream::Error() {
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     return error_;
 }    // ......................................................................................... critical section, end.

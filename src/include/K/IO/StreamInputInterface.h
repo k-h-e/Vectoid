@@ -1,7 +1,7 @@
 #ifndef K_IO_STREAMINPUTINTERFACE_H_
 #define K_IO_STREAMINPUTINTERFACE_H_
 
-#include <K/IO/StreamInterface.h>
+#include <K/Core/ErrorInterface.h>
 
 namespace K {
 namespace IO {
@@ -10,7 +10,7 @@ namespace IO {
 /*!
  *  \ingroup IO
  */
-class StreamInputInterface : public virtual StreamInterface {
+class StreamInputInterface : public virtual K::Core::ErrorInterface {
   public:
     //! Reads data into the specified buffer.
     /*!

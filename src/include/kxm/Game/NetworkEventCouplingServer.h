@@ -2,6 +2,7 @@
 #define KXM_GAME_NETWORKEVENTCOUPLINGSERVER_H_
 
 #include <memory>
+#include <K/Core/ErrorInterface.h>
 
 namespace K {
 namespace Core {
@@ -22,11 +23,12 @@ class EventLoopHub;
 /*!
  *  \ingroup Game
  */
-class NetworkEventCouplingServer {
+class NetworkEventCouplingServer : public virtual K::Core::ErrorInterface {
   public:
     NetworkEventCouplingServer(int port, const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
                                const std::shared_ptr<K::Core::ThreadPool> &threadPool);
     ~NetworkEventCouplingServer();
+    bool Error();
 
   private:
     static const int couplingCompletionId = 0;

@@ -1,7 +1,7 @@
 #ifndef K_IO_STREAMOUTPUTINTERFACE_H_
 #define K_IO_STREAMOUTPUTINTERFACE_H_
 
-#include <K/IO/StreamInterface.h>
+#include <K/Core/ErrorInterface.h>
 
 namespace K {
 namespace IO {
@@ -10,7 +10,7 @@ namespace IO {
 /*!
  *  \ingroup IO
  */
-class StreamOutputInterface : public virtual StreamInterface {
+class StreamOutputInterface : public virtual K::Core::ErrorInterface {
   public:
     //! Writes the specified data to the stream.
     /*!

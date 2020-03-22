@@ -30,7 +30,7 @@ class SocketStream : public virtual StreamIOInterface {
     virtual int Read(void *outBuffer, int bufferSize);
     virtual int Write(const void *data, int dataSize);
     virtual bool EndOfStream();
-    virtual bool IOError();
+    virtual bool Error();
 
     //! Establishes a network stream connection to a host given by name and port, separated by a <c>':'</c>.
     /*!

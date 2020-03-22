@@ -8,7 +8,7 @@
 
 #include <memory>
 #include <mutex>
-#include <kxm/Core/Interface.h>
+#include <K/Core/ErrorInterface.h>
 
 namespace K {
 namespace IO {
@@ -21,7 +21,7 @@ class SocketStream;
  *
  * Thread-safe (i.e. all public methods).
  */
-class ListenSocket : public virtual kxm::Core::Interface {
+class ListenSocket : public virtual K::Core::ErrorInterface {
   public:
     ListenSocket(int port);
     ListenSocket(const ListenSocket &other)             = delete;
@@ -38,6 +38,8 @@ class ListenSocket : public virtual kxm::Core::Interface {
     std::shared_ptr<SocketStream> Accept();
     //! Shuts down the listen socket, causing active <c>Accept()</c> calls to return and fail.
     void ShutDown();
+
+    bool Error();
 
   private:
     void Close();

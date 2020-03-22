@@ -17,7 +17,7 @@ bool ReadItem(StreamInputInterface *stream, void *outItem, int itemSize) {
             numRemaining -= num;
         }
         else {
-            if (stream->IOError() || stream->EndOfStream()) {
+            if (stream->Error() || stream->EndOfStream()) {
                 return false;
             }
         }
@@ -35,7 +35,7 @@ bool WriteItem(StreamOutputInterface *stream, const void *item, int itemSize) {
             numRemaining -= num;
         }
         else {
-            if (stream->IOError()) {
+            if (stream->Error()) {
                 return false;
             }
         }

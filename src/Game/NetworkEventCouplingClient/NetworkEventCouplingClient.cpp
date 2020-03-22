@@ -13,11 +13,13 @@ namespace kxm {
 namespace Game {
 
 NetworkEventCouplingClient::NetworkEventCouplingClient(
-    const shared_ptr<EventLoopHub> &hub, const shared_ptr<ActionInterface> &onConnectAction,
-    const shared_ptr<ActionInterface> &onDisconnectAction, const shared_ptr<ThreadPool> &threadPool)
+    const shared_ptr<EventLoopHub> &hub, const shared_ptr<ActionInterface> &onConnectedAction,
+    const shared_ptr<ActionInterface> &onFailedToConnectAction, const shared_ptr<ActionInterface> &onDisconnectedAction,
+    const shared_ptr<ThreadPool> &threadPool)
         : threadPool_(threadPool) {
     sharedState_ = make_shared<SharedState>();
-    worker_      = make_shared<Worker>(hub, onConnectAction, onDisconnectAction, threadPool_, sharedState_);
+    worker_      = make_shared<Worker>(hub, onConnectedAction, onFailedToConnectAction, onDisconnectedAction,
+                                       threadPool_, sharedState_);
 }
 
 NetworkEventCouplingClient::~NetworkEventCouplingClient() {

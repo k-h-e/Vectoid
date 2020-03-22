@@ -20,13 +20,15 @@ namespace kxm {
 namespace Game {
 
 NetworkEventCouplingClient::Worker::Worker(
-    const shared_ptr<EventLoopHub> &hub, const shared_ptr<ActionInterface> &onConnectAction,
-    const shared_ptr<ActionInterface> &onDisconnectAction, const shared_ptr<ThreadPool> &threadPool,
+    const shared_ptr<EventLoopHub> &hub, const shared_ptr<ActionInterface> &onConnectedAction,
+    const shared_ptr<ActionInterface> &onFailedToConnectAction, const shared_ptr<ActionInterface> &onDisconnectedAction,
+    const shared_ptr<ThreadPool> &threadPool,
     shared_ptr<SharedState> sharedState)
         : sharedState_(sharedState),
           hub_(hub),
-          onConnectAction_(onConnectAction),
-          onDisconnectAction_(onDisconnectAction),
+          onConnectedAction_(onConnectedAction),
+          onFailedToConnectAction_(onFailedToConnectAction),
+          onDisconnectedAction_(onDisconnectedAction),
           threadPool_(threadPool),
           hostIp4Address_(0u),
           hostPort_(0) {
@@ -44,16 +46,21 @@ void NetworkEventCouplingClient::Worker::ExecuteAction() {
     shared_ptr<NetworkEventCoupling> coupling;
     shared_ptr<SocketStream> socketStream = SocketStream::ConnectToHost(hostIp4Address_, hostPort_);
     if (socketStream) {
-        if (onConnectAction_) {
-            onConnectAction_->ExecuteAction();
+        if (onConnectedAction_) {
+            onConnectedAction_->ExecuteAction();
         }
         shared_ptr<CompletionHandlerInterface> handler;
-        if (onDisconnectAction_) {
-            handler = make_shared<CompletionActionAdapter>(onDisconnectAction_);
+        if (onDisconnectedAction_) {
+            handler = make_shared<CompletionActionAdapter>(onDisconnectedAction_);
         }
         coupling = make_shared<NetworkEventCoupling>(socketStream, hub_, handler, 0, threadPool_);
+        sharedState_->OnCouplingCreated(coupling);
     }
-    sharedState_->OnCouplingCreated(coupling);
+    else {
+        if (onFailedToConnectAction_) {
+            onFailedToConnectAction_->ExecuteAction();
+        }
+    }
 
     Log::Print(Log::Level::Debug, this, []{ return "terminating"; });
 }

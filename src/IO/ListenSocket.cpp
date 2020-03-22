@@ -33,15 +33,13 @@ ListenSocket::ListenSocket(int port)
                 success = true;
             }
         }
-        else {
-            Log::Print(Log::Level::Warning, this, [=]{ return "failed to bind socket " + to_string(fd_) + " to port "
-                + to_string(port); });
-        }
     }
 
     if (!success) {
         // Don't have to take lock, constructor.
         Close();
+        Log::Print(Log::Level::Warning, this, [=]{ return "failed to create listen socket on port "
+            + to_string(port); });
     }
 }
 
@@ -75,11 +73,16 @@ shared_ptr<SocketStream> ListenSocket::Accept() {
 
 void ListenSocket::ShutDown() {
     unique_lock<mutex> critical(lock_);    // Critical section .........................................................
-    if (fd_ != -1) {
+    if ((fd_ != -1) && !socketDown_) {
         shutdown(fd_, SHUT_RDWR);
         Log::Print(Log::Level::Debug, this, [=]{ return "listen socket " + to_string(fd_) + " shut down"; });
         socketDown_ = true;
     }
+}    // ......................................................................................... critical section, end.
+
+bool ListenSocket::Error() {
+    unique_lock<mutex> critical(lock_);    // Critical section .........................................................
+    return (fd_ == -1) || socketDown_;
 }    // ......................................................................................... critical section, end.
 
 // Lock expected to be held.
