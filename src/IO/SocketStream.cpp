@@ -39,7 +39,7 @@ SocketStream::~SocketStream() {
     ShutDownSocket();
     if (fd_ != -1) {
         close(fd_);
-        Log::Print(Log::Level::Debug, nullptr, [=]{ return "socket " + to_string(fd_) + " closed"; });
+        Log::Print(Log::Level::Debug, this, [=]{ return "socket " + to_string(fd_) + " closed"; });
     }
 }    // ......................................................................................... critical section, end.
 
@@ -209,7 +209,7 @@ void SocketStream::ShutDownSocket() {
                 error_ = true;
             }
             socketDown_ = true;
-            Log::Print(Log::Level::Debug, nullptr, [=]{ return "socket " + to_string(fd_) + " shut down"; });
+            Log::Print(Log::Level::Debug, this, [=]{ return "socket " + to_string(fd_) + " shut down"; });
         }
     }
 }
