@@ -32,8 +32,7 @@ int EventLoopHub::RegisterEventLoop() {
     }
 
     LoopInfo &loopInfo = loops_[id];
-    loopInfo.inUse             = true;
-    loopInfo.shutDownRequested = false;
+    loopInfo.inUse = true;
     Log::Print(Log::Level::Debug, this, [=]{ return "registered event loop, id=" + to_string(id); });
     return id;
 }    // ......................................................................................... critical section, end.
@@ -42,7 +41,7 @@ void EventLoopHub::UnregisterEventLoop(int clientLoopId) {
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     LoopInfo *info = GetLoopInfo(clientLoopId);
     if (info) {
-        info->inUse = false;
+        info->Reset();
         unusedLoopSlots_.push(clientLoopId);
         Log::Print(Log::Level::Debug, this, [=]{ return "deregistered event loop " + to_string(clientLoopId); });
     }

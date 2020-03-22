@@ -7,15 +7,17 @@
 using std::shared_ptr;
 using std::make_shared;
 using K::Core::ThreadPool;
+using kxm::Core::ActionInterface;
 
 namespace kxm {
 namespace Game {
 
-NetworkEventCouplingClient::NetworkEventCouplingClient(const shared_ptr<EventLoopHub> &hub,
-                                                       const shared_ptr<ThreadPool> &threadPool)
+NetworkEventCouplingClient::NetworkEventCouplingClient(
+    const shared_ptr<EventLoopHub> &hub, const shared_ptr<ActionInterface> &onConnectAction,
+    const shared_ptr<ActionInterface> &onDisconnectAction, const shared_ptr<ThreadPool> &threadPool)
         : threadPool_(threadPool) {
     sharedState_ = make_shared<SharedState>();
-    worker_      = make_shared<Worker>(hub, threadPool_, sharedState_);
+    worker_      = make_shared<Worker>(hub, onConnectAction, onDisconnectAction, threadPool_, sharedState_);
 }
 
 NetworkEventCouplingClient::~NetworkEventCouplingClient() {
@@ -26,7 +28,7 @@ void NetworkEventCouplingClient::Connect(uint32_t ip4Address, int port) {
     sharedState_->WaitForWorker();
     sharedState_->PrepareToConnect();
     worker_->SetHost(ip4Address, port);
-    threadPool_->Run(worker_, sharedState_, 0);
+    threadPool_->Run(worker_, sharedState_, workerCompletionId);
 }
 
 void NetworkEventCouplingClient::Disconnect() {

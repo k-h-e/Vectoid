@@ -75,11 +75,16 @@ class EventLoopHub : public virtual EventReceiverInterface {
         bool                                     shutDownRequested;
         bool                                     inUse;
         LoopInfo()
-            : buffer(new Core::Buffer()),
-              stateChanged(new std::condition_variable()),
-              waiting(false),
-              shutDownRequested(false),
-              inUse(false) {}
+                : buffer(new Core::Buffer()),
+                  stateChanged(new std::condition_variable()) {
+            Reset();
+        }
+        void Reset() {
+            buffer->Clear();
+            waiting           = false;
+            shutDownRequested = false;
+            inUse             = false;
+        }
     };
     
     void DoPost(int clientLoopId, const Core::Buffer &buffer, bool onlyPostToOthers);

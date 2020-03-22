@@ -10,18 +10,37 @@ namespace Core {
 }
 
 namespace kxm {
+namespace Core {
+    class ActionInterface;
+}
+}
+
+namespace kxm {
 namespace Game {
 
 class EventLoopHub;
 
-//! Establishes network connections to remote event loop mechanisms and installs local network event couplings for them.
+//! Establishes network connections (at most one at a time) to remote event loop mechanisms and installs local network
+//! event couplings for them.
 /*!
  *  \ingroup Game
  */
 class NetworkEventCouplingClient {
   public:
-    NetworkEventCouplingClient(const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
-                               const std::shared_ptr<K::Core::ThreadPool> &threadPool);
+    //! Constructor.
+    /*!
+     *  \param onConnectAction
+     *  Optional. If present, gets called on an arbitrary thread whenever a connection is established.
+     *
+     *  \param onDisconnectAction
+     *  Optional. If present, gets called on an arbitrary thread whenever a connection has been closed or has broken
+     *  down.
+     */
+    NetworkEventCouplingClient(
+        const std::shared_ptr<kxm::Game::EventLoopHub> &hub,
+        const std::shared_ptr<kxm::Core::ActionInterface> &onConnectAction,
+        const std::shared_ptr<kxm::Core::ActionInterface> &onDisconnectAction,
+        const std::shared_ptr<K::Core::ThreadPool> &threadPool);
     ~NetworkEventCouplingClient();
     //! Establishes a network event coupling connection to the specified host.
     /*!
@@ -33,6 +52,7 @@ class NetworkEventCouplingClient {
     void Disconnect();
 
   private:
+    static const int workerCompletionId = 0;
     class SharedState;
     class Worker;
 
