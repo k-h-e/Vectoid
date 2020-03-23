@@ -956,7 +956,7 @@ bool Context::CreatePipeline() {
     rasterizationStateInfo.pNext = nullptr;
     rasterizationStateInfo.flags = 0;
     rasterizationStateInfo.polygonMode = VK_POLYGON_MODE_FILL;
-    rasterizationStateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizationStateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
     rasterizationStateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizationStateInfo.depthClampEnable = VK_FALSE;
     rasterizationStateInfo.rasterizerDiscardEnable = VK_FALSE;

@@ -100,7 +100,7 @@ void RenderTarget::RenderFrame() {
                 FullTransform clippingTransform;    // Identity.
                 clippingTransform.Element(1, 1) = -1.0f;
                 clippingTransform.Element(2, 2) =   .5f;
-                clippingTransform.Element(3, 2) =   .5f;
+                //clippingTransform.Element(3, 2) =   .5f;
                 context_->UpdateObjectTransform(clippingTransform);
                 context_->ApplyObjectTransform();
                 

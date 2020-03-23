@@ -41,16 +41,20 @@ class EventLoop : public virtual EventReceiverInterface {
     void RegisterHandler(const Event::EventType &eventType, EventHandlerClass *handler);
     //! Unregisters all event handlers.
     void UnregisterHandlers();
-    //! Runs the event loop, invoking handlers for events as they arrive.
+    //! Runs the event loop until shutdown is requested (via the hub).
     void Run();
     //! Runs the event loop until the next event of the specified type has been dispatched.
     /*!
-     *  Pass <c>nullptr</c> to run until shutdown is requested.
+     *  Pass <c>nullptr</c> to run until shutdown is requested (via the hub).
      *
      *  \return <c>false</c> in case shutdown has been requested.
      */
     bool RunUntilEventOfType(const Event::EventType *eventType);
-
+    //! Runs a batch of events, including all the events posted up until now.
+    /*!
+     *  \return <c>false</c> in case shutdown has been requested.
+     */
+    bool RunBatch();
     //! Posts the specified event for execution on the loop.
     /*!
      *  This is the only method that may be called while any \ref Run() method executes, that is: from event handlers
@@ -65,6 +69,8 @@ class EventLoop : public virtual EventReceiverInterface {
         EventInfo(std::unique_ptr<EventClass> proto) : prototype(std::move(proto)) {}
     };
     
+    EventClass *DispatchOne();
+
     std::vector<EventInfo>          events_;
     std::unordered_map<size_t, int> idToSlotMap_;
     std::unique_ptr<Core::Buffer>   eventsToDispatch_;
@@ -132,34 +138,80 @@ bool EventLoop<EventClass, EventHandlerClass>::RunUntilEventOfType(const kxm::Ga
     assert(!running_);
     running_ = true;
     
-    for (;;) {
-        int slot;
-        while (reader_.ReadBlock(&slot, sizeof(slot))) {
-            EventInfo  &info  = events_[slot];
-            EventClass &event = *(info.prototype);
-            event.Deserialize(&reader_);
-            for (EventHandlerClass *handler : info.handlers) {
-                event.Dispatch(handler);
+    bool done = false;
+    while (!done) {
+        bool haveEvents = true;
+        while (haveEvents) {
+            EventClass *event = DispatchOne();
+            if (event) {
+                if (eventType && (event->Type().id == eventType->id)) {
+                    running_ = false;
+                    return true;
+                }
             }
-            if (eventType && (event.Type().id == eventType->id)) {
-                running_ = false;
-                return true;
+            else {
+                haveEvents = false;
             }
         }
         
-        if (!hub_->GetEvents(hubClientId_, &eventsToDispatch_)) {
-            running_ = false;
-            return false;
+        if (!hub_->GetEvents(hubClientId_, &eventsToDispatch_, false)) {
+            done = true;
         }
         reader_ = eventsToDispatch_->GetReader();
     }
+
+    running_ = false;
+    return false;
+}
+
+template<class EventClass, class EventHandlerClass>
+bool EventLoop<EventClass, EventHandlerClass>::RunBatch() {
+    assert(!running_);
+    running_ = true;
+
+    bool done          = false;
+    bool fetchedEvents = false;
+    while (!done) {
+        while (DispatchOne()) {
+            // Nop.
+        }
+
+        if (fetchedEvents) {
+            running_ = false;
+            return true;
+        }
+
+        done = !hub_->GetEvents(hubClientId_, &eventsToDispatch_, true);
+        reader_ = eventsToDispatch_->GetReader();
+        fetchedEvents = true;
+    }
+
+    running_ = false;
+    return false;
 }
 
 template<class EventClass, class EventHandlerClass>
 void EventLoop<EventClass, EventHandlerClass>::Post(const Event &event) {
     hub_->Post(event);
 }
-    
+
+template<class EventClass, class EventHandlerClass>
+EventClass *EventLoop<EventClass, EventHandlerClass>::DispatchOne() {
+    int slot;
+    if (reader_.ReadBlock(&slot, sizeof(slot))) {
+        EventInfo  &info  = events_[slot];
+        EventClass &event = *(info.prototype);
+        event.Deserialize(&reader_);
+        for (EventHandlerClass *handler : info.handlers) {
+            event.Dispatch(handler);
+        }
+        return &event;
+    }
+    else {
+        return nullptr;
+    }
+}
+
 }    // Namespace Game.
 }    // Namespace kxm.
 

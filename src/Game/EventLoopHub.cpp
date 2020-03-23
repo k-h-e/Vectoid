@@ -68,7 +68,9 @@ void EventLoopHub::Post(int clientLoopId, const Core::Buffer &buffer, bool onlyP
     DoPost(clientLoopId, buffer, onlyPostToOthers);
 }    // ......................................................................................... critical section, end.
 
-bool EventLoopHub::GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *buffer) {
+bool EventLoopHub::GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *buffer, bool nonBlocking) {
+    (*buffer)->Clear();
+
     unique_lock<mutex> critical(lock_);    // Critical section..........................................................
     while (true) {
         LoopInfo *info = GetLoopInfo(clientLoopId);
@@ -76,14 +78,18 @@ bool EventLoopHub::GetEvents(int clientLoopId, std::unique_ptr<Core::Buffer> *bu
             return false;
         }
         else if (info->buffer->DataSize()) {
-            (*buffer)->Clear();
             info->buffer.swap(*buffer);
             return true;
         }
         else {
-            info->waiting = true;
-            info->stateChanged->wait(critical);
-            info->waiting = false;
+            if (nonBlocking) {
+                return true;
+            }
+            else {
+                info->waiting = true;
+                info->stateChanged->wait(critical);
+                info->waiting = false;
+            }
         }
     }
 }    // ......................................................................................... critical section, end.
