@@ -24,9 +24,12 @@ class RenderTarget : public virtual Vectoid::RenderTargetInterface {
     virtual std::shared_ptr<Vectoid::CoordSys> NewCoordSys();
     virtual std::shared_ptr<Vectoid::Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry);
     virtual std::shared_ptr<Vectoid::Glyphs> NewGlyphs();
+    virtual std::shared_ptr<LitTriangles> NewLitTriangles(
+        const std::shared_ptr<TriangleProviderInterface> &triangleProvider);
     virtual std::shared_ptr<Vectoid::ParticlesRenderer> NewParticlesRenderer(
         const std::shared_ptr<Particles> &particles);
     virtual std::shared_ptr<Vectoid::PerspectiveProjection> NewPerspectiveProjection();
+    virtual std::shared_ptr<SimpleLighting> NewSimpleLighting();
     virtual std::shared_ptr<Vectoid::TestTriangle> NewTestTriangle();
     virtual std::shared_ptr<Vectoid::TextConsole> NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Vectoid::Glyphs> &glyphs);

@@ -5,8 +5,10 @@
 #include <kxm/Vectoid/OpenGL/CoordSys.h>
 #include <kxm/Vectoid/OpenGL/Geode.h>
 #include <kxm/Vectoid/OpenGL/Glyphs.h>
+#include <kxm/Vectoid/OpenGL/LitTriangles.h>
 #include <kxm/Vectoid/OpenGL/ParticlesRenderer.h>
 #include <kxm/Vectoid/OpenGL/PerspectiveProjection.h>
+#include <kxm/Vectoid/OpenGL/SimpleLighting.h>
 #include <kxm/Vectoid/OpenGL/TestTriangle.h>
 #include <kxm/Vectoid/OpenGL/TextConsole.h>
 
@@ -57,12 +59,21 @@ shared_ptr<Vectoid::Glyphs> RenderTarget::NewGlyphs() {
     return shared_ptr<Glyphs>(new Glyphs());
 }
 
+shared_ptr<Vectoid::LitTriangles> RenderTarget::NewLitTriangles(
+        const shared_ptr<TriangleProviderInterface> &triangleProvider) {
+    return make_shared<LitTriangles>(triangleProvider);
+}
+
 shared_ptr<Vectoid::ParticlesRenderer> RenderTarget::NewParticlesRenderer(const shared_ptr<Particles> &particles) {
     return shared_ptr<ParticlesRenderer>(new ParticlesRenderer(particles));
 }
 
 shared_ptr<Vectoid::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
     return shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
+}
+
+shared_ptr<Vectoid::SimpleLighting> RenderTarget::NewSimpleLighting() {
+    return make_shared<SimpleLighting>();
 }
 
 shared_ptr<Vectoid::TestTriangle> RenderTarget::NewTestTriangle() {

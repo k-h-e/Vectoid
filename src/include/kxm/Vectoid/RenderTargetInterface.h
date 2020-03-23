@@ -13,12 +13,15 @@ class CoordSys;
 class GeometryInterface;
 class Geode;
 class Glyphs;
+class LitTriangles;
 class Particles;
 class ParticlesRenderer;
 class PerspectiveProjection;
 class SceneGraphNode;
+class SimpleLighting;
 class TestTriangle;
 class TextConsole;
+class TriangleProviderInterface;
 
 //! Interface to <c>Vectoid</c> render targets.
 /*!
@@ -39,8 +42,11 @@ class RenderTargetInterface : public virtual Core::Interface {
     virtual std::shared_ptr<CoordSys> NewCoordSys() = 0;
     virtual std::shared_ptr<Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry) = 0;
     virtual std::shared_ptr<Glyphs> NewGlyphs() = 0;
+    virtual std::shared_ptr<LitTriangles> NewLitTriangles(
+        const std::shared_ptr<TriangleProviderInterface> &triangleProvider) = 0;
     virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(const std::shared_ptr<Particles> &particles) = 0;
     virtual std::shared_ptr<PerspectiveProjection> NewPerspectiveProjection() = 0;
+    virtual std::shared_ptr<SimpleLighting> NewSimpleLighting() = 0;
     virtual std::shared_ptr<TestTriangle> NewTestTriangle() = 0;
     virtual std::shared_ptr<TextConsole> NewTextConsole(int width, int height, float glyphWidth, float glyphHeight,
                                                         const std::shared_ptr<Glyphs> &glyphs) = 0;

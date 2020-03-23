@@ -22,7 +22,8 @@ class Vector {
     inline Vector();
     inline Vector(float x, float y, float z);
     inline Vector(const Vector &other);
-    
+    // Default copy and move, ok.
+
     inline bool operator==(const Vector &other) const;
     inline bool operator!=(const Vector &other) const;
     inline Vector operator-() const;
@@ -35,11 +36,13 @@ class Vector {
     inline float &operator[](int i);
     //! Computes the vector's length.
     inline float Length() const;
-    //! Normalizes the vector to unit length (without checking for a division by <c>0</c>!).
+    //! Normalizes the vector to unit length.
+    /*!
+     *  The resulting normal might not be a <c>Valid()</c> vector.
+     */
     inline void Normalize();
-    //! Normalizes the vector to unit length if possible, and returns <c>false</c> without
-    //! changing state otherwise.
-    inline bool TryNormalize();
+    //! Tells whether all components are still finite numbers.
+    inline bool Valid();
     //! Produces a verbose representation of the current vector state.
     inline std::string ToString();
     
@@ -101,15 +104,13 @@ float Vector::Length() const {
 
 void Vector::Normalize() {
     float len = Length();
-    x /= len;  y /= len;  z /= len;
+    x /= len;
+    y /= len;
+    z /= len;
 }
 
-bool Vector::TryNormalize() {
-    float len = Length();
-    if (len == 0.0f)
-        return false;
-    x /= len;  y /= len;  z /= len;
-    return true;
+bool Vector::Valid() {
+    return isfinite(x) && isfinite(y) && isfinite(z);
 }
 
 std::string Vector::ToString() {
