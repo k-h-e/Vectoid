@@ -6,7 +6,7 @@
 namespace kxm {
 namespace Vectoid {
 
-class Transform;
+template<typename T> class Transform;
 
 //! Interface to entities having an associated transform, as for example a \ref CoordSys.
 /*! 
@@ -15,7 +15,7 @@ class Transform;
 class HasTransformInterface : public virtual Core::Interface {
   public:
     //! Retrieves the associated transform.
-    virtual void GetTransform(Transform *outTransform) const = 0;
+    virtual void GetTransform(Transform<float> *outTransform) const = 0;
 };
 
 }    // Namespace Vectoid.

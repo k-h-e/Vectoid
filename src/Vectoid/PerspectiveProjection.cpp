@@ -6,9 +6,9 @@ namespace Vectoid {
 const float PerspectiveProjection::paramMin = 0.0001f;
 
 PerspectiveProjection::PerspectiveProjection()
-        : windowSize_(paramMin),
-          eyepointDistance_(paramMin),
-          viewingDepth_(paramMin) {
+        : eyepointDistance_(paramMin),
+          viewingDepth_(paramMin),
+          windowSize_(paramMin) {
     SetViewPort(1.0f, 1.0f);    // Sets parametersChanged_ to true.
 }
 
@@ -52,12 +52,10 @@ void PerspectiveProjection::SetViewPort(float width, float height) {
     parametersChanged_ = true;
 }
 
-Vector PerspectiveProjection::TransformViewPortCoordinates(float x, float y) const {
+Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float y) const {
     float windowWidth, windowHeight;
     ComputeWindowDimensions(&windowWidth, &windowHeight);
-    return Vector((x/width_ - .5f)  * windowWidth,
-                  (.5f - y/height_) * windowHeight,
-                  0.0f);
+    return Vector<float>((x/width_ - .5f)  * windowWidth, (.5f - y/height_) * windowHeight, 0.0f);
 }
 
 void PerspectiveProjection::ComputeWindowDimensions(float *width, float *height) const {

@@ -30,21 +30,23 @@ class PerspectiveProjection : public SceneGraphNode {
     //! Tells the projection about the dimensions of the viewport that it is going to be used for.
     void SetViewPort(float width, float height);
     //! Transforms a viewport point to camera coordinates.
-    Vector TransformViewPortCoordinates(float x, float y) const;
+    Vector<float> TransformViewPortCoordinates(float x, float y) const;
     
   protected:
     PerspectiveProjection();
   
     void ComputeWindowDimensions(float *width, float *height) const;
-    float eyepointDistance_,
-          viewingDepth_;
+
+    float eyepointDistance_;
+    float viewingDepth_;
     bool  parametersChanged_;    // Will get cleared by Render() implementations.
     
   private:
     static const float paramMin;
     
-    float windowSize_,
-          width_, height_;
+    float windowSize_;
+    float width_;
+    float height_;
 };
 
 }    // Namespace Vectoid.

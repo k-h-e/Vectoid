@@ -23,16 +23,16 @@ class SimpleTriangleList : public virtual TriangleProviderInterface {
     void Add(const ThreePoints &triangle);
     virtual void PrepareToProvideTriangles();
     virtual bool ProvideNextTriangle(ThreePoints *outTriangle);
-    virtual void ProvideNormal(Vector *outNormal);
+    virtual void ProvideNormal(Vector<float> *outNormal);
     virtual bool TriangleError();
 
   private:
     void EnsureNormalsValid();
 
-    std::vector<ThreePoints> triangles_;
-    std::vector<Vector>      normals_;
-    int                      cursor_;
-    bool                     normalsValid_;
+    std::vector<ThreePoints>   triangles_;
+    std::vector<Vector<float>> normals_;
+    int                        cursor_;
+    bool                       normalsValid_;
 };
 
 }    // Namespace Vectoid.

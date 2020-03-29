@@ -16,17 +16,17 @@ class CoordSysCore : public SceneGraphNode,
                      public virtual CoordSysInterface {
   public:
     CoordSysCore();
-    void PrependTransform(const Transform &other);
-    void AppendTransform(const Transform &other);
-    void SetTransform(const Transform &other);
-    void GetTransform(Transform *outTransform) const;
-    void SetPosition(const Vector &pos);
-    void GetPosition(Vector *outPos);
-    Vector Position();
+    void PrependTransform(const Transform<float> &other);
+    void AppendTransform(const Transform<float> &other);
+    void SetTransform(const Transform<float> &other);
+    void GetTransform(Transform<float> *outTransform) const;
+    void SetPosition(const Vector<float> &pos);
+    void GetPosition(Vector<float> *outPos);
+    Vector<float> Position();
     
   protected:
-    Transform transform_;
-    bool      transformChanged_;
+    Transform<float> transform_;
+    bool             transformChanged_;
     
   private:
     CoordSysCore(const CoordSysCore &other);

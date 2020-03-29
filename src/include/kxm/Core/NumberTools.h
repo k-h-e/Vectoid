@@ -6,7 +6,7 @@ namespace Core {
 
 class NumberTools {
   public:
-    static const float piAsFloat;
+    static const double pi;
 
     static void Clamp(int *numba, int min, int max);
     static void Clamp(float *numba, float min, float max);

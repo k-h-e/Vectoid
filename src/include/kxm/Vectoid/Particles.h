@@ -24,18 +24,19 @@ class Particles {
      *  \ingroup Vectoid
      */
     struct ParticleInfo {
-        Vector position,
-               velocity;
-        float  age;
-        bool   hidden;
-        float  random0, random1;    // Random numbers in [-1, 1].
+        Vector<float> position;
+        Vector<float> velocity;
+        float         age;
+        bool          hidden;
+        float         random0;
+        float         random1;    // Random numbers in [-1, 1].
         
         ParticleInfo();
     };
     
     Particles();
     //! Adds a new particle with specified starting position and velocity, and provides access to it.
-    ParticleInfo &Add(const Vector &position, const Vector &velocity, int *outStorageId = nullptr);
+    ParticleInfo &Add(const Vector<float> &position, const Vector<float> &velocity, int *outStorageId = nullptr);
     //! Removes the specified particle.
     void Remove(int id);
     //! Provides access to the specified particle.

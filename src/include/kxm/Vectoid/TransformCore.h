@@ -11,6 +11,7 @@ namespace Vectoid {
 /*!
  *  \ingroup Vectoid
  */
+template<typename T = float>
 class TransformCore {
   public:
     // No element initialization during construction, subclasses must do this! Want to avoid duplicate element
@@ -19,7 +20,7 @@ class TransformCore {
     // Default copy, ok.
   
     //! Provides read access to the elements of the encapsuled 4x4 matrix in <c>OpenGL</c>-compatible layout.
-    inline const float *MatrixElements() const;
+    inline const T *MatrixElements() const;
     //! Tells the size in bytes of the encapsuled 4x4 matrix in <c>OpenGL</c>-compatible layout.
     inline uint32_t MatrixSize() const;
     
@@ -28,27 +29,45 @@ class TransformCore {
   
     friend class FullTransform;
   
-    float matrix_[4][4];    // Storage is column-major.
-                            //
-                            // Old comment: we represent the transformation as 4x4 matrix in a way compatible with
-                            // OpenGL. Note that as a result, the matrix's memory layout is actually the transpose of
-                            // the German convention for such transform matrices. When in the following we talk about
-                            // matrix columns and rows, we refer to the conventions used in Germany.
+    T matrix_[4][4];    // Storage is column-major.
+                        //
+                        // Old comment: we represent the transformation as 4x4 matrix in a way compatible with OpenGL.
+                        // Note that as a result, the matrix's memory layout is actually the transpose of the German
+                        // convention for such transform matrices. When in the following we talk about matrix columns
+                        // and rows, we refer to the conventions used in Germany.
 };
 
-const float *TransformCore::MatrixElements() const {
+template<typename T>
+const T *TransformCore<T>::MatrixElements() const {
     return &matrix_[0][0];
 }
 
-uint32_t TransformCore::MatrixSize() const {
-    return sizeof(matrix_);
+template<typename T>
+uint32_t TransformCore<T>::MatrixSize() const {
+    return static_cast<uint32_t>(sizeof(matrix_));
 }
 
-void TransformCore::InitAsIdentity() {
-    matrix_[0][0] = 1.0f;  matrix_[0][1] = 0.0f;  matrix_[0][2] = 0.0f;  matrix_[0][3] = 0.0f;
-    matrix_[1][0] = 0.0f;  matrix_[1][1] = 1.0f;  matrix_[1][2] = 0.0f;  matrix_[1][3] = 0.0f;
-    matrix_[2][0] = 0.0f;  matrix_[2][1] = 0.0f;  matrix_[2][2] = 1.0f;  matrix_[2][3] = 0.0f;
-    matrix_[3][0] = 0.0f;  matrix_[3][1] = 0.0f;  matrix_[3][2] = 0.0f;  matrix_[3][3] = 1.0f;
+template<typename T>
+void TransformCore<T>::InitAsIdentity() {
+    matrix_[0][0] = 1.0f;
+    matrix_[0][1] = 0.0f;
+    matrix_[0][2] = 0.0f;
+    matrix_[0][3] = 0.0f;
+
+    matrix_[1][0] = 0.0f;
+    matrix_[1][1] = 1.0f;
+    matrix_[1][2] = 0.0f;
+    matrix_[1][3] = 0.0f;
+
+    matrix_[2][0] = 0.0f;
+    matrix_[2][1] = 0.0f;
+    matrix_[2][2] = 1.0f;
+    matrix_[2][3] = 0.0f;
+
+    matrix_[3][0] = 0.0f;
+    matrix_[3][1] = 0.0f;
+    matrix_[3][2] = 0.0f;
+    matrix_[3][3] = 1.0f;
 }
 
 }    // Namespace Vectoid.

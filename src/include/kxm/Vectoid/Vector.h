@@ -15,27 +15,28 @@ namespace Vectoid {
 //! Vector in 3-space, also used to describe points in 3-space.
 /*! 
  *  \ingroup Vectoid
- */ 
+ */
+template<typename T>
 class Vector {
   public:
     //! Initializes the vector as <c>0</c>-vector.
     inline Vector();
-    inline Vector(float x, float y, float z);
-    inline Vector(const Vector &other);
+    inline Vector(T x, T y, T z);
+    inline Vector(const Vector<T> &other);
     // Default copy and move, ok.
 
-    inline bool operator==(const Vector &other) const;
-    inline bool operator!=(const Vector &other) const;
-    inline Vector operator-() const;
-    inline Vector operator+(const Vector &other) const;
-    inline Vector &operator+=(const Vector &other);
-    inline Vector operator-(const Vector &other) const;
+    inline bool operator==(const Vector<T> &other) const;
+    inline bool operator!=(const Vector<T> &other) const;
+    inline Vector<T> operator-() const;
+    inline Vector<T> operator+(const Vector<T> &other) const;
+    inline Vector<T> &operator+=(const Vector<T> &other);
+    inline Vector<T> operator-(const Vector<T> &other) const;
     
-    //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the
-    //! indices <c>0</c>-, <c>1</c>- and <c>2</c> respectively.
-    inline float &operator[](int i);
+    //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the indices <c>0</c>, <c>1</c> and
+    //! <c>2</c> respectively.
+    inline T &operator[](int i);
     //! Computes the vector's length.
-    inline float Length() const;
+    inline T Length() const;
     //! Normalizes the vector to unit length.
     /*!
      *  The resulting normal might not be a <c>Valid()</c> vector.
@@ -46,47 +47,65 @@ class Vector {
     //! Produces a verbose representation of the current vector state.
     inline std::string ToString();
     
-    float x, y, z;
+    T x, y, z;
 };
-    
-Vector::Vector() {
-    x = 0.0f;  y = 0.0f;  z = 0.0f;
+
+template<typename T>
+Vector<T>::Vector() {
+    x = 0.0f;
+    y = 0.0f;
+    z = 0.0f;
 }
 
-Vector::Vector(float xCoord, float yCoord, float zCoord) {
-    x = xCoord;  y = yCoord;  z = zCoord;
+template<typename T>
+Vector<T>::Vector(T xCoord, T yCoord, T zCoord) {
+    x = xCoord;
+    y = yCoord;
+    z = zCoord;
 }
 
-Vector::Vector(const Vector &other) {
-    x = other.x;  y = other.y;  z = other.z;
+template<typename T>
+Vector<T>::Vector(const Vector<T> &other) {
+    x = other.x;
+    y = other.y;
+    z = other.z;
 }
 
-bool Vector::operator==(const Vector &other) const {
+template<typename T>
+bool Vector<T>::operator==(const Vector<T> &other) const {
     return (x == other.x) && (y == other.y) && (z == other.z);
 }
-      
-bool Vector::operator!=(const Vector &other) const {
+
+template<typename T>
+bool Vector<T>::operator!=(const Vector<T> &other) const {
     return (x != other.x) || (y != other.y) || (z != other.z);
 }
 
-Vector Vector::operator-() const {
-    return Vector(-x, -y, -z);
-}
-      
-Vector Vector::operator+(const Vector &other) const {
-    return Vector(x + other.x, y + other.y, z + other.z);
+template<typename T>
+Vector<T> Vector<T>::operator-() const {
+    return Vector<T>(-x, -y, -z);
 }
 
-Vector &Vector::operator+=(const Vector &other) {
-    x += other.x;  y += other.y;  z += other.z;
+template<typename T>
+Vector<T> Vector<T>::operator+(const Vector<T> &other) const {
+    return Vector<T>(x + other.x, y + other.y, z + other.z);
+}
+
+template<typename T>
+Vector<T> &Vector<T>::operator+=(const Vector<T> &other) {
+    x += other.x;
+    y += other.y;
+    z += other.z;
     return *this;
 }
 
-Vector Vector::operator-(const Vector &other) const {
-    return Vector(x - other.x, y - other.y, z - other.z);
+template<typename T>
+Vector<T> Vector<T>::operator-(const Vector<T> &other) const {
+    return Vector<T>(x - other.x, y - other.y, z - other.z);
 }
 
-float &Vector::operator[](int i) {
+template<typename T>
+T &Vector<T>::operator[](int i) {
     switch (i) {
         case 1:
             return y;
@@ -98,40 +117,47 @@ float &Vector::operator[](int i) {
     }
 }
 
-float Vector::Length() const {
-    return (float)std::sqrt(x*x + y*y + z*z);
+template<typename T>
+T Vector<T>::Length() const {
+    return std::sqrt(x*x + y*y + z*z);
 }
 
-void Vector::Normalize() {
-    float len = Length();
+template<typename T>
+void Vector<T>::Normalize() {
+    T len = Length();
     x /= len;
     y /= len;
     z /= len;
 }
 
-bool Vector::Valid() {
-    return isfinite(x) && isfinite(y) && isfinite(z);
+template<typename T>
+bool Vector<T>::Valid() {
+    return std::isfinite(x) && std::isfinite(y) && std::isfinite(z);
 }
 
-std::string Vector::ToString() {
+template<typename T>
+std::string Vector<T>::ToString() {
     char text[200];
-    std::sprintf(text, "(%f,%f,%f)", x, y, z);
+    std::sprintf(text, "(%f, %f, %f)", x, y, z);
     return std::string(text);
 }
 
 //! Scaling.
-inline Vector operator*(float s, const Vector &v) {
-    return Vector(s * v.x, s * v.y, s * v.z);
+template<typename T>
+inline Vector<T> operator*(T s, const Vector<T> &v) {
+    return Vector<T>(s * v.x, s * v.y, s * v.z);
 }
 
 //! Computes the dot product of the two specified vectors.
-inline float DotProduct(const Vector &u, const Vector &v) {
+template<typename T>
+inline T DotProduct(const Vector<T> &u, const Vector<T> &v) {
     return u.x*v.x + u.y*v.y + u.z*v.z;
 }
 
 //! Computes the cross product of the two specified vectors.
-inline Vector CrossProduct(const Vector &u, const Vector &v) {
-    return Vector(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
+template<typename T>
+inline Vector<T> CrossProduct(const Vector<T> &u, const Vector<T> &v) {
+    return Vector<T>(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
 }
     
 }    // Namespace Vectoid.

@@ -42,5 +42,16 @@ bool StringTools::Parse(const std::string &text, float *outValue) {
     return false;
 }
 
+bool StringTools::Parse(const std::string &text, double *outValue) {
+    try {
+        *outValue = stod(text);
+        return true;
+    }
+    catch (const invalid_argument &) {}
+    catch (const out_of_range &) {}
+
+    return false;
+}
+
 }    // Namespace Core.
 }    // namespace kxm.

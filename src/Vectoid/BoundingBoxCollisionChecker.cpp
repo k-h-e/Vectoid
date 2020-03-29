@@ -7,25 +7,27 @@
 namespace kxm {
 namespace Vectoid {
 
-BoundingBoxCollisionChecker::BoundingBoxCollisionChecker(const BoundingBox &boundingBox)
+BoundingBoxCollisionChecker::BoundingBoxCollisionChecker(const BoundingBox<float> &boundingBox)
         : boundingBox_(boundingBox) {
 }
 
-bool BoundingBoxCollisionChecker::CheckCollision(CollisionCheckerInterface *other,
-                                                 const Transform &otherTransform, const Transform &ourTransform) {
+bool BoundingBoxCollisionChecker::CheckCollision(
+        CollisionCheckerInterface *other, const Transform<float> &otherTransform,
+        const Transform<float> &ourTransform) {
     return other->CheckCollision(this, ourTransform, otherTransform);
 }
 
-bool BoundingBoxCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *other,
-                                                 const Transform &otherTransform, const Transform &ourTransform) {
+bool BoundingBoxCollisionChecker::CheckCollision(
+        BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
+        const Transform<float> &ourTransform) {
     return false;    // TODO: Implement check!
 }
 
-bool BoundingBoxCollisionChecker::CheckCollision(PointCollisionChecker *other,
-                                                 const Transform &otherTransform, const Transform &ourTransform) {
-    Vector point;
+bool BoundingBoxCollisionChecker::CheckCollision(
+        PointCollisionChecker *other, const Transform<float> &otherTransform, const Transform<float> &ourTransform) {
+    Vector<float> point;
     otherTransform.GetTranslationPart(&point);
-    Transform inverseOurTransform(Transform::InitAsInverse, ourTransform);
+    Transform<float> inverseOurTransform(Transform<float>::InitAsInverse, ourTransform);
     inverseOurTransform.ApplyTo(&point);
     return boundingBox_.Contains(point);
 }

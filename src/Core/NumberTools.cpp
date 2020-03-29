@@ -3,7 +3,7 @@
 namespace kxm {
 namespace Core {
 
-const float NumberTools::piAsFloat = 3.141592654f;
+const double NumberTools::pi = 3.141592654;
 
 void NumberTools::Clamp(int *numba, int min, int max) {
     if (*numba < min) {

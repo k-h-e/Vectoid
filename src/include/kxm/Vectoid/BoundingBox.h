@@ -8,12 +8,13 @@
 namespace kxm {
 namespace Vectoid {
 
-class Vector;
+template<typename T> class Vector;
 
 //! Bounding box in 3-space.
 /*! 
  *  \ingroup Vectoid
- */ 
+ */
+template<typename T>
 class BoundingBox {
   public:
     //! Creates an undefined bounding box.
@@ -24,19 +25,21 @@ class BoundingBox {
      */
     BoundingBox();
     //! If necessary, grows the bounding box to include the specified point.
-    void Grow(const Vector &point);
+    void Grow(const Vector<T> &point) {
+        xRange_.Grow(point.x);
+        yRange_.Grow(point.y);
+        zRange_.Grow(point.z);
+    }
     //! Tells wether the bounding box contains the specified point.
-    inline bool Contains(const Vector &point) const;
+    bool Contains(const Vector<T> &point) const {
+        return xRange_.Contains(point.x) && yRange_.Contains(point.y) && zRange_.Contains(point.z);
+    }
     
   private:
-    Range xRange_,
-          yRange_,
-          zRange_;
+    Range<T> xRange_;
+    Range<T> yRange_;
+    Range<T> zRange_;
 };
-
-bool BoundingBox::Contains(const Vector &point) const {
-    return xRange_.Contains(point.x) && yRange_.Contains(point.y) && zRange_.Contains(point.z);
-}
 
 }    // Namespace Vectoid.
 }    // Namespace kxm.

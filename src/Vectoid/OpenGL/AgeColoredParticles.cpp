@@ -32,7 +32,7 @@ void AgeColoredParticles::Render() {
     int     numToRender   = 0,
             numColorSlots = (int)colors_.size() - 1;
     float   colorSlotSize = highAge_ / (float)numColorSlots;
-    Vector  particleColor;
+    Vector<float> particleColor;
     for (Particles::ParticleInfo &particle : particles_->Iterate()) {
         if (particle.hidden)
             continue;

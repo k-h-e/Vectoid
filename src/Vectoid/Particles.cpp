@@ -13,7 +13,8 @@ Particles::Particles()
           random1000_(uniform_int_distribution<>(0, 1000)) {
 }
 
-Particles::ParticleInfo &Particles::Add(const Vector &position, const Vector &velocity, int *outStorageId) {
+Particles::ParticleInfo &Particles::Add(const Vector<float> &position, const Vector<float> &velocity,
+                                        int *outStorageId) {
     int storageId;
     ParticleInfo &particle = particles_.Get(0, &storageId);
     particle.position = position;

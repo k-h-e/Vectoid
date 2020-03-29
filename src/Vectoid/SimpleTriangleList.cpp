@@ -29,13 +29,13 @@ bool SimpleTriangleList::ProvideNextTriangle(ThreePoints *outTriangle) {
     }
 }
 
-void SimpleTriangleList::ProvideNormal(Vector *outNormal) {
+void SimpleTriangleList::ProvideNormal(Vector<float> *outNormal) {
     if (cursor_ < static_cast<int>(triangles_.size())) {
         EnsureNormalsValid();
         *outNormal = normals_[cursor_];
     }
     else {
-        *outNormal = Vector(0.0f, 1.0f, 0.0f);
+        *outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
     }
 }
 
@@ -46,11 +46,11 @@ bool SimpleTriangleList::TriangleError() {
 void SimpleTriangleList::EnsureNormalsValid() {
     if (!normalsValid_) {
         normals_.clear();
-        Vector normal;
+        Vector<float> normal;
         for (ThreePoints &triangle : triangles_) {
             triangle.ComputeNormal(&normal);
             if (!normal.Valid()) {
-                normal = Vector(0.0f, 1.0f, 0.0f);
+                normal = Vector<float>(0.0f, 1.0f, 0.0f);
             }
             normals_.push_back(normal);
         }

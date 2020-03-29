@@ -6,7 +6,7 @@
 namespace kxm {
 namespace Vectoid {
 
-class Vector;
+template<typename T> class Vector;
 class ThreePoints;
 
 //! Interface to entities iteratively providing triangles.
@@ -26,7 +26,7 @@ class TriangleProviderInterface : public virtual kxm::Core::Interface {
     virtual bool ProvideNextTriangle(ThreePoints *outTriangle) = 0;
     //! Provides the normal for the current triangle if normals are supported by the provider, and <c>(0, 1, 0)</c>
     //! otherwise.
-    virtual void ProvideNormal(Vector *outNormal) = 0;
+    virtual void ProvideNormal(Vector<float> *outNormal) = 0;
     //! Tells whether or not the last triangle readout ended because of an error.
     virtual bool TriangleError() = 0;
 };

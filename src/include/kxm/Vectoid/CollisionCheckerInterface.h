@@ -6,7 +6,7 @@
 namespace kxm {
 namespace Vectoid {
 
-class Transform;
+template<typename T> class Transform;
 class BoundingBoxCollisionChecker;
 class PointCollisionChecker;
 
@@ -20,20 +20,20 @@ class CollisionCheckerInterface : public virtual Core::Interface {
     /*!
      *  \return <c>true</c> in case a collision was detected.
      */
-    virtual bool CheckCollision(CollisionCheckerInterface *other, const Transform &otherTransform,
-                                const Transform &ourTransform) = 0;
+    virtual bool CheckCollision(CollisionCheckerInterface *other, const Transform<float> &otherTransform,
+                                const Transform<float> &ourTransform) = 0;
     //! Checks for collision with the specified bounding box.
     /*!
      *  \return <c>true</c> in case a collision was detected.
      */
-    virtual bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform &otherTransform,
-                                const Transform &ourTransform) = 0;
+    virtual bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
+                                const Transform<float> &ourTransform) = 0;
     //! Checks for collision with the specified point.
     /*!
      *  \return <c>true</c> in case a collision was detected.
      */
-    virtual bool CheckCollision(PointCollisionChecker *other, const Transform &otherTransform,
-                                const Transform &ourTransform) = 0;
+    virtual bool CheckCollision(PointCollisionChecker *other, const Transform<float> &otherTransform,
+                                const Transform<float> &ourTransform) = 0;
 };
 
 }    // Namespace Vectoid.

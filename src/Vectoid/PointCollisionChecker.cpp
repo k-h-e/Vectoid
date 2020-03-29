@@ -6,18 +6,18 @@
 namespace kxm {
 namespace Vectoid {
 
-bool PointCollisionChecker::CheckCollision(CollisionCheckerInterface *other, const Transform &otherTransform,
-                                           const Transform &ourTransform) {
+bool PointCollisionChecker::CheckCollision(CollisionCheckerInterface *other, const Transform<float> &otherTransform,
+                                           const Transform<float> &ourTransform) {
     return other->CheckCollision(this, ourTransform, otherTransform);
 }
 
-bool PointCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *other, const Transform &otherTransform,
-                                           const Transform &ourTransform) {
+bool PointCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
+                                           const Transform<float> &ourTransform) {
     return other->CheckCollision(this, ourTransform, otherTransform);
 }
 
-bool PointCollisionChecker::CheckCollision(PointCollisionChecker *other, const Transform &otherTransform,
-                                           const Transform &ourTransform) {
+bool PointCollisionChecker::CheckCollision(PointCollisionChecker *other, const Transform<float> &otherTransform,
+                                           const Transform<float> &ourTransform) {
     return false;    // TODO: Implement check!
 }
 

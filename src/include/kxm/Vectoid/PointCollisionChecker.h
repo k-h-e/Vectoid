@@ -12,12 +12,12 @@ namespace Vectoid {
  */ 
 class PointCollisionChecker : public virtual CollisionCheckerInterface {
   public:
-    bool CheckCollision(CollisionCheckerInterface *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
-    bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
-    bool CheckCollision(PointCollisionChecker *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
+    bool CheckCollision(CollisionCheckerInterface *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
+    bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
+    bool CheckCollision(PointCollisionChecker *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
 };
 
 }    // Namespace Vectoid.

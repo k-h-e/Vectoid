@@ -12,6 +12,7 @@ class StringTools {
     static void Tokenize(const std::string &text, char separator, std::vector<std::string> *outTokens);
     static bool Parse(const std::string &text, int *outValue);
     static bool Parse(const std::string &text, float *outValue);
+    static bool Parse(const std::string &text, double *outValue);
 };
 
 }    // Namespace Core.

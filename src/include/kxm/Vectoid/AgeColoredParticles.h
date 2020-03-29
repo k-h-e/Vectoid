@@ -25,7 +25,7 @@ class AgeColoredParticles : public virtual GeometryInterface {
   
     std::shared_ptr<Vectoid::Particles> particles_;
     float                               highAge_;
-    std::vector<Vectoid::Vector>        colors_;
+    std::vector<Vectoid::Vector<float>> colors_;
 };
 
 }    // Namespace Vectoid.

@@ -7,7 +7,7 @@
 namespace kxm {
 namespace Vectoid {
 
-class Transform;
+template<typename T> class Transform;
 
 //! Interface to entities that establish their own local coordinate system specified via a transform relative to some
 //! parent coordinate system. This transform can be be modified to move or rotate the entity relative to the parent
@@ -18,18 +18,18 @@ class Transform;
 class CoordSysInterface : public virtual HasTransformInterface {
   public:
     //! Maps to \ref Transform::Prepend() of the local transform.
-    virtual void PrependTransform(const Transform &other) = 0;
+    virtual void PrependTransform(const Transform<float> &other) = 0;
     //! Maps to \ref Transform::Append() of the local transform.
-    virtual void AppendTransform(const Transform &other) = 0;
+    virtual void AppendTransform(const Transform<float> &other) = 0;
     //! Sets the local transform as specified.
-    virtual void SetTransform(const Transform &other) = 0;
+    virtual void SetTransform(const Transform<float> &other) = 0;
     // GetTransform() is part of the HasTransformInterface.
     //! Updates the translation part of the local transform as specified.
-    virtual void SetPosition(const Vector &pos) = 0;
+    virtual void SetPosition(const Vector<float> &pos) = 0;
     //! Retrieves the translation part of the local transform.
-    virtual void GetPosition(Vector *outPos) = 0;
+    virtual void GetPosition(Vector<float> *outPos) = 0;
     //! Returns the translation part of the local transform.
-    virtual Vector Position() = 0;
+    virtual Vector<float> Position() = 0;
 };
 
 }    // Namespace Vectoid.

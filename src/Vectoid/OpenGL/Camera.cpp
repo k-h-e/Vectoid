@@ -12,7 +12,7 @@ Camera::Camera()
 }
 
 void Camera::Render() {
-    Transform inverse(Transform::InitAsInverse, transform_);
+    Transform<float> inverse(Transform<float>::InitAsInverse, transform_);
     glLoadIdentity();
     glMultMatrixf(inverse.MatrixElements());
     Vectoid::Camera::Render();

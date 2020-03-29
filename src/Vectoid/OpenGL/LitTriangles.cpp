@@ -20,8 +20,8 @@ void LitTriangles::Render() {
 
     glBegin(GL_TRIANGLES);
     triangleProvider_->PrepareToProvideTriangles();
-    ThreePoints triangle;
-    Vector      normal;
+    ThreePoints   triangle;
+    Vector<float> normal;
     while (triangleProvider_->ProvideNextTriangle(&triangle)) {
         triangleProvider_->ProvideNormal(&normal);
         glNormal3f(normal.x, normal.y, normal.z);

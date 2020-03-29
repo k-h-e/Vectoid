@@ -6,8 +6,8 @@
 namespace kxm {
 namespace Vectoid {
 
-class BoundingBox;
-class Transform;
+template<typename T> class BoundingBox;
+template<typename T> class Transform;
 
 //! Adapts a bounding box for taking part in collision checking.
 /*! 
@@ -16,16 +16,16 @@ class Transform;
 class BoundingBoxCollisionChecker : public virtual CollisionCheckerInterface {
   public:
     //! The specified bounding box object is expected to outlive the constructed checker instance.
-    BoundingBoxCollisionChecker(const BoundingBox &boundingBox);
-    bool CheckCollision(CollisionCheckerInterface *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
-    bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
-    bool CheckCollision(PointCollisionChecker *other, const Transform &otherTransform,
-                        const Transform &ourTransform);
+    BoundingBoxCollisionChecker(const BoundingBox<float> &boundingBox);
+    bool CheckCollision(CollisionCheckerInterface *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
+    bool CheckCollision(BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
+    bool CheckCollision(PointCollisionChecker *other, const Transform<float> &otherTransform,
+                        const Transform<float> &ourTransform);
     
   private:
-    const BoundingBox &boundingBox_;
+    const BoundingBox<float> &boundingBox_;
 };
 
 }    // Namespace Vectoid.
