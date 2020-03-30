@@ -5,6 +5,7 @@
 #include <Vectoid/SceneGraph/OpenGL/CoordSys.h>
 #include <Vectoid/SceneGraph/OpenGL/Geode.h>
 #include <Vectoid/SceneGraph/OpenGL/Glyphs.h>
+#include <Vectoid/SceneGraph/OpenGL/LineSegments.h>
 #include <Vectoid/SceneGraph/OpenGL/LitTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
@@ -13,6 +14,7 @@
 #include <Vectoid/SceneGraph/OpenGL/TextConsole.h>
 
 using namespace std;
+using Vectoid::Core::LineSegmentProviderInterface;
 using Vectoid::Core::Particles;
 using Vectoid::Core::TriangleProviderInterface;
 
@@ -60,6 +62,11 @@ shared_ptr<SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<Geome
 
 shared_ptr<SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
     return shared_ptr<Glyphs>(new Glyphs());
+}
+
+shared_ptr<SceneGraph::LineSegments> RenderTarget::NewLineSegments(
+        const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider) {
+    return make_shared<LineSegments>(lineSegmentProvider);
 }
 
 shared_ptr<SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(

@@ -24,6 +24,8 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     virtual std::shared_ptr<SceneGraph::CoordSys> NewCoordSys();
     virtual std::shared_ptr<SceneGraph::Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry);
     virtual std::shared_ptr<SceneGraph::Glyphs> NewGlyphs();
+    virtual std::shared_ptr<SceneGraph::LineSegments> NewLineSegments(
+        const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider);
     virtual std::shared_ptr<SceneGraph::LitTriangles> NewLitTriangles(
         const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
     virtual std::shared_ptr<SceneGraph::ParticlesRenderer> NewParticlesRenderer(

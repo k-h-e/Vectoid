@@ -23,7 +23,8 @@ class BoundingBox {
      *  longer be undefined, but initialized to <c>(number, number, number)</c>, with <c>number</c> being the argument
      *  to the call to \ref Grow().
      */
-    BoundingBox();
+    BoundingBox() {}
+
     //! If necessary, grows the bounding box to include the specified point.
     void Grow(const Vector<T> &point) {
         xRange_.Grow(point.x);
@@ -33,6 +34,14 @@ class BoundingBox {
     //! Tells wether the bounding box contains the specified point.
     bool Contains(const Vector<T> &point) const {
         return xRange_.Contains(point.x) && yRange_.Contains(point.y) && zRange_.Contains(point.z);
+    }
+    //! Returns the bounding box's center.
+    Vector<T> Center() {
+        return Vector<T>(xRange_.Center(), yRange_.Center(), zRange_.Center());
+    }
+    //! Returns the bounding box's extents.
+    Vector<T> Extents() {
+        return Vector<T>(xRange_.Extent(), yRange_.Extent(), zRange_.Extent());
     }
     
   private:

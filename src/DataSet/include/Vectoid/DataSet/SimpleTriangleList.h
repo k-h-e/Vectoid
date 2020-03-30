@@ -8,7 +8,7 @@
 namespace Vectoid {
 namespace DataSet {
 
-//! Simple lists of triangles in 3-space that can be grown dynamically.
+//! Simple list of triangles in 3-space that can be grown dynamically.
 /*!
  *  \ingroup Vectoid
  */

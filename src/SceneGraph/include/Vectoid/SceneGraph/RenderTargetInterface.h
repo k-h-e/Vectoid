@@ -6,6 +6,7 @@
 
 namespace Vectoid {
 namespace Core {
+    class LineSegmentProviderInterface;
     class Particles;
     class TriangleProviderInterface;
 }
@@ -21,6 +22,7 @@ class GeometryInterface;
 class Geode;
 class Glyphs;
 class LitTriangles;
+class LineSegments;
 class ParticlesRenderer;
 class PerspectiveProjection;
 class SceneGraphNode;
@@ -47,6 +49,8 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<CoordSys> NewCoordSys() = 0;
     virtual std::shared_ptr<Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry) = 0;
     virtual std::shared_ptr<Glyphs> NewGlyphs() = 0;
+    virtual std::shared_ptr<LineSegments> NewLineSegments(
+        const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) = 0;
     virtual std::shared_ptr<LitTriangles> NewLitTriangles(
         const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) = 0;
     virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(

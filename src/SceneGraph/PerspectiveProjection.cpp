@@ -10,14 +10,16 @@ const float PerspectiveProjection::paramMin = 0.0001f;
 PerspectiveProjection::PerspectiveProjection()
         : eyepointDistance_(paramMin),
           viewingDepth_(paramMin),
-          windowSize_(paramMin) {
+          windowSize_(paramMin),
+          windowSizeIsLargerViewPortDimension_(true) {
     SetViewPort(1.0f, 1.0f);    // Sets parametersChanged_ to true.
 }
 
-void PerspectiveProjection::SetWindowSize(float windowSize) {
+void PerspectiveProjection::SetWindowSize(float windowSize, bool identifyWithLargerViewPortDimension) {
     if (windowSize >= paramMin) {
-        windowSize_        = windowSize;
-        parametersChanged_ = true;
+        windowSize_                          = windowSize;
+        windowSizeIsLargerViewPortDimension_ = identifyWithLargerViewPortDimension;
+        parametersChanged_                   = true;
     }
 }
 float PerspectiveProjection::WindowSize() const {
@@ -61,7 +63,11 @@ Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float
 }
 
 void PerspectiveProjection::ComputeWindowDimensions(float *width, float *height) const {
-    if (width_ > height_) {
+    bool assignWindowSizeToWidth = (width_ < height_);
+    if (windowSizeIsLargerViewPortDimension_) {
+        assignWindowSizeToWidth = !assignWindowSizeToWidth;
+    }
+    if (assignWindowSizeToWidth) {
         *width  = windowSize_;
         *height = windowSize_ * height_ / width_;
     }

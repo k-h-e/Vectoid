@@ -29,9 +29,9 @@ class Range {
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
     //! Tells wether the range contains the specified number.
-    inline bool Contains(T number) const;
+    bool Contains(T number) const;
     //! Clamps the specified number to the range.
-    inline void Clamp(T *number) const;
+    void Clamp(T *number) const;
     //! Considers <c>[min, max)</c> as a range where modulo-like arithmetic is done upon, and sets the specified number
     //! <c>n</c> - potentially lying outside that range - to the representative <c>n'</c> of its equivalence class, with
     //! <c>n'</c> in <c>[min, max)</c>. Note that the range instance represents <c>[min, max]</c> (as opposed to
@@ -40,18 +40,22 @@ class Range {
      *  Due to its optimization, the method only works efficiently if the specified number does not lie farther ouside
      *  the range than <c>max - min</c>.
      */
-    inline void ClampModulo(T *number) const;
+    void ClampModulo(T *number) const;
     //! Interprets both numbers as "modulo-clamped" (see ClampModulo() ), and puts the specified number "on the right"
     //! side of the specified observer with respect to the shorter distance, potentially making the number leave the
     //! range <c>[min, max]</c>.
-    inline void CorrectForObserver(T *inOutNumber, T observer) const;
+    void CorrectForObserver(T *inOutNumber, T observer) const;
     //! If the range were subdivided into slots of the specified size, the method returns the slot the specified number
     //! would be in, including the resulting remainder. This method does no bounds checking whatsoever.
-    inline void ComputeSlotUnchecked(T number, T slotSize,
+    void ComputeSlotUnchecked(T number, T slotSize,
                                      int *outSlot, T *outRemainder) const;
     //! Computes the affine combination of the two range delimiters using the given coefficient <c>t</c> (and
     //! <c>(1 - t)</c>).
-    inline T AffineCombination(T t) const;
+    T AffineCombination(T t) const;
+    //! Returns the range's center.
+    T Center() const;
+    //! Returns the range's extent.
+    T Extent() const;
     
   private:
     T    min_;
@@ -183,6 +187,16 @@ void Range<T>::ComputeSlotUnchecked(T number, T slotSize, int *outSlot, T *outRe
 template<typename T>
 T Range<T>::AffineCombination(T t) const {
     return (1.0f - t)*min_ + t*max_;
+}
+
+template<typename T>
+T Range<T>::Center() const {
+    return (T).5*min_ + (T).5*max_;
+}
+
+template<typename T>
+T Range<T>::Extent() const {
+    return max_ - min_;
 }
 
 }    // Namespace Core.

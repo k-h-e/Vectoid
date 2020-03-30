@@ -15,8 +15,8 @@ class PerspectiveProjection : public SceneGraphNode {
   public:
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
-    //! Sets the length in camera space of that dimension of the rectangular "window" on the near clipping plane that correspoinds to the larger dimension of the viewport.
-    void SetWindowSize(float windowSize);
+    //! Sets the size in camera space of the rectangular "window" on the near clipping plane.
+    void SetWindowSize(float windowSize, bool identifyWithLargerViewPortDimension);
     //! Retrieves the property set by SetWindowSize().
     float WindowSize() const;
     //! Sets the distance in camera space between near and far clipping planes.
@@ -45,6 +45,7 @@ class PerspectiveProjection : public SceneGraphNode {
     static const float paramMin;
     
     float windowSize_;
+    bool  windowSizeIsLargerViewPortDimension_;
     float width_;
     float height_;
 };

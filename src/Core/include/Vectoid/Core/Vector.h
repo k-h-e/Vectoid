@@ -21,7 +21,7 @@ class Vector {
   public:
     //! Initializes the vector as <c>0</c>-vector.
     inline Vector();
-    inline Vector(T x, T y, T z);
+    inline Vector(T xCoord, T yCoord, T zCoord);
     inline Vector(const Vector<T> &other);
     // Default copy and move, ok.
 
@@ -35,6 +35,8 @@ class Vector {
     //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the indices <c>0</c>, <c>1</c> and
     //! <c>2</c> respectively.
     inline T &operator[](int i);
+    //! Sets the vector as specified.
+    inline void Set(T xCoord, T yCoord, T zCoord);
     //! Computes the vector's length.
     inline T Length() const;
     //! Normalizes the vector to unit length.
@@ -47,7 +49,9 @@ class Vector {
     //! Produces a verbose representation of the current vector state.
     inline std::string ToString();
     
-    T x, y, z;
+    T x;
+    T y;
+    T z;
 };
 
 template<typename T>
@@ -115,6 +119,13 @@ T &Vector<T>::operator[](int i) {
         default:
             return x;
     }
+}
+
+template<typename T>
+void Vector<T>::Set(T xCoord, T yCoord, T zCoord) {
+    x = xCoord;
+    y = yCoord;
+    z = zCoord;
 }
 
 template<typename T>
