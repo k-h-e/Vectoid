@@ -45,9 +45,11 @@ class Vector {
      */
     inline void Normalize();
     //! Tells whether all components are still finite numbers.
-    inline bool Valid();
+    inline bool Valid() const;
     //! Produces a verbose representation of the current vector state.
-    inline std::string ToString();
+    std::string ToString() const;
+    //! Computes and returns a hash value for the vector.
+    std::size_t Hash() const;
     
     T x;
     T y;
@@ -142,15 +144,24 @@ void Vector<T>::Normalize() {
 }
 
 template<typename T>
-bool Vector<T>::Valid() {
+bool Vector<T>::Valid() const {
     return std::isfinite(x) && std::isfinite(y) && std::isfinite(z);
 }
 
 template<typename T>
-std::string Vector<T>::ToString() {
+std::string Vector<T>::ToString() const {
     char text[200];
     std::sprintf(text, "(%f, %f, %f)", x, y, z);
     return std::string(text);
+}
+
+template<typename T>
+std::size_t Vector<T>::Hash() const {
+    std::size_t hash = 17u;
+    hash = hash*31u + std::hash<T>()(x);
+    hash = hash*31u + std::hash<T>()(y);
+    hash = hash*31u + std::hash<T>()(z);
+    return hash;
 }
 
 //! Scaling.
