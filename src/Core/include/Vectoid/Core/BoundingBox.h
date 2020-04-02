@@ -24,12 +24,19 @@ class BoundingBox {
      *  to the call to \ref Grow().
      */
     BoundingBox() {}
+    // Instances may get copied/moved depending on T.
 
     //! If necessary, grows the bounding box to include the specified point.
     void Grow(const Vector<T> &point) {
         xRange_.Grow(point.x);
         yRange_.Grow(point.y);
         zRange_.Grow(point.z);
+    }
+    //! Expands the bounding box by scaling it by the specified scaling factor > 1.
+    void Expand(T scalingFactor) {
+        xRange_.Expand(scalingFactor);
+        yRange_.Expand(scalingFactor);
+        zRange_.Expand(scalingFactor);
     }
     //! Tells wether the bounding box contains the specified point.
     bool Contains(const Vector<T> &point) const {

@@ -24,10 +24,12 @@ class Range {
     Range(T number, T anotherNumber);
     //! Creates a range of the same interval as the specified other range, but offsets it as specified.
     Range(const Range<T> &other, T offset);
-    // Instances may get copied.
+    // Instances may get copied/moved depending on T.
     
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
+    //! Expands the range by scaling it by the specified scaling factor > 1.
+    void Expand(T scalingFactor);
     //! Tells wether the range contains the specified number.
     bool Contains(T number) const;
     //! Clamps the specified number to the range.
@@ -113,6 +115,16 @@ void Range<T>::Grow(T number) {
         else if (number > max_) {
             max_ = number;
         }
+    }
+}
+
+template<typename T>
+void Range<T>::Expand(T scalingFactor) {
+    if (scalingFactor > (T)1.0) {
+        T center        = Center();
+        T newHalfExtent = scalingFactor * (T)0.5 * Extent();
+        min_ = center - newHalfExtent;
+        max_ = center + newHalfExtent;
     }
 }
 
