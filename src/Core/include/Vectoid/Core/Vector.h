@@ -39,6 +39,8 @@ class Vector {
     inline void Set(T xCoord, T yCoord, T zCoord);
     //! Computes the vector's length.
     inline T Length() const;
+    //! Computes the length of the vector's projection into the <c>x/y</c> plane.
+    inline T LengthXY() const;
     //! Normalizes the vector to unit length.
     /*!
      *  The resulting normal might not be a <c>Valid()</c> vector.
@@ -136,6 +138,11 @@ T Vector<T>::Length() const {
 }
 
 template<typename T>
+T Vector<T>::LengthXY() const {
+    return std::sqrt(x*x + y*y);
+}
+
+template<typename T>
 void Vector<T>::Normalize() {
     T len = Length();
     x /= len;
@@ -181,7 +188,14 @@ template<typename T>
 inline Vector<T> CrossProduct(const Vector<T> &u, const Vector<T> &v) {
     return Vector<T>(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
 }
-    
+
+//! Generates the affine combination of two given points for an arbitrary <c>t</c>. Note that if
+//! <c>t</c> in <c>[0, 1]</c> then the result is a convex combination.
+template<typename T>
+inline Vector<T> CombineAffine(T t, const Vector<T> &u, const Vector<T> &v) {
+    return (1.0f - t)*u + t*v;
+}
+
 }    // Namespace Core.
 }    // Namespace Vectoid.
 

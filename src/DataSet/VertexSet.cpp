@@ -1,5 +1,9 @@
 #include <Vectoid/DataSet/VertexSet.h>
 
+#include <K/Core/Log.h>
+
+using std::to_string;
+using K::Core::Log;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {

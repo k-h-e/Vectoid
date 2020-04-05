@@ -12,7 +12,7 @@ namespace Vectoid {
 namespace Math {
 namespace Distance {
 
-//! Computes the distance from a point in the <c>x/y</c> plane to a line inside the <c>x/y</c>.
+//! Computes the distance from a point in the <c>x/y</c> plane to a line inside the <c>x/y</c> plane.
 /*!
  *  \ingroup Vectoid
  */

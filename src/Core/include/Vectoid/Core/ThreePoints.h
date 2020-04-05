@@ -26,6 +26,11 @@ class ThreePoints {
         outNormal->Normalize();
     }
 
+    //! Tells whether the specified point is one of the three points.
+    bool Contains(const Vector<float> &point) {
+        return (point0 == point) || (point1 == point) || (point2 == point);
+    }
+
     Vector<float> point0;
     Vector<float> point1;
     Vector<float> point2;
