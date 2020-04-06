@@ -17,6 +17,17 @@ class ThreePoints {
         : point0(aPoint0), point1(aPoint1), point2(aPoint2) {}
     // Default copy and move, ok.
 
+    Vector<float> &operator[](int index) {
+        switch (index) {
+            case 1:
+                return point1;
+            case 2:
+                return point2;
+            default:
+                return point0;
+        }
+    }
+
     //! Computes the normal for the triangle given by the three points.
     /*!
      *  The returned normal might not be a <c>Valid()</c> vector.

@@ -17,6 +17,10 @@ class TwoPoints {
         : point0(aPoint0), point1(aPoint1) {}
     // Default copy and move, ok.
 
+    std::string ToString() const {
+        return "( " + point0.ToString() + ", " + point1.ToString() + " )";
+    }
+
     Vector<float> point0;
     Vector<float> point1;
 };

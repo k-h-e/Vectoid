@@ -23,7 +23,7 @@ class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
     SimpleLineSegmentList(const SimpleLineSegmentList &&other)            = delete;
     SimpleLineSegmentList &operator=(const SimpleLineSegmentList &&other) = delete;
     //! Appends the specified line segment to the list.
-    void Add(const Core::TwoPoints &triangle);
+    void Add(const Core::TwoPoints &lineSegment);
     virtual void PrepareToProvideLineSegments();
     virtual bool ProvideNextLineSegment(Core::TwoPoints *outLineSegment);
     virtual bool LineSegmentError();

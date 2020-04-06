@@ -37,6 +37,8 @@ class VertexSet : public virtual K::Core::Interface {
      *  The specified vertex id must lie in <c>[0, Count()]</c>.
      */
     const Core::Vector<float> &operator[](int index);
+    //! Returns the id of the specified vertex, or <c>-1</c> in case the vertex is not in the set.
+    int GetId(const Core::Vector<float> &vertex) const;
 
   private:
     struct VectorHashFunction {

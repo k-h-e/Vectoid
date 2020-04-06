@@ -4,9 +4,10 @@
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Core/TwoPoints.h>
 #include <Vectoid/Core/ThreePoints.h>
-#include <Vectoid/Math/Intersection/PointTriangleIntersectionXY.h>
 #include <Vectoid/Math/Distance/PointLineSegmentDistanceXY.h>
+#include <Vectoid/DataSet/TriangleTreeXY.h>
 
+using std::shared_ptr;
 using std::unordered_set;
 using std::deque;
 using std::to_string;
@@ -16,34 +17,18 @@ using Vectoid::Core::Vector;
 using Vectoid::Core::TwoPoints;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::BoundingBox;
-using Vectoid::Math::Intersection::PointTriangleIntersectionXY;
 using Vectoid::Math::Distance::PointLineSegmentDistanceXY;
 
 namespace Vectoid {
 namespace DataSet {
 
-DelauneyTriangulationXY::DelauneyTriangulationXY()
-        : vertexSet_(new VertexSet()),
-          outerTriangleVertex0Id_(-1),
-          outerTriangleVertex1Id_(-1),
-          outerTriangleVertex2Id_(-1),
-          computed_(false),
-          edgeHitEpsilon_(.01f),
-          cursor_(-1),
-          numEdgeHits_(0),
-          numInteriorSplits_(0),
-          numTrianglePairChecks_(0),
-          numTrianglePairChecksRejected_(0),
-          numEdgeSwaps_(0) {
-    // Nop.
+DelauneyTriangulationXY::DelauneyTriangulationXY() {
+    Reset();
 }
 
 void DelauneyTriangulationXY::Add(const Vector<float> &point) {
     if (computed_) {
-        vertexSet_.reset(new VertexSet());
-        boundingBox_ = BoundingBox<float>();
-        triangles_.clear();
-        computed_ = false;
+        Reset();
     }
     Vector<float> pointXY(point.x, point.y, 0.0f);
     vertexSet_->Add(pointXY);
@@ -56,16 +41,6 @@ bool DelauneyTriangulationXY::Compute() {
     if (!computed_ && (vertexSet_->Count() >= 3)) {
         trianglePairsToCheck_.reset(new deque<TwoIds>());
         pointQuadruplesChecked_.reset(new unordered_set<FourIdsCanonical, FourIdsCanonicalHashFunction>());
-        numEdgeHits_                   = 0;
-        numInteriorSplits_             = 0;
-        numTrianglePairChecks_         = 0;
-        numTrianglePairChecksRejected_ = 0;
-        numEdgeSwaps_                  = 0;
-
-        triangles_.clear();
-        outerTriangleVertex0Id_ = -1;
-        outerTriangleVertex1Id_ = -1;
-        outerTriangleVertex2Id_ = -1;
         GenerateInitialOuterTriangle();
         for (int i = 0; i < vertexSet_->Count() - 3; ++i) {
             trianglePairsToCheck_->clear();
@@ -84,58 +59,95 @@ bool DelauneyTriangulationXY::Compute() {
     trianglePairsToCheck_.reset();
     pointQuadruplesChecked_.reset();
     if (!success) {
-        triangles_.clear();
+        Reset();
     }
-    computed_ = true;
+    computationSuccessful_ = success;
+    computed_              = true;
+    return success;
+}
 
+bool DelauneyTriangulationXY::Reap(shared_ptr<TriangleTreeXY> *outTriangleTree, shared_ptr<VertexSet> *outVertexSet,
+                                   ThreeIds *outOuterTriangle) {
+    bool success = false;
+
+    if (computed_ && computationSuccessful_) {
+        *outTriangleTree  = triangleTree_;
+        *outVertexSet     = vertexSet_;
+        *outOuterTriangle = ThreeIds(outerTriangleVertex0Id_, outerTriangleVertex1Id_, outerTriangleVertex2Id_);
+        success = true;
+    }
+
+    Reset();
+
+    if (!success) {
+        outTriangleTree->reset();
+        outVertexSet->reset();
+    }
     return success;
 }
 
 void DelauneyTriangulationXY::PrepareToProvideTriangles() {
-    cursor_ = -1;
+    triangleTree_->PrepareToProvideTriangles();
 }
 
 bool DelauneyTriangulationXY::ProvideNextTriangle(ThreePoints *outTriangle) {
-    ++cursor_;
-    while (cursor_ < static_cast<int>(triangles_.size())) {
-        TriangleInfo &info = triangles_[cursor_];
-        if (!info.HasChildren()) {
-            if (!info.vertices.Contains(outerTriangleVertex0Id_) && !info.vertices.Contains(outerTriangleVertex1Id_)
-                    && !info.vertices.Contains(outerTriangleVertex2Id_)) {
-                outTriangle->point0 = (*vertexSet_)[info.vertices.id0];
-                outTriangle->point1 = (*vertexSet_)[info.vertices.id1];
-                outTriangle->point2 = (*vertexSet_)[info.vertices.id2];
-                return true;
-            }
+    while (triangleTree_->ProvideNextTriangle(outTriangle)) {
+        if (!outTriangle->Contains((*vertexSet_)[outerTriangleVertex0Id_])
+                && !outTriangle->Contains((*vertexSet_)[outerTriangleVertex1Id_])
+                && !outTriangle->Contains((*vertexSet_)[outerTriangleVertex2Id_])) {
+            return true;
         }
-        ++cursor_;
     }
 
     return false;
 }
 
 void DelauneyTriangulationXY::ProvideNormal(Vector<float> *outNormal) {
-    *outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
+    triangleTree_->ProvideNormal(outNormal);
 }
 
 bool DelauneyTriangulationXY::TriangleError() {
-    return triangles_.empty();
+    return triangleTree_->TriangleError();
+}
+
+void DelauneyTriangulationXY::Reset() {
+    vertexSet_.reset(new VertexSet());
+    boundingBox_ = BoundingBox<float>();
+    triangleTree_.reset(new TriangleTreeXY(vertexSet_));
+    outerTriangleVertex0Id_ = -1;
+    outerTriangleVertex1Id_ = -1;
+    outerTriangleVertex2Id_ = -1;
+    computed_               = false;
+    computationSuccessful_  = false;
+    edgeHitEpsilon_         = .01f;
+
+    numEdgeHits_                   = 0;
+    numInteriorSplits_             = 0;
+    numTrianglePairChecks_         = 0;
+    numTrianglePairChecksRejected_ = 0;
+    numEdgeSwaps_                  = 0;
+
+    trianglePairsToCheck_.reset();
+    pointQuadruplesChecked_.reset();
 }
 
 void DelauneyTriangulationXY::GenerateInitialOuterTriangle() {
     float radius = .5f * boundingBox_.Extents().Length();
+    //radius *= 1.1f;
     float x      = radius / std::tan(30.0f / 180.0f * (float)NumberTools::pi);
     float h      = radius / std::sin(30.0f / 180.0f * (float)NumberTools::pi);
     Vector<float> center = boundingBox_.Center();
     outerTriangleVertex0Id_ = vertexSet_->Add(Vector<float>(center.x - x, center.y - radius, 0.0f));
     outerTriangleVertex1Id_ = vertexSet_->Add(Vector<float>(center.x + x, center.y - radius, 0.0f));
     outerTriangleVertex2Id_ = vertexSet_->Add(Vector<float>(center.x, center.y + h, 0.0f));
-    AddTriangle(TriangleInfo(outerTriangleVertex0Id_, outerTriangleVertex1Id_, outerTriangleVertex2Id_));
+    int triangleId = triangleTree_->AddTriangle(-1);
+    (*triangleTree_)[triangleId] = TriangleTreeXY::TriangleInfo(outerTriangleVertex0Id_, outerTriangleVertex1Id_,
+                                                                outerTriangleVertex2Id_);
 }
 
 void DelauneyTriangulationXY::InsertVertex(int pointId) {
     Vector<float> pointToInsert = (*vertexSet_)[pointId];
-    int oldTriangleId = LocateTriangle(pointToInsert, 0, pointId);
+    int oldTriangleId = triangleTree_->LocateTriangle(pointToInsert, 0);
     if (oldTriangleId == -1) {
         Log::Print(Log::Level::Debug, this, [&]{ return "can't insert point " + to_string(pointId)
             + ", did not find containing triangle"; });
@@ -155,7 +167,7 @@ void DelauneyTriangulationXY::EnforceDelauneyCriterion() {
     while (!trianglePairsToCheck_->empty()) {
         TwoIds trianglePair = trianglePairsToCheck_->front();
         trianglePairsToCheck_->pop_front();
-        if (triangles_[trianglePair.id0].HasChildren() || triangles_[trianglePair.id1].HasChildren()) {
+        if ((*triangleTree_)[trianglePair.id0].HasChildren() || (*triangleTree_)[trianglePair.id1].HasChildren()) {
             continue;
         }
         if (!TestDelauneyCriterion(trianglePair)) {
@@ -165,38 +177,8 @@ void DelauneyTriangulationXY::EnforceDelauneyCriterion() {
     }
 }
 
-int DelauneyTriangulationXY::LocateTriangle(const Vector<float> &point, int rootTriangleId, int locationSeqNo) {
-    TriangleInfo &info = triangles_[rootTriangleId];
-    if (info.lastFailedLocationSeqNo == locationSeqNo) {
-        return -1;
-    }
-    if (info.children.id0 == -1) {    // Leaf, base case.
-        ThreePoints vertices((*vertexSet_)[info.vertices.id0], (*vertexSet_)[info.vertices.id1],
-                             (*vertexSet_)[info.vertices.id2]);
-        bool intersects;
-        if (PointTriangleIntersectionXY::Compute(point, vertices, &intersects) && intersects) {
-            return rootTriangleId;
-        }
-    }
-    else {
-        for (int i = 0; i < 3; ++i) {
-            int child = info.GetChild(i);
-            if (child == -1) {
-                break;
-            }
-            int triangleId = LocateTriangle(point, child, locationSeqNo);
-            if (triangleId != -1) {
-                return triangleId;
-            }
-        }
-
-    }
-    info.lastFailedLocationSeqNo = locationSeqNo;
-    return -1;
-}
-
 int DelauneyTriangulationXY::TestEdgeHit(int triangleId, const Vector<float> &point) {
-    TriangleInfo &info = triangles_[triangleId];
+    TriangleTreeXY::TriangleInfo &info = (*triangleTree_)[triangleId];
     for (int i = 0; i < 3; ++i) {
         TwoPoints edge((*vertexSet_)[info.GetVertex(i)], (*vertexSet_)[info.GetVertex(i + 1)]);
         if (PointLineSegmentDistanceXY::Compute(point, edge) <= edgeHitEpsilon_) {
@@ -207,69 +189,63 @@ int DelauneyTriangulationXY::TestEdgeHit(int triangleId, const Vector<float> &po
 }
 
 void DelauneyTriangulationXY::InsertPointEdgeHitCase(int oldTriangleId, int edgeId, int pointId) {
-    TriangleInfo &oldTriangleInfo      = triangles_[oldTriangleId];    // Written back below.
-    int          firstNewTriangleId    = static_cast<int>(triangles_.size());
-    int          adjacentTriangleId    = oldTriangleInfo.GetAdjacentTriangle(edgeId);
-    TriangleInfo &adjacentTriangleInfo = triangles_[adjacentTriangleId];
+    TriangleTreeXY::TriangleInfo &oldTriangleInfo      = (*triangleTree_)[oldTriangleId];    // Written back below.
+    int                          adjacentTriangleId    = oldTriangleInfo.GetAdjacentTriangle(edgeId);
+    TriangleTreeXY::TriangleInfo &adjacentTriangleInfo = (*triangleTree_)[adjacentTriangleId];
     int sharedEdgeAdjacentId;
-    GetIdsForSharedEdge(oldTriangleId, adjacentTriangleId, &edgeId, &sharedEdgeAdjacentId);
-    int newTriangle0Id = firstNewTriangleId;
-    int newTriangle1Id = firstNewTriangleId + 1;
-    int newTriangle2Id = firstNewTriangleId + 2;
-    int newTriangle3Id = firstNewTriangleId + 3;
-    int neighbor0Id    = oldTriangleInfo.GetAdjacentTriangle(Mod3(edgeId + 2));
-    int neighbor1Id    = oldTriangleInfo.GetAdjacentTriangle(Mod3(edgeId + 1));
-    int neighbor2Id    = adjacentTriangleInfo.GetAdjacentTriangle(Mod3(sharedEdgeAdjacentId + 2));
-    int neighbor3Id    = adjacentTriangleInfo.GetAdjacentTriangle(Mod3(sharedEdgeAdjacentId + 1));
+    triangleTree_->GetIdsForSharedEdge(oldTriangleId, adjacentTriangleId, &edgeId, &sharedEdgeAdjacentId);
 
-    TriangleInfo newTriangleInfo0(pointId,
-                                  oldTriangleInfo.GetVertex(Mod3(edgeId + 2)),
-                                  oldTriangleInfo.GetVertex(edgeId));
+    int newTriangle0Id = triangleTree_->AddTriangle(oldTriangleId);
+    int newTriangle1Id = triangleTree_->AddTriangle(oldTriangleId);
+    int newTriangle2Id = triangleTree_->AddTriangle(adjacentTriangleId);
+    int newTriangle3Id = triangleTree_->AddTriangle(adjacentTriangleId);
+    int neighbor0Id    = oldTriangleInfo.GetAdjacentTriangle(TriangleTreeXY::Mod3(edgeId + 2));
+    int neighbor1Id    = oldTriangleInfo.GetAdjacentTriangle(TriangleTreeXY::Mod3(edgeId + 1));
+    int neighbor2Id    = adjacentTriangleInfo.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdgeAdjacentId + 2));
+    int neighbor3Id    = adjacentTriangleInfo.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdgeAdjacentId + 1));
+
+    TriangleTreeXY::TriangleInfo newTriangleInfo0(
+        pointId, oldTriangleInfo.GetVertex(TriangleTreeXY::Mod3(edgeId + 2)), oldTriangleInfo.GetVertex(edgeId));
     newTriangleInfo0.adjacentTriangles.id0 = newTriangle1Id;
     newTriangleInfo0.adjacentTriangles.id1 = neighbor0Id;
     newTriangleInfo0.adjacentTriangles.id2 = newTriangle3Id;
+    (*triangleTree_)[newTriangle0Id] = newTriangleInfo0;
     if (neighbor0Id != -1) {
-        UpdateTriangleAdjacency(neighbor0Id, oldTriangleId, newTriangle0Id);
+        triangleTree_->UpdateTriangleAdjacency(neighbor0Id, oldTriangleId, newTriangle0Id);
     }
 
-    TriangleInfo newTriangleInfo1(pointId,
-                                  oldTriangleInfo.GetVertex(Mod3(edgeId + 1)),
-                                  oldTriangleInfo.GetVertex(Mod3(edgeId + 2)));
+    TriangleTreeXY::TriangleInfo newTriangleInfo1(
+        pointId, oldTriangleInfo.GetVertex(TriangleTreeXY::Mod3(edgeId + 1)),
+        oldTriangleInfo.GetVertex(TriangleTreeXY::Mod3(edgeId + 2)));
     newTriangleInfo1.adjacentTriangles.id0 = newTriangle2Id;
     newTriangleInfo1.adjacentTriangles.id1 = neighbor1Id;
     newTriangleInfo1.adjacentTriangles.id2 = newTriangle0Id;
+    (*triangleTree_)[newTriangle1Id] = newTriangleInfo1;
     if (neighbor1Id != -1) {
-        UpdateTriangleAdjacency(neighbor1Id, oldTriangleId, newTriangle1Id);
+        triangleTree_->UpdateTriangleAdjacency(neighbor1Id, oldTriangleId, newTriangle1Id);
     }
 
-    TriangleInfo newTriangleInfo2(pointId,
-                                  adjacentTriangleInfo.GetVertex(Mod3(sharedEdgeAdjacentId + 2)),
-                                  adjacentTriangleInfo.GetVertex(sharedEdgeAdjacentId));
+    TriangleTreeXY::TriangleInfo newTriangleInfo2(
+        pointId, adjacentTriangleInfo.GetVertex(TriangleTreeXY::Mod3(sharedEdgeAdjacentId + 2)),
+        adjacentTriangleInfo.GetVertex(sharedEdgeAdjacentId));
     newTriangleInfo2.adjacentTriangles.id0 = newTriangle3Id;
     newTriangleInfo2.adjacentTriangles.id1 = neighbor2Id;
     newTriangleInfo2.adjacentTriangles.id2 = newTriangle1Id;
+    (*triangleTree_)[newTriangle2Id] = newTriangleInfo2;
     if (neighbor2Id != -1) {
-        UpdateTriangleAdjacency(neighbor2Id, adjacentTriangleId, newTriangle2Id);
+        triangleTree_->UpdateTriangleAdjacency(neighbor2Id, adjacentTriangleId, newTriangle2Id);
     }
 
-    TriangleInfo newTriangleInfo3(pointId,
-                                  adjacentTriangleInfo.GetVertex(Mod3(sharedEdgeAdjacentId + 1)),
-                                  adjacentTriangleInfo.GetVertex(Mod3(sharedEdgeAdjacentId + 2)));
+    TriangleTreeXY::TriangleInfo newTriangleInfo3(
+        pointId, adjacentTriangleInfo.GetVertex(TriangleTreeXY::Mod3(sharedEdgeAdjacentId + 1)),
+        adjacentTriangleInfo.GetVertex(TriangleTreeXY::Mod3(sharedEdgeAdjacentId + 2)));
     newTriangleInfo3.adjacentTriangles.id0 = newTriangle0Id;
     newTriangleInfo3.adjacentTriangles.id1 = neighbor3Id;
     newTriangleInfo3.adjacentTriangles.id2 = newTriangle2Id;
+    (*triangleTree_)[newTriangle3Id] = newTriangleInfo3;
     if (neighbor3Id != -1) {
-        UpdateTriangleAdjacency(neighbor3Id, adjacentTriangleId, newTriangle3Id);
+        triangleTree_->UpdateTriangleAdjacency(neighbor3Id, adjacentTriangleId, newTriangle3Id);
     }
-
-    oldTriangleInfo.AddChild(newTriangle0Id);
-    oldTriangleInfo.AddChild(newTriangle1Id);
-    adjacentTriangleInfo.AddChild(newTriangle2Id);
-    adjacentTriangleInfo.AddChild(newTriangle3Id);
-    AddTriangle(newTriangleInfo0);
-    AddTriangle(newTriangleInfo1);
-    AddTriangle(newTriangleInfo2);
-    AddTriangle(newTriangleInfo3);
 
     ScheduleTrianglePairCheckIfNeeded(newTriangle0Id, newTriangle1Id);
     ScheduleTrianglePairCheckIfNeeded(newTriangle1Id, newTriangle2Id);
@@ -284,34 +260,37 @@ void DelauneyTriangulationXY::InsertPointEdgeHitCase(int oldTriangleId, int edge
 }
 
 void DelauneyTriangulationXY::InsertPointInteriorCase(int oldTriangleId, int pointId) {
-    int firstNewTriangleId = static_cast<int>(triangles_.size());
+    int newTriangleIds[3];
     for (int i = 0; i < 3; ++i) {
-        TriangleInfo &oldTriangleInfo = triangles_[oldTriangleId];
+        newTriangleIds[i] = triangleTree_->AddTriangle(oldTriangleId);
+    }
+    for (int i = 0; i < 3; ++i) {
+        TriangleTreeXY::TriangleInfo &oldTriangleInfo = (*triangleTree_)[oldTriangleId];
         int adjacentTriangleId = oldTriangleInfo.GetAdjacentTriangle(i);
         if (adjacentTriangleId != -1) {
-            UpdateTriangleAdjacency(adjacentTriangleId, oldTriangleId, firstNewTriangleId + i);
+            triangleTree_->UpdateTriangleAdjacency(adjacentTriangleId, oldTriangleId, newTriangleIds[i]);
         }
-        TriangleInfo newTriangleInfo(oldTriangleInfo.GetVertex(i), oldTriangleInfo.GetVertex(i + 1), pointId);
+        TriangleTreeXY::TriangleInfo newTriangleInfo(
+            oldTriangleInfo.GetVertex(i), oldTriangleInfo.GetVertex(i + 1), pointId);
         newTriangleInfo.adjacentTriangles.id0 = adjacentTriangleId;
-        newTriangleInfo.adjacentTriangles.id1 = firstNewTriangleId + Mod3(i + 1);
-        newTriangleInfo.adjacentTriangles.id2 = firstNewTriangleId + Mod3(i + 2);
-        oldTriangleInfo.AddChild(firstNewTriangleId + i);
-        AddTriangle(newTriangleInfo);
-        ScheduleTrianglePairCheckIfNeeded(firstNewTriangleId + i, adjacentTriangleId);
+        newTriangleInfo.adjacentTriangles.id1 = newTriangleIds[TriangleTreeXY::Mod3(i + 1)];
+        newTriangleInfo.adjacentTriangles.id2 = newTriangleIds[TriangleTreeXY::Mod3(i + 2)];
+        (*triangleTree_)[newTriangleIds[i]] = newTriangleInfo;
+        ScheduleTrianglePairCheckIfNeeded(newTriangleIds[i], adjacentTriangleId);
     }
     ++numInteriorSplits_;
 }
 
 // The cases where something goes wrong are treated like a passed test.
 bool DelauneyTriangulationXY::TestDelauneyCriterion(const TwoIds &trianglePair) {
-    TriangleInfo &triangle0 = triangles_[trianglePair.id0];
-    TriangleInfo &triangle1 = triangles_[trianglePair.id1];
+    TriangleTreeXY::TriangleInfo &triangle0 = (*triangleTree_)[trianglePair.id0];
+    TriangleTreeXY::TriangleInfo &triangle1 = (*triangleTree_)[trianglePair.id1];
     int sharedEdge0Id;
     int sharedEdge1Id;
-    GetIdsForSharedEdge(trianglePair.id0, trianglePair.id1, &sharedEdge0Id, &sharedEdge1Id);
+    triangleTree_->GetIdsForSharedEdge(trianglePair.id0, trianglePair.id1, &sharedEdge0Id, &sharedEdge1Id);
     ThreePoints triangle((*vertexSet_)[triangle0.vertices.id0], (*vertexSet_)[triangle0.vertices.id1],
                          (*vertexSet_)[triangle0.vertices.id2]);
-    Vector<float> fourthPoint = (*vertexSet_)[triangle1.GetVertex(Mod3(sharedEdge1Id + 2))];
+    Vector<float> fourthPoint = (*vertexSet_)[triangle1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2))];
 
     Vector<float> base0 = .5f*triangle.point0 + .5f*triangle.point1;
     Vector<float> dir0  = triangle.point1 - triangle.point0;
@@ -345,51 +324,49 @@ bool DelauneyTriangulationXY::TestDelauneyCriterion(const TwoIds &trianglePair) 
 }
 
 void DelauneyTriangulationXY::PerformEdgeSwap(const TwoIds &trianglePair) {
-    TriangleInfo &triangle0 = triangles_[trianglePair.id0];
-    TriangleInfo &triangle1 = triangles_[trianglePair.id1];
+    int newId0 = triangleTree_->AddTriangle(trianglePair.id0);
+    int newId1 = triangleTree_->AddTriangle(trianglePair.id0);
+    TriangleTreeXY::TriangleInfo &triangle0 = (*triangleTree_)[trianglePair.id0];
+    TriangleTreeXY::TriangleInfo &triangle1 = (*triangleTree_)[trianglePair.id1];
     int sharedEdge0Id;
     int sharedEdge1Id;
-    GetIdsForSharedEdge(trianglePair.id0, trianglePair.id1, &sharedEdge0Id, &sharedEdge1Id);
-    int newId0 = static_cast<int>(triangles_.size());
-    int newId1 = newId0 + 1;
+    triangleTree_->GetIdsForSharedEdge(trianglePair.id0, trianglePair.id1, &sharedEdge0Id, &sharedEdge1Id);
 
-    TriangleInfo newInfo0(triangle0.GetVertex(Mod3(sharedEdge0Id + 2)),
-                          triangle1.GetVertex(Mod3(sharedEdge1Id + 2)),
-                          triangle1.GetVertex(sharedEdge1Id));
+    TriangleTreeXY::TriangleInfo newInfo0(
+        triangle0.GetVertex(TriangleTreeXY::Mod3(sharedEdge0Id + 2)),
+        triangle1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2)), triangle1.GetVertex(sharedEdge1Id));
     newInfo0.adjacentTriangles.id0 = newId1;
-    int adjacentTriangleId = triangle1.GetAdjacentTriangle(Mod3(sharedEdge1Id + 2));
+    int adjacentTriangleId = triangle1.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdge1Id + 2));
     if (adjacentTriangleId != -1) {
-        UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id1, newId0);
+        triangleTree_->UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id1, newId0);
     }
     newInfo0.adjacentTriangles.id1 = adjacentTriangleId;
-
-    adjacentTriangleId = triangle0.GetAdjacentTriangle(Mod3(sharedEdge0Id + 1));
+    adjacentTriangleId = triangle0.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdge0Id + 1));
     if (adjacentTriangleId != -1) {
-        UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id0, newId0);
+        triangleTree_->UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id0, newId0);
     }
     newInfo0.adjacentTriangles.id2 = adjacentTriangleId;
+    (*triangleTree_)[newId0] = newInfo0;
 
-    TriangleInfo newInfo1(triangle1.GetVertex(Mod3(sharedEdge1Id + 2)),
-                          triangle0.GetVertex(Mod3(sharedEdge0Id + 2)),
-                          triangle0.GetVertex(sharedEdge0Id));
+    TriangleTreeXY::TriangleInfo newInfo1(
+        triangle1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2)),
+        triangle0.GetVertex(TriangleTreeXY::Mod3(sharedEdge0Id + 2)), triangle0.GetVertex(sharedEdge0Id));
     newInfo1.adjacentTriangles.id0 = newId0;
-    adjacentTriangleId = triangle0.GetAdjacentTriangle(Mod3(sharedEdge0Id + 2));
+    adjacentTriangleId = triangle0.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdge0Id + 2));
     if (adjacentTriangleId != -1) {
-        UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id0, newId1);
+        triangleTree_->UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id0, newId1);
     }
     newInfo1.adjacentTriangles.id1 = adjacentTriangleId;
-    adjacentTriangleId = triangle1.GetAdjacentTriangle(Mod3(sharedEdge1Id + 1));
+    adjacentTriangleId = triangle1.GetAdjacentTriangle(TriangleTreeXY::Mod3(sharedEdge1Id + 1));
     if (adjacentTriangleId != -1) {
-        UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id1, newId1);
+        triangleTree_->UpdateTriangleAdjacency(adjacentTriangleId, trianglePair.id1, newId1);
     }
     newInfo1.adjacentTriangles.id2 = adjacentTriangleId;
+    (*triangleTree_)[newId1] = newInfo1;
 
-    triangle0.AddChild(newId0);
-    triangle0.AddChild(newId1);
-    triangle1.AddChild(newId0);
-    triangle1.AddChild(newId1);
-    AddTriangle(newInfo0);
-    AddTriangle(newInfo1);
+    (*triangleTree_)[trianglePair.id1].AddChild(newId0);
+    (*triangleTree_)[trianglePair.id1].AddChild(newId1);
+    // The two new triangles were also added as children of trianglePair.id0 above!
 
     ScheduleTrianglePairCheckIfNeeded(newId0, newInfo0.adjacentTriangles.id1);
     ScheduleTrianglePairCheckIfNeeded(newId0, newInfo0.adjacentTriangles.id2);
@@ -399,134 +376,23 @@ void DelauneyTriangulationXY::PerformEdgeSwap(const TwoIds &trianglePair) {
     ++numEdgeSwaps_;
 }
 
-void DelauneyTriangulationXY::UpdateTriangleAdjacency(int triangleToUpdateId, int oldAdjacentTriangleId,
-                                                      int newAdjacentTriangleId) {
-    TriangleInfo &info = triangles_[triangleToUpdateId];
-    for (int i = 0; i < 3; ++i) {
-        if (info.GetAdjacentTriangle(i) == oldAdjacentTriangleId) {
-            info.SetAdjacentTriangle(i, newAdjacentTriangleId);
-            break;
-        }
-    }
-}
-
-void DelauneyTriangulationXY::GetIdsForSharedEdge(int triangle0Id, int triangle1Id, int *outSharedEdge0Id,
-                                                  int *outSharedEdge1Id) {
-    *outSharedEdge0Id = -1;
-    *outSharedEdge1Id = -1;
-    TriangleInfo &info0 = triangles_[triangle0Id];
-    TriangleInfo &info1 = triangles_[triangle1Id];
-    for (int i = 0; i < 3; ++i) {
-        if (info0.GetAdjacentTriangle(i) == triangle1Id) {
-            *outSharedEdge0Id = i;
-        }
-        if (info1.GetAdjacentTriangle(i) == triangle0Id) {
-            *outSharedEdge1Id = i;
-        }
-    }
-    assert((*outSharedEdge0Id != -1) && (*outSharedEdge1Id != -1));
-}
-
 void DelauneyTriangulationXY::ScheduleTrianglePairCheckIfNeeded(int triangle0Id, int triangle1Id) {
-    if ((triangle0Id == -1) || (triangle1Id == -1))
+    if ((triangle0Id == -1) || (triangle1Id == -1)) {
         return;
-    TriangleInfo &info0 = triangles_[triangle0Id];
-    TriangleInfo &info1 = triangles_[triangle1Id];
+    }
+    TriangleTreeXY::TriangleInfo &info0 = (*triangleTree_)[triangle0Id];
+    TriangleTreeXY::TriangleInfo &info1 = (*triangleTree_)[triangle1Id];
     int sharedEdge0Id;
     int sharedEdge1Id;
-    GetIdsForSharedEdge(triangle0Id, triangle1Id, &sharedEdge0Id, &sharedEdge1Id);
+    triangleTree_->GetIdsForSharedEdge(triangle0Id, triangle1Id, &sharedEdge0Id, &sharedEdge1Id);
     FourIdsCanonical pointQuadruple(info0.vertices.id0, info0.vertices.id1, info0.vertices.id2,
-                                    info1.GetVertex(Mod3(sharedEdge1Id + 2)));
+                                    info1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2)));
     if (pointQuadruplesChecked_->find(pointQuadruple) == pointQuadruplesChecked_->end()) {
         trianglePairsToCheck_->push_back(TwoIds(triangle0Id, triangle1Id));
         pointQuadruplesChecked_->insert(pointQuadruple);
     }
     else {
         ++numTrianglePairChecksRejected_;
-    }
-}
-
-void DelauneyTriangulationXY::AddTriangle(const TriangleInfo &info) {
-    //Log::Print(Log::Level::Debug, this, [&]{ return "adding triangle " + to_string(triangles_.size())
-    //    + ": (" + to_string(info.vertex0) + ", " + to_string(info.vertex1) + ", " + to_string(info.vertex2) + ")"; });
-    triangles_.push_back(info);
-}
-
-int DelauneyTriangulationXY::Mod3(int value) {
-    while (value > 2) {
-        value -= 3;
-    }
-    return value;
-}
-
-DelauneyTriangulationXY::TriangleInfo::TriangleInfo(int vertex0, int vertex1, int vertex2)
-        : vertices(vertex0, vertex1, vertex2),
-          adjacentTriangles(-1, -1 ,-1),
-          children(-1, -1, -1),
-          lastFailedLocationSeqNo(-1) {
-    // Nop.
-}
-
-bool DelauneyTriangulationXY::TriangleInfo::HasChildren() {
-    return children.id0 != -1;
-}
-
-int DelauneyTriangulationXY::TriangleInfo::GetVertex(int i) {
-    switch (Mod3(i)) {
-        case 1:
-            return vertices.id1;
-        case 2:
-            return vertices.id2;
-        default:
-            return vertices.id0;
-    }
-}
-
-int DelauneyTriangulationXY::TriangleInfo::GetAdjacentTriangle(int i) {
-    switch (Mod3(i)) {
-        case 1:
-            return adjacentTriangles.id1;
-        case 2:
-            return adjacentTriangles.id2;
-        default:
-            return adjacentTriangles.id0;
-    }
-}
-
-void DelauneyTriangulationXY::TriangleInfo::SetAdjacentTriangle(int i, int anAdjacentTriangle) {
-    switch (Mod3(i)) {
-        case 1:
-            adjacentTriangles.id1 = anAdjacentTriangle;
-            break;
-        case 2:
-            adjacentTriangles.id2 = anAdjacentTriangle;
-            break;
-        default:
-            adjacentTriangles.id0 = anAdjacentTriangle;
-            break;
-    }
-}
-
-int DelauneyTriangulationXY::TriangleInfo::GetChild(int i) {
-    switch (i) {
-        case 1:
-            return children.id1;
-        case 2:
-            return children.id2;
-        default:
-            return children.id0;
-    }
-}
-
-void DelauneyTriangulationXY::TriangleInfo::AddChild(int child) {
-    if (children.id0 == -1) {
-        children.id0 = child;
-    }
-    else if (children.id1 == -1) {
-        children.id1 = child;
-    }
-    else if (children.id2 == -1) {
-        children.id2 = child;
     }
 }
 

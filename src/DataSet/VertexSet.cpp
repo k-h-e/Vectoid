@@ -35,5 +35,15 @@ const Vector<float> &VertexSet::operator[](int index) {
     return vertices_[index];
 }
 
+int VertexSet::GetId(const Vector<float> &vertex) const {
+    auto iterator = vertexToIdMap_.find(vertex);
+    if (iterator != vertexToIdMap_.end()) {
+        return iterator->second;
+    }
+    else {
+        return -1;
+    }
+}
+
 }    // Namespace DataSet.
 }    // Namespace Vectoid.
