@@ -1,6 +1,10 @@
 #ifndef VECTOID_CORE_RANGE_H_
 #define VECTOID_CORE_RANGE_H_
 
+#include <K/Core/NumberTools.h>
+
+using K::Core::NumberTools;
+
 namespace Vectoid {
 namespace Core {
 
@@ -28,8 +32,10 @@ class Range {
     
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
-    //! Expands the range by scaling it by the specified scaling factor > 1.
-    void Expand(T scalingFactor);
+    //! Expands the range at each side by the specified value.
+    void Expand(T value);
+    //! Scales the range by the specified scaling factor.
+    void Scale(T scalingFactor);
     //! Tells wether the range contains the specified number.
     bool Contains(T number) const;
     //! Clamps the specified number to the range.
@@ -119,13 +125,20 @@ void Range<T>::Grow(T number) {
 }
 
 template<typename T>
-void Range<T>::Expand(T scalingFactor) {
-    if (scalingFactor > (T)1.0) {
-        T center        = Center();
-        T newHalfExtent = scalingFactor * (T)0.5 * Extent();
-        min_ = center - newHalfExtent;
-        max_ = center + newHalfExtent;
-    }
+void Range<T>::Expand(T value) {
+    T center        = Center();
+    T newHalfExtent = (T)0.5*Extent() + value;
+    NumberTools::ClampMin(&newHalfExtent, (T)0.0f);
+    min_ = center - newHalfExtent;
+    max_ = center + newHalfExtent;
+}
+
+template<typename T>
+void Range<T>::Scale(T scalingFactor) {
+    T center        = Center();
+    T newHalfExtent = scalingFactor * (T)0.5 * Extent();
+    min_ = center - newHalfExtent;
+    max_ = center + newHalfExtent;
 }
 
 template<typename T>

@@ -8,6 +8,7 @@
 
 namespace Vectoid {
 namespace Core {
+    class TwoPoints;
     class LineSegmentProviderInterface;
 }
 }
@@ -31,6 +32,7 @@ class TriangulationRefinerXY : public virtual K::Core::Interface {
     TriangulationRefinerXY(const TriangulationRefinerXY &&other)            = delete;
     TriangulationRefinerXY &operator=(const TriangulationRefinerXY &&other) = delete;
 
+    bool EnforceEdge(const Core::TwoPoints &edge, std::vector<Core::TwoPoints> *outRefinedEdges);
     bool SelectSurface(Core::LineSegmentProviderInterface &boundaryCurve,
                        std::unordered_set<int> *outSelectedTriangles);
 
@@ -40,6 +42,8 @@ class TriangulationRefinerXY : public virtual K::Core::Interface {
     std::unordered_map<int, std::unordered_set<int>> vertexToTrianglesMap_;
 
     void BuildVertexToTrianglesMap();
+    void AddTriangleToVertexToTrianglesMap(int triangleId);
+    void RemoveTriangleFromVertexToTrianglesMap(int triangleId);
 };
 
 }    // Namespace DataSet.

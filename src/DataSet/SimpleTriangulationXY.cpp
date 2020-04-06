@@ -84,7 +84,7 @@ bool SimpleTriangulationXY::TriangleError() {
 
 void SimpleTriangulationXY::CreateRootTriangles() {
     BoundingBox<float> box(boundingBox_);
-    box.Expand(1.1f);
+    box.Scale(1.1f);
     Vector<float> center  = box.Center();
     Vector<float> extents = box.Extents();
     int outerVertex0 = vertexSet_->Add(Vector<float>(center.x - .5f*extents.x, center.y - .5f*extents.y, 0.0f));

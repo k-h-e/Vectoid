@@ -20,6 +20,8 @@ LitTriangles::LitTriangles(const shared_ptr<TriangleProviderInterface> &triangle
 
 void LitTriangles::Render() {
     glEnable(GL_LIGHTING);
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3f(color_.x, color_.y, color_.z);
 
     glBegin(GL_TRIANGLES);
     triangleProvider_->PrepareToProvideTriangles();
@@ -34,6 +36,8 @@ void LitTriangles::Render() {
     }
     glEnd();
 
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glDisable(GL_COLOR_MATERIAL);
     glDisable(GL_LIGHTING);
 }
 

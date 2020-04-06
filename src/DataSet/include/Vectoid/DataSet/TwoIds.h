@@ -1,6 +1,8 @@
 #ifndef VECTOID_DATASET_TWOIDS_H_
 #define VECTOID_DATASET_TWOIDS_H_
 
+using std::to_string;
+
 namespace Vectoid {
 namespace DataSet {
 
@@ -27,11 +29,28 @@ class TwoIds {
         }
     }
 
+    bool Contains(int id) const {
+        return (id0 == id) || (id1 == id);
+    }
+
+    int OtherId(int id) {
+        if (id == id0) {
+            return id1;
+        }
+        else {
+            return id0;
+        }
+    }
+
     std::size_t Hash() const {
         std::size_t hash = 17u;
         hash = hash*31u + std::hash<int>()(id0);
         hash = hash*31u + std::hash<int>()(id1);
         return hash;
+    }
+
+    std::string ToString() const {
+        return "(" + to_string(id0) + ", " + to_string(id1) + ")";
     }
 
     int id0;

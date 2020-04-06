@@ -133,7 +133,7 @@ void DelauneyTriangulationXY::Reset() {
 
 void DelauneyTriangulationXY::GenerateInitialOuterTriangle() {
     float radius = .5f * boundingBox_.Extents().Length();
-    //radius *= 1.1f;
+    radius *= 1.01f;
     float x      = radius / std::tan(30.0f / 180.0f * (float)NumberTools::pi);
     float h      = radius / std::sin(30.0f / 180.0f * (float)NumberTools::pi);
     Vector<float> center = boundingBox_.Center();

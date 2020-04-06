@@ -3,6 +3,9 @@
 
 #include <cmath>
 #include <string>
+#include <K/Core/NumberTools.h>
+
+using K::Core::NumberTools;
 
 /*!
  *  \defgroup Vectoid Vectoid
@@ -195,6 +198,19 @@ template<typename T>
 inline Vector<T> CombineAffine(T t, const Vector<T> &u, const Vector<T> &v) {
     return (1.0f - t)*u + t*v;
 }
+
+//! Generates the convex combination of two given points at <c>t = a/(a + b)</c>, with <c>a</c> and <c>b</c>
+//! non-negative and at least one of them positive.
+/*!
+ *  Input parameters are not checked.
+ */
+template<typename T>
+inline Vector<T> CombineConvex(T a, T b, const Vector<T> &point0, const Vector<T> &point1) {
+    T t = a / (a + b);
+    NumberTools::Clamp(&t, 0.0f, 1.0f);
+    return CombineAffine(t, point0, point1);
+}
+
 
 }    // Namespace Core.
 }    // Namespace Vectoid.

@@ -2,6 +2,7 @@
 #define VECTOID_SCENEGRAPH_LITTRIANGLES_H_
 
 #include <memory>
+#include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/GeometryInterface.h>
 
 namespace Vectoid {
@@ -24,10 +25,13 @@ class LitTriangles : public virtual GeometryInterface {
     LitTriangles(LitTriangles &&other)                 = delete;
     LitTriangles &operator=(LitTriangles &&other)      = delete;
 
+    void SetColor(const Core::Vector<float> &color);
+
   protected:
     LitTriangles(const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
 
     std::shared_ptr<Core::TriangleProviderInterface> triangleProvider_;
+    Core::Vector<float>                              color_;
 };
 
 }    // Namespace SceneGraph.

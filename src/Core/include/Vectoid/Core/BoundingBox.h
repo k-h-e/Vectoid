@@ -32,11 +32,17 @@ class BoundingBox {
         yRange_.Grow(point.y);
         zRange_.Grow(point.z);
     }
-    //! Expands the bounding box by scaling it by the specified scaling factor > 1.
-    void Expand(T scalingFactor) {
-        xRange_.Expand(scalingFactor);
-        yRange_.Expand(scalingFactor);
-        zRange_.Expand(scalingFactor);
+    //! Expands the bounding box at each side by the specified length.
+    void Expand(T length) {
+        xRange_.Expand(length);
+        yRange_.Expand(length);
+        zRange_.Expand(length);
+    }
+    //! Scales the bounding box by the specified scaling factor.
+    void Scale(T scalingFactor) {
+        xRange_.Scale(scalingFactor);
+        yRange_.Scale(scalingFactor);
+        zRange_.Scale(scalingFactor);
     }
     //! Tells wether the bounding box contains the specified point.
     bool Contains(const Vector<T> &point) const {
