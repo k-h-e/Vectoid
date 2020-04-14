@@ -3,8 +3,7 @@
 namespace Vectoid {
 namespace SceneGraph {
 
-SimpleLighting::SimpleLighting()
-        : settingsChanged_(true) {
+SimpleLighting::SimpleLighting() {
     // Nop.
 }
 }    // Namespace SceneGraph.

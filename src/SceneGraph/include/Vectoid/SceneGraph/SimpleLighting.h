@@ -19,8 +19,6 @@ class SimpleLighting : public SceneGraphNode {
 
   protected:
     SimpleLighting();
-
-    bool settingsChanged_;
 };
 
 }    // Namespace SceneGraph.

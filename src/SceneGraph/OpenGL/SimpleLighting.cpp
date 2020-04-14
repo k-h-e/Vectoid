@@ -11,16 +11,10 @@ SimpleLighting::SimpleLighting() {
 }
 
 void SimpleLighting::Render() {
-    if (settingsChanged_)
-    {
-        GLfloat lightPosition[4] = { 0.0f, 0.0f, 20.0f, 1.0f };
-        glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-        settingsChanged_ = false;
-    }
+    GLfloat lightPosition[4] = { 0.0f, 0.0f, 20.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-    glEnable(GL_LIGHT0);
     SceneGraph::SimpleLighting::Render();
-    glDisable(GL_LIGHT0);
 }
 
 }    // Namespace OpenGL.

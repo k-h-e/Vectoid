@@ -19,6 +19,7 @@ LineSegments::LineSegments(const shared_ptr<LineSegmentProviderInterface> &lineS
 }
 
 void LineSegments::Render() {
+    glColor3f(color_.x, color_.y, color_.z);
     glBegin(GL_LINES);
     lineSegmentProvider_->PrepareToProvideLineSegments();
     TwoPoints lineSegment;
@@ -27,6 +28,7 @@ void LineSegments::Render() {
         glVertex3f(lineSegment.point1.x, lineSegment.point1.y, lineSegment.point1.z);
     }
     glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 }    // Namespace OpenGL.

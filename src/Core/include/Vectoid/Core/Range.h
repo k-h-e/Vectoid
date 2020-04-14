@@ -30,6 +30,10 @@ class Range {
     Range(const Range<T> &other, T offset);
     // Instances may get copied/moved depending on T.
     
+    //! Returns the range's minimum.
+    T Min() { return min_; }
+    //! Returns the range's maximum.
+    T Max() { return max_; }
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
     //! Expands the range at each side by the specified value.
