@@ -18,10 +18,10 @@ class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
                               public virtual Core::HasBoundingBoxInterface {
   public:
     SimpleLineSegmentList();
-    SimpleLineSegmentList(const SimpleLineSegmentList &other)             = delete;
-    SimpleLineSegmentList &operator=(const SimpleLineSegmentList &other)  = delete;
-    SimpleLineSegmentList(const SimpleLineSegmentList &&other)            = delete;
-    SimpleLineSegmentList &operator=(const SimpleLineSegmentList &&other) = delete;
+    SimpleLineSegmentList(const SimpleLineSegmentList &other)            = default;
+    SimpleLineSegmentList &operator=(const SimpleLineSegmentList &other) = default;
+    SimpleLineSegmentList(SimpleLineSegmentList &&other)                 = default;
+    SimpleLineSegmentList &operator=(SimpleLineSegmentList &&other)      = default;
     //! Appends the specified line segment to the list.
     void Add(const Core::TwoPoints &lineSegment);
     virtual void PrepareToProvideLineSegments();

@@ -15,10 +15,10 @@ namespace DataSet {
 class SimpleTriangleList : public virtual Core::TriangleProviderInterface {
   public:
     SimpleTriangleList();
-    SimpleTriangleList(const SimpleTriangleList &other)             = delete;
-    SimpleTriangleList &operator=(const SimpleTriangleList &other)  = delete;
-    SimpleTriangleList(const SimpleTriangleList &&other)            = delete;
-    SimpleTriangleList &operator=(const SimpleTriangleList &&other) = delete;
+    SimpleTriangleList(const SimpleTriangleList &other)            = default;
+    SimpleTriangleList &operator=(const SimpleTriangleList &other) = default;
+    SimpleTriangleList(SimpleTriangleList &&other)                 = default;
+    SimpleTriangleList &operator=(SimpleTriangleList &&other)      = default;
     //! Appends the specified triangle to the list.
     void Add(const Core::ThreePoints &triangle);
     virtual void PrepareToProvideTriangles();
