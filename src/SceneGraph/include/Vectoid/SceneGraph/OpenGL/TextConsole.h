@@ -26,6 +26,9 @@ class TextConsole : public Vectoid::SceneGraph::TextConsole {
   private:
     TextConsole(int width, int height, float glyphWidth, float glyphHeight,
                 const std::shared_ptr<SceneGraph::Glyphs> &glyphs);
+    void SetColor(uint8_t colorIndex);
+
+    uint8_t currentColorIndex_;
     
 };
 

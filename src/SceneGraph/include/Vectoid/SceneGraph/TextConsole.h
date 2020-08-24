@@ -16,6 +16,12 @@ class Glyphs;
  */
 class TextConsole : public virtual GeometryInterface {
   public:
+    enum class Color { White,
+                       Grey,
+                       Green,
+                       Yellow,
+                       Red     };
+
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -25,22 +31,26 @@ class TextConsole : public virtual GeometryInterface {
     /*!
      *  \note Encoding is ASCII for now.
      */
-    void WriteLine(const char *line);
+    void WriteLine(const char *line, Color color);
     //! Writes text at specified coordinates, without breaking into any new lines.
     /*!
      *  Does not change the \ref WriteLine() cursor.
      */
-    void WriteAt(int column, int row, const char *text);
+    void WriteAt(int column, int row, const char *text, Color color);
+    //! Clears the specified row.
+    void ClearRow(int row);
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
     
   protected:
     TextConsole(int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs);
   
-    int                     width_, height_,
-                            rowCursor_;
+    int                     width_;
+    int                     height_;
+    int                     rowCursor_;
     float                   glyphWidth_, glyphHeight_;
     std::vector<uint8_t>    buffer_;
+    std::vector<uint8_t>    colorBuffer_;
     std::shared_ptr<Glyphs> glyphs_;
 };
 
