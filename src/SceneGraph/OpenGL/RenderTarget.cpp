@@ -43,56 +43,57 @@ void RenderTarget::RenderFrame() {
     }
 }
 
-shared_ptr<SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
+shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
         const shared_ptr<Particles> &particles) {
-    return shared_ptr<AgeColoredParticles>(new AgeColoredParticles(particles));
+    return shared_ptr<OpenGL::AgeColoredParticles>(new AgeColoredParticles(particles));
 }
 
-shared_ptr<SceneGraph::Camera> RenderTarget::NewCamera() {
-    return shared_ptr<Camera>(new Camera());
+shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
+    return shared_ptr<OpenGL::Camera>(new Camera());
 }
 
-shared_ptr<SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
-    return shared_ptr<CoordSys>(new CoordSys());
+shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
+    return shared_ptr<OpenGL::CoordSys>(new CoordSys());
 }
 
-shared_ptr<SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
-    return shared_ptr<Geode>(new Geode(geometry));
+shared_ptr<::Vectoid::SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
+    return shared_ptr<OpenGL::Geode>(new Geode(geometry));
 }
 
-shared_ptr<SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
-    return shared_ptr<Glyphs>(new Glyphs());
+shared_ptr<::Vectoid::SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
+    return shared_ptr<OpenGL::Glyphs>(new Glyphs());
 }
 
-shared_ptr<SceneGraph::LineSegments> RenderTarget::NewLineSegments(
+shared_ptr<::Vectoid::SceneGraph::LineSegments> RenderTarget::NewLineSegments(
         const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider) {
-    return make_shared<LineSegments>(lineSegmentProvider);
+    return make_shared<OpenGL::LineSegments>(lineSegmentProvider);
 }
 
-shared_ptr<SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
+shared_ptr<::Vectoid::SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
         const shared_ptr<TriangleProviderInterface> &triangleProvider) {
-    return make_shared<LitTriangles>(triangleProvider);
+    return make_shared<OpenGL::LitTriangles>(triangleProvider);
 }
 
-shared_ptr<SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(const shared_ptr<Particles> &particles) {
-    return shared_ptr<ParticlesRenderer>(new ParticlesRenderer(particles));
+shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(
+        const shared_ptr<Particles> &particles) {
+    return shared_ptr<OpenGL::ParticlesRenderer>(new ParticlesRenderer(particles));
 }
 
-shared_ptr<SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
-    return shared_ptr<PerspectiveProjection>(new PerspectiveProjection());
+shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
+    return shared_ptr<OpenGL::PerspectiveProjection>(new PerspectiveProjection());
 }
 
-shared_ptr<SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
-    return make_shared<SimpleLighting>();
+shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
+    return make_shared<OpenGL::SimpleLighting>();
 }
 
-shared_ptr<SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
-    return shared_ptr<TestTriangle>(new TestTriangle());
+shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
+    return shared_ptr<OpenGL::TestTriangle>(new TestTriangle());
 }
 
-shared_ptr<SceneGraph::TextConsole> RenderTarget::NewTextConsole(
+shared_ptr<::Vectoid::SceneGraph::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<SceneGraph::Glyphs> &glyphs) {
-    return shared_ptr<TextConsole>(new TextConsole(width, height, glyphWidth, glyphHeight, glyphs));
+    return shared_ptr<OpenGL::TextConsole>(new TextConsole(width, height, glyphWidth, glyphHeight, glyphs));
 }
 
 void RenderTarget::initializeGL() {

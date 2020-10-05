@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! This scene graph node represents actual geometry in the scene (geode = geometry node).
-/*! 
- *  \ingroup Vectoid
- */ 
 class Geode : public SceneGraphNode {
   public:
     Geode(const Geode &other) = delete;

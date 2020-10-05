@@ -14,9 +14,6 @@ namespace Vectoid {
 namespace DataSet {
 
 //! Generates a triangulation for a set of vertices in the <c>x/y</c>-plane.
-/*!
- *  \ingroup Vectoid
- */
 class SimpleTriangulationXY : public virtual Core::TriangleProviderInterface {
   public:
     SimpleTriangulationXY();

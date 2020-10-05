@@ -11,9 +11,6 @@ class RenderTarget;
 class Context;
 
 //! This scene graph node represents a camera.
-/*! 
- *  \ingroup VectoidVulkan
- */ 
 class Camera : public Vectoid::SceneGraph::Camera {
   public:
     friend class RenderTarget;

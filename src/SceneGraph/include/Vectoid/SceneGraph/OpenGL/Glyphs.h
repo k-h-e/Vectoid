@@ -11,9 +11,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Manages textures for text glyphs.
-/*! 
- *  \ingroup VectoidOpenGL
- */
 class Glyphs : public Vectoid::SceneGraph::Glyphs {
   public:
     friend class RenderTarget;

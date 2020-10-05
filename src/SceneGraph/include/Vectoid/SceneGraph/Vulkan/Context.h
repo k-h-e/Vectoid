@@ -4,7 +4,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include <Vectoid/Core/Transform.h>
-#include <Vectoid/CoreFullTransform.h>
+#include <Vectoid/Core/FullTransform.h>
 #include <Vectoid/SceneGraph/Vulkan/FrameBufferInfo.h>
 
 namespace Vectoid {
@@ -13,8 +13,6 @@ namespace Vulkan {
 
 //! Holds <c>Vulkan</c>-specific context for scene graph nodes.
 /*!
- *  \ingroup VectoidVulkan
- *
  *  Allocates Vulkan resources upon construction, and releases Vulkan resources upon destruction.
  */
 class Context {
@@ -39,9 +37,9 @@ class Context {
     //! Recovers from out-of-date image condition.
     void RecoverFromOutOfDateImage();
     
-    void UpdateObjectTransform(const FullTransform &transform);
+    void UpdateObjectTransform(const Core::FullTransform &transform);
     void ApplyObjectTransform();
-    const FullTransform &ObjectTransform();
+    const Core::FullTransform &ObjectTransform();
     
     bool GetMemoryIndex(uint32_t typeBits, VkFlags requirementsMask, uint32_t *typeIndex);
     
@@ -116,9 +114,9 @@ class Context {
     
     static bool GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char *shader, std::vector<unsigned int> &spirv);
     
-    bool          operative_;
-    FullTransform currentObjectTransform_;
-    bool          currentObjectTransformChanged_;
+    bool                operative_;
+    Core::FullTransform currentObjectTransform_;
+    bool                currentObjectTransformChanged_;
 };
 
 }    // Namespace Vulkan.

@@ -11,9 +11,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Simple triangle geometry for testing purposes.
-/*! 
- *  \ingroup VectoidOpenGL
- */ 
 class TestTriangle : public Vectoid::SceneGraph::TestTriangle {
   public:
     friend class RenderTarget;

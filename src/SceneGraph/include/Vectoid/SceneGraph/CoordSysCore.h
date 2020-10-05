@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Base class for scene graph nodes implementing \ref CoordSysInterface.
-/*! 
- *  \ingroup Vectoid
- */ 
 class CoordSysCore : public SceneGraphNode,
                      public virtual CoordSysInterface {
   public:

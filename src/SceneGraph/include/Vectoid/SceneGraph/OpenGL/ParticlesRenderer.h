@@ -13,9 +13,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Renders particles.
-/*!
- *  \ingroup VectoidOpenGL
- */
 class ParticlesRenderer : public Vectoid::SceneGraph::ParticlesRenderer {
   public:
     friend class RenderTarget;

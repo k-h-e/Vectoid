@@ -15,9 +15,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders particles.
-/*!
- *  \ingroup Vectoid
- */
 class ParticlesRenderer : public virtual GeometryInterface {
   public:
     ParticlesRenderer(const ParticlesRenderer &other) = delete;

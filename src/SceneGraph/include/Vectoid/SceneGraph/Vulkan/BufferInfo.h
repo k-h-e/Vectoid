@@ -8,9 +8,6 @@ namespace SceneGraph {
 namespace Vulkan {
 
 //! Holds info about a <c>Vulkan</c> buffer.
-/*!
- *  \ingroup VectoidVulkan
- */
 struct BufferInfo {
     VkBuffer               buffer;
     VkDeviceMemory         memory;

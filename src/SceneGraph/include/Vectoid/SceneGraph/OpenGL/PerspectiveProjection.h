@@ -10,9 +10,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
-/*! 
- *  \ingroup VectoidOpenGL
- */ 
 class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection {
   public:
     friend class RenderTarget;

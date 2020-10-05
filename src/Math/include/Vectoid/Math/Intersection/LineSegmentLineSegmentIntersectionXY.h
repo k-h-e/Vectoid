@@ -10,12 +10,10 @@ namespace Core {
 
 namespace Vectoid {
 namespace Math {
+//! Algorithms to compute intersections between various kinds of entities in 3-space.
 namespace Intersection {
 
 //! Tests whether two line segments in the <c>x/y</c> plane intersect.
-/*!
- *  \ingroup Vectoid
- */
 class LineSegmentLineSegmentIntersectionXY {
   public:
     static bool Compute(const Core::TwoPoints &segment0, const Core::TwoPoints &segment1,

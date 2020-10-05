@@ -11,9 +11,6 @@ namespace Core {
 template<typename T> class Vector;
 
 //! Bounding box in 3-space.
-/*! 
- *  \ingroup Vectoid
- */
 template<typename T>
 class BoundingBox {
   public:

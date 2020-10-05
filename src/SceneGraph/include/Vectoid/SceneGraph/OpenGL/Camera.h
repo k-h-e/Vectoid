@@ -10,9 +10,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! This scene graph node represents a camera.
-/*! 
- *  \ingroup VectoidOpenGL
- */ 
 class Camera : public Vectoid::SceneGraph::Camera {
   public:
     friend class RenderTarget;

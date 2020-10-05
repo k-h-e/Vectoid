@@ -11,9 +11,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Renders particles in different colors, depending of their age.
-/*!
- *  \ingroup VectoidOpenGL
- */
 class AgeColoredParticles : public Vectoid::SceneGraph::AgeColoredParticles {
  public:
     friend class RenderTarget;

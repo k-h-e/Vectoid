@@ -11,9 +11,6 @@ class BoundingBoxCollisionChecker;
 class PointCollisionChecker;
 
 //! Interface to objects performing collision checks between pairs of objects using a double-dispatch scheme.
-/*! 
- *  \ingroup Vectoid
- */ 
 class CollisionCheckerInterface : public virtual K::Core::Interface {
   public:
     //! Checks for collision with the specified other collision checker.

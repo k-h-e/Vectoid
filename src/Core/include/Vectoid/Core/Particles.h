@@ -12,17 +12,12 @@ namespace Core {
 
 //! Manages a set of particles.
 /*!
- *  \ingroup Vectoid
- *
  *  Particles have quite a limited lifetime: They get created, move around for some time, and then they die. To avoid
  *  unnecessary re-allocations of particle data structures, pooling is used transparently.
  */
 class Particles {
   public:
     //! Holds information about a particle.
-    /*!
-     *  \ingroup Vectoid
-     */
     struct ParticleInfo {
         Vector<float> position;
         Vector<float> velocity;

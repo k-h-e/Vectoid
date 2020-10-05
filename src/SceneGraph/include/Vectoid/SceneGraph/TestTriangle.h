@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Simple triangle geometry for testing purposes.
-/*! 
- *  \ingroup Vectoid
- */ 
 class TestTriangle : public virtual GeometryInterface {
   public:
     TestTriangle(const TestTriangle &other) = delete;

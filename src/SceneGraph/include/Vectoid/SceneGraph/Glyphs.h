@@ -8,9 +8,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Manages textures for text glyphs.
-/*! 
- *  \ingroup Vectoid
- */
 class Glyphs : public virtual K::Core::Interface {
   public:
     Glyphs(const Glyphs &other)            = delete;

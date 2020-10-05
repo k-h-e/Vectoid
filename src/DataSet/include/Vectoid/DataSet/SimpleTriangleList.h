@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace DataSet {
 
 //! Simple list of triangles in 3-space that can be grown dynamically.
-/*!
- *  \ingroup Vectoid
- */
 class SimpleTriangleList : public virtual Core::TriangleProviderInterface {
   public:
     SimpleTriangleList();

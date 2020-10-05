@@ -8,9 +8,6 @@ namespace SceneGraph {
 namespace OpenGL {
 
 //! Simple lighting setup using one light source.
-/*!
- *  \ingroup Vectoid
- */
 class SimpleLighting : public Vectoid::SceneGraph::SimpleLighting {
   public:
     SimpleLighting();

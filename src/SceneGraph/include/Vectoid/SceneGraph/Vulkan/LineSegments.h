@@ -1,11 +1,11 @@
-#ifndef VECTOID_SCENEGRAPH_OPENGL_LINESEGMENTS_H_
-#define VECTOID_SCENEGRAPH_OPENGL_LINESEGMENTS_H_
+#ifndef VECTOID_SCENEGRAPH_VULKAN_LINESEGMENTS_H_
+#define VECTOID_SCENEGRAPH_VULKAN_LINESEGMENTS_H_
 
 #include <Vectoid/SceneGraph/LineSegments.h>
 
 namespace Vectoid {
 namespace SceneGraph {
-namespace OpenGL {
+namespace Vulkan {
 
 //! Renders line segments.
 class LineSegments : public Vectoid::SceneGraph::LineSegments {
@@ -18,8 +18,8 @@ class LineSegments : public Vectoid::SceneGraph::LineSegments {
     virtual void Render();
 };
 
-}    // Namespace OpenGL.
+}    // Namespace Vulkan.
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.
 
-#endif    // VECTOID_SCENEGRAPH_OPENGL_LINESEGMENTS_H_
+#endif    // VECTOID_SCENEGRAPH_VULKAN_LINESEGMENTS_H_

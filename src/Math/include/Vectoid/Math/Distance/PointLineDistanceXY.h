@@ -13,9 +13,6 @@ namespace Math {
 namespace Distance {
 
 //! Computes the distance from a point in the <c>x/y</c> plane to a line inside the <c>x/y</c> plane.
-/*!
- *  \ingroup Vectoid
- */
 class PointLineDistanceXY {
   public:
     static bool ComputeSigned(const Core::Vector<float> &point, const Core::TwoPoints &line, float *outDistance);

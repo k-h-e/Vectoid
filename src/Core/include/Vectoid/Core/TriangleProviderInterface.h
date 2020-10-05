@@ -10,9 +10,6 @@ template<typename T> class Vector;
 class ThreePoints;
 
 //! Interface to entities iteratively providing triangles.
-/*!
- *  \ingroup Vectoid
- */
 class TriangleProviderInterface : public virtual K::Core::Interface {
   public:
     //! Tells the provider to (re)start providing triangles from the beginning.

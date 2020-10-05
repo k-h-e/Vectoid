@@ -8,9 +8,6 @@ namespace SceneGraph {
 namespace Vulkan {
 
 //! Holds info about a <c>Vulkan</c> frame buffer.
-/*!
- *  \ingroup VectoidVulkan
- */
 struct FrameBufferInfo {
     VkImage        image;
     VkImageView    view;

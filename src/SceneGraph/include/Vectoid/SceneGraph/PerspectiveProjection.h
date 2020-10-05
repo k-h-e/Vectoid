@@ -8,9 +8,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
-/*! 
- *  \ingroup Vectoid
- */ 
 class PerspectiveProjection : public SceneGraphNode {
   public:
     PerspectiveProjection(const PerspectiveProjection &other) = delete;

@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace DataSet {
 
 //! Two data set item ids with significant ordering.
-/*!
- *  \ingroup Vectoid
- */
 class TwoIds {
   public:
     TwoIds() : id0(0), id1(0) {}

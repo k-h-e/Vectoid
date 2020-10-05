@@ -9,13 +9,12 @@ namespace Core {
 }
 
 namespace Vectoid {
+//! Fundamental mathematics for 3D data processing.
 namespace Math {
+//! Algorithms to compute distances between various kinds of entities in 3-space.
 namespace Distance {
 
 //! Computes the distance from a point in the <c>x/y</c> plane to a line segment inside the <c>x/y</c> plane.
-/*!
- *  \ingroup Vectoid
- */
 class PointLineSegmentDistanceXY {
   public:
     static float Compute(const Core::Vector<float> &point, const Core::TwoPoints &lineSegment);

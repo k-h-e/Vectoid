@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace Core {
 
 //! Range (closed interval) of real numbers.
-/*!
- *  \ingroup Vectoid
- */
 template<typename T>
 class Range {
   public:

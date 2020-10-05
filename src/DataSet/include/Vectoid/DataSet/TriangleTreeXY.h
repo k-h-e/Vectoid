@@ -19,9 +19,6 @@ namespace DataSet {
 class VertexSet;
 
 //! Tree of triangles in the <c>x/y</c>-plane.
-/*!
- *  \ingroup Vectoid
- */
 class TriangleTreeXY : public virtual Core::TriangleProviderInterface {
   public:
     struct TriangleInfo {

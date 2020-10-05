@@ -16,9 +16,6 @@ namespace SceneGraph {
 //! Interface to entities that establish their own local coordinate system specified via a transform relative to some
 //! parent coordinate system. This transform can be be modified to move or rotate the entity relative to the parent
 //! coordinate system.
-/*! 
- *  \ingroup Vectoid
- */ 
 class CoordSysInterface : public virtual Core::HasTransformInterface {
   public:
     //! Maps to \ref Transform::Prepend() of the local transform.

@@ -13,9 +13,6 @@ class RenderTarget;
 class Context;
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
-/*! 
- *  \ingroup VectoidVulkan
- */ 
 class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection {
   public:
     friend class RenderTarget;
@@ -28,7 +25,7 @@ class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection 
     PerspectiveProjection(const std::shared_ptr<Context> &context);
     
     std::shared_ptr<Context> context_;
-    FullTransform transform_;
+    Core::FullTransform transform_;
 };
 
 }    // Namespace Vulkan.

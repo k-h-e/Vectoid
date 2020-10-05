@@ -15,9 +15,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders lit triangles.
-/*!
- *  \ingroup Vectoid
- */
 class LitTriangles : public virtual GeometryInterface {
   public:
     LitTriangles(const LitTriangles &other)            = delete;

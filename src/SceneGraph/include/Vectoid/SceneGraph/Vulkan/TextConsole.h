@@ -11,9 +11,6 @@ class RenderTarget;
 class Context;
 
 //! Text console geometry.
-/*! 
- *  \ingroup VectoidVulkan
- */
 class TextConsole : public Vectoid::SceneGraph::TextConsole {
   public:
     friend class RenderTarget;
@@ -26,7 +23,7 @@ class TextConsole : public Vectoid::SceneGraph::TextConsole {
     
   private:
     TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
-                const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+                const std::shared_ptr<Vectoid::SceneGraph::Glyphs> &glyphs);
     
     std::shared_ptr<Context> context_;
 };

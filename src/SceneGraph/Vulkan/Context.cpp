@@ -1,12 +1,13 @@
-#include <Vectoid/ScveneGraph/Vulkan/Context.h>
+#include <Vectoid/SceneGraph/Vulkan/Context.h>
 
 #include <unordered_set>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_macos.h>
 #include <MoltenVKGLSLToSPIRVConverter/GLSLToSPIRVConverter.h>
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 
 using namespace std;
+using K::Core::Log;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -37,47 +38,47 @@ Context::Context(void *view)
           operative_(false),
           currentObjectTransformChanged_(true) {
     if (!CreateInstance()) {
-        Core::Log().Stream() << "failed to create instance" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create instance"; });
         return;
     }
     if (!CreateSurface(view)) {
-        Core::Log().Stream() << "failed to create surface" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create surface"; });
         return;
     }
     if (!CreateDevice()) {
-        Core::Log().Stream() << "failed to create device" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create device"; });
         return;
     }
     if (!CreateSwapChain()) {
-        Core::Log().Stream() << "failed to create swap chain" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create swap chain"; });
         return;
     }
     if (!CreateDepthBuffer()) {
-        Core::Log().Stream() << "failed to create depth buffer" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create depth buffer"; });
         return;
     }
     if (!CreateLayouts()) {
-        Core::Log().Stream() << "failed to create layouts" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create layouts"; });
         return;
     }
     if (!CreateRenderPass()) {
-        Core::Log().Stream() << "failed to create render pass" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create render pass"; });
         return;
     }
     if (!CreateShaders()) {
-        Core::Log().Stream() << "failed to create shaders" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create shaders"; });
         return;
     }
     if (!CreateFrameBuffers()) {
-        Core::Log().Stream() << "failed to create frame buffers" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create frame buffers"; });
         return;
     }
     if (!CreatePipeline()) {
-        Core::Log().Stream() << "failed to create pipeline" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create pipeline"; });
         return;
     }
     if (!CreateCommandBufferPool()) {
-        Core::Log().Stream() << "failed to create command buffer pool" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create command buffer pool"; });
         return;
     }
     
@@ -103,7 +104,7 @@ bool Context::Operative() {
     return operative_;
 }
 
-void Context::UpdateObjectTransform(const FullTransform &transform) {
+void Context::UpdateObjectTransform(const Core::FullTransform &transform) {
     currentObjectTransform_        = transform;
     currentObjectTransformChanged_ = true;
 }
@@ -116,7 +117,7 @@ void Context::ApplyObjectTransform() {
     }
 }
 
-const FullTransform &Context::ObjectTransform() {
+const Core::FullTransform &Context::ObjectTransform() {
     return currentObjectTransform_;
 }
 
@@ -148,35 +149,35 @@ void Context::RecoverFromOutOfDateImage() {
     operative_ = false;
     
     if (!CreateSwapChain()) {
-        Core::Log().Stream() << "failed to create swap chain" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create swap chain"; });
         return;
     }
     if (!CreateDepthBuffer()) {
-        Core::Log().Stream() << "failed to create depth buffer" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create depth buffer"; });
         return;
     }
     if (!CreateLayouts()) {
-        Core::Log().Stream() << "failed to create layouts" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create layouts"; });
         return;
     }
     if (!CreateRenderPass()) {
-        Core::Log().Stream() << "failed to create render pass" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create render pass"; });
         return;
     }
     if (!CreateShaders()) {
-        Core::Log().Stream() << "failed to create shaders" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create shaders"; });
         return;
     }
     if (!CreateFrameBuffers()) {
-        Core::Log().Stream() << "failed to create frame buffers" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create frame buffers"; });
         return;
     }
     if (!CreatePipeline()) {
-        Core::Log().Stream() << "failed to create pipeline" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create pipeline"; });
         return;
     }
     if (!CreateCommandBufferPool()) {
-        Core::Log().Stream() << "failed to create command buffer pool" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "failed to create command buffer pool"; });
         return;
     }
     
@@ -205,10 +206,10 @@ bool Context::CreateInstance() {
     for (const string &extension : requiredExtensions) {
         if (availableExtensions.find(extension) != availableExtensions.end()) {
             extensionNames.push_back(extension);
-            Core::Log().Stream() << "will request instance extension " << extension << endl;
+            Log::Print(Log::Level::Debug, nullptr, [&]{ return "will request instance extension " + extension; });
         }
         else {
-            Core::Log().Stream() << "instance extension " << extension << " missing" << endl;
+            Log::Print(Log::Level::Debug, nullptr, [&]{ return "instance extension " + extension + " missing"; });
             return false;
         }
     }
@@ -240,13 +241,13 @@ bool Context::CreateInstance() {
         return false;
     }
 
-    Core::Log().Stream() << "instance created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "instance created"; });
     return true;
 }
 
 void Context::FreeInstance() {
     if (instance != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "deleting instance" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "deleting instance"; });
         vkDestroyInstance(instance, nullptr);
         instance = VK_NULL_HANDLE;
     }
@@ -263,13 +264,13 @@ bool Context::CreateSurface(void *view) {
         return false;
     }
     
-    Core::Log().Stream() << "surface created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "surface created"; });
     return true;
 }
 
 void Context::FreeSurface() {
     if (surface != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "deleting surface" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "deleting surface"; });
         vkDestroySurfaceKHR(instance, surface, nullptr);
         surface = VK_NULL_HANDLE;
     }
@@ -289,7 +290,7 @@ bool Context::CreateDevice() {
         return false;
     }
     physicalDevice = devices[0];
-    Core::Log().Stream() << "detected " << deviceCount << " physical devices" << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{ return "detected " + to_string(deviceCount) + " physical devices"; });
     
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &physicalDeviceMemoryProperties);
     
@@ -335,7 +336,7 @@ bool Context::CreateDevice() {
     vector<string> extensionNames;    // Don't want to modifiy state of passed-in vector.
     for (const string &extension : requiredExtensions) {
         extensionNames.push_back(extension);
-        Core::Log().Stream() << "will request device extension " << extension << endl;
+        Log::Print(Log::Level::Debug, nullptr, [&]{ return "will request device extension " + extension; });
     }
     vector<const char *> extensionNamePointers;
     for (const string &extensionName : extensionNames) {
@@ -383,14 +384,16 @@ bool Context::CreateDevice() {
     vkGetDeviceQueue(device, graphicsQueueFamilyIndex, 0, &graphicsQueue);
     vkGetDeviceQueue(device, presentQueueFamilyIndex, 0, &presentQueue);
    
-    Core::Log().Stream() << "device created, num_queues=" << numQueues << ", graphics_queue="
-                         << graphicsQueueFamilyIndex << ", present_queue=" << presentQueueFamilyIndex << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{
+        return "device created, num_queues=" + to_string(numQueues) + ", graphics_queue=" +
+               to_string(graphicsQueueFamilyIndex) + ", present_queue=" + to_string(presentQueueFamilyIndex);
+    });
     return true;
 }
 
 void Context::FreeDevice() {
     if (device != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing device" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing device"; });
         vkDestroyDevice(device, nullptr);
         device = VK_NULL_HANDLE;
     }
@@ -412,7 +415,7 @@ bool Context::CreateSwapChain() {
     } else {
         return false;
     }
-    Core::Log().Stream() << "selected surface format " << colorFormat << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{ return "selected surface format " + to_string(colorFormat); });
     
     VkSurfaceCapabilitiesKHR capabilities;
     if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities) != VK_SUCCESS) {
@@ -428,7 +431,7 @@ bool Context::CreateSwapChain() {
             != VK_SUCCESS) {
         return false;
     }
-    Core::Log().Stream() << "num_present_modes=" << numPresentModes << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{ return "num_present_modes=" + to_string(numPresentModes); });
     
     if (capabilities.currentExtent.width == 0xffffffffu) {    // Surface size undefined.
         width  = 64u;
@@ -450,7 +453,7 @@ bool Context::CreateSwapChain() {
         width  = capabilities.currentExtent.width;
         height = capabilities.currentExtent.height;
     }
-    Core::Log().Stream() << "extent=" << width << "x" << height << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{ return "extent=" + to_string(width) + "x" + to_string(height); });
     
     VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
     uint32_t desiredNumberOfSwapChainImages = capabilities.minImageCount;
@@ -547,14 +550,16 @@ bool Context::CreateSwapChain() {
         }
     }
 
-    Core::Log().Stream() << "swap chain created, num_images=" << colorBuffers.size() << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{
+        return "swap chain created, num_images=" + to_string(colorBuffers.size());
+    });
     return true;
 }
 
 void Context::FreeSwapChain() {
     for (FrameBufferInfo &info : colorBuffers) {
         if (info.view != VK_NULL_HANDLE) {
-            Core::Log().Stream() << "deleting image view" << endl;
+            Log::Print(Log::Level::Debug, nullptr, []{ return "deleting image view"; });
             vkDestroyImageView(device, info.view, nullptr);
             info.view = VK_NULL_HANDLE;
         }
@@ -562,7 +567,7 @@ void Context::FreeSwapChain() {
     colorBuffers.clear();
 
     if (swapChain != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "deleting swap chain" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "deleting swap chain"; });
         vkDestroySwapchainKHR(device, swapChain, nullptr);
         swapChain = VK_NULL_HANDLE;
     }
@@ -581,7 +586,7 @@ bool Context::CreateDepthBuffer() {
     } else {
         return false;
     }
-    Core::Log().Stream() << "have tiling" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "have tiling"; });
 
     VkImageCreateInfo imageInfo = {};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -642,23 +647,23 @@ bool Context::CreateDepthBuffer() {
         return false;
     }
     
-    Core::Log().Stream() << "depth buffer created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "depth buffer created"; });
     return true;
 }
 
 void Context::FreeDepthBuffer() {
     if (depthBuffer.view != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing depth buffer view" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing depth buffer view"; });
         vkDestroyImageView(device, depthBuffer.view, nullptr);
         depthBuffer.view = VK_NULL_HANDLE;
     }
     if (depthBuffer.image != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing depth buffer image" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing depth buffer image"; });
         vkDestroyImage(device, depthBuffer.image, nullptr);
         depthBuffer.image = VK_NULL_HANDLE;
     }
     if (depthBuffer.memory != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing depth buffer memory" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing depth buffer memory"; });
         vkFreeMemory(device, depthBuffer.memory, nullptr);
         depthBuffer.memory = VK_NULL_HANDLE;
     }
@@ -682,13 +687,13 @@ bool Context::CreateLayouts() {
         return false;
     }
     
-    Core::Log().Stream() << "layouts created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "layouts created"; });
     return true;
 }
 
 void Context::FreeLayouts() {
     if (pipelineLayout != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing pipeline layout" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing pipeline layout"; });
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         pipelineLayout = VK_NULL_HANDLE;
     }
@@ -765,23 +770,23 @@ bool Context::CreateRenderPass() {
         return false;
     }
     
-    Core::Log().Stream() << "render pass created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "render pass created"; });
     return true;
 }
 
 void Context::FreeRenderPass() {
     if (renderPass != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing render pass" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing render pass"; });
         vkDestroyRenderPass(device, renderPass, nullptr);
         renderPass = VK_NULL_HANDLE;
     }
     if (drawFence != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing draw fence" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing draw fence"; });
         vkDestroyFence(device, drawFence, nullptr);
         drawFence = VK_NULL_HANDLE;
     }
     if (imageAcquiredSemaphore != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing image acquired semaphore" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing image acquired semaphore"; });
         vkDestroySemaphore(device, imageAcquiredSemaphore, nullptr);
         imageAcquiredSemaphore = VK_NULL_HANDLE;
     }
@@ -840,18 +845,18 @@ bool Context::CreateShaders() {
         return false;
     }
     
-    Core::Log().Stream() << "shaders created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "shaders created"; });
     return true;
 }
 
 void Context::FreeShaders() {
    if (fragmentShader != VK_NULL_HANDLE) {
-       Core::Log().Stream() << "freeing fragment shader" << endl;
+       Log::Print(Log::Level::Debug, nullptr, []{ return "freeing fragment shader"; });
        vkDestroyShaderModule(device, fragmentShader, nullptr);
        fragmentShader = VK_NULL_HANDLE;
    }
    if (vertexShader != VK_NULL_HANDLE) {
-       Core::Log().Stream() << "freeing vertex shader" << endl;
+       Log::Print(Log::Level::Debug, nullptr, []{ return "freeing vertex shader"; });
        vkDestroyShaderModule(device, vertexShader, nullptr);
        vertexShader = VK_NULL_HANDLE;
    }
@@ -880,13 +885,13 @@ bool Context::CreateFrameBuffers() {
         frameBuffers.push_back(frameBuffer);
     }
     
-    Core::Log().Stream() << frameBuffers.size() << " frame buffers created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, [&]{ return to_string(frameBuffers.size()) + " frame buffers created"; });
     return true;
 }
 
 void Context::FreeFrameBuffers() {
     for (VkFramebuffer &frameBuffer : frameBuffers) {
-        Core::Log().Stream() << "freeing frame buffer" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing frame buffer"; });
         vkDestroyFramebuffer(device, frameBuffer, nullptr);
     }
     frameBuffers.clear();
@@ -1054,13 +1059,13 @@ bool Context::CreatePipeline() {
         return false;
     }
 
-    Core::Log().Stream() << "pipeline created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "pipeline created"; });
     return true;
 }
 
 void Context::FreePipeline() {
     if (pipeline != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing pipeline" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing pipeline"; });
         vkDestroyPipeline(device, pipeline, nullptr);
         pipeline = VK_NULL_HANDLE;
     }
@@ -1077,13 +1082,13 @@ bool Context::CreateCommandBufferPool() {
         return false;
     }
     
-    Core::Log().Stream() << "command buffer pool created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "command buffer pool created"; });
     return true;
 }
 
 void Context::FreeCommandBufferPool() {
    if (commandBufferPool != VK_NULL_HANDLE) {
-       Core::Log().Stream() << "freeing command buffer pool" << endl;
+       Log::Print(Log::Level::Debug, nullptr, []{ return "freeing command buffer pool"; });
        vkDestroyCommandPool(device, commandBufferPool, nullptr);
        commandBufferPool = VK_NULL_HANDLE;
    }
@@ -1100,13 +1105,13 @@ bool Context::CreateCommandBuffer() {
         return false;
     }
 
-    Core::Log().Stream() << "command buffer created" << endl;
+    Log::Print(Log::Level::Debug, nullptr, []{ return "command buffer created"; });
     return true;
 }
 
 void Context::FreeCommandBuffer() {
     if (commandBuffer != VK_NULL_HANDLE) {
-        Core::Log().Stream() << "freeing command buffer" << endl;
+        Log::Print(Log::Level::Debug, nullptr, []{ return "freeing command buffer"; });
         vkFreeCommandBuffers(device, commandBufferPool, 1, &commandBuffer);
         commandBuffer = VK_NULL_HANDLE;
     }

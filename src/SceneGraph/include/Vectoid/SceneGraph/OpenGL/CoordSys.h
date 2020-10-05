@@ -10,9 +10,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! This scene graph node sets up a local coordinate system for its children.
-/*! 
- *  \ingroup VectoidOpenGL
- */ 
 class CoordSys : public Vectoid::SceneGraph::CoordSys {
   public:
     friend class RenderTarget;

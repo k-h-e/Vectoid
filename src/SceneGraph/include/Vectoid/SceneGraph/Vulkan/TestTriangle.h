@@ -12,9 +12,6 @@ class RenderTarget;
 class Context;
 
 //! Simple triangle geometry for testing purposes.
-/*! 
- *  \ingroup VectoidVulkan
- */ 
 class TestTriangle : public Vectoid::SceneGraph::TestTriangle {
   public:
     friend class RenderTarget;

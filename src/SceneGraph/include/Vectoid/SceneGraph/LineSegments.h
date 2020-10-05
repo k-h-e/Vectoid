@@ -15,9 +15,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders line segments.
-/*!
- *  \ingroup Vectoid
- */
 class LineSegments : public virtual GeometryInterface {
   public:
     LineSegments(const LineSegments &other)            = delete;

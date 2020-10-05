@@ -1,8 +1,8 @@
 #ifndef VECTOID_CORE_COLLIDER_H_
 #define VECTOID_CORE_COLLIDER_H_
 
-#include <kxm/Core/ReusableItems.h>
-#include <kxm/Core/logging.h>
+#include <K/Core/ReusableItems.h>
+#include <K/Core/Log.h>
 #include <Vectoid/Core/Transform.h>
 #include <Vectoid/Core/CollidableInterface.h>
 #include <Vectoid/Core/CollisionCheckerInterface.h>
@@ -10,20 +10,19 @@
 namespace Vectoid {
 namespace Core {
 
-class Transform;
+template<typename T> class Transform;
 
 //! Checks for collisions between groups of collidables.
 /*! 
- *  \ingroup Vectoid
- *
  *  The id type must be default-constructible and copyable.
  */
 template<class IdType>
 class Collider {
   public:
-    class DelegateInterface : public Core::Interface {
+    class DelegateInterface : public K::Core::Interface {
       public:
-        virtual void ModifyOtherTransform(Transform *inOutOtherTransform, const Transform &ourTransform) = 0;
+        virtual void ModifyOtherTransform(Transform<float> *inOutOtherTransform,
+                                          const Transform<float> &ourTransform) = 0;
         virtual void HandleCollision(const IdType &id, const IdType &otherId) = 0;
     };
   
@@ -65,9 +64,9 @@ class Collider {
   
     };
     
-    Core::ReusableItems<CollidableInfo> collidables_;
-    std::vector<GroupPair>              groupPairsToCheck_;
-    DelegateInterface                   *delegate_;
+    K::Core::ReusableItems<CollidableInfo> collidables_;
+    std::vector<GroupPair>                 groupPairsToCheck_;
+    DelegateInterface                      *delegate_;
 };
 
 template<class IdType>
@@ -98,7 +97,7 @@ void Collider<IdType>::IncludeChecksForGroupPair(int group0, int group1) {
 
 template<class IdType>
 void Collider<IdType>::Check() {
-    Transform transform0, transform1;
+    Transform<float> transform0, transform1;
     for (GroupPair &pair : groupPairsToCheck_) {
         for (CollidableInfo &info0 : collidables_.Iterate(pair.group0)) {
             info0.collidable->GetTransform(&transform0);

@@ -32,8 +32,6 @@ class TextConsole;
 
 //! Interface to <c>Vectoid</c> render targets.
 /*!
- *  \ingroup Vectoid
- *
  *  A <c>Vectoid</c> render target acts as rendering-platform-specific factory for scene graph nodes and associated
  *  resources.
  */
@@ -43,23 +41,24 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     //! Renders a frame using the current scene graph state.
     virtual void RenderFrame() = 0;
   
-    virtual std::shared_ptr<AgeColoredParticles> NewAgeColoredParticles(
+    virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Core::Particles> &particles) = 0;
-    virtual std::shared_ptr<Camera> NewCamera() = 0;
-    virtual std::shared_ptr<CoordSys> NewCoordSys() = 0;
-    virtual std::shared_ptr<Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry) = 0;
-    virtual std::shared_ptr<Glyphs> NewGlyphs() = 0;
-    virtual std::shared_ptr<LineSegments> NewLineSegments(
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(
+        const std::shared_ptr<GeometryInterface> &geometry) = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
         const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) = 0;
-    virtual std::shared_ptr<LitTriangles> NewLitTriangles(
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LitTriangles> NewLitTriangles(
         const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) = 0;
-    virtual std::shared_ptr<ParticlesRenderer> NewParticlesRenderer(
+    virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
         const std::shared_ptr<Core::Particles> &particles) = 0;
-    virtual std::shared_ptr<PerspectiveProjection> NewPerspectiveProjection() = 0;
-    virtual std::shared_ptr<SimpleLighting> NewSimpleLighting() = 0;
-    virtual std::shared_ptr<TestTriangle> NewTestTriangle() = 0;
-    virtual std::shared_ptr<TextConsole> NewTextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                                                        const std::shared_ptr<Glyphs> &glyphs) = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TestTriangle> NewTestTriangle() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TextConsole> NewTextConsole(
+        int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs) = 0;
 };
 
 }    // Namespace SceneGraph.

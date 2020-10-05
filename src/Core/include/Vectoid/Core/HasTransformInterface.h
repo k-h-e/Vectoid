@@ -9,9 +9,6 @@ namespace Core {
 template<typename T> class Transform;
 
 //! Interface to entities having an associated transform, as for example a \ref CoordSys.
-/*! 
- *  \ingroup Vectoid
- */ 
 class HasTransformInterface : public virtual K::Core::Interface {
   public:
     //! Retrieves the associated transform.

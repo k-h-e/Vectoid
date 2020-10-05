@@ -20,9 +20,6 @@ class TriangleTreeXY;
 class VertexSet;
 
 //! Can further refine a triangulation in the <c>x/y</c> plane.
-/*!
- *  \ingroup Vectoid
- */
 class TriangulationRefinerXY : public virtual K::Core::Interface {
   public:
     TriangulationRefinerXY(const std::shared_ptr<TriangleTreeXY> &triangleTree,

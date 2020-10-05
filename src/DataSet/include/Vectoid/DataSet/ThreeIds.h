@@ -10,9 +10,6 @@ namespace Vectoid {
 namespace DataSet {
 
 //! Three data set item ids with significant ordering.
-/*!
- *  \ingroup Vectoid
- */
 class ThreeIds {
   public:
     ThreeIds() : id0(0), id1(0), id2(0) {}

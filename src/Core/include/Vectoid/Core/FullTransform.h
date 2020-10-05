@@ -7,15 +7,12 @@ namespace Vectoid {
 namespace Core {
 
 //! Full 3D transform (not limited to rotations, translations and combinations thereof, as is <c>Transform</c>).
-/*!
- *  \ingroup Vectoid
- */
-class FullTransform : public TransformCore {
+class FullTransform : public TransformCore<float> {
   public:
     //! Initializes the transform to the identity.
     inline FullTransform();
     //! Initializes the transform as the matrix product of the two specified other transforms.
-    inline FullTransform(const TransformCore &left, const TransformCore &right);
+    inline FullTransform(const TransformCore<float> &left, const TransformCore<float> &right);
     // Default copy, ok.
     
     //! Sets up a perspective projection.
@@ -28,7 +25,7 @@ FullTransform::FullTransform() {
     InitAsIdentity();
 }
 
-FullTransform::FullTransform(const TransformCore &left, const TransformCore &right) {
+FullTransform::FullTransform(const TransformCore<float> &left, const TransformCore<float> &right) {
     
     // Remember storage is column-major.
 

@@ -9,9 +9,6 @@ namespace Core {
 template<typename T> class BoundingBox;
 
 //! Interface to entities having an associated bounding box.
-/*! 
- *  \ingroup Vectoid
- */ 
 class HasBoundingBoxInterface : public virtual K::Core::Interface {
   public:
     //! Retrieves the associated bounding box.

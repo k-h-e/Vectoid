@@ -7,18 +7,12 @@
 
 using K::Core::NumberTools;
 
-/*!
- *  \defgroup Vectoid Vectoid
- *  \brief 3D graphics.
- */
-
+//! 3D graphics and data processing.
 namespace Vectoid {
+//! 3D core functionality.
 namespace Core {
 
 //! Vector in 3-space, also used to describe points in 3-space.
-/*! 
- *  \ingroup Vectoid
- */
 template<typename T>
 class Vector {
   public:
@@ -211,9 +205,7 @@ inline Vector<T> CombineConvex(T a, T b, const Vector<T> &point0, const Vector<T
     return CombineAffine(t, point0, point1);
 }
 
-
 }    // Namespace Core.
 }    // Namespace Vectoid.
-
 
 #endif    // VECTOID_CORE_VECTOR_H_

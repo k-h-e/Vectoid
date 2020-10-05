@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! This scene graph node represents a camera.
-/*! 
- *  \ingroup Vectoid
- */ 
 class Camera : public CoordSysCore {
   public:
     Camera(const Camera &other) = delete;

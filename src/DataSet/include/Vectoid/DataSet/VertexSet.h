@@ -8,12 +8,11 @@
 #include <K/Core/Interface.h>
 
 namespace Vectoid {
+//! Data structures and algorithms for 3D data processing.
 namespace DataSet {
 
 //! Set of vertices in 3-space.
 /*!
- *  \ingroup Vectoid
- *
  *  Can grow dynamically.
  */
 class VertexSet : public virtual K::Core::Interface {

@@ -1,7 +1,7 @@
 #ifndef VECTOID_SCENEGRAPH_VULKAN_GEODE_H_
 #define VECTOID_SCENEGRAPH_VULKAN_GEODE_H_
 
-#include <kxm/Vectoid/Geode.h>
+#include <Vectoid/SceneGraph/Geode.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -10,9 +10,6 @@ namespace Vulkan {
 class RenderTarget;
 
 //! This scene graph node represents actual geometry in the scene (geode = geometry node).
-/*! 
- *  \ingroup VectoidVulkan
- */
 class Geode : public Vectoid::SceneGraph::Geode {
   public:
     friend class RenderTarget;

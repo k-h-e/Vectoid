@@ -6,6 +6,7 @@
 using namespace std;
 
 namespace Vectoid {
+//! Scene graph for 3D graphics.
 namespace SceneGraph {
     
 SceneGraphNode::SceneGraphNode() {

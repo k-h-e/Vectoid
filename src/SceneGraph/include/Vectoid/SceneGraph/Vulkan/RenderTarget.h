@@ -5,33 +5,38 @@
 
 namespace Vectoid {
 namespace SceneGraph {
+//! <c>Vulkan</c> renderer (experimental, incomplete).
 namespace Vulkan {
 
 class Context;
 
 //! <c>Vectoid</c> render target for rendering via <c>Vulkan</c>.
-/*!
- *  \ingroup VectoidVulkan
- */
 class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
   public:
     RenderTarget(void *view);
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
-    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot);
-    virtual void RenderFrame();
-    virtual std::shared_ptr<Vectoid::AgeColoredParticles> NewAgeColoredParticles(
-        const std::shared_ptr<Particles> &particles);
-    virtual std::shared_ptr<Vectoid::Camera> NewCamera();
-    virtual std::shared_ptr<Vectoid::CoordSys> NewCoordSys();
-    virtual std::shared_ptr<Vectoid::Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry);
-    virtual std::shared_ptr<Vectoid::Glyphs> NewGlyphs();
-    virtual std::shared_ptr<Vectoid::ParticlesRenderer> NewParticlesRenderer(
-        const std::shared_ptr<Particles> &particles);
-    virtual std::shared_ptr<Vectoid::PerspectiveProjection> NewPerspectiveProjection();
-    virtual std::shared_ptr<Vectoid::TestTriangle> NewTestTriangle();
-    virtual std::shared_ptr<Vectoid::TextConsole> NewTextConsole(
-        int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Vectoid::Glyphs> &glyphs);
+    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) override;
+    virtual void RenderFrame() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
+        const std::shared_ptr<Vectoid::Core::Particles> &particles) override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry)
+        override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
+        const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LitTriangles> NewLitTriangles(
+        const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
+        const std::shared_ptr<Vectoid::Core::Particles> &particles) override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TestTriangle> NewTestTriangle() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TextConsole> NewTextConsole(
+        int width, int height, float glyphWidth, float glyphHeight,
+        const std::shared_ptr<Vectoid::SceneGraph::Glyphs> &glyphs) override;
     
   protected:
     std::shared_ptr<Context>        context_;

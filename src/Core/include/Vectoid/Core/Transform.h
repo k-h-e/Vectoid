@@ -16,9 +16,6 @@ namespace Core {
 enum Axis { XAxis, YAxis, ZAxis };
 
 //! 3D transformation limited to rotations and translations - and any combination thereof.
-/*! 
- *  \ingroup Vectoid
- */ 
 template<typename T>
 class Transform : public TransformCore<T> {
   public:

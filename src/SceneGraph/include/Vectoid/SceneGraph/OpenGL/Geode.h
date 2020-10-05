@@ -10,9 +10,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! This scene graph node represents actual geometry in the scene (geode = geometry node).
-/*! 
- *  \ingroup VectoidOpenGL
- */
 class Geode : public Vectoid::SceneGraph::Geode {
   public:
     friend class RenderTarget;

@@ -10,9 +10,6 @@ template<typename T> class BoundingBox;
 template<typename T> class Transform;
 
 //! Adapts a bounding box for taking part in collision checking.
-/*! 
- *  \ingroup Vectoid
- */ 
 class BoundingBoxCollisionChecker : public virtual CollisionCheckerInterface {
   public:
     //! The specified bounding box object is expected to outlive the constructed checker instance.

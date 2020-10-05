@@ -16,9 +16,6 @@ namespace DataSet {
 class TriangleTreeXY;
 
 //! Generates a Delauney triangulation for a set of vertices in the <c>x/y</c>-plane.
-/*!
- *  \ingroup Vectoid
- */
 class DelauneyTriangulationXY : public virtual Core::TriangleProviderInterface {
   public:
     DelauneyTriangulationXY();

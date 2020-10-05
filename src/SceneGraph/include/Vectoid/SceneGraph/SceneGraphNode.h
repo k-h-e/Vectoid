@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Base class to all scene graph nodes.
-/*! 
- *  \ingroup Vectoid
- */ 
 class SceneGraphNode : public virtual K::Core::Interface {
   public:
     SceneGraphNode(const SceneGraphNode &other)            = delete;

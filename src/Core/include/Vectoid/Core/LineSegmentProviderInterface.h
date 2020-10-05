@@ -10,9 +10,6 @@ template<typename T> class Vector;
 class TwoPoints;
 
 //! Interface to entities iteratively providing line segments.
-/*!
- *  \ingroup Vectoid
- */
 class LineSegmentProviderInterface : public virtual K::Core::Interface {
   public:
     //! Tells the provider to (re)start providing line segments from the beginning.

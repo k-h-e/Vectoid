@@ -16,9 +16,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders particles in different colors, depending of their age.
-/*!
- *  \ingroup Vectoid
- */
 class AgeColoredParticles : public virtual GeometryInterface {
  public:
     AgeColoredParticles(const AgeColoredParticles &other) = delete;

@@ -1,11 +1,11 @@
-#ifndef VECTOID_SCENEGRAPH_OPENGL_LITTRIANGLES_H_
-#define VECTOID_SCENEGRAPH_OPENGL_LITTRIANGLES_H_
+#ifndef VECTOID_SCENEGRAPH_VULKAN_LITTRIANGLES_H_
+#define VECTOID_SCENEGRAPH_VULKAN_LITTRIANGLES_H_
 
 #include <Vectoid/SceneGraph/LitTriangles.h>
 
 namespace Vectoid {
 namespace SceneGraph {
-namespace OpenGL {
+namespace Vulkan {
 
 //! Renders lit triangles.
 class LitTriangles : public Vectoid::SceneGraph::LitTriangles {
@@ -18,8 +18,8 @@ class LitTriangles : public Vectoid::SceneGraph::LitTriangles {
     virtual void Render();
 };
 
-}    // Namespace OpenGL.
+}    // Namespace Vulkan.
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.
 
-#endif    // KXM_VECTOID_LITTRIANGLES_H_
+#endif    // VECTOID_SCENEGRAPH_VULKAN_LITTRIANGLES_H_

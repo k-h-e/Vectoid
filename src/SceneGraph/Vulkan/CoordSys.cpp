@@ -9,16 +9,16 @@ namespace SceneGraph {
 namespace Vulkan {
 
 CoordSys::CoordSys(const shared_ptr<Context> &context)
-        : Vectoid::CoordSys(),
+        : Vectoid::SceneGraph::CoordSys(),
           context_(context) {
     // Nop.
 }
 
 void CoordSys::Render() {
-    FullTransform objectTransformBackup(context_->ObjectTransform());
-    context_->UpdateObjectTransform(FullTransform(context_->ObjectTransform(), transform_));
+    Core::FullTransform objectTransformBackup(context_->ObjectTransform());
+    context_->UpdateObjectTransform(Core::FullTransform(context_->ObjectTransform(), transform_));
     
-    Vectoid::CoordSys::Render();
+    Vectoid::SceneGraph::CoordSys::Render();
     
     context_->UpdateObjectTransform(objectTransformBackup);
 }

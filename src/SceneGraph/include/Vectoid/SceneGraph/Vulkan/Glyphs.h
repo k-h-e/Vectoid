@@ -12,9 +12,6 @@ class RenderTarget;
 class Context;
 
 //! Manages textures for text glyphs.
-/*! 
- *  \ingroup VectoidVulkan
- */
 class Glyphs : public Vectoid::SceneGraph::Glyphs {
   public:
     friend class RenderTarget;

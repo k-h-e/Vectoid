@@ -8,10 +8,7 @@ namespace Vectoid {
 namespace Core {
 
 //! Base class to 3D transforms.
-/*!
- *  \ingroup Vectoid
- */
-template<typename T = float>
+template<typename T>
 class TransformCore {
   public:
     // No element initialization during construction, subclasses must do this! Want to avoid duplicate element

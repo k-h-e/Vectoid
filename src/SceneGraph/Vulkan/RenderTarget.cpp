@@ -1,25 +1,32 @@
 #include <Vectoid/SceneGraph/Vulkan/RenderTarget.h>
 
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 #include <Vectoid/SceneGraph/Vulkan/AgeColoredParticles.h>
 #include <Vectoid/SceneGraph/Vulkan/Camera.h>
 #include <Vectoid/SceneGraph/Vulkan/Context.h>
 #include <Vectoid/SceneGraph/Vulkan/CoordSys.h>
 #include <Vectoid/SceneGraph/Vulkan/Geode.h>
+#include <Vectoid/SceneGraph/Vulkan/LineSegments.h>
+#include <Vectoid/SceneGraph/Vulkan/LitTriangles.h>
 #include <Vectoid/SceneGraph/Vulkan/Glyphs.h>
 #include <Vectoid/SceneGraph/Vulkan/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/Vulkan/PerspectiveProjection.h>
+#include <Vectoid/SceneGraph/Vulkan/SimpleLighting.h>
 #include <Vectoid/SceneGraph/Vulkan/TestTriangle.h>
 #include <Vectoid/SceneGraph/Vulkan/TextConsole.h>
 
 using namespace std;
+using K::Core::Log;
+using Vectoid::Core::LineSegmentProviderInterface;
+using Vectoid::Core::Particles;
+using Vectoid::Core::TriangleProviderInterface;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace Vulkan {
 
 RenderTarget::RenderTarget(void *view) {
-    Core::Log().Stream() << "Vulkan render target" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "Vulkan render target"; });
     
     context_ = make_shared<Context>(view);
 }
@@ -29,7 +36,7 @@ void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGra
 }
 
 void RenderTarget::RenderFrame() {
-    Core::Log().Stream() << "RenderFrame()" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "RenderFrame()"; });
 
     if (!context_->Operative() || !sceneGraphRoot_) {
         return;
@@ -39,14 +46,14 @@ void RenderTarget::RenderFrame() {
         context_->device, context_->swapChain, UINT64_MAX, context_->imageAcquiredSemaphore, VK_NULL_HANDLE,
         &context_->currentBuffer);
     if (acquireResult == VK_SUBOPTIMAL_KHR) {
-        Core::Log().Stream() << "image suboptimal" << endl;
+        Log::Print(Log::Level::Debug, this, []{ return "image suboptimal"; });
     }
     else if (acquireResult == VK_ERROR_OUT_OF_DATE_KHR) {
-        Core::Log().Stream() << "image out of date" << endl;
+        Log::Print(Log::Level::Debug, this, []{ return "image out of date"; });
         context_->RecoverFromOutOfDateImage();
     }
     else if (acquireResult == VK_SUCCESS) {
-        Core::Log().Stream() << "image acquired" << endl;
+        Log::Print(Log::Level::Debug, this, []{ return "image acquired"; });
         if (context_->CreateCommandBuffer()) {
             VkCommandBufferBeginInfo bufferBeginInfo = {};
             bufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -97,7 +104,7 @@ void RenderTarget::RenderFrame() {
                 
                 // Re-init object transform as Vulkan clipping transform...
                 // Note that Vulkan clip space has inverted y and half z.
-                FullTransform clippingTransform;    // Identity.
+                Core::FullTransform clippingTransform;    // Identity.
                 clippingTransform.Element(1, 1) = -1.0f;
                 clippingTransform.Element(2, 2) =   .5f;
                 //clippingTransform.Element(3, 2) =   .5f;
@@ -137,7 +144,7 @@ void RenderTarget::RenderFrame() {
                             presentInfo.waitSemaphoreCount = 0;
                             presentInfo.pResults = nullptr;
                             if (vkQueuePresentKHR(context_->presentQueue, &presentInfo) == VK_SUCCESS) {
-                                Core::Log().Stream() << "frame presented" << endl;
+                                Log::Print(Log::Level::Debug, this, []{ return "frame presented"; });
                             }
                         }
                     }
@@ -148,41 +155,58 @@ void RenderTarget::RenderFrame() {
     }
 }
 
-shared_ptr<Vectoid::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(const shared_ptr<Particles> &particles) {
-    return shared_ptr<AgeColoredParticles>(new AgeColoredParticles(context_, particles));
+shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
+        const shared_ptr<Core::Particles> &particles) {
+    return shared_ptr<Vulkan::AgeColoredParticles>(new AgeColoredParticles(context_, particles));
 }
 
-shared_ptr<Vectoid::Camera> RenderTarget::NewCamera() {
-    return shared_ptr<Camera>(new Camera(context_));
+shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
+    return shared_ptr<Vulkan::Camera>(new Camera(context_));
 }
 
-shared_ptr<Vectoid::CoordSys> RenderTarget::NewCoordSys() {
-    return shared_ptr<CoordSys>(new CoordSys(context_));
+shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
+    return shared_ptr<Vulkan::CoordSys>(new CoordSys(context_));
 }
 
-shared_ptr<Vectoid::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
-    return shared_ptr<Geode>(new Geode(geometry));
+shared_ptr<::Vectoid::SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<GeometryInterface> &geometry) {
+    return shared_ptr<Vulkan::Geode>(new Geode(geometry));
 }
 
-shared_ptr<Vectoid::Glyphs> RenderTarget::NewGlyphs() {
-    return shared_ptr<Glyphs>(new Glyphs(context_));
+shared_ptr<::Vectoid::SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
+    return shared_ptr<Vulkan::Glyphs>(new Glyphs(context_));
 }
 
-shared_ptr<Vectoid::ParticlesRenderer> RenderTarget::NewParticlesRenderer(const shared_ptr<Particles> &particles) {
-    return shared_ptr<ParticlesRenderer>(new ParticlesRenderer(context_, particles));
+shared_ptr<::Vectoid::SceneGraph::LineSegments> RenderTarget::NewLineSegments(
+        const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider) {
+    return make_shared<Vulkan::LineSegments>(lineSegmentProvider);
 }
 
-shared_ptr<Vectoid::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
-    return shared_ptr<PerspectiveProjection>(new PerspectiveProjection(context_));
+shared_ptr<::Vectoid::SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
+        const shared_ptr<TriangleProviderInterface> &triangleProvider) {
+    return make_shared<Vulkan::LitTriangles>(triangleProvider);
 }
 
-shared_ptr<Vectoid::TestTriangle> RenderTarget::NewTestTriangle() {
-    return shared_ptr<TestTriangle>(new TestTriangle(context_));
+shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(
+        const shared_ptr<Core::Particles> &particles) {
+    return shared_ptr<Vulkan::ParticlesRenderer>(new ParticlesRenderer(context_, particles));
 }
 
-shared_ptr<Vectoid::TextConsole> RenderTarget::NewTextConsole(
-        int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Vectoid::Glyphs> &glyphs) {
-    return shared_ptr<TextConsole>(new TextConsole(context_, width, height, glyphWidth, glyphHeight, glyphs));
+shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
+    return shared_ptr<Vulkan::PerspectiveProjection>(new PerspectiveProjection(context_));
+}
+
+shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
+    return make_shared<Vulkan::SimpleLighting>();
+}
+
+shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
+    return shared_ptr<Vulkan::TestTriangle>(new TestTriangle(context_));
+}
+
+shared_ptr<::Vectoid::SceneGraph::TextConsole> RenderTarget::NewTextConsole(
+        int width, int height, float glyphWidth, float glyphHeight,
+        const shared_ptr<Vectoid::SceneGraph::Glyphs> &glyphs) {
+    return shared_ptr<Vulkan::TextConsole>(new TextConsole(context_, width, height, glyphWidth, glyphHeight, glyphs));
 }
 
 }    // Namespace Vulkan.

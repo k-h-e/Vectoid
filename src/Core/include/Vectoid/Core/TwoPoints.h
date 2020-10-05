@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace Core {
 
 //! Two points in 3-space, with meaningful ordering.
-/*!
- *  \ingroup Vectoid
- */
 class TwoPoints {
   public:
     TwoPoints() {}

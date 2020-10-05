@@ -11,9 +11,6 @@ class RenderTarget;
 class Context;
 
 //! This scene graph node sets up a local coordinate system for its children.
-/*! 
- *  \ingroup VectoidVulkan
- */ 
 class CoordSys : public Vectoid::SceneGraph::CoordSys {
   public:
     friend class RenderTarget;

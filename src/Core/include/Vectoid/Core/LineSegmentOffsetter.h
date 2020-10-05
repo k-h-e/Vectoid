@@ -9,9 +9,6 @@ namespace Vectoid {
 namespace Core {
 
 //! Line segment provider (decorator) applying an offset translation to the line segments.
-/*!
- *  \ingroup Vectoid
- */
 class LineSegmentOffsetter : public virtual LineSegmentProviderInterface {
   public:
     LineSegmentOffsetter(const std::shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider,

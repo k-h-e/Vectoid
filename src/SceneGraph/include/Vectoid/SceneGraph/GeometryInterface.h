@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Interface to entities representing actual geometry.
-/*! 
- *  \ingroup Vectoid
- */ 
 class GeometryInterface : public virtual K::Core::Interface {
   public:
     //! Renders the geometry.

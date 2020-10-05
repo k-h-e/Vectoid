@@ -1,21 +1,22 @@
 #include <Vectoid/SceneGraph/Vulkan/TestTriangle.h>
 
-#include <kxm/Core/logging.h>
+#include <K/Core/Log.h>
 
 using namespace std;
+using K::Core::Log;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace Vulkan {
 
 TestTriangle::TestTriangle(const shared_ptr<Context> &context)
-        : Vectoid::TestTriangle(),
+        : Vectoid::SceneGraph::TestTriangle(),
           context_(context) {
     // Nop.
 }
 
 void TestTriangle::Render() {
-    Core::Log().Stream() << "Vulkan::TestTriangle::Render()" << endl;
+    Log::Print(Log::Level::Debug, this, []{ return "Vulkan::TestTriangle::Render()"; });
 }
 
 }    // Namespace Vulkan.

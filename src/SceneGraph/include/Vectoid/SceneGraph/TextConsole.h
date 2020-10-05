@@ -11,9 +11,6 @@ namespace SceneGraph {
 class Glyphs;
 
 //! Text console geometry.
-/*! 
- *  \ingroup Vectoid
- */
 class TextConsole : public virtual GeometryInterface {
   public:
     enum class Color { White,

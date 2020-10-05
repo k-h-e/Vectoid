@@ -7,9 +7,6 @@ namespace Vectoid {
 namespace Core {
 
 //! Point taking part in collision checking.
-/*! 
- *  \ingroup Vectoid
- */ 
 class PointCollisionChecker : public virtual CollisionCheckerInterface {
   public:
     bool CheckCollision(CollisionCheckerInterface *other, const Transform<float> &otherTransform,

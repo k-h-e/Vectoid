@@ -11,9 +11,6 @@ namespace Vectoid {
 namespace DataSet {
 
 //! Simple list of line segments in 3-space that can be grown dynamically.
-/*!
- *  \ingroup Vectoid
- */
 class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
                               public virtual Core::HasBoundingBoxInterface {
   public:

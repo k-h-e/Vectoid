@@ -10,9 +10,6 @@ namespace OpenGL {
 class RenderTarget;
 
 //! Text console geometry.
-/*! 
- *  \ingroup VectoidOpenGL
- */
 class TextConsole : public Vectoid::SceneGraph::TextConsole {
   public:
     friend class RenderTarget;

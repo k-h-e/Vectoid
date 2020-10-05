@@ -9,9 +9,6 @@ namespace Core {
 class CollisionCheckerInterface;
 
 //! Interface to objects taking part in collision checking.
-/*!
- *  \ingroup Vectoid
- */ 
 class CollidableInterface : public virtual HasTransformInterface {
   public:
     //! Returns the collidable's collision checker which is guaranteed to live at least as long as the collidable

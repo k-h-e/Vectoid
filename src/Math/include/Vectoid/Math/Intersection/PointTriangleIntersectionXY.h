@@ -13,9 +13,6 @@ namespace Math {
 namespace Intersection {
 
 //! Tests whether a point in the <c>x/y</c> plane lies inside a tringle in the <c>x/y</c>.
-/*!
- *  \ingroup Vectoid
- */
 class PointTriangleIntersectionXY {
   public:
     static bool Compute(const Core::Vector<float> &point, const Core::ThreePoints &triangle, bool *outIntersects);
