@@ -52,5 +52,14 @@ void SceneGraphNode::Render() {
     }
 }
 
+void SceneGraphNode::Visit(VisitorInterface *visitor) {
+    for (auto &child : children_) {
+        child->Visit(visitor);
+    }
+    if (lastChild_) {
+        lastChild_->Visit(visitor);
+    }
+}
+
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.

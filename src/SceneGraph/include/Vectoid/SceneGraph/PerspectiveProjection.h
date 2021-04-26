@@ -12,6 +12,7 @@ class PerspectiveProjection : public SceneGraphNode {
   public:
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
+
     //! Sets the size in camera space of the rectangular "window" on the near clipping plane.
     void SetWindowSize(float windowSize, bool identifyWithLargerViewPortDimension);
     //! Retrieves the property set by SetWindowSize().
@@ -28,6 +29,8 @@ class PerspectiveProjection : public SceneGraphNode {
     void SetViewPort(float width, float height);
     //! Transforms a viewport point to camera coordinates.
     Core::Vector<float> TransformViewPortCoordinates(float x, float y) const;
+
+    void Visit(VisitorInterface *visitor) override;
     
   protected:
     PerspectiveProjection();

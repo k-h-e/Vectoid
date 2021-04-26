@@ -1,6 +1,7 @@
 #include <Vectoid/SceneGraph/Geode.h>
 
 #include <cassert>
+#include <Vectoid/SceneGraph/VisitorInterface.h>
 
 using namespace std;
 
@@ -15,6 +16,12 @@ Geode::Geode(const shared_ptr<GeometryInterface> &geometry) {
 void Geode::Render() {
     geometry_->Render();
     SceneGraphNode::Render();
+}
+
+void Geode::Visit(VisitorInterface *visitor) {
+    visitor->Visit(this);
+    SceneGraphNode::Visit(visitor);
+    visitor->Leave(this);
 }
 
 }    // Namespace SceneGraph.

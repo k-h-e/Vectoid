@@ -13,8 +13,9 @@ class Geode : public SceneGraphNode {
   public:
     Geode(const Geode &other) = delete;
     Geode &operator=(const Geode &other) = delete;
-    void Render();
-    
+    void Render() override;
+    void Visit(VisitorInterface *visitor) override;
+
   protected:
     Geode(const std::shared_ptr<GeometryInterface> &geometry);
     

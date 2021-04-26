@@ -1,5 +1,7 @@
 #include <Vectoid/SceneGraph/PerspectiveProjection.h>
 
+#include <Vectoid/SceneGraph/VisitorInterface.h>
+
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
@@ -60,6 +62,12 @@ Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float
     float windowWidth, windowHeight;
     ComputeWindowDimensions(&windowWidth, &windowHeight);
     return Vector<float>((x/width_ - .5f)  * windowWidth, (.5f - y/height_) * windowHeight, 0.0f);
+}
+
+void PerspectiveProjection::Visit(VisitorInterface *visitor) {
+    visitor->Visit(this);
+    SceneGraphNode::Visit(visitor);
+    visitor->Leave(this);
 }
 
 void PerspectiveProjection::ComputeWindowDimensions(float *width, float *height) const {

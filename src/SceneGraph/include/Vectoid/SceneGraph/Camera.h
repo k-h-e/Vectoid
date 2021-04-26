@@ -12,6 +12,8 @@ class Camera : public CoordSysCore {
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
     
+    void Visit(VisitorInterface *visitor) override;
+
   protected:
     Camera() {}
 };
