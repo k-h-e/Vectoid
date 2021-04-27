@@ -2,14 +2,14 @@
 #define VECTOID_SCENEGRAPH_COORDSYSCORE_H_
 
 #include <Vectoid/Core/Transform.h>
-#include <Vectoid/SceneGraph/SceneGraphNode.h>
+#include <Vectoid/SceneGraph/GroupNode.h>
 #include <Vectoid/SceneGraph/CoordSysInterface.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 
 //! Base class for scene graph nodes implementing \ref CoordSysInterface.
-class CoordSysCore : public SceneGraphNode,
+class CoordSysCore : public GroupNode,
                      public virtual CoordSysInterface {
   public:
     CoordSysCore();

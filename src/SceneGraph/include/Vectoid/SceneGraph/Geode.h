@@ -2,18 +2,19 @@
 #define VECTOID_SCENEGRAPH_GEODE_H_
 
 #include <memory>
-#include <Vectoid/SceneGraph/SceneGraphNode.h>
+#include <Vectoid/SceneGraph/Node.h>
 #include <Vectoid/SceneGraph/GeometryInterface.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 
 //! This scene graph node represents actual geometry in the scene (geode = geometry node).
-class Geode : public SceneGraphNode {
+class Geode : public Node {
   public:
     Geode(const Geode &other) = delete;
     Geode &operator=(const Geode &other) = delete;
-    void Render() override;
+
+    void RenderPre() override;
     void Visit(VisitorInterface *visitor) override;
 
   protected:

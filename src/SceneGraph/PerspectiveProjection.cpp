@@ -64,12 +64,6 @@ Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float
     return Vector<float>((x/width_ - .5f)  * windowWidth, (.5f - y/height_) * windowHeight, 0.0f);
 }
 
-void PerspectiveProjection::Visit(VisitorInterface *visitor) {
-    visitor->Visit(this);
-    SceneGraphNode::Visit(visitor);
-    visitor->Leave(this);
-}
-
 void PerspectiveProjection::ComputeWindowDimensions(float *width, float *height) const {
     bool assignWindowSizeToWidth = (width_ < height_);
     if (windowSizeIsLargerViewPortDimension_) {

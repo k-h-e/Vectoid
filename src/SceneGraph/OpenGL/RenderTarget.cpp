@@ -1,5 +1,6 @@
 #include <Vectoid/SceneGraph/OpenGL/RenderTarget.h>
 
+#include <Vectoid/SceneGraph/RenderVisitor.h>
 #include <Vectoid/SceneGraph/OpenGL/AgeColoredParticles.h>
 #include <Vectoid/SceneGraph/OpenGL/Camera.h>
 #include <Vectoid/SceneGraph/OpenGL/CoordSys.h>
@@ -27,7 +28,7 @@ RenderTarget::RenderTarget()
     // Nop.
 }
 
-void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) {
+void RenderTarget::SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) {
     sceneGraphRoot_ = sceneGraphRoot;
 }
 
@@ -39,7 +40,8 @@ void RenderTarget::RenderFrame() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (sceneGraphRoot_) {
-        sceneGraphRoot_->Render();
+        RenderVisitor renderVisitor;
+        sceneGraphRoot_->Visit(&renderVisitor);
     }
 }
 

@@ -13,11 +13,10 @@ Camera::Camera()
     //Nop.
 }
 
-void Camera::Render() {
+void Camera::RenderPre() {
     Transform<float> inverse(Transform<float>::InitAsInverse, transform_);
     glLoadIdentity();
     glMultMatrixf(inverse.MatrixElements());
-    SceneGraph::Camera::Render();
 }
 
 }    // Namespace OpenGL.

@@ -23,9 +23,9 @@ class Geode;
 class Glyphs;
 class LitTriangles;
 class LineSegments;
+class Node;
 class ParticlesRenderer;
 class PerspectiveProjection;
-class SceneGraphNode;
 class SimpleLighting;
 class TestTriangle;
 class TextConsole;
@@ -37,7 +37,7 @@ class TextConsole;
  */
 class RenderTargetInterface : public virtual K::Core::Interface {
   public:
-    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) = 0;
+    virtual void SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) = 0;
     //! Renders a frame using the current scene graph state.
     virtual void RenderFrame() = 0;
   

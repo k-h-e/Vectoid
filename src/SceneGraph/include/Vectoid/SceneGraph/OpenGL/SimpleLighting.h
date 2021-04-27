@@ -15,7 +15,8 @@ class SimpleLighting : public Vectoid::SceneGraph::SimpleLighting {
     SimpleLighting &operator=(const SimpleLighting &other)  = delete;
     SimpleLighting(const SimpleLighting &&other)            = delete;
     SimpleLighting &operator=(const SimpleLighting &&other) = delete;
-    virtual void Render();
+
+    void RenderPre() override;
 };
 
 }    // Namespace OpenGL.

@@ -6,25 +6,13 @@
 namespace Vectoid {
 namespace SceneGraph {
 
-class Camera;
-class CoordSys;
-class Geode;
-class PerspectiveProjection;
-class SimpleLighting;
+class Node;
 
 //! Interface to scene graph visitors.
 class VisitorInterface : public virtual K::Core::Interface {
   public:
-    virtual void Visit(::Vectoid::SceneGraph::Camera *camera) = 0;
-    virtual void Leave(::Vectoid::SceneGraph::Camera *camera) = 0;
-    virtual void Visit(::Vectoid::SceneGraph::CoordSys *coordSys) = 0;
-    virtual void Leave(::Vectoid::SceneGraph::CoordSys *coordSys) = 0;
-    virtual void Visit(::Vectoid::SceneGraph::Geode *geode) = 0;
-    virtual void Leave(::Vectoid::SceneGraph::Geode *geode) = 0;
-    virtual void Visit(::Vectoid::SceneGraph::PerspectiveProjection *perspectiveProjection) = 0;
-    virtual void Leave(::Vectoid::SceneGraph::PerspectiveProjection *perspectiveProjection) = 0;
-    virtual void Visit(::Vectoid::SceneGraph::SimpleLighting *simpleLighting) = 0;
-    virtual void Leave(::Vectoid::SceneGraph::SimpleLighting *simpleLighting) = 0;
+    virtual void Visit(Node *node) = 0;
+    virtual void Leave(Node *node) = 0;
 };
 
 }    // Namespace SceneGraph.

@@ -11,8 +11,6 @@ class CoordSys : public CoordSysCore {
   public:
     CoordSys(const CoordSys &other) = delete;
     CoordSys &operator=(const CoordSys &other) = delete;
-    
-    void Visit(VisitorInterface *visitor) override;
 
   protected:
     CoordSys() {}

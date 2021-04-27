@@ -11,11 +11,9 @@ class Camera : public CoordSysCore {
   public:
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
-    
-    void Visit(VisitorInterface *visitor) override;
 
   protected:
-    Camera() {}
+    Camera();
 };
 
 }    // Namespace SceneGraph.

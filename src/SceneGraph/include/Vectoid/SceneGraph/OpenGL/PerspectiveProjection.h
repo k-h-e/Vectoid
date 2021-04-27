@@ -16,7 +16,8 @@ class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection 
     
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
-    void Render();
+
+    void RenderPre() override;
     
   private:
     PerspectiveProjection();

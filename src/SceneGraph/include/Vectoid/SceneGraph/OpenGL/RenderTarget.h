@@ -14,7 +14,7 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     RenderTarget();
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
-    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) override;
+    virtual void SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) override;
     virtual void RenderFrame() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Core::Particles> &particles) override;
@@ -39,8 +39,8 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
   private:
     void initializeGL();
 
-    std::shared_ptr<SceneGraphNode> sceneGraphRoot_;
-    bool                            glInitialized_;
+    std::shared_ptr<Node> sceneGraphRoot_;
+    bool                  glInitialized_;
 };
 
 }    // Namespace OpenGL.

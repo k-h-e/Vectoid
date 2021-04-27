@@ -13,14 +13,12 @@ Geode::Geode(const shared_ptr<GeometryInterface> &geometry) {
     geometry_ = geometry;
 }
 
-void Geode::Render() {
+void Geode::RenderPre() {
     geometry_->Render();
-    SceneGraphNode::Render();
 }
 
 void Geode::Visit(VisitorInterface *visitor) {
     visitor->Visit(this);
-    SceneGraphNode::Visit(visitor);
     visitor->Leave(this);
 }
 

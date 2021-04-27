@@ -16,7 +16,8 @@ class Camera : public Vectoid::SceneGraph::Camera {
     
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
-    void Render();
+
+    void RenderPre() override;
     
   private:
     Camera();

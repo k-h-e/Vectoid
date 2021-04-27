@@ -16,7 +16,9 @@ class CoordSys : public Vectoid::SceneGraph::CoordSys {
     
     CoordSys(const CoordSys &other) = delete;
     CoordSys &operator=(const CoordSys &other) = delete;
-    void Render();
+
+    void RenderPre() override;
+    void RenderPost() override;
     
   private:
     CoordSys();

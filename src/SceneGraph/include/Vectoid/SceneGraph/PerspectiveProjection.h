@@ -2,13 +2,13 @@
 #define VECTOID_SCENEGRAPH_PERSPECTIVEPROJECTION_H_
 
 #include <Vectoid/Core/Vector.h>
-#include <Vectoid/SceneGraph/SceneGraphNode.h>
+#include <Vectoid/SceneGraph/GroupNode.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
-class PerspectiveProjection : public SceneGraphNode {
+class PerspectiveProjection : public GroupNode {
   public:
     PerspectiveProjection(const PerspectiveProjection &other) = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
@@ -29,8 +29,6 @@ class PerspectiveProjection : public SceneGraphNode {
     void SetViewPort(float width, float height);
     //! Transforms a viewport point to camera coordinates.
     Core::Vector<float> TransformViewPortCoordinates(float x, float y) const;
-
-    void Visit(VisitorInterface *visitor) override;
     
   protected:
     PerspectiveProjection();

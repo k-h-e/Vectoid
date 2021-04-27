@@ -11,10 +11,12 @@ CoordSys::CoordSys()
     // Nop.
 }
 
-void CoordSys::Render() {
+void CoordSys::RenderPre() {
     glPushMatrix();
     glMultMatrixf(transform_.MatrixElements());
-    SceneGraph::CoordSys::Render();
+}
+
+void CoordSys::RenderPost() {
     glPopMatrix();
 }
 

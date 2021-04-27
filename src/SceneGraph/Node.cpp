@@ -1,17 +1,29 @@
-#include <Vectoid/SceneGraph/SimpleLighting.h>
+#include <Vectoid/SceneGraph/Node.h>
 
 #include <Vectoid/SceneGraph/VisitorInterface.h>
 
 namespace Vectoid {
 namespace SceneGraph {
-
-SimpleLighting::SimpleLighting() {
+    
+Node::Node() {
     // Nop.
 }
 
-void SimpleLighting::Visit(VisitorInterface *visitor) {
+Node::~Node() {
+    // Nop.
+}
+
+void Node::Visit(VisitorInterface *visitor) {
     visitor->Visit(this);
     visitor->Leave(this);
+}
+
+void Node::RenderPre() {
+    // Nop.
+}
+
+void Node::RenderPost() {
+    // Nop.
 }
 
 }    // Namespace SceneGraph.
