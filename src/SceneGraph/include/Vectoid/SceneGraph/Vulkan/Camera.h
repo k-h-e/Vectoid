@@ -1,6 +1,7 @@
 #ifndef VECTOID_SCENEGRAPH_VULKAN_CAMERA_H_
 #define VECTOID_SCENEGRAPH_VULKAN_CAMERA_H_
 
+#include <Vectoid/Core/FullTransform.h>
 #include <Vectoid/SceneGraph/Camera.h>
 
 namespace Vectoid {
@@ -17,12 +18,15 @@ class Camera : public Vectoid::SceneGraph::Camera {
     
     Camera(const Camera &other) = delete;
     Camera &operator=(const Camera &other) = delete;
-    void Render();
+    
+    void RenderPre() override;
+    void RenderPost() override;
     
   private:
     Camera(const std::shared_ptr<Context> &context);
     
     std::shared_ptr<Context> context_;
+    Core::FullTransform      objectTransformBackup_;
 };
 
 }    // Namespace Vulkan.

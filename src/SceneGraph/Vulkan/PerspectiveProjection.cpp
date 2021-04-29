@@ -13,8 +13,8 @@ PerspectiveProjection::PerspectiveProjection(const shared_ptr<Context> &context)
     // Nop.
 }
 
-void PerspectiveProjection::Render() {
-    Core::FullTransform objectTransformBackup(context_->ObjectTransform());
+void PerspectiveProjection::RenderPre() {
+    objectTransformBackup_ = context_->ObjectTransform();
     if (parametersChanged_) {
         float windowWidth, windowHeight;
         ComputeWindowDimensions(&windowWidth, &windowHeight);
@@ -26,10 +26,10 @@ void PerspectiveProjection::Render() {
         parametersChanged_ = false;
     }
     context_->UpdateObjectTransform(Core::FullTransform(context_->ObjectTransform(), transform_));
-    
-    Vectoid::SceneGraph::PerspectiveProjection::Render();
-    
-    context_->UpdateObjectTransform(objectTransformBackup);
+}
+
+void PerspectiveProjection::RenderPost() {
+    context_->UpdateObjectTransform(objectTransformBackup_);
 }
 
 }    // Namespace Vulkan.

@@ -14,13 +14,13 @@ CoordSys::CoordSys(const shared_ptr<Context> &context)
     // Nop.
 }
 
-void CoordSys::Render() {
-    Core::FullTransform objectTransformBackup(context_->ObjectTransform());
+void CoordSys::RenderPre() {
+    objectTransformBackup_ = context_->ObjectTransform();
     context_->UpdateObjectTransform(Core::FullTransform(context_->ObjectTransform(), transform_));
-    
-    Vectoid::SceneGraph::CoordSys::Render();
-    
-    context_->UpdateObjectTransform(objectTransformBackup);
+}
+
+void CoordSys::RenderPost() {
+    context_->UpdateObjectTransform(objectTransformBackup_);
 }
 
 }    // Namespace Vulkan.

@@ -17,15 +17,20 @@ class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection 
   public:
     friend class RenderTarget;
     
-    PerspectiveProjection(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection(const PerspectiveProjection &other)            = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
-    void Render();
+    PerspectiveProjection(PerspectiveProjection &&other)                 = delete;
+    PerspectiveProjection &operator=(PerspectiveProjection &&other)      = delete;
+    
+    void RenderPre() override;
+    void RenderPost() override;
     
   private:
     PerspectiveProjection(const std::shared_ptr<Context> &context);
     
     std::shared_ptr<Context> context_;
     Core::FullTransform transform_;
+    Core::FullTransform objectTransformBackup_;
 };
 
 }    // Namespace Vulkan.

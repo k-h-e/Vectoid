@@ -10,7 +10,9 @@
 #include <Vectoid/SceneGraph/OpenGL/LitTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
+#include <Vectoid/SceneGraph/OpenGL/SimpleGeometryRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/SimpleLighting.h>
+#include <Vectoid/SceneGraph/OpenGL/TerrainRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/TestTriangle.h>
 #include <Vectoid/SceneGraph/OpenGL/TextConsole.h>
 
@@ -85,8 +87,19 @@ shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspe
     return shared_ptr<OpenGL::PerspectiveProjection>(new PerspectiveProjection());
 }
 
+shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
+        const shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) {
+    return shared_ptr<OpenGL::SimpleGeometryRenderer>(new SimpleGeometryRenderer(geometry));
+}
+
 shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
     return make_shared<OpenGL::SimpleLighting>();
+}
+
+shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> RenderTarget::NewTerrainRenderer(
+        const shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
+        const shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) {
+    return shared_ptr<OpenGL::TerrainRenderer>(new TerrainRenderer(terrain, mapParameters));
 }
 
 shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {

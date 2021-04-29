@@ -16,7 +16,7 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     RenderTarget(void *view);
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
-    virtual void SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) override;
+    virtual void SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) override;
     virtual void RenderFrame() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Vectoid::Core::Particles> &particles) override;
@@ -32,7 +32,12 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
         const std::shared_ptr<Vectoid::Core::Particles> &particles) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
+        const std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> NewTerrainRenderer(
+        const std::shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
+        const std::shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::TestTriangle> NewTestTriangle() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::TextConsole> NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight,
@@ -42,7 +47,7 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     std::shared_ptr<Context>        context_;
     
   private:
-    std::shared_ptr<SceneGraphNode> sceneGraphRoot_;
+    std::shared_ptr<Node> sceneGraphRoot_;
 };
 
 }    // Namespace Vulkan.

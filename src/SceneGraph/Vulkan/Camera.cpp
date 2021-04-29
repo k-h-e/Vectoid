@@ -16,14 +16,14 @@ Camera::Camera(const shared_ptr<Context> &context)
     // Nop.
 }
 
-void Camera::Render() {
-    FullTransform objectTransformBackup(context_->ObjectTransform());
+void Camera::RenderPre() {
+    objectTransformBackup_ = context_->ObjectTransform();
     Transform<float> inverse(Transform<float>::InitAsInverse, transform_);
     context_->UpdateObjectTransform(FullTransform(context_->ObjectTransform(), inverse));
+}
 
-    Vectoid::SceneGraph::Camera::Render();
-
-    context_->UpdateObjectTransform(objectTransformBackup);
+void Camera::RenderPost() {
+    context_->UpdateObjectTransform(objectTransformBackup_);
 }
 
 }    // Namespace Vulkan.

@@ -1,6 +1,7 @@
 #ifndef VECTOID_SCENEGRAPH_VULKAN_COORDSYS_H_
 #define VECTOID_SCENEGRAPH_VULKAN_COORDSYS_H_
 
+#include <Vectoid/Core/FullTransform.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
 
 namespace Vectoid {
@@ -17,12 +18,15 @@ class CoordSys : public Vectoid::SceneGraph::CoordSys {
     
     CoordSys(const CoordSys &other) = delete;
     CoordSys &operator=(const CoordSys &other) = delete;
-    void Render();
+    
+    void RenderPre() override;
+    void RenderPost() override;
 
   private:
     CoordSys(const std::shared_ptr<Context> &context);
     
     std::shared_ptr<Context> context_;
+    Core::FullTransform      objectTransformBackup_;
 };
 
 }    // Namespace Vulkan.

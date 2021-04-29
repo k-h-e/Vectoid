@@ -23,10 +23,15 @@ class Geode;
 class Glyphs;
 class LitTriangles;
 class LineSegments;
+class MapParameters;
 class Node;
 class ParticlesRenderer;
 class PerspectiveProjection;
+class SimpleGeometry;
+class SimpleGeometryRenderer;
 class SimpleLighting;
+class Terrain;
+class TerrainRenderer;
 class TestTriangle;
 class TextConsole;
 
@@ -55,7 +60,12 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
         const std::shared_ptr<Core::Particles> &particles) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
+        const std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> NewTerrainRenderer(
+        const std::shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
+        const std::shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::TestTriangle> NewTestTriangle() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::TextConsole> NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs) = 0;

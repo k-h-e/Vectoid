@@ -14,11 +14,6 @@ Geode::Geode(const shared_ptr<GeometryInterface> &geometry)
     // Nop.
 }
 
-void Geode::Render() {
-    Log::Print(Log::Level::Debug, this, []{ return "Vulkan::Geode::Render()"; });
-    Vectoid::SceneGraph::Geode::Render();
-}
-
 }    // Namespace Vulkan.
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.

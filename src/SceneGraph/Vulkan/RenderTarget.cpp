@@ -1,6 +1,7 @@
 #include <Vectoid/SceneGraph/Vulkan/RenderTarget.h>
 
 #include <K/Core/Log.h>
+#include <Vectoid/SceneGraph/RenderVisitor.h>
 #include <Vectoid/SceneGraph/Vulkan/AgeColoredParticles.h>
 #include <Vectoid/SceneGraph/Vulkan/Camera.h>
 #include <Vectoid/SceneGraph/Vulkan/Context.h>
@@ -11,7 +12,9 @@
 #include <Vectoid/SceneGraph/Vulkan/Glyphs.h>
 #include <Vectoid/SceneGraph/Vulkan/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/Vulkan/PerspectiveProjection.h>
+#include <Vectoid/SceneGraph/Vulkan/SimpleGeometryRenderer.h>
 #include <Vectoid/SceneGraph/Vulkan/SimpleLighting.h>
+#include <Vectoid/SceneGraph/Vulkan/TerrainRenderer.h>
 #include <Vectoid/SceneGraph/Vulkan/TestTriangle.h>
 #include <Vectoid/SceneGraph/Vulkan/TextConsole.h>
 
@@ -31,7 +34,7 @@ RenderTarget::RenderTarget(void *view) {
     context_ = make_shared<Context>(view);
 }
 
-void RenderTarget::SetSceneGraph(const std::shared_ptr<SceneGraphNode> &sceneGraphRoot) {
+void RenderTarget::SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) {
     sceneGraphRoot_ = sceneGraphRoot;
 }
 
@@ -111,7 +114,8 @@ void RenderTarget::RenderFrame() {
                 context_->UpdateObjectTransform(clippingTransform);
                 context_->ApplyObjectTransform();
                 
-                sceneGraphRoot_->Render();
+                RenderVisitor renderVisitor;
+                sceneGraphRoot_->Visit(&renderVisitor);
                 
                 vkCmdEndRenderPass(context_->commandBuffer);
                 
@@ -195,8 +199,19 @@ shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspe
     return shared_ptr<Vulkan::PerspectiveProjection>(new PerspectiveProjection(context_));
 }
 
+shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
+        const shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) {
+    return shared_ptr<Vulkan::SimpleGeometryRenderer>(new SimpleGeometryRenderer(context_, geometry));
+}
+
 shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
     return make_shared<Vulkan::SimpleLighting>();
+}
+
+shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> RenderTarget::NewTerrainRenderer(
+        const shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
+        const shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) {
+    return shared_ptr<Vulkan::TerrainRenderer>(new TerrainRenderer(context_, terrain, mapParameters));
 }
 
 shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
