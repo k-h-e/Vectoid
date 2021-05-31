@@ -29,7 +29,7 @@ class GroupNode : public Node {
     //! Removes all child nodes from the scene graph node.
     void RemoveAllChildren();
 
-    void Visit(VisitorInterface *visitor) override final;
+    void OnVisited(VisitorInterface *visitor, bool visitAll) override final;
     
   protected:
     GroupNode();

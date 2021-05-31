@@ -2,10 +2,14 @@
 
 #include <Vectoid/SceneGraph/VisitorInterface.h>
 
+using std::string;
+using std::shared_ptr;
+
 namespace Vectoid {
 namespace SceneGraph {
     
-Node::Node() {
+Node::Node()
+        : enabled_(true) {
     // Nop.
 }
 
@@ -13,9 +17,20 @@ Node::~Node() {
     // Nop.
 }
 
-void Node::Visit(VisitorInterface *visitor) {
-    visitor->Visit(this);
-    visitor->Leave(this);
+void Node::SetName(const std::string &name) {
+    name_ = name;
+}
+
+string Node::Name() const {
+    return name_;
+}
+
+void Node::setEnabled(bool enabled) {
+    enabled_ = enabled;
+}
+
+bool Node::Enabled() const {
+    return enabled_;
 }
 
 void Node::RenderPre() {
@@ -24,6 +39,19 @@ void Node::RenderPre() {
 
 void Node::RenderPost() {
     // Nop.
+}
+
+void Node::OnVisited(VisitorInterface *visitor, bool visitAll) {
+    (void)visitor;
+    // Nop.
+}
+
+void Visit(const shared_ptr<Node> &node, VisitorInterface *visitor, bool visitAll) {
+    if (visitAll || node->Enabled()) {
+        visitor->Visit(node);
+        node->OnVisited(visitor, visitAll);
+        visitor->Leave(node);
+    }
 }
 
 }    // Namespace SceneGraph.

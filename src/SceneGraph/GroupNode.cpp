@@ -43,17 +43,13 @@ void GroupNode::RemoveAllChildren() {
     lastChild_.reset();
 }
 
-void GroupNode::Visit(VisitorInterface *visitor) {
-    visitor->Visit(this);
-
-    for (auto &child : children_) {
-        child->Visit(visitor);
+void GroupNode::OnVisited(VisitorInterface *visitor, bool visitAll) {
+    for (shared_ptr<Node> &child : children_) {
+        Visit(child, visitor, visitAll);
     }
     if (lastChild_) {
-        lastChild_->Visit(visitor);
+        Visit(lastChild_, visitor, visitAll);
     }
-
-    visitor->Leave(this);
 }
 
 }    // Namespace SceneGraph.

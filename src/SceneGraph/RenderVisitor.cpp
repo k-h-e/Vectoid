@@ -2,14 +2,16 @@
 
 #include <Vectoid/SceneGraph/Node.h>
 
+using std::shared_ptr;
+
 namespace Vectoid {
 namespace SceneGraph {
     
-void RenderVisitor::Visit(Node *node) {
+void RenderVisitor::Visit(const shared_ptr<Node> &node) {
     node->RenderPre();
 }
 
-void RenderVisitor::Leave(Node *node) {
+void RenderVisitor::Leave(const shared_ptr<Node> &node) {
     node->RenderPost();
 }
 

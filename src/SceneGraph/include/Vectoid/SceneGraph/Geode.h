@@ -15,7 +15,6 @@ class Geode : public Node {
     Geode &operator=(const Geode &other) = delete;
 
     void RenderPre() override;
-    void Visit(VisitorInterface *visitor) override;
 
   protected:
     Geode(const std::shared_ptr<GeometryInterface> &geometry);

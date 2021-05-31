@@ -9,10 +9,5 @@ SimpleLighting::SimpleLighting() {
     // Nop.
 }
 
-void SimpleLighting::Visit(VisitorInterface *visitor) {
-    visitor->Visit(this);
-    visitor->Leave(this);
-}
-
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.

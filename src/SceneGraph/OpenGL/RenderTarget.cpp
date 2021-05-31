@@ -43,7 +43,7 @@ void RenderTarget::RenderFrame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (sceneGraphRoot_) {
         RenderVisitor renderVisitor;
-        sceneGraphRoot_->Visit(&renderVisitor);
+        Visit(sceneGraphRoot_, &renderVisitor, false);
     }
 }
 

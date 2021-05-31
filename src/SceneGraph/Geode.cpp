@@ -17,10 +17,5 @@ void Geode::RenderPre() {
     geometry_->Render();
 }
 
-void Geode::Visit(VisitorInterface *visitor) {
-    visitor->Visit(this);
-    visitor->Leave(this);
-}
-
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.

@@ -14,8 +14,6 @@ class SimpleLighting : public Node {
     SimpleLighting(const SimpleLighting &&other)            = delete;
     SimpleLighting &operator=(const SimpleLighting &&other) = delete;
 
-    void Visit(VisitorInterface *visitor) override;
-
   protected:
     SimpleLighting();
 };

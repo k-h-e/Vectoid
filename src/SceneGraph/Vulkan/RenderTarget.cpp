@@ -115,7 +115,7 @@ void RenderTarget::RenderFrame() {
                 context_->ApplyObjectTransform();
                 
                 RenderVisitor renderVisitor;
-                sceneGraphRoot_->Visit(&renderVisitor);
+                Visit(sceneGraphRoot_, &renderVisitor, false);
                 
                 vkCmdEndRenderPass(context_->commandBuffer);
                 
