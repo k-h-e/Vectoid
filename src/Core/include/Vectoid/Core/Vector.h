@@ -19,8 +19,10 @@ class Vector {
     //! Initializes the vector as <c>0</c>-vector.
     inline Vector();
     inline Vector(T xCoord, T yCoord, T zCoord);
-    inline Vector(const Vector<T> &other);
-    // Default copy and move, ok.
+    Vector(const Vector<T> &other)            = default;
+    Vector &operator=(const Vector<T> &other) = default;
+    Vector(Vector<T> &&other)                 = default;
+    Vector &operator=(Vector<T> &&other)      = default;
 
     inline bool operator==(const Vector<T> &other) const;
     inline bool operator!=(const Vector<T> &other) const;
@@ -67,13 +69,6 @@ Vector<T>::Vector(T xCoord, T yCoord, T zCoord) {
     x = xCoord;
     y = yCoord;
     z = zCoord;
-}
-
-template<typename T>
-Vector<T>::Vector(const Vector<T> &other) {
-    x = other.x;
-    y = other.y;
-    z = other.z;
 }
 
 template<typename T>

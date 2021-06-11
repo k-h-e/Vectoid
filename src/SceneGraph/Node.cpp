@@ -25,7 +25,7 @@ string Node::Name() const {
     return name_;
 }
 
-void Node::setEnabled(bool enabled) {
+void Node::SetEnabled(bool enabled) {
     enabled_ = enabled;
 }
 

@@ -28,7 +28,7 @@ class Node : public virtual K::Core::Interface {
      *  Disabling a node effectively disables the subtree headed by the node. Re-enabling the node re-enables the
      *  subtree according to the subtree nodes' enabled states.
      */
-    void setEnabled(bool enabled);
+    void SetEnabled(bool enabled);
     //! Tells whether the node is enabled.
     bool Enabled() const;
     //! Renders the node.
