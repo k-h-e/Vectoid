@@ -30,6 +30,8 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
         const std::shared_ptr<Core::Particles> &particles) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Points> NewPoints(
+        const std::shared_ptr<DataSet::VertexSet> &points) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
         const std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() override;

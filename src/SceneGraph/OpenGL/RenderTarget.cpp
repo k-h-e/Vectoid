@@ -10,16 +10,19 @@
 #include <Vectoid/SceneGraph/OpenGL/LitTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
+#include <Vectoid/SceneGraph/OpenGL/Points.h>
 #include <Vectoid/SceneGraph/OpenGL/SimpleGeometryRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/SimpleLighting.h>
 #include <Vectoid/SceneGraph/OpenGL/TerrainRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/TestTriangle.h>
 #include <Vectoid/SceneGraph/OpenGL/TextConsole.h>
 
-using namespace std;
+using std::shared_ptr;
+using std::make_shared;
 using Vectoid::Core::LineSegmentProviderInterface;
 using Vectoid::Core::Particles;
 using Vectoid::Core::TriangleProviderInterface;
+using Vectoid::DataSet::VertexSet;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -86,6 +89,11 @@ shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesR
 shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
     return shared_ptr<OpenGL::PerspectiveProjection>(new PerspectiveProjection());
 }
+
+shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<VertexSet> &points) {
+    return make_shared<OpenGL::Points>(points);
+}
+
 
 shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
         const shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) {

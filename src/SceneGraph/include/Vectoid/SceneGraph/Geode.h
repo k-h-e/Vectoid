@@ -14,6 +14,8 @@ class Geode : public Node {
     Geode(const Geode &other) = delete;
     Geode &operator=(const Geode &other) = delete;
 
+    //! Replaces the geode's geometry with the specified one.
+    void SetGeometry(const std::shared_ptr<GeometryInterface> &geometry);
     void RenderPre() override;
 
   protected:
