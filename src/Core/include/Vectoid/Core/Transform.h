@@ -13,7 +13,7 @@ namespace Core {
  *  Note that we are using a right-hand system and that as such - if we identify the screen with the <c>xy</c>-plane -
  *  the <c>z</c>-axis protudes from the screen.
  */
-enum Axis { XAxis, YAxis, ZAxis };
+enum class Axis { X, Y, Z };
 
 //! 3D transformation limited to rotations and translations - and any combination thereof.
 template<typename T>
@@ -119,7 +119,7 @@ Transform<T>::Transform(Axis axis, T angleDeg) {
 
     // Set rotation part depending on rotation axis...
     switch (axis) {
-        case YAxis:
+        case Axis::Y:
             this->matrix_[0][0] =  std::cos(angleRad);
             this->matrix_[0][1] =                0.0f;
             this->matrix_[0][2] = -std::sin(angleRad);
@@ -133,7 +133,7 @@ Transform<T>::Transform(Axis axis, T angleDeg) {
             this->matrix_[2][2] =  std::cos(angleRad);
             break;
             
-        case ZAxis:
+    case Axis::Z:
             this->matrix_[0][0] =  std::cos(angleRad);
             this->matrix_[0][1] =  std::sin(angleRad);
             this->matrix_[0][2] =                0.0f;
@@ -147,7 +147,7 @@ Transform<T>::Transform(Axis axis, T angleDeg) {
             this->matrix_[2][2] =                1.0f;
             break;
             
-        case XAxis:
+    case Axis::X:
         default:
             this->matrix_[0][0] =                1.0f;
             this->matrix_[0][1] =                0.0f;
