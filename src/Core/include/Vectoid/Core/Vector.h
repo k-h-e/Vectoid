@@ -16,6 +16,8 @@ namespace Core {
 template<typename T>
 class Vector {
   public:
+    struct HashFunction;
+
     //! Initializes the vector as <c>0</c>-vector.
     inline Vector();
     inline Vector(T xCoord, T yCoord, T zCoord);
@@ -199,6 +201,13 @@ inline Vector<T> CombineConvex(T a, T b, const Vector<T> &point0, const Vector<T
     NumberTools::Clamp(&t, 0.0f, 1.0f);
     return CombineAffine(t, point0, point1);
 }
+
+template<typename T>
+struct Vector<T>::HashFunction {
+    std::size_t operator()(const Vector<T> &aVector) const {
+        return aVector.Hash();
+    }
+};
 
 }    // Namespace Core.
 }    // Namespace Vectoid.

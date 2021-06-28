@@ -54,6 +54,7 @@ class RenderTargetInterface : public virtual K::Core::Interface {
         const std::shared_ptr<Core::Particles> &particles) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() = 0;
+    //! Can take <c>nullptr</c> as geometry.
     virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(
         const std::shared_ptr<GeometryInterface> &geometry) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() = 0;

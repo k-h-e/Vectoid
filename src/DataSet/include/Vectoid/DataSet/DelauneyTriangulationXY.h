@@ -26,6 +26,8 @@ class DelauneyTriangulationXY : public virtual Core::TriangleProviderInterface {
 
     //! Adds the specified point in the <c>x/y</c>-plane (<c>z</c> coordinate will be zeroed).
     /*!
+     *  Duplicates are ignored.
+     *
      *  The first call to this method after a triangulation has been computed resets the object for a new computation
      *  (before adding the vertex).
      */

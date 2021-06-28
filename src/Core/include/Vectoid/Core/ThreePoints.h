@@ -1,6 +1,7 @@
 #ifndef VECTOID_CORE_THREEPOINTS_H_
 #define VECTOID_CORE_THREEPOINTS_H_
 
+#include <Vectoid/Core/Tools.h>
 #include <Vectoid/Core/Vector.h>
 
 namespace Vectoid {
@@ -14,8 +15,9 @@ class ThreePoints {
         : point0(aPoint0), point1(aPoint1), point2(aPoint2) {}
     // Default copy and move, ok.
 
+    //! Gives access to the specified point. Does mod 3 on index.
     Vector<float> &operator[](int index) {
-        switch (index) {
+        switch (Tools::IndexMod3(index)) {
             case 1:
                 return point1;
             case 2:

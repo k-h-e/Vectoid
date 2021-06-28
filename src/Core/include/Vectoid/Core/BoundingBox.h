@@ -46,11 +46,11 @@ class BoundingBox {
         return xRange_.Contains(point.x) && yRange_.Contains(point.y) && zRange_.Contains(point.z);
     }
     //! Returns the bounding box's center.
-    Vector<T> Center() {
+    Vector<T> Center() const {
         return Vector<T>(xRange_.Center(), yRange_.Center(), zRange_.Center());
     }
     //! Returns the bounding box's extents.
-    Vector<T> Extents() {
+    Vector<T> Extents() const {
         return Vector<T>(xRange_.Extent(), yRange_.Extent(), zRange_.Extent());
     }
     

@@ -9,6 +9,8 @@ namespace DataSet {
 //! Two data set item ids with significant ordering.
 class TwoIds {
   public:
+    struct HashFunction;
+
     TwoIds() : id0(0), id1(0) {}
     TwoIds(int anId0, int anId1) : id0(anId0), id1(anId1) {}
     // Default copy/move, ok.
@@ -52,6 +54,12 @@ class TwoIds {
 
     int id0;
     int id1;
+};
+
+struct TwoIds::HashFunction {
+    std::size_t operator()(const TwoIds &twoIds) const {
+        return twoIds.Hash();
+    }
 };
 
 }    // Namespace DataSet.

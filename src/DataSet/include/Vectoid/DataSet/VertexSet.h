@@ -18,10 +18,10 @@ namespace DataSet {
 class VertexSet : public virtual K::Core::Interface {
   public:
     VertexSet();
-    VertexSet(const VertexSet &other)             = delete;
-    VertexSet &operator=(const VertexSet &other)  = delete;
-    VertexSet(const VertexSet &&other)            = delete;
-    VertexSet &operator=(const VertexSet &&other) = delete;
+    VertexSet(const VertexSet &other)            = default;
+    VertexSet &operator=(const VertexSet &other) = default;
+    VertexSet(VertexSet &&other)                 = default;
+    VertexSet &operator=(VertexSet &&other)      = default;
 
     //! Tells the number of vertices in the set.
     int Count();
@@ -40,14 +40,8 @@ class VertexSet : public virtual K::Core::Interface {
     int GetId(const Core::Vector<float> &vertex) const;
 
   private:
-    struct VectorHashFunction {
-        std::size_t operator()(const Core::Vector<float> &aVector) const {
-            return aVector.Hash();
-        }
-    };
-
-    std::vector<Core::Vector<float>>                                 vertices_;
-    std::unordered_map<Core::Vector<float>, int, VectorHashFunction> vertexToIdMap_;
+    std::vector<Core::Vector<float>>                                                vertices_;
+    std::unordered_map<Core::Vector<float>, int, Core::Vector<float>::HashFunction> vertexToIdMap_;
 };
 
 }    // Namespace DataSet.
