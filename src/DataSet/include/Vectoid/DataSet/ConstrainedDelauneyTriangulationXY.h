@@ -2,7 +2,8 @@
 #define VECTOID_DATASET_CONSTRAINEDDELAUNEYTRIANGULATIONXY_H_
 
 #include <unordered_set>
-#include <Vectoid/Core/TriangleProviderInterface.h>
+#include <K/Core/Interface.h>
+#include <Vectoid/DataSet/SimpleTriangleList.h>
 #include <Vectoid/DataSet/VertexSet.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
@@ -15,7 +16,7 @@ namespace Core {
 namespace DataSet {
 
 //! Generates a constrained Delauney triangulation in the <c>x/y</c>-plane.
-class ConstrainedDelauneyTriangulationXY : public virtual Core::TriangleProviderInterface {
+class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
   public:
     ConstrainedDelauneyTriangulationXY();
     ConstrainedDelauneyTriangulationXY(const ConstrainedDelauneyTriangulationXY &other)             = delete;
@@ -36,17 +37,17 @@ class ConstrainedDelauneyTriangulationXY : public virtual Core::TriangleProvider
      */
     void AddSegment(const Vectoid::Core::TwoPoints &segmentXY);
     //! Computes the constrained triangulation from the data added previously.
-    bool Compute();
-
-    void PrepareToProvideTriangles() override;
-    bool ProvideNextTriangle(Vectoid::Core::ThreePoints *outTriangle) override;
-    void ProvideNormal(Vectoid::Core::Vector<float> *outNormal) override;
-    bool TriangleError() override;
+    /*!
+     *
+     *  \return <nullptr> in case of failure.
+     */
+    std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> Compute();
 
   private:
     bool WriteTriangleInputFile();
     bool RunTriangle();
-    std::unique_ptr<Vectoid::DataSet::VertexSet> ReadTriangleVertexFile();
+    std::unique_ptr<std::vector<Vectoid::Core::Vector<float>>> ReadTriangleVertexFile();
+    std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ReadTriangleTrianglesFile();
 
     Vectoid::DataSet::VertexSet                      vertices_;
     std::unordered_set<TwoIds, TwoIds::HashFunction> segments_;    // In canonical form.

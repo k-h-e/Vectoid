@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <cstdio>
 #include <cerrno>
+#include <vector>
 #include <K/Core/Log.h>
 #include <K/Core/Result.h>
 #include <K/Core/StringTools.h>
@@ -18,6 +19,7 @@ using std::make_shared;
 using std::unique_ptr;
 using std::make_unique;
 using std::string;
+using std::vector;
 using K::Core::Log;
 using K::Core::Result;
 using K::Core::StringTools;
@@ -38,7 +40,7 @@ ConstrainedDelauneyTriangulationXY::ConstrainedDelauneyTriangulationXY()
 }
 
 void ConstrainedDelauneyTriangulationXY::AddPoint(const Vector<float> &vertexXY) {
-    vertices_.Add(Vector<float>(vertexXY.x, 0.0f, vertexXY.z));
+    vertices_.Add(Vector<float>(vertexXY.x, vertexXY.y, 0.0f));
 }
 
 void ConstrainedDelauneyTriangulationXY::AddSegment(const TwoPoints &segmentXY) {
@@ -47,35 +49,16 @@ void ConstrainedDelauneyTriangulationXY::AddSegment(const TwoPoints &segmentXY) 
     segments_.insert(TwoIds(vertex0, vertex1).MakeCanonical());
 }
 
-bool ConstrainedDelauneyTriangulationXY::Compute() {
+std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ConstrainedDelauneyTriangulationXY::Compute() {
     if (vertices_.Count() >= 3) {
         if (WriteTriangleInputFile()) {
             if (RunTriangle()) {
-                auto vertices = ReadTriangleVertexFile();
-                if (vertices) {
-                    return true;
-                }
+                return ReadTriangleTrianglesFile();
             }
         }
     }
 
-    return false;
-}
-
-void ConstrainedDelauneyTriangulationXY::PrepareToProvideTriangles() {
-
-}
-
-bool ConstrainedDelauneyTriangulationXY::ProvideNextTriangle(ThreePoints *outTriangle) {
-    return false;
-}
-
-void ConstrainedDelauneyTriangulationXY::ProvideNormal(Vector<float> *outNormal) {
-
-}
-
-bool ConstrainedDelauneyTriangulationXY::TriangleError() {
-    return false;
+    return nullptr;
 }
 
 bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
@@ -118,7 +101,7 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
         return false;
     } else if (id == 0) {
         auto fileName = workingDirectory_ + "/" + "triangulation.poly";
-        exit(execlp("triangle", "triangle", fileName.c_str(), nullptr));
+        exit(execlp("triangle", "triangle", "-p", fileName.c_str(), nullptr));
     } else {
         int status;
         while (true) {
@@ -137,7 +120,7 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     }
 }
 
-unique_ptr<VertexSet> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile() {
+unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile() {
     auto buffer = make_shared<StreamBuffer>(
         make_shared<File>(workingDirectory_ + "/" + "triangulation.1.node", File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly,
@@ -154,8 +137,7 @@ unique_ptr<VertexSet> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile
         return nullptr;
     }
 
-    Log::Print(Log::Level::Debug, this, [&]{ return "num_vertices=" + to_string(numVertices); });
-    auto vertices = make_unique<VertexSet>();
+    auto vertices = make_unique<vector<Vector<float>>>();
     double x;
     double y;
     for (int i = 0; i < numVertices; ++i) {
@@ -167,10 +149,52 @@ unique_ptr<VertexSet> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile
         if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], &x) || !StringTools::Parse(tokens[2], &y)) {
             return nullptr;
         }
-        Log::Print(Log::Level::Debug, this, [&]{ return "have point, x=" + to_string(x) + ", y=" + to_string(y); });
+        vertices->push_back(Vector<float>(static_cast<float>(x), static_cast<float>(y), 0.0f));
     }
 
     return vertices;
+}
+
+std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ConstrainedDelauneyTriangulationXY::ReadTriangleTrianglesFile() {
+    auto buffer = make_shared<StreamBuffer>(
+        make_shared<File>(workingDirectory_ + "/" + "triangulation.1.ele", File::AccessMode::ReadOnly, false),
+        File::AccessMode::ReadOnly,
+        4 * 1024);
+
+    string line;
+    Read(buffer.get(), '\n', &line);
+    if (!Good(buffer.get())) {
+        return nullptr;
+    }
+    int numTriangles;
+    auto tokens = StringTools::Tokenize(line, " \t", true);
+    if ((tokens.size() != 3u) || !StringTools::Parse(tokens[0], &numTriangles)) {
+        return nullptr;
+    }
+
+    auto triangles = make_unique<SimpleTriangleList>();
+    int vertex0, vertex1, vertex2;
+    for (int i = 0; i < numTriangles; ++i) {
+        Read(buffer.get(), '\n', &line);
+        if (!Good(buffer.get())) {
+            return nullptr;
+        }
+
+        tokens = StringTools::Tokenize(line, " \t", true);
+        if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], &vertex0)
+                || !StringTools::Parse(tokens[2], &vertex1) || !StringTools::Parse(tokens[3], &vertex2)) {
+            return nullptr;
+        }
+        if ((vertex0 < 1) || (vertex0 > vertices_.Count())
+                || (vertex1 < 1) || (vertex1 > vertices_.Count())
+                || (vertex2 < 1) || (vertex2 > vertices_.Count())) {
+            return nullptr;
+        }
+
+        triangles->Add(ThreePoints(vertices_[vertex0 - 1], vertices_[vertex1 - 1], vertices_[vertex2 - 1]));
+    }
+
+    return triangles;
 }
 
 }    // Namespace DataSet.
