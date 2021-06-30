@@ -81,6 +81,7 @@ void Viewer::mousePressEvent(QMouseEvent *event) {
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *event) {
+    (void)event;
     rotating_ = false;
     panning_  = false;
 }
@@ -94,7 +95,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
         Vector<float> stop  = projection_->TransformViewPortCoordinates(static_cast<float>(x),
                                                                         static_cast<float>(y));
         if (rotating_) {
-            float yawAngle   = -(stop.x - start.x)/projection_->WindowSize() * 90.0f;
+            float yawAngle   =  (stop.x - start.x)/projection_->WindowSize() * 90.0f;
             float pitchAngle = -(stop.y - start.y)/projection_->WindowSize() * 90.0f;
             Transform<float> transform = startCameraTransform_;
             transform.Prepend(Transform(Axis::Y, yawAngle));
@@ -112,7 +113,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
 
             Vector<float> position;
             startCameraTransform_.GetTranslationPart(&position);
-            position = position + 10.0f*(stop.x - start.x)*right - 10.0f*(stop.y - start.y)*up;
+            position = position - 15.0f*(stop.x - start.x)*right - 15.0f*(stop.y - start.y)*up;
             camera_->SetPosition(position);
             update();
         }
