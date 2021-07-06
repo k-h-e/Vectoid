@@ -1,7 +1,7 @@
 #ifndef VECTOID_DATASET_TWOIDS_H_
 #define VECTOID_DATASET_TWOIDS_H_
 
-using std::to_string;
+#include <string>
 
 namespace Vectoid {
 namespace DataSet {
@@ -17,6 +17,13 @@ class TwoIds {
 
     bool operator==(const TwoIds &other) const {
         return (id0 == other.id0) && (id1 == other.id1);
+    }
+
+    std::size_t Hash() const {
+        std::size_t hash = 17u;
+        hash = hash*31u + std::hash<int>()(id0);
+        hash = hash*31u + std::hash<int>()(id1);
+        return hash;
     }
 
     TwoIds MakeCanonical() const {
@@ -41,15 +48,18 @@ class TwoIds {
         }
     }
 
-    std::size_t Hash() const {
-        std::size_t hash = 17u;
-        hash = hash*31u + std::hash<int>()(id0);
-        hash = hash*31u + std::hash<int>()(id1);
-        return hash;
+    int SharedId(const TwoIds &other) {
+        if ((id0 == other.id0) || (id0 == other.id1)) {
+            return id0;
+        } else if ((id1 == other.id0) || (id1 == other.id1)) {
+            return id1;
+        } else {
+            assert(false);
+        }
     }
 
     std::string ToString() const {
-        return "(" + to_string(id0) + ", " + to_string(id1) + ")";
+        return "(" + std::to_string(id0) + ", " + std::to_string(id1) + ")";
     }
 
     int id0;

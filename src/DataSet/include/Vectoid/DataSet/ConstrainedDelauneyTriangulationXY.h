@@ -3,7 +3,7 @@
 
 #include <unordered_set>
 #include <K/Core/Interface.h>
-#include <Vectoid/DataSet/SimpleTriangleList.h>
+#include <Vectoid/DataSet/Triangles.h>
 #include <Vectoid/DataSet/VertexSet.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
@@ -41,13 +41,13 @@ class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
      *
      *  \return <nullptr> in case of failure.
      */
-    std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> Compute();
+    std::unique_ptr<Vectoid::DataSet::Triangles> Compute();
 
   private:
     bool WriteTriangleInputFile();
     bool RunTriangle();
     std::unique_ptr<std::vector<Vectoid::Core::Vector<float>>> ReadTriangleVertexFile();
-    std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ReadTriangleTrianglesFile();
+    std::unique_ptr<Vectoid::DataSet::Triangles> ReadTriangleTrianglesFile();
 
     Vectoid::DataSet::VertexSet                      vertices_;
     std::unordered_set<TwoIds, TwoIds::HashFunction> segments_;    // In canonical form.

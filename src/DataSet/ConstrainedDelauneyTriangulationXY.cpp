@@ -19,6 +19,7 @@ using std::make_shared;
 using std::unique_ptr;
 using std::make_unique;
 using std::string;
+using std::to_string;
 using std::vector;
 using K::Core::Log;
 using K::Core::Result;
@@ -49,7 +50,7 @@ void ConstrainedDelauneyTriangulationXY::AddSegment(const TwoPoints &segmentXY) 
     segments_.insert(TwoIds(vertex0, vertex1).MakeCanonical());
 }
 
-std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ConstrainedDelauneyTriangulationXY::Compute() {
+std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY::Compute() {
     if (vertices_.Count() >= 3) {
         if (WriteTriangleInputFile()) {
             if (RunTriangle()) {
@@ -155,7 +156,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     return vertices;
 }
 
-std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ConstrainedDelauneyTriangulationXY::ReadTriangleTrianglesFile() {
+std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY::ReadTriangleTrianglesFile() {
     auto buffer = make_shared<StreamBuffer>(
         make_shared<File>(workingDirectory_ + "/" + "triangulation.1.ele", File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly,
@@ -172,7 +173,7 @@ std::unique_ptr<Vectoid::DataSet::SimpleTriangleList> ConstrainedDelauneyTriangu
         return nullptr;
     }
 
-    auto triangles = make_unique<SimpleTriangleList>();
+    auto triangles = make_unique<Triangles>(make_shared<VertexSet>());
     int vertex0, vertex1, vertex2;
     for (int i = 0; i < numTriangles; ++i) {
         Read(buffer.get(), '\n', &line);

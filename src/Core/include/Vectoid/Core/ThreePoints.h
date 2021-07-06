@@ -10,10 +10,24 @@ namespace Core {
 //! Three points in 3-space, with meaningful ordering.
 class ThreePoints {
   public:
+    struct HashFunction;
+
     ThreePoints() {}
     ThreePoints(const Vector<float> &aPoint0, const Vector<float> &aPoint1, const Vector<float> &aPoint2)
         : point0(aPoint0), point1(aPoint1), point2(aPoint2) {}
     // Default copy and move, ok.
+
+    bool operator==(const ThreePoints &other) const {
+        return (point0 == other.point0) && (point1 == other.point1) && (point2 == other.point2);
+    }
+
+    std::size_t Hash() const {
+        std::size_t hash = 17u;
+        hash = hash*31u + point0.Hash();
+        hash = hash*31u + point1.Hash();
+        hash = hash*31u + point2.Hash();
+        return hash;
+    }
 
     //! Gives access to the specified point. Does mod 3 on index.
     Vector<float> &operator[](int index) {
@@ -44,6 +58,12 @@ class ThreePoints {
     Vector<float> point0;
     Vector<float> point1;
     Vector<float> point2;
+};
+
+struct ThreePoints::HashFunction {
+    std::size_t operator()(const ThreePoints &threePoints) const {
+        return threePoints.Hash();
+    }
 };
 
 }    // Namespace Core.

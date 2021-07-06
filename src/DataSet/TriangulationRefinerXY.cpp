@@ -11,6 +11,7 @@
 
 using std::shared_ptr;
 using std::unordered_set;
+using std::to_string;
 using K::Core::Log;
 using Vectoid::Core::Vector;
 using Vectoid::Core::TwoPoints;
