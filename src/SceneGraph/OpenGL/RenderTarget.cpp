@@ -22,7 +22,6 @@ using std::make_shared;
 using Vectoid::Core::LineSegmentProviderInterface;
 using Vectoid::Core::Particles;
 using Vectoid::Core::TriangleProviderInterface;
-using Vectoid::DataSet::VertexSet;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -90,7 +89,7 @@ shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspe
     return shared_ptr<OpenGL::PerspectiveProjection>(new PerspectiveProjection());
 }
 
-shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<VertexSet> &points) {
+shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<DataSet::Points> &points) {
     return make_shared<OpenGL::Points>(points);
 }
 

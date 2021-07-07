@@ -1,12 +1,11 @@
 #include <Vectoid/SceneGraph/Points.h>
 
 using std::shared_ptr;
-using Vectoid::DataSet::VertexSet;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-Points::Points(const shared_ptr<VertexSet> &points)
+Points::Points(const shared_ptr<DataSet::Points> &points)
         : points_(points),
           color_(.8f, .8f, .8f) {
     // Nop.

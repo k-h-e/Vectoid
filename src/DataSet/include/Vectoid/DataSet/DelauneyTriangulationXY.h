@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
-#include <Vectoid/DataSet/VertexSet.h>
+#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/TwoIds.h>
 #include <Vectoid/DataSet/ThreeIds.h>
 
@@ -47,7 +47,7 @@ class DelauneyTriangulationXY : public virtual Core::TriangleProviderInterface {
      *  <c>false</c> in case there is no result of a successful computation. In this case, the output shared pointers
      *  will be nulled, the other output parameters will be undefined.
      */
-    bool Reap(std::shared_ptr<TriangleTreeXY> *outTriangleTree, std::shared_ptr<VertexSet> *outVertexSet,
+    bool Reap(std::shared_ptr<TriangleTreeXY> *outTriangleTree, std::shared_ptr<Points> *outVertices,
               ThreeIds *outOuterTriangle);
 
     virtual void PrepareToProvideTriangles();
@@ -85,7 +85,7 @@ class DelauneyTriangulationXY : public virtual Core::TriangleProviderInterface {
     void PerformEdgeSwap(const TwoIds &trianglePair);
     void ScheduleTrianglePairCheckIfNeeded(int triangle0Id, int triangle1Id);
 
-    std::shared_ptr<VertexSet>      vertexSet_;
+    std::shared_ptr<Points>         vertices_;
     Core::BoundingBox<float>        boundingBox_;
     std::shared_ptr<TriangleTreeXY> triangleTree_;
     int                             outerTriangleVertex0Id_;

@@ -10,7 +10,7 @@ namespace OpenGL {
 //! Renders points.
 class Points : public Vectoid::SceneGraph::Points {
   public:
-    Points(const std::shared_ptr<DataSet::VertexSet> &points);
+    Points(const std::shared_ptr<DataSet::Points> &points);
     Points(const Points &other)            = delete;
     Points &operator=(const Points &other) = delete;
     Points(Points &&other)                 = delete;

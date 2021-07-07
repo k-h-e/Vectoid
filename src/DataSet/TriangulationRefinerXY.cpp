@@ -6,7 +6,7 @@
 #include <Vectoid/Core/LineSegmentProviderInterface.h>
 #include <Vectoid/Math/Intersection/LineSegmentLineSegmentIntersectionXY.h>
 #include <Vectoid/DataSet/TriangleTreeXY.h>
-#include <Vectoid/DataSet/VertexSet.h>
+#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
 using std::shared_ptr;
@@ -22,17 +22,17 @@ namespace Vectoid {
 namespace DataSet {
 
 TriangulationRefinerXY::TriangulationRefinerXY(const shared_ptr<TriangleTreeXY> &triangleTree,
-                                               const shared_ptr<VertexSet> &vertexSet)
+                                               const shared_ptr<Points> &vertices)
         : triangleTree_(triangleTree),
-          vertexSet_(vertexSet) {
+          vertices_(vertices) {
     BuildVertexToTrianglesMap();
 }
 
 bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoPoints> *outRefinedEdges) {
     outRefinedEdges->clear();
 
-    int id0 = vertexSet_->GetId(edge.point0);
-    int id1 = vertexSet_->GetId(edge.point1);
+    int id0 = vertices_->Id(edge.point0);
+    int id1 = vertices_->Id(edge.point1);
     if ((id0 == -1) || (id1 == -1)) {
         return false;
     }
@@ -84,7 +84,7 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
                     TwoIds triangleEdge = info.vertices.GetEdge(i);
                     if (triangleEdge.Contains(currentVertexId)) {
                         bool rightSide = (triangleEdge.id0 == currentVertexId);
-                        Vector<float> otherVertex  = (*vertexSet_)[triangleEdge.OtherId(currentVertexId)];
+                        Vector<float> otherVertex  = (*vertices_)[triangleEdge.OtherId(currentVertexId)];
                         Vector<float> triangleEdge = otherVertex - currentVertex;
                         float dotProduct = DotProduct(triangleEdge, directionNormal);
                         if (rightSide && (dotProduct >= 0)) {
@@ -115,7 +115,7 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
             if (!LineSegmentLineSegmentIntersectionXY::Compute(edge, edgeToSplit, &newVertex)) {
                 return false;
             }
-            int newVertexId = vertexSet_->Add(newVertex);
+            int newVertexId = vertices_->Add(newVertex);
             Log::Print(Log::Level::Debug, this, [&]{ return "new_vertex=" + to_string(newVertexId)
                 + ", distance_left=" + to_string((newVertex - blockingTriangleLeftVertex).Length())
                 + ", distance_right=" + to_string((newVertex - blockingTriangleRightVertex).Length()); });
@@ -223,8 +223,8 @@ bool TriangulationRefinerXY::SelectSurface(Core::LineSegmentProviderInterface &b
     TwoPoints segment;
     TwoIds    edge;
     while (boundaryCurve.ProvideNextLineSegment(&segment)) {
-        int id0 = vertexSet_->GetId(segment.point0);
-        int id1 = vertexSet_->GetId(segment.point1);
+        int id0 = vertices_->Id(segment.point0);
+        int id1 = vertices_->Id(segment.point1);
         if ((id0 == -1) || (id1 == -1)) {
             Log::Print(Log::Level::Debug, this, []{ return "vertex missing"; });
             return false;

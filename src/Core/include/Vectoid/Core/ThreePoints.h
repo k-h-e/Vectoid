@@ -41,6 +41,18 @@ class ThreePoints {
         }
     }
 
+    //! Gives access to the specified point. Does mod 3 on index.
+    const Vector<float> &operator[](int index) const {
+        switch (Tools::IndexMod3(index)) {
+            case 1:
+                return point1;
+            case 2:
+                return point2;
+            default:
+                return point0;
+        }
+    }
+
     //! Computes the normal for the triangle given by the three points.
     /*!
      *  The returned normal might not be a <c>Valid()</c> vector.

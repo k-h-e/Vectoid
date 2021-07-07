@@ -30,7 +30,7 @@ using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TwoPoints;
 using Vectoid::Core::Vector;
 using Vectoid::DataSet::TwoIds;
-using Vectoid::DataSet::VertexSet;
+using Vectoid::DataSet::Points;
 
 namespace Vectoid {
 namespace DataSet {
@@ -173,7 +173,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
         return nullptr;
     }
 
-    auto triangles = make_unique<Triangles>(make_shared<VertexSet>());
+    auto triangles = make_unique<Triangles>(make_shared<Points>());
     int vertex0, vertex1, vertex2;
     for (int i = 0; i < numTriangles; ++i) {
         Read(buffer.get(), '\n', &line);

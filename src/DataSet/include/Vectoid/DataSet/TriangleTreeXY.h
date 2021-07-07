@@ -16,7 +16,7 @@ namespace Core {
 namespace Vectoid {
 namespace DataSet {
 
-class VertexSet;
+class Points;
 
 //! Tree of triangles in the <c>x/y</c>-plane.
 class TriangleTreeXY : public virtual Core::TriangleProviderInterface {
@@ -49,7 +49,7 @@ class TriangleTreeXY : public virtual Core::TriangleProviderInterface {
         void AddChild(int child);
     };
 
-    TriangleTreeXY(const std::shared_ptr<VertexSet> &vertexSet);
+    TriangleTreeXY(const std::shared_ptr<Points> &vertices);
     TriangleTreeXY(const TriangleTreeXY &other)             = delete;
     TriangleTreeXY &operator=(const TriangleTreeXY &other)  = delete;
     TriangleTreeXY(const TriangleTreeXY &&other)            = delete;
@@ -72,7 +72,7 @@ class TriangleTreeXY : public virtual Core::TriangleProviderInterface {
     virtual bool TriangleError();
 
   private:
-    std::shared_ptr<VertexSet> vertexSet_;
+    std::shared_ptr<Points>    vertices_;
     std::vector<TriangleInfo>  triangles_;
     int                        cursor_;
 };

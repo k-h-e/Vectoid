@@ -31,25 +31,25 @@ void DelauneyTriangulationXY::Add(const Vector<float> &point) {
         Reset();
     }
     Vector<float> pointXY(point.x, point.y, 0.0f);
-    vertexSet_->Add(pointXY);
+    vertices_->Add(pointXY);
     boundingBox_.Grow(pointXY);
 }
 
 bool DelauneyTriangulationXY::Compute() {
     bool success = false;
 
-    if (!computed_ && (vertexSet_->Count() >= 3)) {
+    if (!computed_ && (vertices_->Count() >= 3)) {
         trianglePairsToCheck_.reset(new deque<TwoIds>());
         pointQuadruplesChecked_.reset(new unordered_set<FourIdsCanonical, FourIdsCanonicalHashFunction>());
         GenerateInitialOuterTriangle();
-        for (int i = 0; i < vertexSet_->Count() - 3; ++i) {
+        for (int i = 0; i < vertices_->Count() - 3; ++i) {
             trianglePairsToCheck_->clear();
             InsertVertex(i);
             EnforceDelauneyCriterion();
         }
 
         Log::Print(Log::Level::Debug, this, [&]{ return "triangulation computed, num_points="
-            + to_string(vertexSet_->Count() - 3) + ", num_interior_splits=" + to_string(numInteriorSplits_)
+            + to_string(vertices_->Count() - 3) + ", num_interior_splits=" + to_string(numInteriorSplits_)
             + ", num_edge_hits=" + to_string(numEdgeHits_) + ", num_triangle_pair_checks="
             + to_string(numTrianglePairChecks_) + " (num_rejected=" + to_string(numTrianglePairChecksRejected_) + ")"
             + ", num_edge_swaps=" + to_string(numEdgeSwaps_); });
@@ -66,13 +66,13 @@ bool DelauneyTriangulationXY::Compute() {
     return success;
 }
 
-bool DelauneyTriangulationXY::Reap(shared_ptr<TriangleTreeXY> *outTriangleTree, shared_ptr<VertexSet> *outVertexSet,
+bool DelauneyTriangulationXY::Reap(shared_ptr<TriangleTreeXY> *outTriangleTree, shared_ptr<Points> *outVertices,
                                    ThreeIds *outOuterTriangle) {
     bool success = false;
 
     if (computed_ && computationSuccessful_) {
         *outTriangleTree  = triangleTree_;
-        *outVertexSet     = vertexSet_;
+        *outVertices      = vertices_;
         *outOuterTriangle = ThreeIds(outerTriangleVertex0Id_, outerTriangleVertex1Id_, outerTriangleVertex2Id_);
         success = true;
     }
@@ -81,7 +81,7 @@ bool DelauneyTriangulationXY::Reap(shared_ptr<TriangleTreeXY> *outTriangleTree, 
 
     if (!success) {
         outTriangleTree->reset();
-        outVertexSet->reset();
+        outVertices->reset();
     }
     return success;
 }
@@ -92,9 +92,9 @@ void DelauneyTriangulationXY::PrepareToProvideTriangles() {
 
 bool DelauneyTriangulationXY::ProvideNextTriangle(ThreePoints *outTriangle) {
     while (triangleTree_->ProvideNextTriangle(outTriangle)) {
-        if (!outTriangle->Contains((*vertexSet_)[outerTriangleVertex0Id_])
-                && !outTriangle->Contains((*vertexSet_)[outerTriangleVertex1Id_])
-                && !outTriangle->Contains((*vertexSet_)[outerTriangleVertex2Id_])) {
+        if (!outTriangle->Contains((*vertices_)[outerTriangleVertex0Id_])
+                && !outTriangle->Contains((*vertices_)[outerTriangleVertex1Id_])
+                && !outTriangle->Contains((*vertices_)[outerTriangleVertex2Id_])) {
             return true;
         }
     }
@@ -111,9 +111,9 @@ bool DelauneyTriangulationXY::TriangleError() {
 }
 
 void DelauneyTriangulationXY::Reset() {
-    vertexSet_.reset(new VertexSet());
+    vertices_.reset(new Points());
     boundingBox_ = BoundingBox<float>();
-    triangleTree_.reset(new TriangleTreeXY(vertexSet_));
+    triangleTree_.reset(new TriangleTreeXY(vertices_));
     outerTriangleVertex0Id_ = -1;
     outerTriangleVertex1Id_ = -1;
     outerTriangleVertex2Id_ = -1;
@@ -137,16 +137,16 @@ void DelauneyTriangulationXY::GenerateInitialOuterTriangle() {
     float x      = radius / std::tan(30.0f / 180.0f * (float)NumberTools::pi);
     float h      = radius / std::sin(30.0f / 180.0f * (float)NumberTools::pi);
     Vector<float> center = boundingBox_.Center();
-    outerTriangleVertex0Id_ = vertexSet_->Add(Vector<float>(center.x - x, center.y - radius, 0.0f));
-    outerTriangleVertex1Id_ = vertexSet_->Add(Vector<float>(center.x + x, center.y - radius, 0.0f));
-    outerTriangleVertex2Id_ = vertexSet_->Add(Vector<float>(center.x, center.y + h, 0.0f));
+    outerTriangleVertex0Id_ = vertices_->Add(Vector<float>(center.x - x, center.y - radius, 0.0f));
+    outerTriangleVertex1Id_ = vertices_->Add(Vector<float>(center.x + x, center.y - radius, 0.0f));
+    outerTriangleVertex2Id_ = vertices_->Add(Vector<float>(center.x, center.y + h, 0.0f));
     int triangleId = triangleTree_->AddTriangle(-1);
     (*triangleTree_)[triangleId] = TriangleTreeXY::TriangleInfo(outerTriangleVertex0Id_, outerTriangleVertex1Id_,
                                                                 outerTriangleVertex2Id_);
 }
 
 void DelauneyTriangulationXY::InsertVertex(int pointId) {
-    Vector<float> pointToInsert = (*vertexSet_)[pointId];
+    Vector<float> pointToInsert = (*vertices_)[pointId];
     int oldTriangleId = triangleTree_->LocateTriangle(pointToInsert, 0);
     if (oldTriangleId == -1) {
         Log::Print(Log::Level::Debug, this, [&]{ return "can't insert point " + to_string(pointId)
@@ -180,7 +180,7 @@ void DelauneyTriangulationXY::EnforceDelauneyCriterion() {
 int DelauneyTriangulationXY::TestEdgeHit(int triangleId, const Vector<float> &point) {
     TriangleTreeXY::TriangleInfo &info = (*triangleTree_)[triangleId];
     for (int i = 0; i < 3; ++i) {
-        TwoPoints edge((*vertexSet_)[info.GetVertex(i)], (*vertexSet_)[info.GetVertex(i + 1)]);
+        TwoPoints edge((*vertices_)[info.GetVertex(i)], (*vertices_)[info.GetVertex(i + 1)]);
         if (PointLineSegmentDistanceXY::Compute(point, edge) <= edgeHitEpsilon_) {
             return i;
         }
@@ -288,9 +288,9 @@ bool DelauneyTriangulationXY::TestDelauneyCriterion(const TwoIds &trianglePair) 
     int sharedEdge0Id;
     int sharedEdge1Id;
     triangleTree_->GetIdsForSharedEdge(trianglePair.id0, trianglePair.id1, &sharedEdge0Id, &sharedEdge1Id);
-    ThreePoints triangle((*vertexSet_)[triangle0.vertices.id0], (*vertexSet_)[triangle0.vertices.id1],
-                         (*vertexSet_)[triangle0.vertices.id2]);
-    Vector<float> fourthPoint = (*vertexSet_)[triangle1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2))];
+    ThreePoints triangle((*vertices_)[triangle0.vertices.id0], (*vertices_)[triangle0.vertices.id1],
+                         (*vertices_)[triangle0.vertices.id2]);
+    Vector<float> fourthPoint = (*vertices_)[triangle1.GetVertex(TriangleTreeXY::Mod3(sharedEdge1Id + 2))];
 
     Vector<float> base0 = .5f*triangle.point0 + .5f*triangle.point1;
     Vector<float> dir0  = triangle.point1 - triangle.point0;

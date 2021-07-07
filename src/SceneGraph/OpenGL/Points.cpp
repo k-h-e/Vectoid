@@ -1,18 +1,17 @@
 #include <Vectoid/SceneGraph/OpenGL/Points.h>
 
 #include <Vectoid/Core/TwoPoints.h>
-#include <Vectoid/DataSet/VertexSet.h>
+#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::shared_ptr;
 using Vectoid::Core::Vector;
-using Vectoid::DataSet::VertexSet;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-Points::Points(const shared_ptr<VertexSet> &points)
+Points::Points(const shared_ptr<DataSet::Points> &points)
         : SceneGraph::Points(points) {
     // Nop.
 }

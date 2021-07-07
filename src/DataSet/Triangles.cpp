@@ -1,22 +1,29 @@
-#include <K/Core/Log.h>
-#include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/DataSet/Triangles.h>
 
+#include <K/Core/Log.h>
+#include <Vectoid/Core/ThreePoints.h>
+#include <Vectoid/Core/TwoPoints.h>
+#include <Vectoid/DataSet/Points.h>
+
 using std::shared_ptr;
+using std::make_shared;
 using std::make_unique;
 using std::unordered_map;
+using std::unordered_set;
 using std::to_string;
 using K::Core::Log;
 using Vectoid::Core::ThreePoints;
+using Vectoid::Core::TwoPoints;
 using Vectoid::Core::Vector;
+using Vectoid::DataSet::LineSegments;
 using Vectoid::DataSet::ThreeIds;
-using Vectoid::DataSet::VertexSet;
 
 namespace Vectoid {
 namespace DataSet {
 
-Triangles::Triangles(const shared_ptr<VertexSet> &vertices)
+Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices)
         : vertices_(vertices),
+          edges_(make_shared<LineSegments>(vertices)),
           badConnectivity_(false),
           cursor_(-1),
           currentNormal_(0.0f, 1.0f, 0.0f) {
@@ -24,23 +31,9 @@ Triangles::Triangles(const shared_ptr<VertexSet> &vertices)
 }
 
 int Triangles::Add(const ThreePoints &triangle) {
-    ThreeIds triangleVertices(vertices_->Add(triangle.point0), vertices_->Add(triangle.point1),
-                              vertices_->Add(triangle.point2));
     ThreeIds edges;
     for (int i = 0; i < 3; ++i) {
-        auto edge   = TwoIds(triangleVertices[i], triangleVertices[i + 1]).MakeCanonical();
-        int  edgeId = -1;
-        auto *edgeMap = EdgeMap();
-        auto iter = edgeMap->find(edge);
-        if (iter == edgeMap->end()) {
-            edgeId = static_cast<int>(edges_.size());
-            edges_.push_back(EdgeInfo(edge));
-            (*edgeMap)[edge] = edgeId;
-        } else {
-            edgeId = iter->second;
-        }
-
-        edges[i] = edgeId;
+        edges[i] = edges_->Add(TwoPoints(triangle[i], triangle[i + 1]));
     }
 
     edges = edges.MakeCanonical();
@@ -52,7 +45,11 @@ int Triangles::Add(const ThreePoints &triangle) {
         triangles_.push_back(edges);
         (*triangleMap)[edges] = triangleId;
         for (int i = 0; i < 3; ++i) {
-            if (!edges_[edges[i]].AddTriangle(triangleId)) {
+            int edge = edges[i];
+            if (static_cast<int>(edgeInfos_.size()) < edge + 1) {
+                edgeInfos_.resize(edge + 1);
+            }
+            if (!edgeInfos_[edge].AddTriangle(triangleId)) {
                 badConnectivity_ = true;
                 Log::Print(Log::Level::Warning, this, [&]{
                     return "bad connectivity detected, triangle=" + to_string(triangleId);
@@ -70,17 +67,69 @@ bool Triangles::BadConnectivity() {
     return badConnectivity_;
 }
 
-int Triangles::TriangleCount() {
+int Triangles::Count() {
     return static_cast<int>(triangles_.size());
 }
 
 void Triangles::GetTriangleVertices(int triangle, ThreePoints *outVertices) {
     ThreeIds &edges = triangles_[triangle];
+    TwoIds vertices0, vertices1;
     for (int i = 0; i < 3; ++i) {
-        EdgeInfo &info0 = edges_[edges[i - 1]];
-        EdgeInfo &info1 = edges_[edges[i]];
-        (*outVertices)[i] = (*vertices_)[info0.vertices.SharedId(info1.vertices)];
+        edges_->GetSegmentVertices(edges[i - 1], &vertices0);
+        edges_->GetSegmentVertices(edges[i],     &vertices1);
+        (*outVertices)[i] = (*vertices_)[vertices0.SharedId(vertices1)];
     }
+}
+
+void Triangles::GetTriangleEdges(int triangle, ThreeIds *outEdges) {
+    *outEdges = triangles_[triangle];
+}
+
+void Triangles::GetEdgeVertices(int edge, TwoIds *outVertices) {
+    edges_->GetSegmentVertices(edge, outVertices);
+}
+
+int Triangles::GetNeighbor(int triangle, int edge) {
+    EdgeInfo &info = edgeInfos_[edge];
+    if (info.triangle0 == triangle) {
+        return info.triangle1;
+    } else if (info.triangle1 == triangle) {
+        return info.triangle0;
+    } else {
+        return -1;
+    }
+}
+
+unordered_set<int> Triangles::Find(const Core::Vector<float> &vertex) {
+    unordered_set<int> result;
+
+    auto num = static_cast<int>(triangles_.size());
+    ThreePoints vertices;
+    for (int i = 0; i < num; ++i) {
+        GetTriangleVertices(i, &vertices);
+        if (vertices.Contains(vertex)) {
+            result.insert(i);
+        }
+
+    }
+
+    return result;
+}
+
+void Triangles::OptimizeForSpace() {
+    Log::Print(Log::Level::Debug, this, []{ return "optimizing for space"; });
+    triangleMap_.reset();
+    edges_->OptimizeForSpace();
+    vertices_->OptimizeForSpace();
+}
+
+
+shared_ptr<LineSegments> Triangles::Edges() {
+    return edges_;
+}
+
+shared_ptr<Points> Triangles::Vertices() {
+    return vertices_;
 }
 
 void Triangles::PrepareToProvideTriangles() {
@@ -88,7 +137,7 @@ void Triangles::PrepareToProvideTriangles() {
 }
 
 bool Triangles::ProvideNextTriangle(ThreePoints *outTriangle) {
-    if (cursor_ + 1 < TriangleCount()) {
+    if (cursor_ + 1 < Count()) {
         ++cursor_;
         GetTriangleVertices(cursor_, outTriangle);
         outTriangle->ComputeNormal(&currentNormal_);
@@ -107,18 +156,6 @@ void Triangles::ProvideNormal(Vector<float> *outNormal) {
 
 bool Triangles::TriangleError() {
     return false;
-}
-
-unordered_map<TwoIds, int, TwoIds::HashFunction> *Triangles::EdgeMap() {
-    if (!edgeMap_) {
-        Log::Print(Log::Level::Debug, this, []{ return "(re-)generating edge map"; });
-        edgeMap_ = make_unique<unordered_map<TwoIds, int, TwoIds::HashFunction>>();
-        for (int i = 0; i < static_cast<int>(edges_.size()); ++i) {
-            (*edgeMap_)[edges_[i].vertices] = i;
-        }
-    }
-
-    return edgeMap_.get();
 }
 
 unordered_map<ThreeIds, int, ThreeIds::HashFunction> *Triangles::TriangleMap() {

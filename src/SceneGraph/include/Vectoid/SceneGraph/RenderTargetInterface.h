@@ -11,7 +11,7 @@ namespace Core {
     class TriangleProviderInterface;
 }
 namespace DataSet {
-    class VertexSet;
+    class Points;
 }
 }
 
@@ -66,7 +66,7 @@ class RenderTargetInterface : public virtual K::Core::Interface {
         const std::shared_ptr<Core::Particles> &particles) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> NewPerspectiveProjection() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Points> NewPoints(
-            const std::shared_ptr<DataSet::VertexSet> &points) = 0;
+            const std::shared_ptr<DataSet::Points> &points) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> NewSimpleGeometryRenderer(
         const std::shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::SimpleLighting> NewSimpleLighting() = 0;

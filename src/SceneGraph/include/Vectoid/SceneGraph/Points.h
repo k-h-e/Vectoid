@@ -7,7 +7,7 @@
 
 namespace Vectoid {
 namespace DataSet {
-    class VertexSet;
+    class Points;
 }
 }
 
@@ -17,7 +17,7 @@ namespace SceneGraph {
 //! Renders points.
 class Points : public virtual GeometryInterface {
   public:
-    Points(const Points &other)            = delete;
+    Points(const DataSet::Points &other)   = delete;
     Points &operator=(const Points &other) = delete;
     Points(Points &&other)                 = delete;
     Points &operator=(Points &&other)      = delete;
@@ -25,10 +25,10 @@ class Points : public virtual GeometryInterface {
     void SetColor(const Core::Vector<float> &color);
 
   protected:
-    Points(const std::shared_ptr<DataSet::VertexSet> &points);
+    Points(const std::shared_ptr<DataSet::Points> &points);
 
-    std::shared_ptr<DataSet::VertexSet> points_;
-    Core::Vector<float>                 color_;
+    std::shared_ptr<DataSet::Points> points_;
+    Core::Vector<float>              color_;
 };
 
 }    // Namespace SceneGraph.

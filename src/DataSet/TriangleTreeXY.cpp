@@ -2,7 +2,7 @@
 
 #include <K/Core/Log.h>
 #include <Vectoid/Core/ThreePoints.h>
-#include <Vectoid/DataSet/VertexSet.h>
+#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/Math/Intersection/PointTriangleIntersectionXY.h>
 
 using std::to_string;
@@ -14,8 +14,8 @@ using Vectoid::Math::Intersection::PointTriangleIntersectionXY;
 namespace Vectoid {
 namespace DataSet {
 
-TriangleTreeXY::TriangleTreeXY(const std::shared_ptr<VertexSet> &vertexSet)
-        : vertexSet_(vertexSet),
+TriangleTreeXY::TriangleTreeXY(const std::shared_ptr<Points> &vertices)
+        : vertices_(vertices),
           cursor_(-1) {
     // Nop.
 }
@@ -29,9 +29,9 @@ bool TriangleTreeXY::ProvideNextTriangle(ThreePoints *outTriangle) {
     while (cursor_ < static_cast<int>(triangles_.size())) {
         TriangleInfo &info = triangles_[cursor_];
         if (!info.HasChildren()) {
-            outTriangle->point0 = (*vertexSet_)[info.vertices.id0];
-            outTriangle->point1 = (*vertexSet_)[info.vertices.id1];
-            outTriangle->point2 = (*vertexSet_)[info.vertices.id2];
+            outTriangle->point0 = (*vertices_)[info.vertices.id0];
+            outTriangle->point1 = (*vertices_)[info.vertices.id1];
+            outTriangle->point2 = (*vertices_)[info.vertices.id2];
             return true;
         }
         ++cursor_;
@@ -59,8 +59,8 @@ int TriangleTreeXY::Count() const {
 
 int TriangleTreeXY::LocateTriangle(const Vector<float> &point, int rootTriangleId) {
     TriangleInfo &info = triangles_[rootTriangleId];
-    ThreePoints vertices((*vertexSet_)[info.vertices.id0], (*vertexSet_)[info.vertices.id1],
-                         (*vertexSet_)[info.vertices.id2]);
+    ThreePoints vertices((*vertices_)[info.vertices.id0], (*vertices_)[info.vertices.id1],
+                         (*vertices_)[info.vertices.id2]);
     bool intersects;
     if (PointTriangleIntersectionXY::Compute(point, vertices, &intersects) && intersects) {
         if (!info.HasChildren()) {
