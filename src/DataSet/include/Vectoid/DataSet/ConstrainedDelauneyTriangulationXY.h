@@ -3,7 +3,6 @@
 
 #include <unordered_set>
 #include <K/Core/Interface.h>
-#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/Triangles.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
@@ -15,10 +14,13 @@ namespace Core {
 
 namespace DataSet {
 
+class LineSegments;
+class Points;
+
 //! Generates a constrained Delauney triangulation in the <c>x/y</c>-plane.
 class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
   public:
-    ConstrainedDelauneyTriangulationXY();
+    ConstrainedDelauneyTriangulationXY(const std::string &workingDirectory, const std::string &fileNamePrefix);
     ConstrainedDelauneyTriangulationXY(const ConstrainedDelauneyTriangulationXY &other)             = delete;
     ConstrainedDelauneyTriangulationXY &operator=(const ConstrainedDelauneyTriangulationXY &other)  = delete;
     ConstrainedDelauneyTriangulationXY(const ConstrainedDelauneyTriangulationXY &&other)            = delete;
@@ -38,6 +40,7 @@ class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
     void AddSegment(const Vectoid::Core::TwoPoints &segmentXY);
     //! Computes the constrained triangulation from the data added previously.
     /*!
+     *  When the method has returned, the triangulator has been reset for creating a new triangulation.
      *
      *  \return <nullptr> in case of failure.
      */
@@ -49,9 +52,10 @@ class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
     std::unique_ptr<std::vector<Vectoid::Core::Vector<float>>> ReadTriangleVertexFile();
     std::unique_ptr<Vectoid::DataSet::Triangles> ReadTriangleTrianglesFile();
 
-    Vectoid::DataSet::Points                         vertices_;
-    std::unordered_set<TwoIds, TwoIds::HashFunction> segments_;    // In canonical form.
-    std::string                                      workingDirectory_;
+    std::shared_ptr<Vectoid::DataSet::Points>       vertices_;
+    std::shared_ptr<Vectoid::DataSet::LineSegments> segments_;
+    std::string                                     workingDirectory_;
+    std::string                                     fileNamePrefix_;
 };
 
 }    // Namespace DataSet.

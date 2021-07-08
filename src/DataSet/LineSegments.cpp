@@ -22,15 +22,15 @@ LineSegments::LineSegments(const shared_ptr<Points> &vertices)
 }
 
 int LineSegments::Add(const TwoPoints &segment) {
-    auto newSegment = TwoIds(vertices_->Add(segment.point0), vertices_->Add(segment.point1)).MakeCanonical();
+    auto segmentCanonical = TwoIds(vertices_->Add(segment.point0), vertices_->Add(segment.point1)).MakeCanonical();
 
     int  segmentId = -1;
     auto *segmentMap = SegmentMap();
-    auto iter = segmentMap->find(newSegment);
+    auto iter = segmentMap->find(segmentCanonical);
     if (iter == segmentMap->end()) {
         segmentId = static_cast<int>(segments_.size());
-        segments_.push_back(newSegment);
-        (*segmentMap)[newSegment] = segmentId;
+        segments_.push_back(segmentCanonical);
+        (*segmentMap)[segmentCanonical] = segmentId;
     } else {
         segmentId = iter->second;
     }
@@ -66,6 +66,10 @@ void LineSegments::OptimizeForSpace() {
     Log::Print(Log::Level::Debug, this, []{ return "optimizing for space"; });
     segmentMap_.reset();
     vertices_->OptimizeForSpace();
+}
+
+shared_ptr<Points> LineSegments::Vertices() {
+    return vertices_;
 }
 
 void LineSegments::PrepareToProvideLineSegments() {

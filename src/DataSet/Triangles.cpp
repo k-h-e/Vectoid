@@ -21,9 +21,13 @@ using Vectoid::DataSet::ThreeIds;
 namespace Vectoid {
 namespace DataSet {
 
-Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices)
-        : vertices_(vertices),
-          edges_(make_shared<LineSegments>(vertices)),
+Triangles::Triangles() : Triangles(make_shared<LineSegments>(make_shared<Points>())) {}
+
+Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices) : Triangles(make_shared<LineSegments>(vertices)) {}
+
+Triangles::Triangles(const shared_ptr<DataSet::LineSegments> &edges)
+        : vertices_(edges->Vertices()),
+          edges_(edges),
           badConnectivity_(false),
           cursor_(-1),
           currentNormal_(0.0f, 1.0f, 0.0f) {
@@ -120,7 +124,6 @@ void Triangles::OptimizeForSpace() {
     Log::Print(Log::Level::Debug, this, []{ return "optimizing for space"; });
     triangleMap_.reset();
     edges_->OptimizeForSpace();
-    vertices_->OptimizeForSpace();
 }
 
 

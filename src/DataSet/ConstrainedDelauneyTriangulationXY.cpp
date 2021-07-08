@@ -13,6 +13,8 @@
 #include <K/IO/StreamBuffer.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TwoPoints.h>
+#include <Vectoid/DataSet/LineSegments.h>
+#include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
 using std::make_shared;
@@ -35,30 +37,42 @@ using Vectoid::DataSet::Points;
 namespace Vectoid {
 namespace DataSet {
 
-ConstrainedDelauneyTriangulationXY::ConstrainedDelauneyTriangulationXY()
-        : workingDirectory_("./Triangulation") {
+ConstrainedDelauneyTriangulationXY::ConstrainedDelauneyTriangulationXY(
+    const string &workingDirectory, const string &fileNamePrefix)
+        : vertices_(make_shared<Points>()),
+          segments_(make_shared<LineSegments>(vertices_)),
+          workingDirectory_(workingDirectory),
+          fileNamePrefix_(fileNamePrefix) {
     // Nop.
 }
 
 void ConstrainedDelauneyTriangulationXY::AddPoint(const Vector<float> &vertexXY) {
-    vertices_.Add(Vector<float>(vertexXY.x, vertexXY.y, 0.0f));
+    vertices_->Add(Vector<float>(vertexXY.x, vertexXY.y, 0.0f));
 }
 
 void ConstrainedDelauneyTriangulationXY::AddSegment(const TwoPoints &segmentXY) {
-    int vertex0 = vertices_.Add(Vector(segmentXY.point0.x, segmentXY.point0.y, 0.0f));
-    int vertex1 = vertices_.Add(Vector(segmentXY.point1.x, segmentXY.point1.y, 0.0f));
-    segments_.insert(TwoIds(vertex0, vertex1).MakeCanonical());
+    segments_->Add(TwoPoints(Vector(segmentXY.point0.x, segmentXY.point0.y, 0.0f),
+                             Vector(segmentXY.point1.x, segmentXY.point1.y, 0.0f)));
 }
 
 std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY::Compute() {
-    if (vertices_.Count() >= 3) {
+    if (vertices_->Count() >= 3) {
         if (WriteTriangleInputFile()) {
             if (RunTriangle()) {
-                return ReadTriangleTrianglesFile();
+                std::unique_ptr<Vectoid::DataSet::Triangles> triangulation = ReadTriangleTrianglesFile();
+                if (triangulation) {
+                    Log::Print(Log::Level::Debug, this, [&]{
+                        return "triangulation generated, num_triangles=" + to_string(triangulation->Count())
+                            + ", num_edges=" + to_string(triangulation->Edges()->Count())
+                            + ", num_vertices=" + to_string(triangulation->Vertices()->Count());
+                    });
+                    return triangulation;
+                }
             }
         }
     }
 
+    Log::Print(Log::Level::Error, this, []{ return "failed to generate triangulation"; });
     return nullptr;
 }
 
@@ -66,24 +80,26 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
     auto result = make_shared<Result>();
     {
         auto buffer = make_shared<StreamBuffer>(
-                    make_shared<File>(workingDirectory_ + "/" + "triangulation.poly", File::AccessMode::WriteOnly,
+                    make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".poly", File::AccessMode::WriteOnly,
                                       true),
                     File::AccessMode::WriteOnly,
                     4 * 1024, result);
 
         char line[200];
-        std::sprintf(line, "%d 2 0 0\n", vertices_.Count());
+        std::sprintf(line, "%d 2 0 0\n", vertices_->Count());
         *buffer << line;
-        for (int i = 0; i < vertices_.Count(); ++i) {
-            const Vector<float> &point = vertices_[i];
+        for (int i = 0; i < vertices_->Count(); ++i) {
+            const Vector<float> &point = (*vertices_)[i];
             std::sprintf(line, "%d %.12f %.12f\n", (i + 1), point.x, point.y);
             *buffer << line;
         }
 
-        std::sprintf(line, "%d 0\n", static_cast<int>(segments_.size()));
+        std::sprintf(line, "%d 0\n", segments_->Count());
         *buffer << line;
         int segmentIndex = 0;
-        for (const TwoIds &segment : segments_) {
+        for (int i = 0; i < segments_->Count(); ++i) {
+            TwoIds segment;
+            segments_->GetSegmentVertices(i, &segment);
             std::sprintf(line, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
             *buffer << line;
             ++segmentIndex;
@@ -101,17 +117,19 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     if (id == -1) {
         return false;
     } else if (id == 0) {
-        auto fileName = workingDirectory_ + "/" + "triangulation.poly";
+        auto fileName = workingDirectory_ + "/" + fileNamePrefix_ + ".poly";
         exit(execlp("triangle", "triangle", "-p", fileName.c_str(), nullptr));
     } else {
         int status;
         while (true) {
             pid_t result = waitpid(id, &status, 0);
             if (result == id) {
+                bool success = (status == 0);
                 Log::Print(Log::Level::Debug, this, [&]{
-                    return "triangle tool reported status " + to_string(status);
+                    return "triangle tool reported " + string(success ? "success" : "failure")
+                        + ", status=" + to_string(status);
                 });
-                return (status == 0);
+                return success;
             } else if (result == -1) {
                 if (errno != EINTR) {
                     return false;
@@ -123,7 +141,7 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
 
 unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile() {
     auto buffer = make_shared<StreamBuffer>(
-        make_shared<File>(workingDirectory_ + "/" + "triangulation.1.node", File::AccessMode::ReadOnly, false),
+        make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.node", File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly,
         4 * 1024);
 
@@ -157,8 +175,14 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
 }
 
 std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY::ReadTriangleTrianglesFile() {
+    auto triangles = make_unique<Triangles>(segments_);
+
+    // Reset...
+    vertices_ = make_shared<Points>();
+    segments_ = make_shared<LineSegments>(vertices_);
+
     auto buffer = make_shared<StreamBuffer>(
-        make_shared<File>(workingDirectory_ + "/" + "triangulation.1.ele", File::AccessMode::ReadOnly, false),
+        make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.ele", File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly,
         4 * 1024);
 
@@ -173,8 +197,8 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
         return nullptr;
     }
 
-    auto triangles = make_unique<Triangles>(make_shared<Points>());
     int vertex0, vertex1, vertex2;
+    Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
         Read(buffer.get(), '\n', &line);
         if (!Good(buffer.get())) {
@@ -186,16 +210,21 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
                 || !StringTools::Parse(tokens[2], &vertex1) || !StringTools::Parse(tokens[3], &vertex2)) {
             return nullptr;
         }
-        if ((vertex0 < 1) || (vertex0 > vertices_.Count())
-                || (vertex1 < 1) || (vertex1 > vertices_.Count())
-                || (vertex2 < 1) || (vertex2 > vertices_.Count())) {
+        if ((vertex0 < 1) || (vertex0 > vertices.Count())
+                || (vertex1 < 1) || (vertex1 > vertices.Count())
+                || (vertex2 < 1) || (vertex2 > vertices.Count())) {
             return nullptr;
         }
 
-        triangles->Add(ThreePoints(vertices_[vertex0 - 1], vertices_[vertex1 - 1], vertices_[vertex2 - 1]));
+        triangles->Add(ThreePoints(vertices[vertex0 - 1], vertices[vertex1 - 1], vertices[vertex2 - 1]));
     }
 
-    return triangles;
+    if (!triangles->BadConnectivity()) {
+        triangles->OptimizeForSpace();
+        return triangles;
+    } else {
+        return nullptr;
+    }
 }
 
 }    // Namespace DataSet.

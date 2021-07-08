@@ -32,11 +32,13 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
     int Id(const TwoIds &segment);
     //! Retrieves vertex data for the specified segment.
     void GetSegmentVertices(int segment, Core::TwoPoints *outVertices);
-    //! Retrieves vertex data for the specified segment.
+    //! Retrieves the vertices for the specified segment.
     void GetSegmentVertices(int segment, TwoIds *outVertices);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
+    //! Returns the underlying <c>Points</c> object in which the line segment set stores its vertices.
+    std::shared_ptr<Points> Vertices();
 
     void PrepareToProvideLineSegments() override;
     bool ProvideNextLineSegment(Core::TwoPoints *outSegment) override;

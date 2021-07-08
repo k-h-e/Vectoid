@@ -27,6 +27,8 @@ class Points;
  */
 class Triangles : public virtual Vectoid::Core::TriangleProviderInterface {
   public:
+    Triangles();
+    Triangles(const std::shared_ptr<Vectoid::DataSet::LineSegments> &edges);
     Triangles(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
     Triangles(const Triangles &other)            = delete;
     Triangles &operator=(const Triangles &other) = delete;

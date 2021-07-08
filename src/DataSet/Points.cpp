@@ -67,7 +67,7 @@ void Points::OptimizeForSpace() {
 
 unordered_map<Vector<float>, int, Vector<float>::HashFunction> *Points::PointMap() {
     if (!pointMap_) {
-        Log::Print(Log::Level::Debug, this, []{ return "(re-)generating vertex map"; });
+        Log::Print(Log::Level::Debug, this, []{ return "(re-)generating point map"; });
         pointMap_ = make_unique<unordered_map<Vector<float>, int, Vector<float>::HashFunction>>();
         for (int i = 0; i < static_cast<int>(points_.size()); ++i) {
              (*pointMap_)[points_[i]] = i;
