@@ -7,6 +7,7 @@
 #include <Vectoid/SceneGraph/OpenGL/Geode.h>
 #include <Vectoid/SceneGraph/OpenGL/Glyphs.h>
 #include <Vectoid/SceneGraph/OpenGL/LineSegments.h>
+#include <Vectoid/SceneGraph/OpenGL/LitColorCodedTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/LitTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
@@ -73,6 +74,11 @@ shared_ptr<::Vectoid::SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
 shared_ptr<::Vectoid::SceneGraph::LineSegments> RenderTarget::NewLineSegments(
         const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider) {
     return make_shared<OpenGL::LineSegments>(lineSegmentProvider);
+}
+
+shared_ptr<::Vectoid::SceneGraph::LitColorCodedTriangles> RenderTarget::NewLitColorCodedTriangles(
+        const shared_ptr<TriangleProviderInterface> &triangleProvider) {
+    return make_shared<OpenGL::LitColorCodedTriangles>(triangleProvider);
 }
 
 shared_ptr<::Vectoid::SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(

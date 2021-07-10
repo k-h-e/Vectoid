@@ -25,6 +25,8 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
         const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) override;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LitColorCodedTriangles> NewLitColorCodedTriangles(
+        const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LitTriangles> NewLitTriangles(
         const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(

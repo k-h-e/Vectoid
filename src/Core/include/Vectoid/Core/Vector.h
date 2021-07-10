@@ -26,6 +26,8 @@ class Vector {
     Vector(Vector<T> &&other)                 = default;
     Vector &operator=(Vector<T> &&other)      = default;
 
+    //! Computes and returns a hash value for the vector.
+    std::size_t Hash() const;
     inline bool operator==(const Vector<T> &other) const;
     inline bool operator!=(const Vector<T> &other) const;
     inline Vector<T> operator-() const;
@@ -49,10 +51,10 @@ class Vector {
     inline void Normalize();
     //! Tells whether all components are still finite numbers.
     inline bool Valid() const;
+    //! Clamps the vector's components to the specified range.
+    inline void ClampComponents(T min, T max);
     //! Produces a verbose representation of the current vector state.
     std::string ToString() const;
-    //! Computes and returns a hash value for the vector.
-    std::size_t Hash() const;
     
     T x;
     T y;
@@ -71,6 +73,15 @@ Vector<T>::Vector(T xCoord, T yCoord, T zCoord) {
     x = xCoord;
     y = yCoord;
     z = zCoord;
+}
+
+template<typename T>
+std::size_t Vector<T>::Hash() const {
+    std::size_t hash = 17u;
+    hash = hash*31u + std::hash<T>()(x);
+    hash = hash*31u + std::hash<T>()(y);
+    hash = hash*31u + std::hash<T>()(z);
+    return hash;
 }
 
 template<typename T>
@@ -150,19 +161,17 @@ bool Vector<T>::Valid() const {
 }
 
 template<typename T>
+void Vector<T>::ClampComponents(T min, T max) {
+    NumberTools::Clamp(&x, min, max);
+    NumberTools::Clamp(&y, min, max);
+    NumberTools::Clamp(&z, min, max);
+}
+
+template<typename T>
 std::string Vector<T>::ToString() const {
     char text[200];
     std::sprintf(text, "(%f, %f, %f)", x, y, z);
     return std::string(text);
-}
-
-template<typename T>
-std::size_t Vector<T>::Hash() const {
-    std::size_t hash = 17u;
-    hash = hash*31u + std::hash<T>()(x);
-    hash = hash*31u + std::hash<T>()(y);
-    hash = hash*31u + std::hash<T>()(z);
-    return hash;
 }
 
 //! Scaling.

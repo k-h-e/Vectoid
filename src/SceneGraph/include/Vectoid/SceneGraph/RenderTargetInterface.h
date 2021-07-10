@@ -24,6 +24,7 @@ class CoordSys;
 class GeometryInterface;
 class Geode;
 class Glyphs;
+class LitColorCodedTriangles;
 class LitTriangles;
 class LineSegments;
 class MapParameters;
@@ -60,6 +61,8 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
         const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::LitColorCodedTriangles> NewLitColorCodedTriangles(
+        const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LitTriangles> NewLitTriangles(
         const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> NewParticlesRenderer(
