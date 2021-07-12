@@ -13,7 +13,7 @@ PerspectiveProjection::PerspectiveProjection() {
 void PerspectiveProjection::RenderPre() {
     if (parametersChanged_) {
         float windowWidth, windowHeight;
-        ComputeWindowDimensions(&windowWidth, &windowHeight);
+        GetWindowDimensions(&windowWidth, &windowHeight);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
 #ifdef KXM_VECTOID_GLES

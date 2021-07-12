@@ -28,6 +28,21 @@ float PerspectiveProjection::WindowSize() const {
     return windowSize_;
 }
 
+void PerspectiveProjection::GetWindowDimensions(float *outWidth, float *outHeight) const {
+    bool assignWindowSizeToWidth = (width_ < height_);
+    if (windowSizeIsLargerViewPortDimension_) {
+        assignWindowSizeToWidth = !assignWindowSizeToWidth;
+    }
+    if (assignWindowSizeToWidth) {
+        *outWidth  = windowSize_;
+        *outHeight = windowSize_ * height_ / width_;
+    }
+    else {
+        *outWidth  = windowSize_ * width_ / height_;
+        *outHeight = windowSize_;
+    }
+}
+
 void PerspectiveProjection::SetViewingDepth(float viewingDepth) {
     if (viewingDepth >= paramMin) {
         viewingDepth_      = viewingDepth;
@@ -60,23 +75,8 @@ void PerspectiveProjection::SetViewPort(float width, float height) {
 
 Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float y) const {
     float windowWidth, windowHeight;
-    ComputeWindowDimensions(&windowWidth, &windowHeight);
+    GetWindowDimensions(&windowWidth, &windowHeight);
     return Vector<float>((x/width_ - .5f)  * windowWidth, (.5f - y/height_) * windowHeight, 0.0f);
-}
-
-void PerspectiveProjection::ComputeWindowDimensions(float *width, float *height) const {
-    bool assignWindowSizeToWidth = (width_ < height_);
-    if (windowSizeIsLargerViewPortDimension_) {
-        assignWindowSizeToWidth = !assignWindowSizeToWidth;
-    }
-    if (assignWindowSizeToWidth) {
-        *width  = windowSize_;
-        *height = windowSize_ * height_ / width_;
-    }
-    else {
-        *width  = windowSize_ * width_ / height_;
-        *height = windowSize_;
-    }
 }
 
 }    // Namespace SceneGraph.

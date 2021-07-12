@@ -29,7 +29,10 @@ Viewer::Viewer(QWidget *parent)
           renderTarget_(new Vectoid::SceneGraph::OpenGL::RenderTarget()),
           width_(1),
           height_(1),
-          rotating_(false) {
+          rotating_(false),
+          panning_(false),
+          dragging_(false),
+          cameraNavigationEnabled_(true) {
     // Nop.
 }
 
@@ -51,6 +54,13 @@ void Viewer::SetSceneGraph(const shared_ptr<Node> &root, const shared_ptr<Perspe
     update();
 }
 
+void Viewer::EnableCameraNavigation(bool enabled) {
+    cameraNavigationEnabled_ = enabled;
+    rotating_ = false;
+    panning_  = false;
+    dragging_ = false;
+}
+
 void Viewer::paintGL() {
     renderTarget_->RenderFrame();
 }
@@ -62,20 +72,25 @@ void Viewer::resizeGL(int width, int height) {
     height_ = height;
     if (root_ && projection_) {
         projection_->SetViewPort(width_, height_);
+        emit ProjectionUpdated();
     }
     Log::Print(Log::Level::Debug, this, [&]{ return "viewport_size=" + to_string(width_) + "x" + to_string(height_); });
 }
 
 void Viewer::mousePressEvent(QMouseEvent *event) {
-    if (!rotating_ && !panning_ && camera_) {
+    if (!rotating_ && !panning_ && !dragging_) {
         startX_ = event->x();
         startY_ = event->y();
-        camera_->GetTransform(&startCameraTransform_);
-        if (event->button() == ::Qt::LeftButton) {
-            rotating_ = true;
-        }
-        else if (event->button() == ::Qt::RightButton) {
-            panning_ = true;
+        if (cameraNavigationEnabled_ && camera_) {
+            camera_->GetTransform(&startCameraTransform_);
+            if (event->button() == ::Qt::LeftButton) {
+                rotating_ = true;
+            } else if (event->button() == ::Qt::RightButton) {
+                panning_ = true;
+            }
+        } else {
+            dragging_ = true;
+            emit MouseDragStateChanged(true);
         }
     }
 }
@@ -84,17 +99,20 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
     (void)event;
     rotating_ = false;
     panning_  = false;
+
+    if (dragging_) {
+        dragging_ = false;
+        emit MouseDragStateChanged(false);
+    }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
-    int x = event->x();
-    int y = event->y();
-    if ((rotating_ || panning_) && projection_ && camera_) {
+    if ((rotating_ || panning_ || dragging_) && projection_) {
         Vector<float> start = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
                                                                         static_cast<float>(startY_));
-        Vector<float> stop  = projection_->TransformViewPortCoordinates(static_cast<float>(x),
-                                                                        static_cast<float>(y));
-        if (rotating_) {
+        Vector<float> stop  = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
+                                                                        static_cast<float>(event->y()));
+        if (rotating_ && camera_) {
             float yawAngle   =  (stop.x - start.x)/projection_->WindowSize() * 90.0f;
             float pitchAngle = -(stop.y - start.y)/projection_->WindowSize() * 90.0f;
             Transform<float> transform = startCameraTransform_;
@@ -102,8 +120,9 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
             transform.Prepend(Transform(Axis::X, pitchAngle));
             camera_->SetTransform(transform);
             update();
+            emit CameraUpdated();
 
-        } else if (panning_) {
+        } else if (panning_ && camera_) {
             Transform<float> cameraRotation = startCameraTransform_;
             cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
             Vector<float> up(0.0f, 1.0f, 0.0f);
@@ -116,6 +135,11 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
             position = position - 15.0f*(stop.x - start.x)*right - 15.0f*(stop.y - start.y)*up;
             camera_->SetPosition(position);
             update();
+            emit CameraUpdated();
+
+        } else if (dragging_) {
+            emit MouseDragged((stop.x - start.x)/projection_->WindowSize(),
+                              (stop.y - start.y)/projection_->WindowSize());
         }
     }
 }
@@ -132,7 +156,9 @@ void Viewer::wheelEvent(QWheelEvent *event) {
         transform.Prepend(Transform<float>(Axis::Z, rollAngle));
 
         camera_->SetTransform(transform);
+
         update();
+        emit CameraUpdated();
     }
 }
 

@@ -17,6 +17,9 @@ class PerspectiveProjection : public GroupNode {
     void SetWindowSize(float windowSize, bool identifyWithLargerViewPortDimension);
     //! Retrieves the property set by SetWindowSize().
     float WindowSize() const;
+    //! Tells the current dimensions of the rectangular "window" on the near clipping plane, depending on window size
+    //! settings and the current view port.
+    void GetWindowDimensions(float *outWidth, float *outHeight) const;
     //! Sets the distance in camera space between near and far clipping planes.
     void SetViewingDepth(float viewingDepth);
     //! Retrieves the property set by SetViewingDepth();
@@ -32,8 +35,6 @@ class PerspectiveProjection : public GroupNode {
     
   protected:
     PerspectiveProjection();
-  
-    void ComputeWindowDimensions(float *width, float *height) const;
 
     float eyepointDistance_;
     float viewingDepth_;

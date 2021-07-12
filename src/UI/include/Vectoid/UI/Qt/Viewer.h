@@ -34,6 +34,24 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void SetSceneGraph(const std::shared_ptr<Vectoid::SceneGraph::Node> &root,
                        const std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> &projection,
                        const std::shared_ptr<Vectoid::SceneGraph::Camera> &camera);
+    //! Toggles interactive camera navigation.
+    /*!
+     *  When camera navigation is disabled, mouse dragging is reported via the respective signals.
+     */
+    void EnableCameraNavigation(bool enabled);
+
+  signals:
+    //! Emitted when the projection has been updated by the viewer.
+    void ProjectionUpdated();
+    //! Emitted when the camera has been updated by the viewer.
+    void CameraUpdated();
+    //! Reports mouse drags in case camera navigation is turned off.
+    void MouseDragStateChanged(bool dragging);
+    //! Reports mouse drags in case camera navigation is turned off.
+    /*!
+     *  Drags are reported in multiples of the window size, and with respect to the dragging start point.
+     */
+    void MouseDragged(float x, float y);
 
   protected:
     void paintGL() override;
@@ -58,6 +76,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     Vectoid::Core::Vector<float>                                virtualRotationCenter_;
     bool                                                        rotating_;
     bool                                                        panning_;
+    bool                                                        dragging_;
+    bool                                                        cameraNavigationEnabled_;
 };
 
 }    // Namespace Qt.
