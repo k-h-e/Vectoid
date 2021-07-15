@@ -49,6 +49,7 @@ void Viewer::SetSceneGraph(const shared_ptr<Node> &root, const shared_ptr<Perspe
     renderTarget_->SetSceneGraph(root_);
     if (projection_) {
         projection_->SetViewPort(width_, height_);
+        emit ProjectionUpdated();
     }
 
     update();
