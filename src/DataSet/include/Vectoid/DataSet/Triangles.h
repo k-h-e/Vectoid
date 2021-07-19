@@ -8,6 +8,7 @@
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/DataSet/LineSegments.h>
+#include <Vectoid/DataSet/SupportsBoundingBoxTreeInterface.h>
 #include <Vectoid/DataSet/ThreeIds.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
@@ -25,7 +26,7 @@ class Points;
 /*!
  *  Intended for sets of triangular elements forming surfaces in 3D.
  */
-class Triangles : public virtual Vectoid::Core::TriangleProviderInterface {
+class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtual Core::TriangleProviderInterface {
   public:
     Triangles();
     Triangles(const std::shared_ptr<Vectoid::DataSet::LineSegments> &edges);
@@ -42,10 +43,8 @@ class Triangles : public virtual Vectoid::Core::TriangleProviderInterface {
     int Add(const Core::ThreePoints &triangle);
     //! Tells whether bad triangle connectivity has been detected.
     bool BadConnectivity();
-    //! Tells the number of triangles.
-    int Count();
     //! Retrieves the vertex data for the specified triangle.
-    void GetTriangleVertices(int triangle, Core::ThreePoints *outVertices);
+    void GetTriangleVertices(int triangle, Core::ThreePoints *outVertices) const;
     //! Retrieves the specified triangle's edges.
     void GetTriangleEdges(int triangle, ThreeIds *outEdges);
     //! Retrieves the specified edge's vertices.
@@ -64,6 +63,11 @@ class Triangles : public virtual Vectoid::Core::TriangleProviderInterface {
     std::shared_ptr<LineSegments> Edges();
     //! Returns the underlying <c>Points</c> object in which the triangle set stores its vertices.
     std::shared_ptr<Points> Vertices();
+
+    int Size() const override;
+    void GetItemBoundingBox(int item, Core::BoundingBox<float> *outBoundingBox) const override;
+    bool ComputeLineItemIntersection(const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
+                                     int item, bool *outIntersects, ItemIntersection *outIntersection) override;
 
     void PrepareToProvideTriangles() override;
     bool ProvideNextTriangle(Core::ThreePoints *outTriangle) override;

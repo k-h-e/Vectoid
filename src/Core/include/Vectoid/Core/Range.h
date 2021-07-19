@@ -27,10 +27,12 @@ class Range {
     Range(const Range<T> &other, T offset);
     // Instances may get copied/moved depending on T.
     
+    //! Tells whether the range is (still) undefined.
+    bool Undefined() const { return undefined_; }
     //! Returns the range's minimum.
-    T Min() const { return min_; }
+    T Min() const { return undefined_ ? (T)0.0 : min_; }
     //! Returns the range's maximum.
-    T Max() const { return max_; }
+    T Max() const { return undefined_ ? (T)0.0 : max_; }
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
     //! Expands the range at each side by the specified value.
@@ -56,8 +58,7 @@ class Range {
     void CorrectForObserver(T *inOutNumber, T observer) const;
     //! If the range were subdivided into slots of the specified size, the method returns the slot the specified number
     //! would be in, including the resulting remainder. This method does no bounds checking whatsoever.
-    void ComputeSlotUnchecked(T number, T slotSize,
-                                     int *outSlot, T *outRemainder) const;
+    void ComputeSlotUnchecked(T number, T slotSize, int *outSlot, T *outRemainder) const;
     //! Computes the affine combination of the two range delimiters using the given coefficient <c>t</c> (and
     //! <c>(1 - t)</c>).
     T AffineCombination(T t) const;
@@ -127,102 +128,118 @@ void Range<T>::Grow(T number) {
 
 template<typename T>
 void Range<T>::Expand(T value) {
-    T center        = Center();
-    T newHalfExtent = (T)0.5*Extent() + value;
-    NumberTools::ClampMin(&newHalfExtent, (T)0.0f);
-    min_ = center - newHalfExtent;
-    max_ = center + newHalfExtent;
+    if (!undefined_) {
+        T center        = Center();
+        T newHalfExtent = (T)0.5*Extent() + value;
+        NumberTools::ClampMin(&newHalfExtent, (T)0.0f);
+        min_ = center - newHalfExtent;
+        max_ = center + newHalfExtent;
+    }
 }
 
 template<typename T>
 void Range<T>::Scale(T scalingFactor) {
-    T center        = Center();
-    T newHalfExtent = scalingFactor * (T)0.5 * Extent();
-    min_ = center - newHalfExtent;
-    max_ = center + newHalfExtent;
+    assert (scalingFactor > (T)0.0);
+    if (!undefined_) {
+        T center        = Center();
+        T newHalfExtent = scalingFactor * (T)0.5 * Extent();
+        min_ = center - newHalfExtent;
+        max_ = center + newHalfExtent;
+    }
 }
 
 template<typename T>
 bool Range<T>::Contains(T number) const {
-    return (number >= min_) && (number <= max_);
+    return undefined_ ? false : (number >= min_) && (number <= max_);
 }
 
 template<typename T>
 void Range<T>::Clamp(T *number) const {
-    if (*number < min_) {
-        *number = min_;
-    }
-    else if (*number > max_) {
-        *number = max_;
+    if (!undefined_) {
+        if (*number < min_) {
+            *number = min_;
+        }
+        else if (*number > max_) {
+            *number = max_;
+        }
     }
 }
 
 template<typename T>
 void Range<T>::ClampModulo(T *number) const {
-    if (*number < min_) {
-        if (min_ == max_) {
-            *number = min_;
-            return;
-        }
-        T delta = max_ - min_;
-        do {
-            *number += delta;
-        } while (*number < min_);
-        if (*number >= max_) {
-            *number = min_;
-        }
-    }
-    else if (*number >= max_) {
-        if (min_ == max_) {
-            *number = min_;
-            return;
-        }
-        T delta = max_ - min_;
-        do {
-            *number -= delta;
-        } while (*number >= max_);
+    if (!undefined_) {
         if (*number < min_) {
-            *number = min_;
+            if (min_ == max_) {
+                *number = min_;
+                return;
+            }
+            T delta = max_ - min_;
+            do {
+                *number += delta;
+            } while (*number < min_);
+            if (*number >= max_) {
+                *number = min_;
+            }
+        }
+        else if (*number >= max_) {
+            if (min_ == max_) {
+                *number = min_;
+                return;
+            }
+            T delta = max_ - min_;
+            do {
+                *number -= delta;
+            } while (*number >= max_);
+            if (*number < min_) {
+                *number = min_;
+            }
         }
     }
 }
 
 template<typename T>
 void Range<T>::CorrectForObserver(T *inOutNumber, T observer) const {
-    T range = max_ - min_;
-    T delta = *inOutNumber - observer;
-    if (delta >= 0.0f) {
-        if (delta > range/2.0f) {
-            delta -= range;
+    if (!undefined_) {
+        T range = max_ - min_;
+        T delta = *inOutNumber - observer;
+        if (delta >= 0.0f) {
+            if (delta > range/2.0f) {
+                delta -= range;
+            }
         }
-    }
-    else {
-        if (delta < -range/2.0f) {
-            delta += range;
+        else {
+            if (delta < -range/2.0f) {
+                delta += range;
+            }
         }
+        *inOutNumber = observer + delta;
     }
-    *inOutNumber = observer + delta;
 }
 
 template<typename T>
 void Range<T>::ComputeSlotUnchecked(T number, T slotSize, int *outSlot, T *outRemainder) const {
-    *outSlot      = (number - min_) / slotSize;
-    *outRemainder = number - (min_ + (T)*outSlot * slotSize);
+    if (!undefined_) {
+        *outSlot      = (number - min_) / slotSize;
+        *outRemainder = number - (min_ + (T)*outSlot * slotSize);
+    } else {
+        *outSlot      = (T)0.0;
+        *outRemainder = (T)0.0;
+    }
 }
 
 template<typename T>
 T Range<T>::AffineCombination(T t) const {
-    return (1.0f - t)*min_ + t*max_;
+    return undefined_ ? (T)0.0 : (1.0f - t)*min_ + t*max_;
 }
 
 template<typename T>
 T Range<T>::Center() const {
-    return (T).5*min_ + (T).5*max_;
+    return undefined_ ? (T)0.0 : (T).5*min_ + (T).5*max_;
 }
 
 template<typename T>
 T Range<T>::Extent() const {
-    return max_ - min_;
+    return undefined_ ? (T)0.0 : max_ - min_;
 }
 
 }    // Namespace Core.

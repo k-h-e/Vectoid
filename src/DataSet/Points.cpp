@@ -26,7 +26,7 @@ Points &Points::operator=(const Points &other) {
     return *this;
 }
 
-int Points::Count() {
+int Points::Size() const {
     return static_cast<int>(points_.size());
 }
 

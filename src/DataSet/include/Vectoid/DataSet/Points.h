@@ -25,7 +25,7 @@ class Points : public virtual K::Core::Interface {
     Points &operator=(Points &&other)       = default;
 
     //! Tells the number of points in the set.
-    int Count();
+    int Size() const;
     //! Adds the specified point, if it is not already present.
     /*!
      * \return

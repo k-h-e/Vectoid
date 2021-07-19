@@ -33,7 +33,7 @@ Viewer::Viewer(QWidget *parent)
           panning_(false),
           dragging_(false),
           cameraNavigationEnabled_(true) {
-    // Nop.
+    setMouseTracking(true);
 }
 
 shared_ptr<RenderTargetInterface> Viewer::RenderTarget() {
@@ -108,40 +108,44 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
-    if ((rotating_ || panning_ || dragging_) && projection_) {
-        Vector<float> start = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
-                                                                        static_cast<float>(startY_));
-        Vector<float> stop  = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
-                                                                        static_cast<float>(event->y()));
-        if (rotating_ && camera_) {
-            float yawAngle   =  (stop.x - start.x)/projection_->WindowSize() * 90.0f;
-            float pitchAngle = -(stop.y - start.y)/projection_->WindowSize() * 90.0f;
-            Transform<float> transform = startCameraTransform_;
-            transform.Prepend(Transform(Axis::Y, yawAngle));
-            transform.Prepend(Transform(Axis::X, pitchAngle));
-            camera_->SetTransform(transform);
-            update();
-            emit CameraUpdated();
+    if (projection_) {
+        Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
+                                                                          static_cast<float>(event->y()));
+        if (rotating_ || panning_ || dragging_) {
+            Vector<float> start = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
+                                                                            static_cast<float>(startY_));
+            if (rotating_ && camera_) {
+                float yawAngle   =  (current.x - start.x)/projection_->WindowSize() * 90.0f;
+                float pitchAngle = -(current.y - start.y)/projection_->WindowSize() * 90.0f;
+                Transform<float> transform = startCameraTransform_;
+                transform.Prepend(Transform(Axis::Y, yawAngle));
+                transform.Prepend(Transform(Axis::X, pitchAngle));
+                camera_->SetTransform(transform);
+                update();
+                emit CameraUpdated();
 
-        } else if (panning_ && camera_) {
-            Transform<float> cameraRotation = startCameraTransform_;
-            cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
-            Vector<float> up(0.0f, 1.0f, 0.0f);
-            cameraRotation.ApplyTo(&up);
-            Vector<float> right(1.0f, 0.0f, 0.0f);
-            cameraRotation.ApplyTo(&right);
+            } else if (panning_ && camera_) {
+                Transform<float> cameraRotation = startCameraTransform_;
+                cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
+                Vector<float> up(0.0f, 1.0f, 0.0f);
+                cameraRotation.ApplyTo(&up);
+                Vector<float> right(1.0f, 0.0f, 0.0f);
+                cameraRotation.ApplyTo(&right);
 
-            Vector<float> position;
-            startCameraTransform_.GetTranslationPart(&position);
-            position = position - 15.0f*(stop.x - start.x)*right - 15.0f*(stop.y - start.y)*up;
-            camera_->SetPosition(position);
-            update();
-            emit CameraUpdated();
+                Vector<float> position;
+                startCameraTransform_.GetTranslationPart(&position);
+                position = position - 15.0f*(current.x - start.x)*right - 15.0f*(current.y - start.y)*up;
+                camera_->SetPosition(position);
+                update();
+                emit CameraUpdated();
 
-        } else if (dragging_) {
-            emit MouseDragged((stop.x - start.x)/projection_->WindowSize(),
-                              (stop.y - start.y)/projection_->WindowSize());
+            } else if (dragging_) {
+                emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
+                                  (current.y - start.y)/projection_->WindowSize());
+            }
         }
+
+        emit MouseMoved(current);
     }
 }
 

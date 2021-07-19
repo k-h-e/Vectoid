@@ -27,7 +27,7 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
      */
     int Add(const Core::TwoPoints &segment);
     //! Tells the number of line segments.
-    int Count();
+    int Size() const;
     //! Returns the ID for the specified line segment, or <c>-1</c> in case the segment is not in the set.
     int Id(const TwoIds &segment);
     //! Retrieves vertex data for the specified segment.

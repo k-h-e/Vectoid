@@ -1,8 +1,11 @@
 #include <Vectoid/DataSet/Triangles.h>
 
 #include <K/Core/Log.h>
+#include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TwoPoints.h>
+#include <Vectoid/Math/Intersection/LineTriangleIntersection.h>
+#include <Vectoid/DataSet/ItemIntersection.h>
 #include <Vectoid/DataSet/Points.h>
 
 using std::shared_ptr;
@@ -12,9 +15,11 @@ using std::unordered_map;
 using std::unordered_set;
 using std::to_string;
 using K::Core::Log;
+using Vectoid::Core::BoundingBox;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TwoPoints;
 using Vectoid::Core::Vector;
+using Vectoid::Math::Intersection::LineTriangleIntersection;
 using Vectoid::DataSet::LineSegments;
 using Vectoid::DataSet::ThreeIds;
 
@@ -71,12 +76,8 @@ bool Triangles::BadConnectivity() {
     return badConnectivity_;
 }
 
-int Triangles::Count() {
-    return static_cast<int>(triangles_.size());
-}
-
-void Triangles::GetTriangleVertices(int triangle, ThreePoints *outVertices) {
-    ThreeIds &edges = triangles_[triangle];
+void Triangles::GetTriangleVertices(int triangle, ThreePoints *outVertices) const {
+    const ThreeIds &edges = triangles_[triangle];
     TwoIds vertices0, vertices1;
     for (int i = 0; i < 3; ++i) {
         edges_->GetSegmentVertices(edges[i - 1], &vertices0);
@@ -135,12 +136,40 @@ shared_ptr<Points> Triangles::Vertices() {
     return vertices_;
 }
 
+int Triangles::Size() const {
+    return static_cast<int>(triangles_.size());
+}
+
+void Triangles::GetItemBoundingBox(int item, BoundingBox<float> *outBoundingBox) const {
+    ThreePoints triangle;
+    GetTriangleVertices(item, &triangle);
+    *outBoundingBox = BoundingBox<float>();
+    for (int i = 0; i < 3; ++i) {
+        outBoundingBox->Grow(triangle[i]);
+    }
+}
+
+bool Triangles::ComputeLineItemIntersection(const Vector<float> &linePoint, const Vector<float> &lineDirection,
+                                            int item, bool *outIntersects, ItemIntersection *outIntersection) {
+    ThreePoints triangle;
+    GetTriangleVertices(item, &triangle);
+    Vector<float> intersectionPoint;
+    if (LineTriangleIntersection::Compute(linePoint, lineDirection, triangle, outIntersects, &intersectionPoint)) {
+        if (*outIntersects) {
+            *outIntersection = ItemIntersection(item, intersectionPoint);
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void Triangles::PrepareToProvideTriangles() {
     cursor_ = -1;
 }
 
 bool Triangles::ProvideNextTriangle(ThreePoints *outTriangle) {
-    if (cursor_ + 1 < Count()) {
+    if (cursor_ + 1 < Size()) {
         ++cursor_;
         GetTriangleVertices(cursor_, outTriangle);
         outTriangle->ComputeNormal(&currentNormal_);

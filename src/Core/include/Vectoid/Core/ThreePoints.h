@@ -57,7 +57,7 @@ class ThreePoints {
     /*!
      *  The returned normal might not be a <c>Valid()</c> vector.
      */
-    void ComputeNormal(Vector<float> *outNormal) {
+    void ComputeNormal(Vector<float> *outNormal) const {
         *outNormal = CrossProduct(point1 - point0, point2 - point0);
         outNormal->Normalize();
     }

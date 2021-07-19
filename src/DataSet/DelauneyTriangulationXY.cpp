@@ -38,18 +38,18 @@ void DelauneyTriangulationXY::Add(const Vector<float> &point) {
 bool DelauneyTriangulationXY::Compute() {
     bool success = false;
 
-    if (!computed_ && (vertices_->Count() >= 3)) {
+    if (!computed_ && (vertices_->Size() >= 3)) {
         trianglePairsToCheck_.reset(new deque<TwoIds>());
         pointQuadruplesChecked_.reset(new unordered_set<FourIdsCanonical, FourIdsCanonicalHashFunction>());
         GenerateInitialOuterTriangle();
-        for (int i = 0; i < vertices_->Count() - 3; ++i) {
+        for (int i = 0; i < vertices_->Size() - 3; ++i) {
             trianglePairsToCheck_->clear();
             InsertVertex(i);
             EnforceDelauneyCriterion();
         }
 
         Log::Print(Log::Level::Debug, this, [&]{ return "triangulation computed, num_points="
-            + to_string(vertices_->Count() - 3) + ", num_interior_splits=" + to_string(numInteriorSplits_)
+            + to_string(vertices_->Size() - 3) + ", num_interior_splits=" + to_string(numInteriorSplits_)
             + ", num_edge_hits=" + to_string(numEdgeHits_) + ", num_triangle_pair_checks="
             + to_string(numTrianglePairChecks_) + " (num_rejected=" + to_string(numTrianglePairChecksRejected_) + ")"
             + ", num_edge_swaps=" + to_string(numEdgeSwaps_); });

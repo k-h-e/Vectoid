@@ -38,7 +38,7 @@ int LineSegments::Add(const TwoPoints &segment) {
     return segmentId;
 }
 
-int LineSegments::Count() {
+int LineSegments::Size() const {
     return static_cast<int>(segments_.size());
 }
 
@@ -77,7 +77,7 @@ void LineSegments::PrepareToProvideLineSegments() {
 }
 
 bool LineSegments::ProvideNextLineSegment(TwoPoints *outSegment) {
-    if (cursor_ + 1 < Count()) {
+    if (cursor_ + 1 < Size()) {
         ++cursor_;
         GetSegmentVertices(cursor_, outSegment);
         return true;

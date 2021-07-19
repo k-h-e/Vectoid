@@ -19,7 +19,7 @@ Points::Points(const shared_ptr<DataSet::Points> &points)
 void Points::Render() {
     glColor3f(color_.x, color_.y, color_.z);
     glBegin(GL_POINTS);
-    for (int i = 0; i < points_->Count(); ++i) {
+    for (int i = 0; i < points_->Size(); ++i) {
         auto &point = (*points_)[i];
         glVertex3f(point.x, point.y, point.z);
     }

@@ -56,15 +56,15 @@ void ConstrainedDelauneyTriangulationXY::AddSegment(const TwoPoints &segmentXY) 
 }
 
 std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY::Compute() {
-    if (vertices_->Count() >= 3) {
+    if (vertices_->Size() >= 3) {
         if (WriteTriangleInputFile()) {
             if (RunTriangle()) {
                 std::unique_ptr<Vectoid::DataSet::Triangles> triangulation = ReadTriangleTrianglesFile();
                 if (triangulation) {
                     Log::Print(Log::Level::Debug, this, [&]{
-                        return "triangulation generated, num_triangles=" + to_string(triangulation->Count())
-                            + ", num_edges=" + to_string(triangulation->Edges()->Count())
-                            + ", num_vertices=" + to_string(triangulation->Vertices()->Count());
+                        return "triangulation generated, num_triangles=" + to_string(triangulation->Size())
+                            + ", num_edges=" + to_string(triangulation->Edges()->Size())
+                            + ", num_vertices=" + to_string(triangulation->Vertices()->Size());
                     });
                     return triangulation;
                 }
@@ -86,18 +86,18 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
                     4 * 1024, result);
 
         char line[200];
-        std::sprintf(line, "%d 2 0 0\n", vertices_->Count());
+        std::sprintf(line, "%d 2 0 0\n", vertices_->Size());
         *buffer << line;
-        for (int i = 0; i < vertices_->Count(); ++i) {
+        for (int i = 0; i < vertices_->Size(); ++i) {
             const Vector<float> &point = (*vertices_)[i];
             std::sprintf(line, "%d %.12f %.12f\n", (i + 1), point.x, point.y);
             *buffer << line;
         }
 
-        std::sprintf(line, "%d 0\n", segments_->Count());
+        std::sprintf(line, "%d 0\n", segments_->Size());
         *buffer << line;
         int segmentIndex = 0;
-        for (int i = 0; i < segments_->Count(); ++i) {
+        for (int i = 0; i < segments_->Size(); ++i) {
             TwoIds segment;
             segments_->GetSegmentVertices(i, &segment);
             std::sprintf(line, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
@@ -210,9 +210,9 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
                 || !StringTools::Parse(tokens[2], &vertex1) || !StringTools::Parse(tokens[3], &vertex2)) {
             return nullptr;
         }
-        if ((vertex0 < 1) || (vertex0 > vertices.Count())
-                || (vertex1 < 1) || (vertex1 > vertices.Count())
-                || (vertex2 < 1) || (vertex2 > vertices.Count())) {
+        if ((vertex0 < 1) || (vertex0 > vertices.Size())
+                || (vertex1 < 1) || (vertex1 > vertices.Size())
+                || (vertex2 < 1) || (vertex2 > vertices.Size())) {
             return nullptr;
         }
 

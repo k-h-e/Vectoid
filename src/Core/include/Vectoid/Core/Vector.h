@@ -38,6 +38,9 @@ class Vector {
     //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the indices <c>0</c>, <c>1</c> and
     //! <c>2</c> respectively.
     inline T &operator[](int i);
+    //! Allows to access the vector's <c>x</c>-, <c>y</c>- and <c>z</c>-elements via the indices <c>0</c>, <c>1</c> and
+    //! <c>2</c> respectively.
+    inline const T &operator[](int i) const;
     //! Sets the vector as specified.
     inline void Set(T xCoord, T yCoord, T zCoord);
     //! Computes the vector's length.
@@ -119,6 +122,19 @@ Vector<T> Vector<T>::operator-(const Vector<T> &other) const {
 
 template<typename T>
 T &Vector<T>::operator[](int i) {
+    switch (i) {
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 0:
+        default:
+            return x;
+    }
+}
+
+template<typename T>
+const T &Vector<T>::operator[](int i) const {
     switch (i) {
         case 1:
             return y;

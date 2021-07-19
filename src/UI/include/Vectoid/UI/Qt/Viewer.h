@@ -52,6 +52,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
      *  Drags are reported in multiples of the window size, and with respect to the dragging start point.
      */
     void MouseDragged(float x, float y);
+    //! Reports mouse moves.
+    void MouseMoved(Vectoid::Core::Vector<float> cameraSpacePosition);
 
   protected:
     void paintGL() override;
