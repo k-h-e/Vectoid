@@ -49,7 +49,6 @@ bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, co
             return false;
         }
 
-        Log::Print(Log::Level::Debug, this, [&]{ return to_string(itemsToTest.size()) + " items to test"; });
         for (int item : itemsToTest) {
             bool             intersects;
             ItemIntersection intersection;

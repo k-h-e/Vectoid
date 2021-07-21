@@ -54,6 +54,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void MouseDragged(float x, float y);
     //! Reports mouse moves.
     void MouseMoved(Vectoid::Core::Vector<float> cameraSpacePosition);
+    //! Reports that the mouse has been clicked.
+    void MouseClicked();
 
   protected:
     void paintGL() override;
@@ -79,6 +81,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     bool                                                        rotating_;
     bool                                                        panning_;
     bool                                                        dragging_;
+    bool                                                        mouseMovedWhilePressed_;
     bool                                                        cameraNavigationEnabled_;
 };
 

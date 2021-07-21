@@ -32,6 +32,7 @@ Viewer::Viewer(QWidget *parent)
           rotating_(false),
           panning_(false),
           dragging_(false),
+          mouseMovedWhilePressed_(false),
           cameraNavigationEnabled_(true) {
     setMouseTracking(true);
 }
@@ -93,6 +94,8 @@ void Viewer::mousePressEvent(QMouseEvent *event) {
             dragging_ = true;
             emit MouseDragStateChanged(true);
         }
+
+        mouseMovedWhilePressed_ = false;
     }
 }
 
@@ -105,9 +108,19 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
         dragging_ = false;
         emit MouseDragStateChanged(false);
     }
+
+    if (!mouseMovedWhilePressed_) {
+        emit MouseClicked();
+    } else {
+        mouseMovedWhilePressed_ = false;
+    }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
+    if (rotating_ || panning_ || dragging_) {
+        mouseMovedWhilePressed_ = true;
+    }
+
     if (projection_) {
         Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
                                                                           static_cast<float>(event->y()));
@@ -134,7 +147,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
 
                 Vector<float> position;
                 startCameraTransform_.GetTranslationPart(&position);
-                position = position - 15.0f*(current.x - start.x)*right - 15.0f*(current.y - start.y)*up;
+                position = position - 20.0f*(current.x - start.x)*right - 20.0f*(current.y - start.y)*up;
                 camera_->SetPosition(position);
                 update();
                 emit CameraUpdated();
@@ -150,14 +163,14 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void Viewer::wheelEvent(QWheelEvent *event) {
-    if (projection_ && camera_) {
-        Vector position(0.0f, 0.0f, .01f * static_cast<float>(event->angleDelta().y()) * projection_->WindowSize());
+    if (cameraNavigationEnabled_ && projection_ && camera_) {
+        Vector position(0.0f, 0.0f, -.01f * static_cast<float>(event->angleDelta().y()) * projection_->WindowSize());
         Transform<float> transform;
         camera_->GetTransform(&transform);
         transform.ApplyTo(&position);
         transform.SetTranslationPart(position);
 
-        float rollAngle = -.02f * static_cast<float>(event->angleDelta().x());
+        float rollAngle = .02f * static_cast<float>(event->angleDelta().x());
         transform.Prepend(Transform<float>(Axis::Z, rollAngle));
 
         camera_->SetTransform(transform);
