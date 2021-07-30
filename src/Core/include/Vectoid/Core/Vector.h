@@ -3,9 +3,10 @@
 
 #include <cmath>
 #include <string>
+#include <K/Core/ItemReadInterface.h>
+#include <K/Core/ItemWriteInterface.h>
 #include <K/Core/NumberTools.h>
-
-using K::Core::NumberTools;
+#include <K/Core/SerializableInterface.h>
 
 //! 3D graphics and data processing.
 namespace Vectoid {
@@ -14,7 +15,7 @@ namespace Core {
 
 //! Vector in 3-space, also used to describe points in 3-space.
 template<typename T>
-class Vector {
+class Vector : public virtual K::Core::SerializableInterface {
   public:
     struct HashFunction;
 
@@ -58,6 +59,9 @@ class Vector {
     inline void ClampComponents(T min, T max);
     //! Produces a verbose representation of the current vector state.
     std::string ToString() const;
+
+    void Serialize(K::Core::ItemWriteInterface *stream) const override;
+    void Deserialize(K::Core::ItemReadInterface *stream) override;
     
     T x;
     T y;
@@ -178,9 +182,9 @@ bool Vector<T>::Valid() const {
 
 template<typename T>
 void Vector<T>::ClampComponents(T min, T max) {
-    NumberTools::Clamp(&x, min, max);
-    NumberTools::Clamp(&y, min, max);
-    NumberTools::Clamp(&z, min, max);
+    K::Core::NumberTools::Clamp(&x, min, max);
+    K::Core::NumberTools::Clamp(&y, min, max);
+    K::Core::NumberTools::Clamp(&z, min, max);
 }
 
 template<typename T>
@@ -188,6 +192,20 @@ std::string Vector<T>::ToString() const {
     char text[200];
     std::sprintf(text, "(%f, %f, %f)", x, y, z);
     return std::string(text);
+}
+
+template<typename T>
+void Vector<T>::Serialize(K::Core::ItemWriteInterface *stream) const {
+    stream->WriteItem(&x, sizeof(x));
+    stream->WriteItem(&y, sizeof(y));
+    stream->WriteItem(&z, sizeof(z));
+}
+
+template<typename T>
+void Vector<T>::Deserialize(K::Core::ItemReadInterface *stream) {
+    stream->ReadItem(&x, sizeof(x));
+    stream->ReadItem(&y, sizeof(y));
+    stream->ReadItem(&z, sizeof(z));
 }
 
 //! Scaling.
@@ -223,7 +241,7 @@ inline Vector<T> CombineAffine(T t, const Vector<T> &u, const Vector<T> &v) {
 template<typename T>
 inline Vector<T> CombineConvex(T a, T b, const Vector<T> &point0, const Vector<T> &point1) {
     T t = a / (a + b);
-    NumberTools::Clamp(&t, 0.0f, 1.0f);
+    K::Core::NumberTools::Clamp(&t, 0.0f, 1.0f);
     return CombineAffine(t, point0, point1);
 }
 

@@ -147,7 +147,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
 
     string line;
     Read(buffer.get(), '\n', &line);
-    if (!Good(buffer.get())) {
+    if (!buffer->Good()) {
         return nullptr;
     }
     int numVertices;
@@ -161,7 +161,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     double y;
     for (int i = 0; i < numVertices; ++i) {
         Read(buffer.get(), '\n', &line);
-        if (!Good(buffer.get())) {
+        if (!buffer->Good()) {
             return nullptr;
         }
         tokens = StringTools::Tokenize(line, " \t", true);
@@ -188,7 +188,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
 
     string line;
     Read(buffer.get(), '\n', &line);
-    if (!Good(buffer.get())) {
+    if (!buffer->Good()) {
         return nullptr;
     }
     int numTriangles;
@@ -201,7 +201,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
         Read(buffer.get(), '\n', &line);
-        if (!Good(buffer.get())) {
+        if (!buffer->Good()) {
             return nullptr;
         }
 
