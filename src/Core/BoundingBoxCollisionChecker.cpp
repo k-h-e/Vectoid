@@ -20,11 +20,16 @@ bool BoundingBoxCollisionChecker::CheckCollision(
 bool BoundingBoxCollisionChecker::CheckCollision(
         BoundingBoxCollisionChecker *other, const Transform<float> &otherTransform,
         const Transform<float> &ourTransform) {
+    (void)other;
+    (void)otherTransform;
+    (void)ourTransform;
     return false;    // TODO: Implement check!
 }
 
 bool BoundingBoxCollisionChecker::CheckCollision(
         PointCollisionChecker *other, const Transform<float> &otherTransform, const Transform<float> &ourTransform) {
+    (void)other;
+
     Vector<float> point;
     otherTransform.GetTranslationPart(&point);
     Transform<float> inverseOurTransform(Transform<float>::InitAsInverse, ourTransform);

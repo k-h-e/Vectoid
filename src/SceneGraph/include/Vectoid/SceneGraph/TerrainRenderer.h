@@ -14,7 +14,7 @@ namespace Core {
 namespace SceneGraph {
 
 class Terrain;
-class MapParameters;
+struct MapParameters;
 
 //! Renders the terrain.
 class TerrainRenderer : public virtual Vectoid::SceneGraph::GeometryInterface {

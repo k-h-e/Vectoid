@@ -43,6 +43,7 @@ void Node::RenderPost() {
 
 void Node::OnVisited(VisitorInterface *visitor, bool visitAll) {
     (void)visitor;
+    (void)visitAll;
     // Nop.
 }
 

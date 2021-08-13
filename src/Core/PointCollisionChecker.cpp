@@ -18,6 +18,9 @@ bool PointCollisionChecker::CheckCollision(BoundingBoxCollisionChecker *other, c
 
 bool PointCollisionChecker::CheckCollision(PointCollisionChecker *other, const Transform<float> &otherTransform,
                                            const Transform<float> &ourTransform) {
+    (void)other;
+    (void)otherTransform;
+    (void)ourTransform;
     return false;    // TODO: Implement check!
 }
 

@@ -27,7 +27,7 @@ class Glyphs;
 class LitColorCodedTriangles;
 class LitTriangles;
 class LineSegments;
-class MapParameters;
+struct MapParameters;
 class Node;
 class ParticlesRenderer;
 class PerspectiveProjection;
