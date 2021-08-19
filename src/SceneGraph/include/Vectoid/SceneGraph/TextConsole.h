@@ -17,7 +17,8 @@ class TextConsole : public virtual GeometryInterface {
                        Grey,
                        Green,
                        Yellow,
-                       Red     };
+                       Red,
+                       LightBlue };
 
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;

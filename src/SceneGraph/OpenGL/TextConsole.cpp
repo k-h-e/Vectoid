@@ -104,6 +104,9 @@ void TextConsole::SetColor(uint8_t colorIndex) {
             case 4u:
                 color = Vector<float>(1.0f, 0.0f, 0.0f);
                 break;
+            case 5u:
+                color = Vector<float>(0.5f, 0.5f, 1.0f);
+                break;
             default:
                 break;
         }
