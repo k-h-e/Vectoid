@@ -1,8 +1,11 @@
 #ifndef VECTOID_CORE_RANGE_H_
 #define VECTOID_CORE_RANGE_H_
 
+#include <string>
 #include <K/Core/NumberTools.h>
 
+using std::string;
+using std::to_string;
 using K::Core::NumberTools;
 
 namespace Vectoid {
@@ -66,6 +69,8 @@ class Range {
     T Center() const;
     //! Returns the range's extent.
     T Extent() const;
+    //! Returns a human-readable description of the current range state.
+    std::string ToString() const;
     
   private:
     T    min_;
@@ -240,6 +245,11 @@ T Range<T>::Center() const {
 template<typename T>
 T Range<T>::Extent() const {
     return undefined_ ? (T)0.0 : max_ - min_;
+}
+
+template<typename T>
+string Range<T>::ToString() const {
+    return undefined_ ? "(?, ?)" : string("(") + to_string(min_) + ", " + to_string(max_) + ")";
 }
 
 }    // Namespace Core.
