@@ -11,7 +11,7 @@ SimpleLighting::SimpleLighting() {
 }
 
 void SimpleLighting::RenderPre() {
-    GLfloat lightPosition[4] = { 0.0f, 0.0f, 20.0f, 1.0f };
+    GLfloat lightPosition[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
