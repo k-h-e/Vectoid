@@ -80,54 +80,65 @@ void Viewer::resizeGL(int width, int height) {
 }
 
 void Viewer::mousePressEvent(QMouseEvent *event) {
-    if (!rotating_ && !panning_ && !dragging_) {
-        startX_ = event->x();
-        startY_ = event->y();
-        if (cameraNavigationEnabled_ && camera_) {
+    rotating_ = false;
+    panning_  = false;
+    dragging_ = false;
+
+    if (cameraNavigationEnabled_) {
+        if (camera_) {
             camera_->GetTransform(&startCameraTransform_);
             if (event->button() == ::Qt::LeftButton) {
                 rotating_ = true;
             } else if (event->button() == ::Qt::RightButton) {
                 panning_ = true;
             }
-        } else {
-            dragging_ = true;
+        }
+    } else {
+        dragging_ = true;
+    }
+
+    if (rotating_ || panning_ || dragging_) {
+        startX_                 = event->x();
+        startY_                 = event->y();
+        mouseMovedWhilePressed_ = false;
+
+        if (dragging_) {
             emit MouseDragStateChanged(true);
         }
-
-        mouseMovedWhilePressed_ = false;
     }
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *event) {
     (void)event;
+
+    bool didDrag = dragging_;
+
     rotating_ = false;
     panning_  = false;
+    dragging_ = false;
 
-    if (dragging_) {
-        dragging_ = false;
+    if (didDrag) {
         emit MouseDragStateChanged(false);
     }
-
     if (!mouseMovedWhilePressed_) {
         emit MouseClicked();
-    } else {
-        mouseMovedWhilePressed_ = false;
     }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
-    if (rotating_ || panning_ || dragging_) {
-        mouseMovedWhilePressed_ = true;
+    if (!mouseMovedWhilePressed_) {
+        if ((event->x() != startX_) || (event->y() != startY_)) {
+            mouseMovedWhilePressed_ = true;
+        }
     }
 
     if (projection_) {
         Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
                                                                           static_cast<float>(event->y()));
-        if (rotating_ || panning_ || dragging_) {
-            Vector<float> start = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
-                                                                            static_cast<float>(startY_));
-            if (rotating_ && camera_) {
+        Vector<float> start   = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
+                                                                          static_cast<float>(startY_));
+        if (rotating_) {
+            if (camera_) {
                 float yawAngle   =  (current.x - start.x)/projection_->WindowSize() * 90.0f;
                 float pitchAngle = -(current.y - start.y)/projection_->WindowSize() * 90.0f;
                 Transform<float> transform = startCameraTransform_;
@@ -136,8 +147,9 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
                 camera_->SetTransform(transform);
                 update();
                 emit CameraUpdated();
-
-            } else if (panning_ && camera_) {
+            }
+        } else if (panning_) {
+            if (camera_) {
                 Transform<float> cameraRotation = startCameraTransform_;
                 cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
                 Vector<float> up(0.0f, 1.0f, 0.0f);
@@ -151,11 +163,10 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
                 camera_->SetPosition(position);
                 update();
                 emit CameraUpdated();
-
-            } else if (dragging_) {
-                emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
-                                  (current.y - start.y)/projection_->WindowSize());
             }
+        } else if (dragging_) {
+            emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
+                              (current.y - start.y)/projection_->WindowSize());
         }
 
         emit MouseMoved(current);
