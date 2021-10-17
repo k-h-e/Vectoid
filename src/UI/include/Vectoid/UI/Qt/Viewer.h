@@ -63,7 +63,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-    void wheelEvent(QWheelEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
   private:
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::RenderTarget>  renderTarget_;
@@ -80,9 +81,12 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     Vectoid::Core::Vector<float>                                virtualRotationCenter_;
     bool                                                        rotating_;
     bool                                                        panning_;
+    bool                                                        movingRolling_;
     bool                                                        dragging_;
     bool                                                        mouseMovedWhilePressed_;
     bool                                                        cameraNavigationEnabled_;
+    bool                                                        altKeyDown_;
+    bool                                                        controlKeyDown_;
 };
 
 }    // Namespace Qt.

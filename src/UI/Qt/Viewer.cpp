@@ -31,10 +31,14 @@ Viewer::Viewer(QWidget *parent)
           height_(1),
           rotating_(false),
           panning_(false),
+          movingRolling_(false),
           dragging_(false),
           mouseMovedWhilePressed_(false),
-          cameraNavigationEnabled_(true) {
+          cameraNavigationEnabled_(true),
+          altKeyDown_(false),
+          controlKeyDown_(false) {
     setMouseTracking(true);
+    setFocusPolicy(::Qt::ClickFocus);
 }
 
 shared_ptr<RenderTargetInterface> Viewer::RenderTarget() {
@@ -80,24 +84,27 @@ void Viewer::resizeGL(int width, int height) {
 }
 
 void Viewer::mousePressEvent(QMouseEvent *event) {
-    rotating_ = false;
-    panning_  = false;
-    dragging_ = false;
+    rotating_      = false;
+    panning_       = false;
+    movingRolling_ = false;
+    dragging_      = false;
 
     if (cameraNavigationEnabled_) {
         if (camera_) {
             camera_->GetTransform(&startCameraTransform_);
-            if (event->button() == ::Qt::LeftButton) {
-                rotating_ = true;
-            } else if (event->button() == ::Qt::RightButton) {
+            if (altKeyDown_) {
                 panning_ = true;
+            } else if (controlKeyDown_) {
+                movingRolling_ = true;
+            } else {
+                rotating_ = true;
             }
         }
     } else {
         dragging_ = true;
     }
 
-    if (rotating_ || panning_ || dragging_) {
+    if (rotating_ || panning_ || movingRolling_ || dragging_) {
         startX_                 = event->x();
         startY_                 = event->y();
         mouseMovedWhilePressed_ = false;
@@ -113,9 +120,10 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
 
     bool didDrag = dragging_;
 
-    rotating_ = false;
-    panning_  = false;
-    dragging_ = false;
+    rotating_      = false;
+    panning_       = false;
+    movingRolling_ = false;
+    dragging_      = false;
 
     if (didDrag) {
         emit MouseDragStateChanged(false);
@@ -164,6 +172,16 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
                 update();
                 emit CameraUpdated();
             }
+        } else if (movingRolling_) {
+            if (camera_) {
+                Transform<float> transform = startCameraTransform_;
+                transform.Prepend(Transform<float>((-100.0f * (current.y - start.y)/projection_->WindowSize())
+                                                       * Vector<float>(0.0f, 0.0f, 1.0f)));
+                transform.Prepend(Transform<float>(Axis::Z, -90.0f * (current.x - start.x)/projection_->WindowSize()));
+                camera_->SetTransform(transform);
+                update();
+                emit CameraUpdated();
+            }
         } else if (dragging_) {
             emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
                               (current.y - start.y)/projection_->WindowSize());
@@ -173,21 +191,31 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
-void Viewer::wheelEvent(QWheelEvent *event) {
-    if (cameraNavigationEnabled_ && projection_ && camera_) {
-        Vector position(0.0f, 0.0f, -.01f * static_cast<float>(event->angleDelta().y()) * projection_->WindowSize());
-        Transform<float> transform;
-        camera_->GetTransform(&transform);
-        transform.ApplyTo(&position);
-        transform.SetTranslationPart(position);
+void Viewer::keyPressEvent(QKeyEvent *event) {
+    switch (event->key()) {
+        case ::Qt::Key_Alt:
+            altKeyDown_ = true;
+            break;
+        case ::Qt::Key_Meta:
+            controlKeyDown_ = true;
+            break;
+        default:
+            QOpenGLWidget::keyPressEvent(event);
+            break;
+    }
+}
 
-        float rollAngle = .02f * static_cast<float>(event->angleDelta().x());
-        transform.Prepend(Transform<float>(Axis::Z, rollAngle));
-
-        camera_->SetTransform(transform);
-
-        update();
-        emit CameraUpdated();
+void Viewer::keyReleaseEvent(QKeyEvent *event) {
+    switch (event->key()) {
+        case ::Qt::Key_Alt:
+            altKeyDown_ = false;
+            break;
+        case ::Qt::Key_Meta:
+            controlKeyDown_ = false;
+            break;
+        default:
+            QOpenGLWidget::keyReleaseEvent(event);
+            break;
     }
 }
 
