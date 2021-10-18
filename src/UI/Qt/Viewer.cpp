@@ -175,9 +175,9 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
         } else if (movingRolling_) {
             if (camera_) {
                 Transform<float> transform = startCameraTransform_;
-                transform.Prepend(Transform<float>((-100.0f * (current.y - start.y)/projection_->WindowSize())
-                                                       * Vector<float>(0.0f, 0.0f, 1.0f)));
-                transform.Prepend(Transform<float>(Axis::Z, -90.0f * (current.x - start.x)/projection_->WindowSize()));
+                transform.Prepend(Transform<float>((100.0f * (current.y - start.y)/projection_->WindowSize())
+                                                      * Vector<float>(0.0f, 0.0f, 1.0f)));
+                transform.Prepend(Transform<float>(Axis::Z, 90.0f * (current.x - start.x)/projection_->WindowSize()));
                 camera_->SetTransform(transform);
                 update();
                 emit CameraUpdated();

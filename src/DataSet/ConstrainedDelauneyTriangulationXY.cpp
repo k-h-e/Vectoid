@@ -113,12 +113,13 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
 
 bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     Log::Print(Log::Level::Debug, this, []{ return "running triangle tool..."; });
+    auto fileName = workingDirectory_ + "/" + fileNamePrefix_ + ".poly";
+    const char *fileNameDumb = fileName.c_str();
     pid_t id = fork();
     if (id == -1) {
         return false;
     } else if (id == 0) {
-        auto fileName = workingDirectory_ + "/" + fileNamePrefix_ + ".poly";
-        exit(execlp("triangle", "triangle", "-p", fileName.c_str(), nullptr));
+        exit(execl("/opt/local/bin/triangle", "triangle", "-p", fileNameDumb, nullptr));
     } else {
         int status;
         while (true) {
