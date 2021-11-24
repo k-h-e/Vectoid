@@ -105,8 +105,8 @@ void Viewer::mousePressEvent(QMouseEvent *event) {
     }
 
     if (rotating_ || panning_ || movingRolling_ || dragging_) {
-        startX_                 = event->x();
-        startY_                 = event->y();
+        startX_                 = event->pos().x();
+        startY_                 = event->pos().y();
         mouseMovedWhilePressed_ = false;
 
         if (dragging_) {
@@ -135,14 +135,14 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
     if (!mouseMovedWhilePressed_) {
-        if ((event->x() != startX_) || (event->y() != startY_)) {
+        if ((event->pos().x() != startX_) || (event->pos().y() != startY_)) {
             mouseMovedWhilePressed_ = true;
         }
     }
 
     if (projection_) {
-        Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->x()),
-                                                                          static_cast<float>(event->y()));
+        Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
+                                                                          static_cast<float>(event->pos().y()));
         Vector<float> start   = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
                                                                           static_cast<float>(startY_));
         if (rotating_) {
