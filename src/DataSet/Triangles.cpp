@@ -28,6 +28,11 @@ namespace DataSet {
 
 Triangles::Triangles() : Triangles(make_shared<LineSegments>(make_shared<Points>())) {}
 
+Triangles::Triangles(Core::TriangleProviderInterface *triangleProvider)
+        : Triangles(make_shared<LineSegments>(make_shared<Points>())) {
+    (void)Add(triangleProvider);
+}
+
 Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices) : Triangles(make_shared<LineSegments>(vertices)) {}
 
 Triangles::Triangles(const shared_ptr<DataSet::LineSegments> &edges)
@@ -70,6 +75,15 @@ int Triangles::Add(const ThreePoints &triangle) {
     }
 
     return triangleId;
+}
+
+bool Triangles::Add(Core::TriangleProviderInterface *triangleProvider) {
+    triangleProvider->PrepareToProvideTriangles();
+    ThreePoints triangle;
+    while (triangleProvider->ProvideNextTriangle(&triangle)) {
+        (void)Add(triangle);
+    }
+    return !triangleProvider->TriangleError();
 }
 
 bool Triangles::BadConnectivity() {

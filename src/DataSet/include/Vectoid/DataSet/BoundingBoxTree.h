@@ -14,6 +14,9 @@ namespace DataSet {
 class SupportsBoundingBoxTreeInterface;
 
 //! Axis-aligned bounding box tree.
+/*!
+ *  Implementation derived from <c>Harvey</c> code base.
+ */
 class BoundingBoxTree : public virtual K::Core::Interface {
   public:
     //! The item collection must not be empty.

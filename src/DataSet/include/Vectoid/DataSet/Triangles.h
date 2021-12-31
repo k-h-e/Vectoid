@@ -16,6 +16,7 @@ namespace Vectoid {
 
 namespace Core {
     class ThreePoints;
+    class TriangleProviderInterface;
 }
 
 namespace DataSet {
@@ -29,6 +30,12 @@ class Points;
 class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtual Core::TriangleProviderInterface {
   public:
     Triangles();
+    //! Initializes the set with the triangles from the specified provider.
+    /*!
+     *  Use <c>Core::TriangleProviderInterface::TriangleError()</c> to learn whether all triangles were copied
+     *  successfully. If not, the <c>Triangles</c> object will be in sane state, yet triangles will be missing.
+     */
+    Triangles(Core::TriangleProviderInterface *triangleProvider);
     Triangles(const std::shared_ptr<Vectoid::DataSet::LineSegments> &edges);
     Triangles(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
     Triangles(const Triangles &other)            = delete;
@@ -41,6 +48,13 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
      *  \return The triangle's index.
      */
     int Add(const Core::ThreePoints &triangle);
+    //! Adds the triangles from the specified provider (those not already present).
+    /*!
+     *  \return
+     *  <c>false</c> in case of failure. The <c>Triangles</c> object will then be in sane state, yet the triangles will
+     *  only have been partially added.
+     */
+    bool Add(Core::TriangleProviderInterface *triangleProvider);
     //! Tells whether bad triangle connectivity has been detected.
     bool BadConnectivity();
     //! Retrieves the vertex data for the specified triangle.
