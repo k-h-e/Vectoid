@@ -1,10 +1,16 @@
 #include <Vectoid/Core/Tools.h>
 
+#include <cmath>
 #include <vector>
+#include <K/Core/NumberTools.h>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/Core/ThreePoints.h>
 
+using std::atan2;
+using std::nullopt;
+using std::optional;
 using std::vector;
+using K::Core::NumberTools;
 
 namespace Vectoid {
 namespace Core {
@@ -28,6 +34,25 @@ void Tools::CreateCoordinateSystem(const Vector<float> &direction, Vector<float>
     outU->Normalize();
     *outV = CrossProduct(direction, *outU);
     outV->Normalize();
+}
+
+optional<float> Tools::PolarAngle(float x, float y) {
+    float angleRadians = atan2(y, x);
+    if (errno != EDOM) {
+        float angleDeg = angleRadians * 180.0f / static_cast<float>(NumberTools::pi);    // In [-180, +180].
+        if (angleDeg < 0.0f) {
+            angleDeg += 360.0f;
+        }
+        if (angleDeg >= 360.0f) {
+            angleDeg = 0.0f;
+        }
+
+        if (isfinite(angleDeg)) {
+            return angleDeg;
+        }
+    }
+
+    return nullopt;
 }
 
 bool Tools::ComputeBarycentricCoordinates(const Vector<float> &pointXY, const ThreePoints &triangleXY,

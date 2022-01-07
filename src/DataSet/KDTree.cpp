@@ -44,9 +44,9 @@ bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int *outNeare
 void KDTree::QuerySphereIntersection(const Vector<float> &sphereCenter, float sphereRadius,
                                      vector<ItemIntersection> *outIntersections) {
     outIntersections->clear();
-
-    (void)sphereCenter;
-    (void)sphereRadius;
+    if (root_ != -1) {
+        PerformSphereQuery(sphereCenter, sphereRadius, root_, outIntersections);
+    }
 }
 
 bool KDTree::CheckIntegrity() {
