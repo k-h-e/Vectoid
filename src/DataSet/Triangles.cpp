@@ -13,7 +13,9 @@ using std::make_shared;
 using std::make_unique;
 using std::unordered_map;
 using std::unordered_set;
+using std::optional;
 using std::to_string;
+using std::vector;
 using K::Core::Log;
 using Vectoid::Core::BoundingBox;
 using Vectoid::Core::ThreePoints;
@@ -70,6 +72,17 @@ int Triangles::Add(const ThreePoints &triangle) {
                 });
             }
         }
+
+        ThreeIds vertices;
+        GetTriangleVertexIds(triangleId, &vertices);
+        for (int i = 0; i < 3; ++i) {
+            int vertex = vertices[i];
+            if (static_cast<int>(vertexInfos_.size()) < vertex + 1) {
+                vertexInfos_.resize(vertex + 1);
+            }
+            vertexInfos_[vertex].RegisterTriangle(triangleId);
+        }
+
     } else {
         triangleId = iter->second;
     }
@@ -100,6 +113,16 @@ void Triangles::GetTriangleVertices(int triangle, ThreePoints *outVertices) cons
     }
 }
 
+void Triangles::GetTriangleVertexIds(int triangle, ThreeIds *outVertexIds) const {
+    const ThreeIds &edges = triangles_[triangle];
+    TwoIds vertices0, vertices1;
+    for (int i = 0; i < 3; ++i) {
+        edges_->GetSegmentVertices(edges[i - 1], &vertices0);
+        edges_->GetSegmentVertices(edges[i],     &vertices1);
+        (*outVertexIds)[i] = vertices0.SharedId(vertices1);
+    }
+}
+
 void Triangles::GetTriangleEdges(int triangle, ThreeIds *outEdges) {
     *outEdges = triangles_[triangle];
 }
@@ -119,20 +142,41 @@ int Triangles::GetNeighbor(int triangle, int edge) {
     }
 }
 
-unordered_set<int> Triangles::Find(const Core::Vector<float> &vertex) {
-    unordered_set<int> result;
+void Triangles::GetTrianglesSharingVertex(int vertex, unordered_set<int> *outTriangles) {
+    outTriangles->clear();
+    if ((vertex >= 0) && (vertex < static_cast<int>(vertexInfos_.size()))
+            && (vertexInfos_[vertex].firstTriangle != -1)) {
+        unordered_set<int> toProcess;
+        toProcess.insert(vertexInfos_[vertex].firstTriangle);
 
-    auto num = static_cast<int>(triangles_.size());
-    ThreePoints vertices;
-    for (int i = 0; i < num; ++i) {
-        GetTriangleVertices(i, &vertices);
-        if (vertices.Contains(vertex)) {
-            result.insert(i);
+        unordered_set<int> negatives;
+        ThreeIds vertexIds;
+        while (!toProcess.empty()) {
+            int currentTriangle = *toProcess.begin();
+            toProcess.erase(currentTriangle);
+            GetTriangleVertexIds(currentTriangle, &vertexIds);
+            if (vertexIds.Contains(vertex)) {
+                outTriangles->insert(currentTriangle);
+                ThreeIds &edges = triangles_[currentTriangle];
+                for (int i = 0; i < 3; ++i) {
+                    optional<int> neighbor = edgeInfos_[edges[i]].OtherTriangle(currentTriangle);
+                    if (neighbor && !outTriangles->contains(*neighbor) && !negatives.contains(*neighbor)) {
+                        toProcess.insert(*neighbor);
+                    }
+                }
+            } else {
+                negatives.insert(currentTriangle);
+            }
         }
-
     }
+}
 
-    return result;
+void Triangles::GetTrianglesSharingVertex(const Vector<float> &vertex, unordered_set<int> *outTriangles) {
+    outTriangles->clear();
+    optional<int> vertexId = vertices_->Id(vertex);
+    if (vertexId) {
+        GetTrianglesSharingVertex(*vertexId, outTriangles);
+    }
 }
 
 void Triangles::OptimizeForSpace() {

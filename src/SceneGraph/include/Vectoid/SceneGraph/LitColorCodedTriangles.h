@@ -21,9 +21,11 @@ class LitColorCodedTriangles : public virtual GeometryInterface {
     LitColorCodedTriangles &operator=(const LitColorCodedTriangles &other) = delete;
     LitColorCodedTriangles(LitColorCodedTriangles &&other)                 = delete;
     LitColorCodedTriangles &operator=(LitColorCodedTriangles &&other)      = delete;
-
+    //! Sets a color coding function. Pass empty function to unset.
     void SetColorCodingFunction(
         const std::function<Vectoid::Core::Vector<float>(const Vectoid::Core::Vector<float> &)> &colorCodingFunction);
+    //! Switches Gouraud shading on and off.
+    virtual void EnableGouraudShading(bool enabled) = 0;
 
   protected:
     LitColorCodedTriangles(const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);

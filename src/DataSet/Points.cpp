@@ -2,9 +2,11 @@
 
 #include <K/Core/Log.h>
 
-using std::unordered_map;
 using std::make_unique;
+using std::nullopt;
+using std::optional;
 using std::to_string;
+using std::unordered_map;
 using K::Core::Log;
 using Vectoid::Core::Vector;
 
@@ -49,15 +51,14 @@ const Vector<float> &Points::operator[](int index) {
     return points_[index];
 }
 
-int Points::Id(const Vector<float> &point) {
+optional<int> Points::Id(const Vector<float> &point) {
     auto *pointMap = PointMap();
     auto iterator = pointMap->find(point);
     if (iterator != pointMap->end()) {
         return iterator->second;
     }
-    else {
-        return -1;
-    }
+
+    return nullopt;
 }
 
 void Points::OptimizeForSpace() {

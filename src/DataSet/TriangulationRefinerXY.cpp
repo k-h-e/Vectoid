@@ -9,9 +9,10 @@
 #include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
+using std::optional;
 using std::shared_ptr;
-using std::unordered_set;
 using std::to_string;
+using std::unordered_set;
 using K::Core::Log;
 using Vectoid::Core::Vector;
 using Vectoid::Core::TwoPoints;
@@ -31,9 +32,9 @@ TriangulationRefinerXY::TriangulationRefinerXY(const shared_ptr<TriangleTreeXY> 
 bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoPoints> *outRefinedEdges) {
     outRefinedEdges->clear();
 
-    int id0 = vertices_->Id(edge.point0);
-    int id1 = vertices_->Id(edge.point1);
-    if ((id0 == -1) || (id1 == -1)) {
+    optional<int> id0 = vertices_->Id(edge.point0);
+    optional<int> id1 = vertices_->Id(edge.point1);
+    if (!id0 || !id1) {
         return false;
     }
 
@@ -44,11 +45,11 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
     }
     Vector<float> directionNormal(direction.y, -direction.x, 0.0f);
 
-    int           currentVertexId = id0;
+    int           currentVertexId = *id0;
     Vector<float> currentVertex   = edge.point0;
     while (currentVertexId != id1) {
         TwoPoints currentEdge(currentVertex, edge.point1);
-        TwoIds    currentEdgeIds(currentVertexId, id1);
+        TwoIds    currentEdgeIds(currentVertexId, *id1);
 
         int connectingTriangleId = -1;
 
@@ -68,7 +69,7 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
 
         if (connectingTriangleId != -1) {
             outRefinedEdges->push_back(currentEdge);
-            currentVertexId = id1;
+            currentVertexId = *id1;
         }
         else {
             int blockingTriangleId = -1;
@@ -223,13 +224,13 @@ bool TriangulationRefinerXY::SelectSurface(Core::LineSegmentProviderInterface &b
     TwoPoints segment;
     TwoIds    edge;
     while (boundaryCurve.ProvideNextLineSegment(&segment)) {
-        int id0 = vertices_->Id(segment.point0);
-        int id1 = vertices_->Id(segment.point1);
-        if ((id0 == -1) || (id1 == -1)) {
+        optional<int> id0 = vertices_->Id(segment.point0);
+        optional<int> id1 = vertices_->Id(segment.point1);
+        if (!id0 || !id1) {
             Log::Print(Log::Level::Debug, this, []{ return "vertex missing"; });
             return false;
         }
-        edge = TwoIds(id0, id1);
+        edge = TwoIds(*id0, *id1);
         boundaryEdges.insert(edge.MakeCanonical());
 
         bool haveTriangle = false;

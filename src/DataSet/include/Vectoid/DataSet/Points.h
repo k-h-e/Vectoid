@@ -2,6 +2,7 @@
 #define VECTOID_DATASET_POINTS_H_
 
 #include <memory>
+#include <optional>
 #include <vector>
 #include <unordered_map>
 #include <Vectoid/Core/Vector.h>
@@ -37,8 +38,8 @@ class Points : public virtual K::Core::Interface {
      *  The specified point id must lie in <c>[0, Count()]</c>.
      */
     const Core::Vector<float> &operator[](int index);
-    //! Returns the id of the specified point, or <c>-1</c> in case the point is not in the set.
-    int Id(const Core::Vector<float> &point);
+    //! Returns the id of the specified point, or <c>nullopt</c> in case the point is not in the set.
+    std::optional<int> Id(const Core::Vector<float> &point);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();

@@ -2,9 +2,10 @@
 #define VECTOID_DATASET_TRIANGLES_H_
 
 #include <memory>
-#include <vector>
+#include <optional>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/DataSet/LineSegments.h>
@@ -22,6 +23,7 @@ namespace Core {
 namespace DataSet {
 
 class Points;
+class ThreeIds;
 
 //! Holds a set of triangles together with connectivity information.
 /*!
@@ -59,6 +61,8 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
     bool BadConnectivity();
     //! Retrieves the vertex data for the specified triangle.
     void GetTriangleVertices(int triangle, Core::ThreePoints *outVertices) const;
+    //! Retrieves the vertex ids for the specified triangle.
+    void GetTriangleVertexIds(int triangle, DataSet::ThreeIds *outVertexIds) const;
     //! Retrieves the specified triangle's edges.
     void GetTriangleEdges(int triangle, ThreeIds *outEdges);
     //! Retrieves the specified edge's vertices.
@@ -68,8 +72,10 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
      *  \return <c>-1</c> in case there is no such triangle.
      */
     int GetNeighbor(int triangle, int edge);
-    //! Finds all triangles containing the specified vertex.
-    std::unordered_set<int> Find(const Core::Vector<float> &vertex);
+    //! Gets all triangles sharing the specified vertex.
+    void GetTrianglesSharingVertex(int vertex, std::unordered_set<int> *outTriangles);
+    //! Gets all triangles sharing the specified vertex.
+    void GetTrianglesSharingVertex(const Core::Vector<float> &vertex, std::unordered_set<int> *outTriangles);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
@@ -89,6 +95,24 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
     bool TriangleError() override;
 
   private:
+    struct VertexInfo {
+        int firstTriangle;
+
+        VertexInfo()
+                : firstTriangle(-1) {
+            // Nop.
+        }
+        VertexInfo(const VertexInfo &other)            = default;
+        VertexInfo &operator=(const VertexInfo &other) = default;
+        VertexInfo(VertexInfo &&other)                 = default;
+        VertexInfo &operator=(VertexInfo &&other)      = default;
+
+        void RegisterTriangle(int triangle) {
+            if (firstTriangle == -1) {
+                firstTriangle = triangle;
+            }
+        }
+    };
     struct EdgeInfo {
         int    triangle0;    // -1 if not set.
         int    triangle1;    // -1 if not set.
@@ -98,6 +122,11 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
                   triangle1(-1) {
             // Nop.
         }
+        EdgeInfo(const EdgeInfo &other)            = default;
+        EdgeInfo &operator=(const EdgeInfo &other) = default;
+        EdgeInfo(EdgeInfo &&other)                 = default;
+        EdgeInfo &operator=(EdgeInfo &&other)      = default;
+
         bool AddTriangle(int triangle) {
             if (triangle0 == -1) {
                 triangle0 = triangle;
@@ -109,16 +138,30 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
                 return false;
             }
         }
+        //! If the specified triangle contains the edge, and an adjacent triangle sharing the edge is present, that
+        //! other triangle is returned. Otherwise <c>nullopt</c>.
+        std::optional<int> OtherTriangle(int triangle) {
+            if (triangle0 == triangle) {
+                if (triangle1 != -1) {
+                    return triangle1;
+                }
+            } else if (triangle1 == triangle) {
+                return triangle0;
+            }
+
+            return std::nullopt;
+        }
     };
 
     std::unordered_map<ThreeIds, int, ThreeIds::HashFunction> *TriangleMap();
 
     std::shared_ptr<Vectoid::DataSet::Points>                                  vertices_;
     std::shared_ptr<LineSegments>                                              edges_;
-    std::vector<EdgeInfo>                                                      edgeInfos_;
     std::vector<ThreeIds>                                                      triangles_;    // IDs are edge IDs.
     std::unique_ptr<std::unordered_map<ThreeIds, int, ThreeIds::HashFunction>> triangleMap_;
                                                                                    // Dynamically (re)generated.
+    std::vector<EdgeInfo>                                                      edgeInfos_;
+    std::vector<VertexInfo>                                                    vertexInfos_;
     bool                                                                       badConnectivity_;
     int                                                                        cursor_;
     Core::Vector<float>                                                        currentNormal_;
