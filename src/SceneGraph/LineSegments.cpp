@@ -6,8 +6,10 @@ using Vectoid::Core::LineSegmentProviderInterface;
 namespace Vectoid {
 namespace SceneGraph {
 
-LineSegments::LineSegments(const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider)
-        : lineSegmentProvider_(lineSegmentProvider),
+LineSegments::LineSegments(const shared_ptr<Context> &context,
+                           const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider)
+        : Geometry(context),
+          lineSegmentProvider_(lineSegmentProvider),
           color_(.8f, .8f, .8f) {
     // Nop.
 }

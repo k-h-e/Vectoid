@@ -7,18 +7,18 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! This scene graph node represents actual geometry in the scene (geode = geometry node).
 class Geode : public Vectoid::SceneGraph::Geode {
   public:
-    friend class RenderTarget;
-    
-    Geode(const Geode &other) = delete;
+    Geode()                              = delete;
+    Geode(const std::shared_ptr<Context> &context, const std::shared_ptr<Geometry> &geometry);
+    Geode(const Geode &other)            = delete;
     Geode &operator=(const Geode &other) = delete;
-    
-  private:
-    Geode(const std::shared_ptr<GeometryInterface> &geometry);
+    Geode(Geode &&other)                 = delete;
+    Geode &operator=(Geode &&other)      = delete;
 };
 
 }    // Namespace OpenGL.

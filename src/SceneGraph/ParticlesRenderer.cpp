@@ -7,8 +7,9 @@ using Vectoid::Core::Particles;
 namespace Vectoid {
 namespace SceneGraph {
 
-ParticlesRenderer::ParticlesRenderer(const shared_ptr<Particles> &particles)
-        : particles_(particles) {
+ParticlesRenderer::ParticlesRenderer(const shared_ptr<Context> &context, const shared_ptr<Particles> &particles)
+        : Geometry(context),
+          particles_(particles) {
     // Nop.
 }
 

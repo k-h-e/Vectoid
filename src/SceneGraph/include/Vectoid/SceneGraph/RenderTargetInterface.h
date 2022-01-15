@@ -21,14 +21,13 @@ namespace SceneGraph {
 class AgeColoredParticles;
 class Camera;
 class CoordSys;
-class GeometryInterface;
+class Geometry;
 class Geode;
 class Glyphs;
 class LitColorCodedTriangles;
 class LitTriangles;
 class LineSegments;
 struct MapParameters;
-class Node;
 class ParticlesRenderer;
 class PerspectiveProjection;
 class Points;
@@ -39,6 +38,7 @@ class Terrain;
 class TerrainRenderer;
 class TestTriangle;
 class TextConsole;
+class TreeNode;
 
 //! Interface to <c>Vectoid</c> render targets.
 /*!
@@ -47,7 +47,7 @@ class TextConsole;
  */
 class RenderTargetInterface : public virtual K::Core::Interface {
   public:
-    virtual void SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) = 0;
+    virtual void SetSceneGraph(const std::shared_ptr<TreeNode> &sceneGraphRoot) = 0;
     //! Renders a frame using the current scene graph state.
     virtual void RenderFrame() = 0;
   
@@ -57,7 +57,7 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() = 0;
     //! Can take <c>nullptr</c> as geometry.
     virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(
-        const std::shared_ptr<GeometryInterface> &geometry) = 0;
+        const std::shared_ptr<Geometry> &geometry) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
         const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider) = 0;

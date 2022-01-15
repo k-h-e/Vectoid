@@ -8,19 +8,21 @@ namespace SceneGraph {
 //! <c>OpenGL</c> renderer.
 namespace OpenGL {
 
+class Context;
+
 //! <c>Vectoid</c> render target for rendering via <c>OpenGL</c>.
 class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
   public:
     RenderTarget();
     RenderTarget(const RenderTarget &other) = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
-    virtual void SetSceneGraph(const std::shared_ptr<Node> &sceneGraphRoot) override;
+    virtual void SetSceneGraph(const std::shared_ptr<TreeNode> &sceneGraphRoot) override;
     virtual void RenderFrame() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Core::Particles> &particles) override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() override;
-    virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(const std::shared_ptr<GeometryInterface> &geometry)
+    virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(const std::shared_ptr<Geometry> &geometry)
         override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(
@@ -48,8 +50,9 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
   private:
     void initializeGL();
 
-    std::shared_ptr<Node> sceneGraphRoot_;
-    bool                  glInitialized_;
+    std::shared_ptr<Context>  context_;
+    std::shared_ptr<TreeNode> sceneGraphRoot_;
+    bool                      glInitialized_;
 };
 
 }    // Namespace OpenGL.

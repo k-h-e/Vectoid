@@ -10,20 +10,23 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Renders particles.
 class ParticlesRenderer : public Vectoid::SceneGraph::ParticlesRenderer {
   public:
-    friend class RenderTarget;
-    
-    ParticlesRenderer(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer()                                          = delete;
+    ParticlesRenderer(const std::shared_ptr<Context> &context,
+                      const std::shared_ptr<Core::Particles> &particles);
+    ParticlesRenderer(const ParticlesRenderer &other)            = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
-    void Render();
+    ParticlesRenderer(ParticlesRenderer &&other)                 = delete;
+    ParticlesRenderer &operator=(ParticlesRenderer &&other)      = delete;
+
+    void Render() override;
     
   private:
-    ParticlesRenderer(const std::shared_ptr<Core::Particles> &particles);
-    
     std::vector<GLfloat> vertexBuffer_;
 };
 

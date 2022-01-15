@@ -1,16 +1,17 @@
 #include <Vectoid/SceneGraph/OpenGL/SimpleGeometryRenderer.h>
 
 #include <Vectoid/SceneGraph/SimpleGeometry.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
-using namespace std;
-using namespace Vectoid::SceneGraph;
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<SimpleGeometry> &geometry)
-        : SceneGraph::SimpleGeometryRenderer(geometry) {
+SimpleGeometryRenderer::SimpleGeometryRenderer(const std::shared_ptr<Context> &context,
+                                               const shared_ptr<SimpleGeometry> &geometry)
+        : SceneGraph::SimpleGeometryRenderer(context, geometry) {
     numTriangles_ = geometry->numTriangles_;
     for (float &value : geometry->vertexArray_) {
         vertexArray_.push_back(static_cast<GLfloat>(value));

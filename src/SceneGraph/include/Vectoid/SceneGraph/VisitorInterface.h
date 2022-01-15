@@ -7,13 +7,13 @@
 namespace Vectoid {
 namespace SceneGraph {
 
-class Node;
+class TreeNode;
 
-//! Interface to scene graph visitors.
+//! Interface to scene graph tree visitors.
 class VisitorInterface : public virtual K::Core::Interface {
   public:
-    virtual void Visit(const std::shared_ptr<Node> &node) = 0;
-    virtual void Leave(const std::shared_ptr<Node> &node) = 0;
+    virtual void Visit(const std::shared_ptr<TreeNode> &node) = 0;
+    virtual void Leave(const std::shared_ptr<TreeNode> &node) = 0;
 };
 
 }    // Namespace SceneGraph.

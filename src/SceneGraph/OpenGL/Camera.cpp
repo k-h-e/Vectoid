@@ -1,15 +1,17 @@
 #include <Vectoid/SceneGraph/OpenGL/Camera.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
+using std::shared_ptr;
 using Vectoid::Core::Transform;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-Camera::Camera()
-        : SceneGraph::Camera() {
+Camera::Camera(const shared_ptr<Context> &context)
+        : SceneGraph::Camera(context) {
     //Nop.
 }
 

@@ -1,23 +1,23 @@
 #include <Vectoid/SceneGraph/Node.h>
 
-#include <Vectoid/SceneGraph/VisitorInterface.h>
+#include <Vectoid/SceneGraph/Context.h>
 
-using std::string;
 using std::shared_ptr;
+using std::string;
 
 namespace Vectoid {
 namespace SceneGraph {
     
-Node::Node()
-        : enabled_(true) {
-    // Nop.
+Node::Node(const shared_ptr<Context> &context)
+        : context_(context) {
+    id_ = context_->RegisterNode(this);
 }
 
 Node::~Node() {
-    // Nop.
+    context_->UnregisterNode(id_);
 }
 
-void Node::SetName(const std::string &name) {
+void Node::SetName(const string &name) {
     name_ = name;
 }
 
@@ -25,34 +25,8 @@ string Node::Name() const {
     return name_;
 }
 
-void Node::SetEnabled(bool enabled) {
-    enabled_ = enabled;
-}
-
-bool Node::Enabled() const {
-    return enabled_;
-}
-
-void Node::RenderPre() {
+void Node::DropGraphicsResources() {
     // Nop.
-}
-
-void Node::RenderPost() {
-    // Nop.
-}
-
-void Node::OnVisited(VisitorInterface *visitor, bool visitAll) {
-    (void)visitor;
-    (void)visitAll;
-    // Nop.
-}
-
-void Visit(const shared_ptr<Node> &node, VisitorInterface *visitor, bool visitAll) {
-    if (visitAll || node->Enabled()) {
-        visitor->Visit(node);
-        node->OnVisited(visitor, visitAll);
-        visitor->Leave(node);
-    }
 }
 
 }    // Namespace SceneGraph.

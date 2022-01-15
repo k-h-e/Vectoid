@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <Vectoid/Core/Vector.h>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace Core {
@@ -16,13 +16,16 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders particles in different colors, depending of their age.
-class AgeColoredParticles : public virtual GeometryInterface {
+class AgeColoredParticles : public Geometry {
  public:
-    AgeColoredParticles(const AgeColoredParticles &other) = delete;
+    AgeColoredParticles()                                            = delete;
+    AgeColoredParticles(const AgeColoredParticles &other)            = delete;
     AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
+    AgeColoredParticles(AgeColoredParticles &&other)                 = delete;
+    AgeColoredParticles &operator=(AgeColoredParticles &&other)      = delete;
     
   protected:
-    AgeColoredParticles(const std::shared_ptr<Core::Particles> &particles);
+    AgeColoredParticles(const std::shared_ptr<Context> &context, const std::shared_ptr<Core::Particles> &particles);
   
     std::shared_ptr<Core::Particles> particles_;
     float                            highAge_;

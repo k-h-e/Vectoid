@@ -1,12 +1,16 @@
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-PerspectiveProjection::PerspectiveProjection() {
+PerspectiveProjection::PerspectiveProjection(const shared_ptr<Context> &context)
+        : SceneGraph::PerspectiveProjection(context) {
     // Nop.
 }
 

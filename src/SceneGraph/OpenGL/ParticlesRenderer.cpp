@@ -1,16 +1,17 @@
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 
 #include <Vectoid/Core/Particles.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
-using namespace std;
+using std::shared_ptr;
 using Vectoid::Core::Particles;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-ParticlesRenderer::ParticlesRenderer(const shared_ptr<Particles> &particles)
-        : SceneGraph::ParticlesRenderer(particles) {
+ParticlesRenderer::ParticlesRenderer(const shared_ptr<Context> &context, const shared_ptr<Particles> &particles)
+        : SceneGraph::ParticlesRenderer(context, particles) {
     // Nop.
 }
 

@@ -9,21 +9,23 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Renders the terrain.
 class TerrainRenderer : public SceneGraph::TerrainRenderer {
   public:
-    friend class RenderTarget;
-  
-    TerrainRenderer(const TerrainRenderer &other) = delete;
+    TerrainRenderer()                                        = delete;
+    TerrainRenderer(const std::shared_ptr<Context> &context, const std::shared_ptr<Terrain> &terrain,
+                    const std::shared_ptr<MapParameters> &mapParameters);
+    TerrainRenderer(const TerrainRenderer &other)            = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
-    void Render();
+    TerrainRenderer(TerrainRenderer &&other)                 = delete;
+    TerrainRenderer &operator=(TerrainRenderer &&other)      = delete;
+
+    void Render() override;
     
   private:
-    TerrainRenderer(const std::shared_ptr<Terrain> &terrain,
-                    const std::shared_ptr<MapParameters> &mapParameters);
-    
     std::vector<GLfloat> vertices_;
 };
 

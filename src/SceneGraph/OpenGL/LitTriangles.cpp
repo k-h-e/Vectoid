@@ -2,6 +2,7 @@
 
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::shared_ptr;
@@ -13,8 +14,9 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-LitTriangles::LitTriangles(const shared_ptr<TriangleProviderInterface> &triangleProvider)
-        : SceneGraph::LitTriangles(triangleProvider) {
+LitTriangles::LitTriangles(const shared_ptr<Context> &context,
+                           const shared_ptr<TriangleProviderInterface> &triangleProvider)
+        : SceneGraph::LitTriangles(context, triangleProvider) {
     // Nop.
 }
 

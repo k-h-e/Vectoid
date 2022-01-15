@@ -8,19 +8,23 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace Vulkan {
 
-class RenderTarget;
 class Context;
+class RenderTarget;
 
 //! Renders particles.
 class ParticlesRenderer : public Vectoid::SceneGraph::ParticlesRenderer {
   public:
-    friend class RenderTarget;
-    
-    ParticlesRenderer(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer()                                          = delete;
+    ParticlesRenderer(const ParticlesRenderer &other)            = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer(ParticlesRenderer &&other)                 = delete;
+    ParticlesRenderer &operator=(ParticlesRenderer &&other)      = delete;
+
     void Render();
     
   private:
+    friend class RenderTarget;
+
     ParticlesRenderer(const std::shared_ptr<Context> &context,
                       const std::shared_ptr<Vectoid::Core::Particles> &particles);
     

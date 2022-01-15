@@ -1,13 +1,16 @@
 #include <Vectoid/SceneGraph/CoordSysCore.h>
 
+using std::shared_ptr;
 using Vectoid::Core::Vector;
 using Vectoid::Core::Transform;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-CoordSysCore::CoordSysCore()
-        : transformChanged_(true) {
+CoordSysCore::CoordSysCore(const shared_ptr<Context> &context)
+        : GroupNode(context),
+          transformChanged_(true) {
+    // Nop.
 }
 
 void CoordSysCore::PrependTransform(const Transform<float> &other) {

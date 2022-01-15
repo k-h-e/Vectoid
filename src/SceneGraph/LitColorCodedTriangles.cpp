@@ -8,8 +8,10 @@ using Vectoid::Core::TriangleProviderInterface;
 namespace Vectoid {
 namespace SceneGraph {
 
-LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<TriangleProviderInterface> &triangleProvider)
-        : triangleProvider_(triangleProvider) {
+LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<Context> &context,
+                                               const shared_ptr<TriangleProviderInterface> &triangleProvider)
+        : Geometry(context),
+          triangleProvider_(triangleProvider) {
     // Nop.
 }
 

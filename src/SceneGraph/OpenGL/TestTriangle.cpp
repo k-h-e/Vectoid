@@ -1,6 +1,9 @@
 #include <Vectoid/SceneGraph/OpenGL/TestTriangle.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -10,8 +13,8 @@ const GLfloat TestTriangle::vertices[9] = { -1.0f, 0.0f, 0.0f,
                                              1.0f, 0.0f, 0.0f,
                                              0.0f, 1.0f, 0.0f  };
 
-TestTriangle::TestTriangle()
-        : SceneGraph::TestTriangle() {
+TestTriangle::TestTriangle(const shared_ptr<Context> &context)
+        : SceneGraph::TestTriangle(context) {
     // Nop.
 }
 

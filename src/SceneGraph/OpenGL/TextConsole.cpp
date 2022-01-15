@@ -4,18 +4,19 @@
 #include <cassert>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Glyphs.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
-using namespace std;
+using std::shared_ptr;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight,
+TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
                          const shared_ptr<SceneGraph::Glyphs> &glyphs)
-        : SceneGraph::TextConsole(width, height, glyphWidth, glyphHeight, glyphs),
+        : SceneGraph::TextConsole(context, width, height, glyphWidth, glyphHeight, glyphs),
           currentColorIndex_(0u) {
     // Nop.
 }

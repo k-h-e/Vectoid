@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 
@@ -17,17 +17,21 @@ class Terrain;
 struct MapParameters;
 
 //! Renders the terrain.
-class TerrainRenderer : public virtual Vectoid::SceneGraph::GeometryInterface {
+class TerrainRenderer : public Geometry {
   public:
-    TerrainRenderer(const TerrainRenderer &other) = delete;
+    TerrainRenderer()                                        = delete;
+    TerrainRenderer(const TerrainRenderer &other)            = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
+    TerrainRenderer(TerrainRenderer &&other)                 = delete;
+    TerrainRenderer &operator=(TerrainRenderer &&other)      = delete;
+
     //! Sets the observer's position in the <c>xz</c>-plane, ignoring the <c>y</c>-coordinate.
     void SetObserverPosition(const Vectoid::Core::Vector<float> &position);
     //! Gets the observer's position in the <c>xz</c>-plane, not affecting the output vector's <c>y</c>-coordinate.
     void GetObserverPosition(Vectoid::Core::Vector<float> *outPosition);
     
   protected:
-    TerrainRenderer(const std::shared_ptr<Terrain> &terrain,
+    TerrainRenderer(const std::shared_ptr<Context> &context, const std::shared_ptr<Terrain> &terrain,
                     const std::shared_ptr<MapParameters> &mapParameters);
 
     std::shared_ptr<Terrain>             terrain_;

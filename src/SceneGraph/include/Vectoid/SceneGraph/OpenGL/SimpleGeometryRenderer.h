@@ -1,29 +1,30 @@
 #ifndef VECTOID_SCENEGRAPH_OPENGL_SIMPLEGEOMETRYRENDERER_H_
 #define VECTOID_SCENEGRAPH_OPENGL_SIMPLEGEOMETRYRENDERER_H_
 
-#include <Vectoid/SceneGraph/SimpleGeometryRenderer.h>
-
 #include <vector>
+#include <Vectoid/SceneGraph/SimpleGeometryRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Renders simple geometry.
 class SimpleGeometryRenderer : public SceneGraph::SimpleGeometryRenderer {
   public:
-    friend class RenderTarget;
-    
-    SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
+    SimpleGeometryRenderer()                                               = delete;
+    SimpleGeometryRenderer(const std::shared_ptr<Context> &context, const std::shared_ptr<SimpleGeometry> &geometry);
+    SimpleGeometryRenderer(const SimpleGeometryRenderer &other)            = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
-    void Render();
+    SimpleGeometryRenderer(SimpleGeometryRenderer &&other)                 = delete;
+    SimpleGeometryRenderer &operator=(SimpleGeometryRenderer &&other)      = delete;
+
+    void Render() override;
     
   private:
-    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
-  
     int                  numTriangles_;
     std::vector<GLfloat> vertexArray_,
                          colorArray_;

@@ -1,11 +1,16 @@
 #include <Vectoid/SceneGraph/OpenGL/Glyphs.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
+
+using std::shared_ptr;
+
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-Glyphs::Glyphs()
-        : defaultGlyph_(0),
+Glyphs::Glyphs(const shared_ptr<Context> &context)
+        : SceneGraph::Glyphs(context),
+          defaultGlyph_(0),
           glResourcesPresent_(false),
           haveDefaultGlyph_(false) {
     for (int i = 0; i < 256; ++i)

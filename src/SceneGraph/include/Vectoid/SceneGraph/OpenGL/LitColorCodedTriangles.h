@@ -14,6 +14,9 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
+class RenderTarget;
+
 //! Renders lit, color-coded triangles.
 /*!
  *  \note
@@ -22,13 +25,16 @@ namespace OpenGL {
  */
 class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangles {
   public:
-    LitColorCodedTriangles(const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
+    LitColorCodedTriangles()                                               = delete;
+    LitColorCodedTriangles(const std::shared_ptr<Context> &context,
+                           const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
     LitColorCodedTriangles(const LitColorCodedTriangles &other)            = delete;
     LitColorCodedTriangles &operator=(const LitColorCodedTriangles &other) = delete;
     LitColorCodedTriangles(LitColorCodedTriangles &&other)                 = delete;
     LitColorCodedTriangles &operator=(LitColorCodedTriangles &&other)      = delete;
+
     void EnableGouraudShading(bool enabled) override;
-    virtual void Render() override;
+    void Render() override;
 
   private:
     void RenderFlat();

@@ -1,5 +1,7 @@
 #include <Vectoid/SceneGraph/Glyphs.h>
 
+using std::shared_ptr;
+
 namespace Vectoid {
 namespace SceneGraph {
 
@@ -2676,7 +2678,8 @@ const uint8_t Glyphs::glyphCodes[] = {
     0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x2e, 0x2c, 0x21, 0x3f, 0x28, 0x29, 0x5b, 0x5d, 0x2b, 0x2d, 0x2a, 0x2f, 0x3d
 };
 
-Glyphs::Glyphs() {
+Glyphs::Glyphs(const shared_ptr<Context> &context)
+        : Node(context) {
     // Nop.
 }
 

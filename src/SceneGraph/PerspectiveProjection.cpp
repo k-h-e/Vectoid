@@ -1,7 +1,6 @@
 #include <Vectoid/SceneGraph/PerspectiveProjection.h>
 
-#include <Vectoid/SceneGraph/VisitorInterface.h>
-
+using std::shared_ptr;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
@@ -9,8 +8,9 @@ namespace SceneGraph {
 
 const float PerspectiveProjection::paramMin = 0.0001f;
 
-PerspectiveProjection::PerspectiveProjection()
-        : eyepointDistance_(paramMin),
+PerspectiveProjection::PerspectiveProjection(const shared_ptr<Context> &context)
+        : GroupNode(context),
+          eyepointDistance_(paramMin),
           viewingDepth_(paramMin),
           windowSize_(paramMin),
           windowSizeIsLargerViewPortDimension_(true) {

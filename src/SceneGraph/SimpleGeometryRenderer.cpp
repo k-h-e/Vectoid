@@ -5,8 +5,10 @@ using namespace std;
 namespace Vectoid {
 namespace SceneGraph {
 
-SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<SimpleGeometry> &geometry)
-        : geometry_(geometry) {
+SimpleGeometryRenderer::SimpleGeometryRenderer(const shared_ptr<Context> &context,
+                                               const shared_ptr<SimpleGeometry> &geometry)
+        : Geometry(context),
+          geometry_(geometry) {
     // Nop.
 }
 

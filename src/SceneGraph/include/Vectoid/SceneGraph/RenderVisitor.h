@@ -9,8 +9,8 @@ namespace SceneGraph {
 //! Render visitor.
 class RenderVisitor : public virtual VisitorInterface {
   public:
-    void Visit(const std::shared_ptr<Node> &node) override;
-    void Leave(const std::shared_ptr<Node> &node) override;
+    void Visit(const std::shared_ptr<TreeNode> &node) override;
+    void Leave(const std::shared_ptr<TreeNode> &node) override;
 };
 
 }    // Namespace SceneGraph.

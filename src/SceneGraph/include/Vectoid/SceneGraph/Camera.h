@@ -9,11 +9,14 @@ namespace SceneGraph {
 //! This scene graph node represents a camera.
 class Camera : public CoordSysCore {
   public:
-    Camera(const Camera &other) = delete;
+    Camera()                               = delete;
+    Camera(const Camera &other)            = delete;
     Camera &operator=(const Camera &other) = delete;
+    Camera(Camera &&other)                 = delete;
+    Camera &operator=(Camera &&other)      = delete;
 
   protected:
-    Camera();
+    Camera(const std::shared_ptr<Context> &context);
 };
 
 }    // Namespace SceneGraph.

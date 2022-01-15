@@ -3,17 +3,19 @@
 #include <K/Core/IntModN.h>
 #include <Vectoid/SceneGraph/Terrain.h>
 #include <Vectoid/SceneGraph/MapParameters.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
-using namespace std;
-using namespace K::Core;
+using std::shared_ptr;
+using K::Core::IntModN;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-TerrainRenderer::TerrainRenderer(const shared_ptr<Terrain> &terrain, const shared_ptr<MapParameters> &mapParameters)
-        : SceneGraph::TerrainRenderer(terrain, mapParameters) {
+TerrainRenderer::TerrainRenderer(const shared_ptr<Context> &context, const shared_ptr<Terrain> &terrain,
+                                 const shared_ptr<MapParameters> &mapParameters)
+        : SceneGraph::TerrainRenderer(context, terrain, mapParameters) {
     vertices_.resize(2 * 3 * 3);    // Two triangles.
 }
 

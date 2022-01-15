@@ -8,8 +8,10 @@ using namespace std;
 namespace Vectoid {
 namespace SceneGraph {
 
-TextConsole::TextConsole(int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<Glyphs> &glyphs)
-        : glyphWidth_(glyphWidth),
+TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                         const shared_ptr<Glyphs> &glyphs)
+        : Geometry(context),
+          glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
           glyphs_(glyphs) {
     Resize(width, height);

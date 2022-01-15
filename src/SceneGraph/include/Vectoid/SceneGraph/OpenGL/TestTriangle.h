@@ -8,20 +8,22 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Simple triangle geometry for testing purposes.
 class TestTriangle : public Vectoid::SceneGraph::TestTriangle {
   public:
-    friend class RenderTarget;
-    
-    TestTriangle(const TestTriangle &other) = delete;
+    TestTriangle()                                     = delete;
+    TestTriangle(const std::shared_ptr<Context> &context);
+    TestTriangle(const TestTriangle &other)            = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
-    void Render();
+    TestTriangle(TestTriangle &&other)                 = delete;
+    TestTriangle &operator=(TestTriangle &&other)      = delete;
+
+    void Render() override;
     
-  private:
-    TestTriangle();
-  
+  private:  
     static const GLfloat vertices[9];
 };
 

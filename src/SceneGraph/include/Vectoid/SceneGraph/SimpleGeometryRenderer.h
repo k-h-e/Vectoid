@@ -2,7 +2,7 @@
 #define VECTOID_SCENEGRAPH_SIMPLEGEOMETRYRENDERER_H_
 
 #include <memory>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -10,13 +10,17 @@ namespace SceneGraph {
 class SimpleGeometry;
 
 //! Renders simple geometry.
-class SimpleGeometryRenderer : public virtual Vectoid::SceneGraph::GeometryInterface {
+class SimpleGeometryRenderer : public Geometry {
   public:
-    SimpleGeometryRenderer(const SimpleGeometryRenderer &other) = delete;
+    SimpleGeometryRenderer()                                               = delete;
+    SimpleGeometryRenderer(const SimpleGeometryRenderer &other)            = delete;
     SimpleGeometryRenderer &operator=(const SimpleGeometryRenderer &other) = delete;
+    SimpleGeometryRenderer(SimpleGeometryRenderer &&other)                 = delete;
+    SimpleGeometryRenderer &operator=(SimpleGeometryRenderer &&other)      = delete;
     
   protected:
-    SimpleGeometryRenderer(const std::shared_ptr<SimpleGeometry> &geometry);
+    SimpleGeometryRenderer(const std::shared_ptr<Context> &context, const std::shared_ptr<SimpleGeometry> &geometry);
+
     std::shared_ptr<SimpleGeometry> geometry_;
 };
 

@@ -7,15 +7,21 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
+class RenderTarget;
+
 //! Renders line segments.
 class LineSegments : public Vectoid::SceneGraph::LineSegments {
   public:
-    LineSegments(const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider);
+    LineSegments()                                     = delete;
+    LineSegments(const std::shared_ptr<Context> &context,
+                 const std::shared_ptr<Core::LineSegmentProviderInterface> &lineSegmentProvider);
     LineSegments(const LineSegments &other)            = delete;
     LineSegments &operator=(const LineSegments &other) = delete;
     LineSegments(LineSegments &&other)                 = delete;
     LineSegments &operator=(LineSegments &&other)      = delete;
-    virtual void Render();
+
+    void Render() override;
 };
 
 }    // Namespace OpenGL.

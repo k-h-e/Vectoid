@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <vector>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -11,7 +11,7 @@ namespace SceneGraph {
 class Glyphs;
 
 //! Text console geometry.
-class TextConsole : public virtual GeometryInterface {
+class TextConsole : public Geometry {
   public:
     enum class Color { White,
                        Grey,
@@ -20,6 +20,7 @@ class TextConsole : public virtual GeometryInterface {
                        Red,
                        LightBlue };
 
+    TextConsole()                                    = delete;
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -41,7 +42,8 @@ class TextConsole : public virtual GeometryInterface {
     void Resize(int width, int height);
     
   protected:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs);
+    TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                const std::shared_ptr<Glyphs> &glyphs);
   
     int                     width_;
     int                     height_;

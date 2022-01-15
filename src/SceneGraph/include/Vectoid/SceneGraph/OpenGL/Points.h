@@ -7,15 +7,20 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
+class RenderTarget;
+
 //! Renders points.
 class Points : public Vectoid::SceneGraph::Points {
   public:
-    Points(const std::shared_ptr<DataSet::Points> &points);
+    Points()                               = delete;
+    Points(const std::shared_ptr<Context> &context, const std::shared_ptr<DataSet::Points> &points);
     Points(const Points &other)            = delete;
     Points &operator=(const Points &other) = delete;
     Points(Points &&other)                 = delete;
     Points &operator=(Points &&other)      = delete;
-    virtual void Render();
+
+    void Render() override;
 };
 
 }    // Namespace OpenGL.

@@ -1,11 +1,12 @@
 #include <Vectoid/SceneGraph/SimpleLighting.h>
 
-#include <Vectoid/SceneGraph/VisitorInterface.h>
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-SimpleLighting::SimpleLighting() {
+SimpleLighting::SimpleLighting(const shared_ptr<Context> &context)
+        : TreeNode(context) {
     // Nop.
 }
 

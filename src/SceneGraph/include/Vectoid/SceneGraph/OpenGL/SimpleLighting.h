@@ -7,14 +7,18 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
+class RenderTarget;
+
 //! Simple lighting setup using one light source.
 class SimpleLighting : public Vectoid::SceneGraph::SimpleLighting {
   public:
-    SimpleLighting();
+    SimpleLighting()                                        = delete;
+    SimpleLighting(const std::shared_ptr<Context> &context);
     SimpleLighting(const SimpleLighting &other)             = delete;
     SimpleLighting &operator=(const SimpleLighting &other)  = delete;
-    SimpleLighting(const SimpleLighting &&other)            = delete;
-    SimpleLighting &operator=(const SimpleLighting &&other) = delete;
+    SimpleLighting(SimpleLighting &&other)                  = delete;
+    SimpleLighting &operator=(SimpleLighting &&other)       = delete;
 
     void RenderPre() override;
 };

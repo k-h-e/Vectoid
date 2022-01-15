@@ -8,20 +8,22 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Renders particles in different colors, depending of their age.
 class AgeColoredParticles : public Vectoid::SceneGraph::AgeColoredParticles {
  public:
-    friend class RenderTarget;
-
-    AgeColoredParticles(const AgeColoredParticles &other) = delete;
+    AgeColoredParticles()                                            = delete;
+    AgeColoredParticles(const std::shared_ptr<Context> &context, const std::shared_ptr<Core::Particles> &particles);
+    AgeColoredParticles(const AgeColoredParticles &other)            = delete;
     AgeColoredParticles &operator=(const AgeColoredParticles &other) = delete;
-    void Render();
+    AgeColoredParticles(AgeColoredParticles &&other)                 = delete;
+    AgeColoredParticles &operator=(AgeColoredParticles &&other)      = delete;
+
+    void Render() override;
     
   private:
-    AgeColoredParticles(const std::shared_ptr<Core::Particles> &particles);
-  
     std::vector<GLfloat> vertexBuffer_;
     std::vector<GLfloat> colorBuffer_;
 };

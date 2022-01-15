@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <Vectoid/Core/Vector.h>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace Core {
@@ -15,8 +15,9 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders lit, color-coded triangles (useful e.g. for depth maps).
-class LitColorCodedTriangles : public virtual GeometryInterface {
+class LitColorCodedTriangles : public Geometry {
   public:
+    LitColorCodedTriangles()                                               = delete;
     LitColorCodedTriangles(const LitColorCodedTriangles &other)            = delete;
     LitColorCodedTriangles &operator=(const LitColorCodedTriangles &other) = delete;
     LitColorCodedTriangles(LitColorCodedTriangles &&other)                 = delete;
@@ -28,7 +29,8 @@ class LitColorCodedTriangles : public virtual GeometryInterface {
     virtual void EnableGouraudShading(bool enabled) = 0;
 
   protected:
-    LitColorCodedTriangles(const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
+    LitColorCodedTriangles(const std::shared_ptr<Context> &context,
+                           const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
 
     std::shared_ptr<Core::TriangleProviderInterface>                                  triangleProvider_;
     std::function<Vectoid::Core::Vector<float>(const Vectoid::Core::Vector<float> &)> colorCodingFunction_;

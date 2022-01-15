@@ -1,12 +1,12 @@
-#include <Vectoid/SceneGraph/Camera.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-Camera::Camera(const shared_ptr<Context> &context)
-        : CoordSysCore(context) {
+Geometry::Geometry(const shared_ptr<Context> &context)
+        : Node(context) {
     // Nop.
 }
 

@@ -12,7 +12,12 @@ namespace SceneGraph {
 class CoordSysCore : public GroupNode,
                      public virtual CoordSysInterface {
   public:
-    CoordSysCore();
+    CoordSysCore()                                     = delete;
+    CoordSysCore(const CoordSysCore &other)            = delete;
+    CoordSysCore &operator=(const CoordSysCore &other) = delete;
+    CoordSysCore(CoordSysCore &&other)                 = delete;
+    CoordSysCore &operator=(CoordSysCore &&other)      = delete;
+
     void PrependTransform(const Core::Transform<float> &other);
     void AppendTransform(const Core::Transform<float> &other);
     void SetTransform(const Core::Transform<float> &other);
@@ -22,12 +27,10 @@ class CoordSysCore : public GroupNode,
     Core::Vector<float> Position();
     
   protected:
+    CoordSysCore(const std::shared_ptr<Context> &context);
+
     Core::Transform<float> transform_;
     bool                   transformChanged_;
-    
-  private:
-    CoordSysCore(const CoordSysCore &other);
-    CoordSysCore &operator=(const CoordSysCore &other);
 };
 
 }    // Namespace SceneGraph.

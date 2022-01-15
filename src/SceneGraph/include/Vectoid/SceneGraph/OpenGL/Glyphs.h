@@ -8,23 +8,21 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-class RenderTarget;
+class Context;
 
 //! Manages textures for text glyphs.
-class Glyphs : public Vectoid::SceneGraph::Glyphs {
+class Glyphs : public SceneGraph::Glyphs {
   public:
-    friend class RenderTarget;
-    
+    Glyphs()                               = delete;
+    Glyphs(const std::shared_ptr<Context> &context);
     Glyphs(const Glyphs &other)            = delete;
     Glyphs &operator=(const Glyphs &other) = delete;
     Glyphs(Glyphs &&other)                 = delete;
     Glyphs &operator=(Glyphs &&other)      = delete;
     
-    //! Binds the texture for the specified glyph, if present.
-    void BindGlyphTexture(uint8_t glyph);
+    void BindGlyphTexture(uint8_t glyph) override;
     
   private:
-    Glyphs();
     void GenerateTextures();
                          
     GLuint  textures_[256];

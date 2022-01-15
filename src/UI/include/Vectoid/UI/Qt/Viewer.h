@@ -12,7 +12,7 @@ namespace SceneGraph {
     class Camera;
     class PerspectiveProjection;
     class RenderTargetInterface;
-    class Node;
+    class TreeNode;
     namespace OpenGL {
         class RenderTarget;
     }
@@ -31,7 +31,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     //! Provides access to the viewer's render target.
     std::shared_ptr<Vectoid::SceneGraph::RenderTargetInterface> RenderTarget();
     //! Sets the scene graph to be viewed.
-    void SetSceneGraph(const std::shared_ptr<Vectoid::SceneGraph::Node> &root,
+    void SetSceneGraph(const std::shared_ptr<Vectoid::SceneGraph::TreeNode> &root,
                        const std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> &projection,
                        const std::shared_ptr<Vectoid::SceneGraph::Camera> &camera);
     //! Toggles interactive camera navigation.
@@ -68,7 +68,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
 
   private:
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::RenderTarget>  renderTarget_;
-    std::shared_ptr<Vectoid::SceneGraph::Node>                  root_;
+    std::shared_ptr<Vectoid::SceneGraph::TreeNode>              root_;
     std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> projection_;
     std::shared_ptr<Vectoid::SceneGraph::Camera>                camera_;
     int                                                         width_;

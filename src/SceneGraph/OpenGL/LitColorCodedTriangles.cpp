@@ -6,6 +6,7 @@
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/ThreeIds.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::make_unique;
@@ -25,8 +26,9 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<TriangleProviderInterface> &triangleProvider)
-        : SceneGraph::LitColorCodedTriangles(triangleProvider),
+LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<Context> &context,
+                                               const shared_ptr<TriangleProviderInterface> &triangleProvider)
+        : SceneGraph::LitColorCodedTriangles(context, triangleProvider),
           vboInvalid_(false),
           numTriangles_(0),
           gouraudShadingEnabled_(false) {

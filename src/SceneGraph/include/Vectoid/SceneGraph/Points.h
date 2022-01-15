@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <Vectoid/Core/Vector.h>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace DataSet {
@@ -15,8 +15,9 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders points.
-class Points : public virtual GeometryInterface {
+class Points : public Geometry {
   public:
+    Points()                               = delete;
     Points(const DataSet::Points &other)   = delete;
     Points &operator=(const Points &other) = delete;
     Points(Points &&other)                 = delete;
@@ -25,7 +26,7 @@ class Points : public virtual GeometryInterface {
     void SetColor(const Core::Vector<float> &color);
 
   protected:
-    Points(const std::shared_ptr<DataSet::Points> &points);
+    Points(const std::shared_ptr<Context> &context, const std::shared_ptr<DataSet::Points> &points);
 
     std::shared_ptr<DataSet::Points> points_;
     Core::Vector<float>              color_;

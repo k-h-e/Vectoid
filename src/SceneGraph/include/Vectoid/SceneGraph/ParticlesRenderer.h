@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace Core {
@@ -15,13 +15,16 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders particles.
-class ParticlesRenderer : public virtual GeometryInterface {
+class ParticlesRenderer : public Geometry {
   public:
-    ParticlesRenderer(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer()                                          = delete;
+    ParticlesRenderer(const ParticlesRenderer &other)            = delete;
     ParticlesRenderer &operator=(const ParticlesRenderer &other) = delete;
+    ParticlesRenderer(ParticlesRenderer &&other)                 = delete;
+    ParticlesRenderer &operator=(ParticlesRenderer &&other)      = delete;
     
   protected:
-    ParticlesRenderer(const std::shared_ptr<Core::Particles> &particles);
+    ParticlesRenderer(const std::shared_ptr<Context> &context, const std::shared_ptr<Core::Particles> &particles);
   
     std::shared_ptr<Core::Particles> particles_;
 };

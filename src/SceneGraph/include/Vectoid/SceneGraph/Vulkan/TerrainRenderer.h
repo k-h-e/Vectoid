@@ -14,13 +14,17 @@ class RenderTarget;
 //! Renders the terrain.
 class TerrainRenderer : public SceneGraph::TerrainRenderer {
   public:
-    friend class RenderTarget;
-    
-    TerrainRenderer(const TerrainRenderer &other) = delete;
+    TerrainRenderer()                                        = delete;
+    TerrainRenderer(const TerrainRenderer &other)            = delete;
     TerrainRenderer &operator=(const TerrainRenderer &other) = delete;
-    void Render();
+    TerrainRenderer(TerrainRenderer &&other)                 = delete;
+    TerrainRenderer &operator=(TerrainRenderer &&other)      = delete;
+
+    void Render() override ;
     
   private:
+    friend class RenderTarget;
+
     TerrainRenderer(const std::shared_ptr<Vectoid::SceneGraph::Vulkan::Context> &context,
                     const std::shared_ptr<Terrain> &terrain, const std::shared_ptr<MapParameters> &mapParameters);
   

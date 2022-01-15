@@ -1,13 +1,16 @@
 #include <Vectoid/SceneGraph/OpenGL/CoordSys.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-CoordSys::CoordSys()
-        : SceneGraph::CoordSys() {
+CoordSys::CoordSys(const shared_ptr<Context> &context)
+        : SceneGraph::CoordSys(context) {
     // Nop.
 }
 

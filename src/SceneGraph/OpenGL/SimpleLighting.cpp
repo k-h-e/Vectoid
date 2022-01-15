@@ -1,12 +1,16 @@
 #include <Vectoid/SceneGraph/OpenGL/SimpleLighting.h>
 
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-SimpleLighting::SimpleLighting() {
+SimpleLighting::SimpleLighting(const shared_ptr<Context> &context)
+        : SceneGraph::SimpleLighting(context) {
     // Nop.
 }
 

@@ -1,12 +1,12 @@
-#include <Vectoid/SceneGraph/Camera.h>
+#include <Vectoid/SceneGraph/TestTriangle.h>
 
 using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-Camera::Camera(const shared_ptr<Context> &context)
-        : CoordSysCore(context) {
+TestTriangle::TestTriangle(const shared_ptr<Context> &context)
+        : Geometry(context) {
     // Nop.
 }
 

@@ -7,20 +7,20 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
+class Context;
 class RenderTarget;
 
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
 class PerspectiveProjection : public Vectoid::SceneGraph::PerspectiveProjection {
   public:
-    friend class RenderTarget;
-    
-    PerspectiveProjection(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection()                                              = delete;
+    PerspectiveProjection(const std::shared_ptr<Context> &context);
+    PerspectiveProjection(const PerspectiveProjection &other)            = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection(PerspectiveProjection &&other)                 = delete;
+    PerspectiveProjection &operator=(PerspectiveProjection &&other)      = delete;
 
-    void RenderPre() override;
-    
-  private:
-    PerspectiveProjection();
+    void RenderPre() override; 
 };
 
 }    // Namespace OpenGL.

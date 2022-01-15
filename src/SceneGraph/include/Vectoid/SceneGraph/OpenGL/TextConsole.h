@@ -7,13 +7,14 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-class RenderTarget;
+class Context;
 
 //! Text console geometry.
 class TextConsole : public Vectoid::SceneGraph::TextConsole {
   public:
-    friend class RenderTarget;
-    
+    TextConsole()                                    = delete;
+    TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
+                const std::shared_ptr<SceneGraph::Glyphs> &glyphs);
     TextConsole(const TextConsole &other)            = delete;
     TextConsole &operator=(const TextConsole &other) = delete;
     TextConsole(TextConsole &&other)                 = delete;
@@ -21,8 +22,6 @@ class TextConsole : public Vectoid::SceneGraph::TextConsole {
     void Render();
 
   private:
-    TextConsole(int width, int height, float glyphWidth, float glyphHeight,
-                const std::shared_ptr<SceneGraph::Glyphs> &glyphs);
     void SetColor(uint8_t colorIndex);
 
     uint8_t currentColorIndex_;

@@ -15,10 +15,10 @@ using K::Core::Log;
 using Vectoid::Core::Axis;
 using Vectoid::Core::Vector;
 using Vectoid::Core::Transform;
-using Vectoid::SceneGraph::RenderTargetInterface;
-using Vectoid::SceneGraph::Node;
-using Vectoid::SceneGraph::PerspectiveProjection;
 using Vectoid::SceneGraph::Camera;
+using Vectoid::SceneGraph::PerspectiveProjection;
+using Vectoid::SceneGraph::RenderTargetInterface;
+using Vectoid::SceneGraph::TreeNode;
 
 namespace Vectoid {
 namespace UI {
@@ -45,7 +45,7 @@ shared_ptr<RenderTargetInterface> Viewer::RenderTarget() {
     return renderTarget_;
 }
 
-void Viewer::SetSceneGraph(const shared_ptr<Node> &root, const shared_ptr<PerspectiveProjection> &projection,
+void Viewer::SetSceneGraph(const shared_ptr<TreeNode> &root, const shared_ptr<PerspectiveProjection> &projection,
                            const shared_ptr<Camera> &camera) {
     root_       = root;
     projection_ = projection;

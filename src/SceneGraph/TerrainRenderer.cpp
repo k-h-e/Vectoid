@@ -8,9 +8,10 @@ using namespace Vectoid::Core;
 namespace Vectoid {
 namespace SceneGraph {
 
-TerrainRenderer::TerrainRenderer(const shared_ptr<Terrain> &terrain,
+TerrainRenderer::TerrainRenderer(const shared_ptr<Context> &context, const shared_ptr<Terrain> &terrain,
                                  const shared_ptr<MapParameters> &mapParameters)
-        : terrain_(terrain),
+        : Geometry(context),
+          terrain_(terrain),
           mapParameters_(mapParameters),
           observerX_(0.0f),
           observerZ_(0.0f) {

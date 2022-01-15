@@ -1,19 +1,22 @@
 #ifndef VECTOID_SCENEGRAPH_TESTTRIANGLE_H_
 #define VECTOID_SCENEGRAPH_TESTTRIANGLE_H_
 
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 
 //! Simple triangle geometry for testing purposes.
-class TestTriangle : public virtual GeometryInterface {
+class TestTriangle : public Geometry {
   public:
-    TestTriangle(const TestTriangle &other) = delete;
+    TestTriangle()                                     = delete;
+    TestTriangle(const TestTriangle &other)            = delete;
     TestTriangle &operator=(const TestTriangle &other) = delete;
+    TestTriangle(TestTriangle &&other)                 = delete;
+    TestTriangle &operator=(TestTriangle &&other)      = delete;
     
   protected:
-    TestTriangle() {}
+    TestTriangle(const std::shared_ptr<Context> &context);
 };
 
 }    // Namespace SceneGraph.

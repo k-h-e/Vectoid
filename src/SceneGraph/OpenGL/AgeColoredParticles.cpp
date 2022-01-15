@@ -2,6 +2,7 @@
 
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Core/Particles.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using namespace std;
@@ -13,8 +14,8 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-AgeColoredParticles::AgeColoredParticles(const shared_ptr<Particles> &particles)
-        : SceneGraph::AgeColoredParticles(particles) {
+AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context, const shared_ptr<Particles> &particles)
+        : SceneGraph::AgeColoredParticles(context, particles) {
     // Nop.
 }
     

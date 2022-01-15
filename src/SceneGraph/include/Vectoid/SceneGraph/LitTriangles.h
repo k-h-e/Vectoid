@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <Vectoid/Core/Vector.h>
-#include <Vectoid/SceneGraph/GeometryInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
 namespace Core {
@@ -15,8 +15,9 @@ namespace Vectoid {
 namespace SceneGraph {
 
 //! Renders lit triangles.
-class LitTriangles : public virtual GeometryInterface {
+class LitTriangles : public Geometry {
   public:
+    LitTriangles()                                     = delete;
     LitTriangles(const LitTriangles &other)            = delete;
     LitTriangles &operator=(const LitTriangles &other) = delete;
     LitTriangles(LitTriangles &&other)                 = delete;
@@ -25,7 +26,8 @@ class LitTriangles : public virtual GeometryInterface {
     void SetColor(const Core::Vector<float> &color);
 
   protected:
-    LitTriangles(const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
+    LitTriangles(const std::shared_ptr<Context> &context,
+                 const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
 
     std::shared_ptr<Core::TriangleProviderInterface> triangleProvider_;
     Core::Vector<float>                              color_;

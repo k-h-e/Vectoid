@@ -1,18 +1,19 @@
 #include <Vectoid/SceneGraph/Geode.h>
 
-#include <cassert>
-#include <Vectoid/SceneGraph/VisitorInterface.h>
+#include <Vectoid/SceneGraph/Geometry.h>
 
-using namespace std;
+using std::shared_ptr;
 
 namespace Vectoid {
 namespace SceneGraph {
 
-Geode::Geode(const shared_ptr<GeometryInterface> &geometry) {
-    geometry_ = geometry;
+Geode::Geode(const shared_ptr<Context> &context, const shared_ptr<Geometry> &geometry)
+        : TreeNode(context),
+          geometry_(geometry) {
+    // Nop.
 }
 
-void Geode::SetGeometry(const std::shared_ptr<GeometryInterface> &geometry) {
+void Geode::SetGeometry(const std::shared_ptr<Geometry> &geometry) {
     geometry_ = geometry;
 }
 

@@ -10,8 +10,11 @@ namespace SceneGraph {
 //! Perspective screen projection, defining a frustum-shaped viewing volume.
 class PerspectiveProjection : public GroupNode {
   public:
-    PerspectiveProjection(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection()                                              = delete;
+    PerspectiveProjection(const PerspectiveProjection &other)            = delete;
     PerspectiveProjection &operator=(const PerspectiveProjection &other) = delete;
+    PerspectiveProjection(PerspectiveProjection &&other)                 = delete;
+    PerspectiveProjection &operator=(PerspectiveProjection &&other)      = delete;
 
     //! Sets the size in camera space of the rectangular "window" on the near clipping plane.
     void SetWindowSize(float windowSize, bool identifyWithLargerViewPortDimension);
@@ -34,7 +37,7 @@ class PerspectiveProjection : public GroupNode {
     Core::Vector<float> TransformViewPortCoordinates(float x, float y) const;
     
   protected:
-    PerspectiveProjection();
+    PerspectiveProjection(const std::shared_ptr<Context> &context);
 
     float eyepointDistance_;
     float viewingDepth_;
