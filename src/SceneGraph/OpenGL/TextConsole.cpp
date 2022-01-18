@@ -38,20 +38,38 @@ void TextConsole::Render() {
                             1.0f, 1.0f,
                             0.0f, 1.0f  };
     
+    float left = -.5f * width_  * glyphWidth_;
+    float top  =  .5f * height_ * glyphHeight_;
+
     glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+
+    float margin = .5f * glyphWidth_;
+    float backgroundLeft   = left - margin;
+    float backgroundRight  = -backgroundLeft;
+    float backgroundTop    = top + margin;
+    float backgroundBottom = -backgroundTop;
+    glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
+    glBegin(GL_TRIANGLES);
+        glVertex3f(backgroundLeft,  backgroundTop,    0.0f);
+        glVertex3f(backgroundLeft,  backgroundBottom, 0.0f);
+        glVertex3f(backgroundRight, backgroundTop,    0.0f);
+
+        glVertex3f(backgroundLeft,  backgroundBottom, 0.0f);
+        glVertex3f(backgroundRight, backgroundBottom, 0.0f);
+        glVertex3f(backgroundRight, backgroundTop,    0.0f);
+    glEnd();
+
     glEnable(GL_TEXTURE_2D);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-   	glEnableClientState(GL_VERTEX_ARRAY);
-   	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     currentColorIndex_ = 1u;
     SetColor(0u);
-
-    float left        = -.5f * width_  * glyphWidth_,
-          top         =  .5f * height_ * glyphHeight_,
-          x           = left,
-          y           = top;
+    float x           = left;
+    float y           = top;
     uint8_t *ptr      = &buffer_[0];
     uint8_t *colorPtr = &colorBuffer_[0];
     for (int row = 0; row < height_; ++row) {
@@ -83,6 +101,8 @@ void TextConsole::Render() {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 }
 

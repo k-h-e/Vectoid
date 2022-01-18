@@ -17,6 +17,9 @@ class Glyphs : public Node {
     Glyphs &operator=(Glyphs &&other)      = delete;
     
     //! Binds the texture for the specified glyph, if present.
+    /*!
+     *  Interacts with the underlying graphics system.
+     */
     virtual void BindGlyphTexture(uint8_t glyph) = 0;
     
   protected:

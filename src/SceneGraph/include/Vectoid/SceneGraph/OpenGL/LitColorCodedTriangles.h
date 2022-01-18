@@ -32,18 +32,20 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
     LitColorCodedTriangles &operator=(const LitColorCodedTriangles &other) = delete;
     LitColorCodedTriangles(LitColorCodedTriangles &&other)                 = delete;
     LitColorCodedTriangles &operator=(LitColorCodedTriangles &&other)      = delete;
+    ~LitColorCodedTriangles();
 
     void EnableGouraudShading(bool enabled) override;
     void Render() override;
+    void DropGraphicsResources() override;
 
   private:
-    void RenderFlat();
-    void RenderGouraud();
+    void GenerateVBO();
+    void GenerateRegularVBO();
+    void GenerateGouraudVBO();
+    void DropVBO();
     Vectoid::Core::Vector<float> GetColor(const Vectoid::Core::Vector<float> &vertex);
-    void GenerateGouraudResources();
 
     std::optional<GLuint> vbo_;
-    bool                  vboInvalid_;
     int                   numTriangles_;             // Valid <=> VBO present.
     bool                  gouraudShadingEnabled_;
 };

@@ -38,8 +38,9 @@ class Node : public virtual K::Core::Interface {
   protected:
     Node(const std::shared_ptr<Context> &context);
 
-  private:
     std::shared_ptr<Context> context_;
+
+  private:
     int                      id_;
     std::string              name_;
 };

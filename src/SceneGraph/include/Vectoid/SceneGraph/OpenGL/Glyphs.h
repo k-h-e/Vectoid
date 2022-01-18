@@ -1,6 +1,7 @@
 #ifndef VECTOID_SCENEGRAPH_OPENGL_GLYPHS_H_
 #define VECTOID_SCENEGRAPH_OPENGL_GLYPHS_H_
 
+#include <optional>
 #include <Vectoid/SceneGraph/Glyphs.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
@@ -19,16 +20,18 @@ class Glyphs : public SceneGraph::Glyphs {
     Glyphs &operator=(const Glyphs &other) = delete;
     Glyphs(Glyphs &&other)                 = delete;
     Glyphs &operator=(Glyphs &&other)      = delete;
+    ~Glyphs();
     
     void BindGlyphTexture(uint8_t glyph) override;
+    void DropGraphicsResources() override;
     
   private:
     void GenerateTextures();
-                         
-    GLuint  textures_[256];
-    uint8_t defaultGlyph_;
-    bool    glResourcesPresent_,
-            haveDefaultGlyph_;
+    void DropTextures();
+
+    bool                   texturesGenerated_;
+    std::optional<GLuint>  textures_[256];
+    std::optional<uint8_t> defaultGlyph_;
 };
 
 }    // Namespace OpenGL.

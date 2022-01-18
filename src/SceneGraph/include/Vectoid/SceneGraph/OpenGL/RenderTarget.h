@@ -13,9 +13,13 @@ class Context;
 //! <c>Vectoid</c> render target for rendering via <c>OpenGL</c>.
 class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
   public:
-    RenderTarget();
-    RenderTarget(const RenderTarget &other) = delete;
+    RenderTarget()                                     = delete;
+    RenderTarget(const std::shared_ptr<Context> &context);
+    RenderTarget(const RenderTarget &other)            = delete;
     RenderTarget &operator=(const RenderTarget &other) = delete;
+    RenderTarget(RenderTarget &&other)                 = delete;
+    RenderTarget &operator=(RenderTarget &&other)      = delete;
+
     virtual void SetSceneGraph(const std::shared_ptr<TreeNode> &sceneGraphRoot) override;
     virtual void RenderFrame() override;
     virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
@@ -48,11 +52,8 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
         override;
     
   private:
-    void initializeGL();
-
     std::shared_ptr<Context>  context_;
     std::shared_ptr<TreeNode> sceneGraphRoot_;
-    bool                      glInitialized_;
 };
 
 }    // Namespace OpenGL.

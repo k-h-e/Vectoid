@@ -32,7 +32,7 @@ class Context : public virtual K::Core::Interface {
     //! Unregisters the node identified by the specified id (that was obtained earlier via <c>RegisterNode()</c>).
     void UnregisterNode(int nodeId);
 
-  private:
+  protected:
     K::Core::ReusableItems<Node *> nodes_;
 };
 

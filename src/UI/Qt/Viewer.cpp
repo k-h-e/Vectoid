@@ -1,13 +1,16 @@
 #include <Vectoid/UI/Qt/Viewer.h>
 
 #include <QMouseEvent>
+#include <QOpenGLContext>
 #include <QWheelEvent>
 #include <K/Core/NumberTools.h>
 #include <K/Core/Log.h>
 #include <Vectoid/SceneGraph/Camera.h>
 #include <Vectoid/SceneGraph/PerspectiveProjection.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/RenderTarget.h>
 
+using std::make_shared;
 using std::shared_ptr;
 using std::to_string;
 using K::Core::NumberTools;
@@ -19,6 +22,8 @@ using Vectoid::SceneGraph::Camera;
 using Vectoid::SceneGraph::PerspectiveProjection;
 using Vectoid::SceneGraph::RenderTargetInterface;
 using Vectoid::SceneGraph::TreeNode;
+using Vectoid::SceneGraph::OpenGL::Context;
+using Vectoid::SceneGraph::OpenGL::RenderTarget;
 
 namespace Vectoid {
 namespace UI {
@@ -26,7 +31,7 @@ namespace Qt {
 
 Viewer::Viewer(QWidget *parent)
         : QOpenGLWidget(parent),
-          renderTarget_(new Vectoid::SceneGraph::OpenGL::RenderTarget()),
+          qtGLContext_(nullptr),
           width_(1),
           height_(1),
           rotating_(false),
@@ -39,6 +44,19 @@ Viewer::Viewer(QWidget *parent)
           controlKeyDown_(false) {
     setMouseTracking(true);
     setFocusPolicy(::Qt::ClickFocus);
+
+    context_      = make_shared<Context>();
+    renderTarget_ = make_shared<class RenderTarget>(context_);
+}
+
+Viewer::~Viewer() {
+    if (qtGLContext_) {
+        makeCurrent();
+        context_->ReleaseOpenGLResources();
+
+        disconnect(qtGLContext_, &QOpenGLContext::aboutToBeDestroyed, this, &Viewer::OnGLContextAboutToBeDestroyed);
+        qtGLContext_ = nullptr;
+    }
 }
 
 shared_ptr<RenderTargetInterface> Viewer::RenderTarget() {
@@ -65,6 +83,13 @@ void Viewer::EnableCameraNavigation(bool enabled) {
     rotating_ = false;
     panning_  = false;
     dragging_ = false;
+}
+
+void Viewer::initializeGL() {
+    qtGLContext_ = context();
+    assert(qtGLContext_);
+    connect(qtGLContext_, &QOpenGLContext::aboutToBeDestroyed, this, &Viewer::OnGLContextAboutToBeDestroyed);
+    context_->InitializeGL();
 }
 
 void Viewer::paintGL() {
@@ -217,6 +242,11 @@ void Viewer::keyReleaseEvent(QKeyEvent *event) {
             QOpenGLWidget::keyReleaseEvent(event);
             break;
     }
+}
+
+void Viewer::OnGLContextAboutToBeDestroyed() {
+    makeCurrent();
+    context_->ReleaseOpenGLResources();
 }
 
 }    // Namespace Qt.

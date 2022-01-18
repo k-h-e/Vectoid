@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
@@ -40,18 +41,23 @@ class TextConsole : public Geometry {
     void ClearRow(int row);
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
-    
+    //! Sets the console's background color, including its alpha channel.
+    void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
+
   protected:
     TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
                 const std::shared_ptr<Glyphs> &glyphs);
   
-    int                     width_;
-    int                     height_;
-    int                     rowCursor_;
-    float                   glyphWidth_, glyphHeight_;
-    std::vector<uint8_t>    buffer_;
-    std::vector<uint8_t>    colorBuffer_;
-    std::shared_ptr<Glyphs> glyphs_;
+    int                          width_;
+    int                          height_;
+    int                          rowCursor_;
+    float                        glyphWidth_;
+    float                        glyphHeight_;
+    std::vector<uint8_t>         buffer_;
+    std::vector<uint8_t>         colorBuffer_;
+    Vectoid::Core::Vector<float> backgroundColor_;
+    float                        backgroundAlpha_;
+    std::shared_ptr<Glyphs>      glyphs_;
 };
 
 }    // Namespace SceneGraph;

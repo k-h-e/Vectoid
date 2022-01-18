@@ -14,6 +14,7 @@ namespace SceneGraph {
     class RenderTargetInterface;
     class TreeNode;
     namespace OpenGL {
+        class Context;
         class RenderTarget;
     }
 }
@@ -28,6 +29,12 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
 
   public:
     Viewer(QWidget *parent);
+    Viewer(const Viewer &other)            = delete;
+    Viewer &operator=(const Viewer &other) = delete;
+    Viewer(Viewer &&other)                 = delete;
+    Viewer &operator=(Viewer &&other)      = delete;
+    ~Viewer();
+
     //! Provides access to the viewer's render target.
     std::shared_ptr<Vectoid::SceneGraph::RenderTargetInterface> RenderTarget();
     //! Sets the scene graph to be viewed.
@@ -58,6 +65,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void MouseClicked();
 
   protected:
+    void initializeGL() override;
     void paintGL() override;
     void resizeGL(int width, int height) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -66,7 +74,12 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
+  private slots:
+    void OnGLContextAboutToBeDestroyed();
+
   private:
+    QOpenGLContext                                              *qtGLContext_;
+    std::shared_ptr<Vectoid::SceneGraph::OpenGL::Context>       context_;
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::RenderTarget>  renderTarget_;
     std::shared_ptr<Vectoid::SceneGraph::TreeNode>              root_;
     std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> projection_;

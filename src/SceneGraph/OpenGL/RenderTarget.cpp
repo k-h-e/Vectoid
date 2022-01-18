@@ -29,9 +29,9 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-RenderTarget::RenderTarget()
-        : glInitialized_(false) {
-    context_ = make_shared<Context>();
+RenderTarget::RenderTarget(const shared_ptr<Context> &context)
+        : context_(context) {
+    // Nop.
 }
 
 void RenderTarget::SetSceneGraph(const std::shared_ptr<TreeNode> &sceneGraphRoot) {
@@ -39,10 +39,7 @@ void RenderTarget::SetSceneGraph(const std::shared_ptr<TreeNode> &sceneGraphRoot
 }
 
 void RenderTarget::RenderFrame() {
-    if (!glInitialized_) {
-        initializeGL();
-        glInitialized_ = true;
-    }
+    context_->ReleaseScheduledOpenGLResources();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (sceneGraphRoot_) {
@@ -122,15 +119,6 @@ shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() 
 shared_ptr<::Vectoid::SceneGraph::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<SceneGraph::Glyphs> &glyphs) {
     return shared_ptr<OpenGL::TextConsole>(new TextConsole(context_, width, height, glyphWidth, glyphHeight, glyphs));
-}
-
-void RenderTarget::initializeGL() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHT0);
 }
 
 }    // Namespace OpenGL.

@@ -2,8 +2,11 @@
 
 #include <string>
 #include <cassert>
+#include <K/Core/NumberTools.h>
 
-using namespace std;
+using std::shared_ptr;
+using K::Core::NumberTools;
+using Vectoid::Core::Vector;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -13,6 +16,8 @@ TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int heig
         : Geometry(context),
           glyphWidth_(glyphWidth),
           glyphHeight_(glyphHeight),
+          backgroundColor_(1.0f, 1.0f, 1.0f),
+          backgroundAlpha_(.125f),
           glyphs_(glyphs) {
     Resize(width, height);
 }
@@ -88,6 +93,16 @@ void TextConsole::Resize(int width, int height) {
         buffer_[i]      = (uint8_t)' ';
         colorBuffer_[i] = static_cast<uint8_t>(Color::White);
     }
+}
+
+void TextConsole::SetBackgroundColor(const Vector<float> &color, float alpha) {
+    backgroundColor_ = color;
+    NumberTools::Clamp(&backgroundColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(&backgroundColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(&backgroundColor_.z, 0.0f, 1.0f);
+
+    backgroundAlpha_ = alpha;
+    NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
 }
 
 }    // Namespace SceneGraph.
