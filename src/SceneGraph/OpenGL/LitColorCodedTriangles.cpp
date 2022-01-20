@@ -10,6 +10,8 @@
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::make_unique;
+using std::nullopt;
+using std::optional;
 using std::shared_ptr;
 using std::to_string;
 using std::unordered_set;
@@ -26,32 +28,33 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<Context> &context,
+LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<class Context> &context,
                                                const shared_ptr<TriangleProviderInterface> &triangleProvider)
         : SceneGraph::LitColorCodedTriangles(context, triangleProvider),
+          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
           numTriangles_(0),
           gouraudShadingEnabled_(false) {
     // Nop.
 }
 
 LitColorCodedTriangles::~LitColorCodedTriangles() {
-    DropVBO();
+    Context()->RemoveResourceSlot(vboSlot_);
 }
 
 void LitColorCodedTriangles::EnableGouraudShading(bool enabled) {
     if (enabled != gouraudShadingEnabled_) {
         gouraudShadingEnabled_ = enabled;
-        DropVBO();
+        Context()->ClearResource(vboSlot_);
     }
 }
 
 void LitColorCodedTriangles::Render() {
-    GenerateVBO();
-    if (vbo_) {
+    optional<GLuint> vbo = GenerateVBO();
+    if (vbo) {
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
 
-        glBindBuffer(GL_ARRAY_BUFFER, *vbo_);
+        glBindBuffer(GL_ARRAY_BUFFER, *vbo);
         glVertexPointer(3, GL_FLOAT, 9 * sizeof(GLfloat), nullptr);
         glNormalPointer(GL_FLOAT, 9 * sizeof(GLfloat), reinterpret_cast<void *>(12u));
         glColorPointer(3, GL_FLOAT, 9 * sizeof(GLfloat), reinterpret_cast<void *>(24u));
@@ -72,21 +75,20 @@ void LitColorCodedTriangles::Render() {
     }
 }
 
-void LitColorCodedTriangles::DropGraphicsResources() {
-    DropVBO();
-}
-
-void LitColorCodedTriangles::GenerateVBO() {
-    if (!vbo_) {
+optional<GLuint> LitColorCodedTriangles::GenerateVBO() {
+    optional<GLuint> vbo = Context()->GetResource(vboSlot_);
+    if (!vbo) {
         if (gouraudShadingEnabled_) {
-            GenerateGouraudVBO();
+            vbo = GenerateGouraudVBO();
         } else {
-            GenerateRegularVBO();
+            vbo = GenerateRegularVBO();
         }
     }
+
+    return vbo;
 }
 
-void LitColorCodedTriangles::GenerateRegularVBO() {
+optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
     vector<GLfloat> data;
 
     ThreePoints   triangle;
@@ -125,21 +127,21 @@ void LitColorCodedTriangles::GenerateRegularVBO() {
         glBindBuffer(GL_ARRAY_BUFFER, name);
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
-        vbo_          = name;
-        numTriangles_ = numTriangles;
 
+        Context()->SetResource(vboSlot_, name);
+        numTriangles_ = numTriangles;
         Log::Print(Log::Level::Debug, this, [&]{
-            return "generated VBO " + to_string(*vbo_) + " for regular shading, size="
+            return "generated VBO " + to_string(name) + " for regular shading, size="
                 + to_string(data.size() * sizeof(GLfloat));
         });
-    }
-
-    if (!vbo_) {
+        return name;
+    } else {
         Log::Print(Log::Level::Error, this, [&]{ return "failed to generate VBO for regular shading"; });
+        return nullopt;
     }
 }
 
-void LitColorCodedTriangles::GenerateGouraudVBO() {
+optional<GLuint> LitColorCodedTriangles::GenerateGouraudVBO() {
     Triangles triangles(triangleProvider_.get());
     if (triangles.Size()) {
         int numVertices = triangles.Vertices()->Size();
@@ -193,24 +195,17 @@ void LitColorCodedTriangles::GenerateGouraudVBO() {
         glBindBuffer(GL_ARRAY_BUFFER, name);
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
-        vbo_          = name;
-        numTriangles_ = triangles.Size();
 
+        Context()->SetResource(vboSlot_, name);
+        numTriangles_ = triangles.Size();
         Log::Print(Log::Level::Debug, this, [&]{
-            return "generated VBO " + to_string(*vbo_) + " for Gouraud shading, size="
+            return "generated VBO " + to_string(name) + " for Gouraud shading, size="
                 + to_string(data.size() * sizeof(GLfloat));
         });
-    }
-
-    if (!vbo_) {
+        return name;
+    } else {
         Log::Print(Log::Level::Error, this, [&]{ return "failed to generate VBO for Gouraud shading"; });
-    }
-}
-
-void LitColorCodedTriangles::DropVBO() {
-    if (vbo_) {
-        static_cast<Context *>(context_.get())->ScheduleVBOForRelease(*vbo_, this);
-        vbo_.reset();
+        return nullopt;
     }
 }
 

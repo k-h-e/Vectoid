@@ -10,11 +10,11 @@ namespace SceneGraph {
     
 Node::Node(const shared_ptr<Context> &context)
         : context_(context) {
-    id_ = context_->RegisterNode(this);
+    // Nop.
 }
 
 Node::~Node() {
-    context_->UnregisterNode(id_);
+    // Nop.
 }
 
 void Node::SetName(const string &name) {
@@ -23,10 +23,6 @@ void Node::SetName(const string &name) {
 
 string Node::Name() const {
     return name_;
-}
-
-void Node::DropGraphicsResources() {
-    // Nop.
 }
 
 }    // Namespace SceneGraph.

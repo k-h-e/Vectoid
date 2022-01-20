@@ -86,5 +86,15 @@ int Tools::IndexMod3(int index) {
     return index;
 }
 
+int Tools::IndexMod2(int index) {
+    while (index < 0) {
+        index += 2;
+    }
+    while (index >= 2) {
+        index -= 2;
+    }
+    return index;
+}
+
 }    // Namespace Core.
 }    // Namespace Vectoid.

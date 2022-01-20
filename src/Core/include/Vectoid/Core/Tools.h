@@ -35,6 +35,8 @@ class Tools {
                                               Vector<float> *outBarycentricCoordinates);
     //! Returns the index in <c>[0, 2]</c> according to modulo 3. Use only with input close to <c>[0, 2]</c>.
     static int IndexMod3(int index);
+    //! Returns the index in <c>[0, 1]</c> according to modulo 2. Use only with input close to <c>[0, 1]</c>.
+    static int IndexMod2(int index);
 };
 
 }    // Namespace Core.

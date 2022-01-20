@@ -2,6 +2,7 @@
 #define VECTOID_SCENEGRAPH_OPENGL_LINESEGMENTS_H_
 
 #include <Vectoid/SceneGraph/LineSegments.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -20,8 +21,16 @@ class LineSegments : public Vectoid::SceneGraph::LineSegments {
     LineSegments &operator=(const LineSegments &other) = delete;
     LineSegments(LineSegments &&other)                 = delete;
     LineSegments &operator=(LineSegments &&other)      = delete;
+    ~LineSegments();
 
     void Render() override;
+
+  private:
+    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    std::optional<GLuint> GenerateVBO();
+
+    int vboSlot_;
+    int numSegments_;    // Valid <=> VBO present.
 };
 
 }    // Namespace OpenGL.

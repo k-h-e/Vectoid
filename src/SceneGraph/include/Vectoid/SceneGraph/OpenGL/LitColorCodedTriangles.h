@@ -7,14 +7,13 @@
 #include <vector>
 #include <Vectoid/DataSet/Triangles.h>
 #include <Vectoid/SceneGraph/LitColorCodedTriangles.h>
-#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
 namespace Vectoid {
 
 namespace SceneGraph {
 namespace OpenGL {
 
-class Context;
 class RenderTarget;
 
 //! Renders lit, color-coded triangles.
@@ -36,18 +35,17 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
 
     void EnableGouraudShading(bool enabled) override;
     void Render() override;
-    void DropGraphicsResources() override;
 
   private:
-    void GenerateVBO();
-    void GenerateRegularVBO();
-    void GenerateGouraudVBO();
-    void DropVBO();
+    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    std::optional<GLuint> GenerateVBO();
+    std::optional<GLuint> GenerateRegularVBO();
+    std::optional<GLuint> GenerateGouraudVBO();
     Vectoid::Core::Vector<float> GetColor(const Vectoid::Core::Vector<float> &vertex);
 
-    std::optional<GLuint> vbo_;
-    int                   numTriangles_;             // Valid <=> VBO present.
-    bool                  gouraudShadingEnabled_;
+    int  vboSlot_;
+    int  numTriangles_;             // Valid <=> VBO present.
+    bool gouraudShadingEnabled_;
 };
 
 }    // Namespace OpenGL.

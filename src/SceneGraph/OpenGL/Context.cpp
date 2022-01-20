@@ -4,6 +4,8 @@
 #include <K/Core/StringTools.h>
 #include <Vectoid/SceneGraph/Node.h>
 
+using std::nullopt;
+using std::optional;
 using std::to_string;
 using K::Core::Log;
 using K::Core::StringTools;
@@ -12,34 +14,24 @@ namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-Context::Context() {
+Context::Context()
+        : resources_(1) {
     // Nop.
 }
 
 Context::~Context() {
     Log::Print(Log::Level::Debug, this, [&]{ return "signing off..."; });
 
-    int numNodes = 0;
-    for (Node *node : nodes_.Iterate(0)) {
-        node->DropGraphicsResources();
-        ++numNodes;
+    int numLeaked = 0;
+    for (ResourceInfo &info : resources_.Iterate(0)) {
+        if (info.resource) {
+            ++numLeaked;
+        }
     }
 
-    if (numNodes) {
-        Log::Print(Log::Level::Error, this, [&]{ return to_string(numNodes) + " left-over scene graph nodes"; });
+    if (numLeaked) {
+        Log::Print(Log::Level::Error, this, [&]{ return "leaking " + to_string(numLeaked) + " OpenGL resources"; });
     } else {
-        Log::Print(Log::Level::Debug, this, [&]{ return "no left-over scene graph nodes"; });
-    }
-
-    bool resourcesLeaked = false;
-    if (!vbosToRelease_.empty()) {
-        resourcesLeaked = true;
-        Log::Print(Log::Level::Error, this, [&]{
-            return "leaking " + to_string(vbosToRelease_.size()) + " VBOs";
-        });
-    }
-
-    if (!resourcesLeaked) {
         Log::Print(Log::Level::Debug, this, [&]{ return "not leaking any OpenGL resources"; });
     }
 }
@@ -56,16 +48,18 @@ void Context::InitializeGL() {
 void Context::ReleaseOpenGLResources() {
     Log::Print(Log::Level::Debug, this, [&]{ return "releasing OpenGL resources..."; });
 
-    int numNodes = 0;
-    for (Node *node : nodes_.Iterate(0)) {
-        node->DropGraphicsResources();
-        ++numNodes;
+    int numReleased = 0;
+    for (ResourceInfo &info : resources_.Iterate(0)) {
+        if (Release(&info)) {
+            ++numReleased;
+        }
     }
-    Log::Print(Log::Level::Debug, this, [&]{
-        return "asked " + to_string(numNodes) + " scene graph nodes to drop their OpenGL resources";
-    });
 
-    int numReleased = ReleaseScheduledOpenGLResources();
+    for (int slot : resourceSlotsToRemove_) {
+        resources_.Put(slot);
+    }
+    resourceSlotsToRemove_.clear();
+
     if (numReleased)  {
         Log::Print(Log::Level::Debug, this, [&]{ return "released " + to_string(numReleased) + " OpenGL resources"; });
     } else {
@@ -73,40 +67,87 @@ void Context::ReleaseOpenGLResources() {
     }
 }
 
-int Context::ReleaseScheduledOpenGLResources() {
+void Context::ReleaseScheduledOpenGLResources() {
     int numReleased = 0;
-
-    for (GLuint vbo : vbosToRelease_) {
-        glDeleteBuffers(1, &vbo);
-        ++numReleased;
-        Log::Print(Log::Level::Debug, this, [&]{ return "deleted VBO " + to_string(vbo); });
+    for (int slot : resourceSlotsToRemove_) {
+        if (Release(&resources_.Item(slot))) {
+            ++numReleased;
+        }
+        resources_.Put(slot);
     }
-    vbosToRelease_.clear();
+    resourceSlotsToRemove_.clear();
 
-    for (GLuint texture : texturesToRelease_) {
-        glDeleteTextures(1, &texture);
-        ++numReleased;
-        Log::Print(Log::Level::Debug, this, [&]{ return "deleted texture " + to_string(texture); });
+    if (numReleased) {
+        Log::Print(Log::Level::Debug, this, [&]{ return "released " + to_string(numReleased) + " OpenGL resources"; });
     }
-    texturesToRelease_.clear();
-
-    return numReleased;
 }
 
-void Context::ScheduleTextureForRelease(GLuint texture, Node *node) {
-    texturesToRelease_.push_back(texture);
+int Context::AddResourceSlot(Context::ResourceType type) {
+    int slot;
+    resources_.Get(0, &slot) = ResourceInfo(type);
+    return slot;
+}
+
+void Context::RemoveResourceSlot(int slot) {
+    ResourceInfo &info = resources_.Item(slot);
+    if (info.resource) {
+        resourceSlotsToRemove_.push_back(slot);
+    } else {
+        resources_.Put(slot);
+    }
+}
+
+void Context::SetResource(int slot, GLuint resource) {
+    ClearResource(slot);
+    resources_.Item(slot).resource = resource;
     Log::Print(Log::Level::Debug, this, [&]{
-        return "Texture " + to_string(texture) + " scheduled for release by a "
-            + StringTools::GetCleanClassName(node, 1) + " node";
+        return "stored resource " + to_string(resource) + " into slot " + to_string(slot);
     });
 }
 
-void Context::ScheduleVBOForRelease(GLuint vbo, Node *node) {
-    vbosToRelease_.push_back(vbo);
-    Log::Print(Log::Level::Debug, this, [&]{
-        return "VBO " + to_string(vbo) + " scheduled for release by a " + StringTools::GetCleanClassName(node, 1)
-            + " node";
-    });
+optional<GLuint> Context::GetResource(int slot) {
+    return resources_.Item(slot).resource;
+}
+
+void Context::ClearResource(int slot) {
+    ResourceInfo &info = resources_.Item(slot);
+    if (info.resource) {
+        int newSlot;
+        resources_.Get(0, &newSlot) = info;
+        resourceSlotsToRemove_.push_back(newSlot);
+
+        Log::Print(Log::Level::Debug, this, [&]{
+            return "removed resource  " + to_string(*info.resource) + " from slot " + to_string(slot);
+        });
+
+        info.resource.reset();
+    }
+}
+
+bool Context::Release(ResourceInfo *info) {
+    if (info->resource) {
+        switch (info->type) {
+            case ResourceType::VBO:
+                glDeleteBuffers(1, &*info->resource);
+                Log::Print(Log::Level::Debug, this, [&]{ return "deleted VBO " + to_string(*info->resource); });
+                break;
+            case ResourceType::Texture:
+                glDeleteTextures(1, &*info->resource);
+                Log::Print(Log::Level::Debug, this, [&]{ return "deleted texture " + to_string(*info->resource); });
+                break;
+            default:
+                Log::Print(Log::Level::Error, this, [&]{
+                    return "leaking OpenGL resource " + to_string(*info->resource) + " of unknown type "
+                        + to_string(static_cast<int>(info->type));
+                });
+                break;
+        }
+
+        info->resource.reset();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 }    // Namespace OpenGL.

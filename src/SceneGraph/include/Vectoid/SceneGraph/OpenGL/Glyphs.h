@@ -3,13 +3,11 @@
 
 #include <optional>
 #include <Vectoid/SceneGraph/Glyphs.h>
-#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
+#include <Vectoid/SceneGraph/OpenGL/Context.h>
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
-
-class Context;
 
 //! Manages textures for text glyphs.
 class Glyphs : public SceneGraph::Glyphs {
@@ -23,14 +21,12 @@ class Glyphs : public SceneGraph::Glyphs {
     ~Glyphs();
     
     void BindGlyphTexture(uint8_t glyph) override;
-    void DropGraphicsResources() override;
     
   private:
+    Context *Context() { return static_cast<class Context *>(context_.get()); }
     void GenerateTextures();
-    void DropTextures();
 
-    bool                   texturesGenerated_;
-    std::optional<GLuint>  textures_[256];
+    int                    textureSlots_[256];
     std::optional<uint8_t> defaultGlyph_;
 };
 
