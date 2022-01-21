@@ -8,9 +8,10 @@
 #include <Vectoid/DataSet/SupportsBoundingBoxTreeInterface.h>
 
 using std::shared_ptr;
-using std::vector;
-using std::to_string;
 using std::sort;
+using std::to_string;
+using std::unique_ptr;
+using std::vector;
 using K::Core::Log;
 using Vectoid::Core::Axis;
 using Vectoid::Core::BoundingBox;
@@ -38,6 +39,17 @@ BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterfa
     }
 }
 
+// Private helper constructor to Clone().
+BoundingBoxTree::BoundingBoxTree(const BoundingBoxTree &other,
+                                 const shared_ptr<SupportsBoundingBoxTreeInterface> &items)
+        : items_(items),
+          nodes_(other.nodes_),
+          root_(other.root_),
+          comparer_(items),
+          depth_(other.depth_) {
+    // Nop.
+}
+
 bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, const Vector<float> &lineDirection,
                                               vector<ItemIntersection> *outIntersections) {
     outIntersections->clear();
@@ -62,6 +74,10 @@ bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, co
 
         return true;
     }
+}
+
+unique_ptr<BoundingBoxTree> BoundingBoxTree::Clone(const shared_ptr<SupportsBoundingBoxTreeInterface> &clonedItems) {
+    return unique_ptr<BoundingBoxTree>(new BoundingBoxTree(*this, clonedItems));
 }
 
 int BoundingBoxTree::AddSubTree(std::vector<int> *itemIds, int offset, int numItems, int depth) {

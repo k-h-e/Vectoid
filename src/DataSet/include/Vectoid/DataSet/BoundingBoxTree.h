@@ -32,6 +32,12 @@ class BoundingBoxTree : public virtual K::Core::Interface {
      */
     bool ComputeLineIntersection(const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
                                  std::vector<ItemIntersection> *outIntersections);
+    //! Creates an independent copy of the boundig box tree.
+    /*!
+     *  \param clonedItems
+     *  An independent copy of the underlying items must be passed in by the caller.
+     */
+    std::unique_ptr<BoundingBoxTree> Clone(const std::shared_ptr<SupportsBoundingBoxTreeInterface> &clonedItems);
 
   private:
     struct Node {
@@ -49,6 +55,7 @@ class BoundingBoxTree : public virtual K::Core::Interface {
         bool operator()(int left, int right);
     };
 
+    BoundingBoxTree(const BoundingBoxTree &other, const std::shared_ptr<SupportsBoundingBoxTreeInterface> &items);
     int AddSubTree(std::vector<int> *itemIds, int offset, int numItems, int depth);
     bool ComputeSubTreeLineIntersection(
         int node, const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,

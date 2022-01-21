@@ -25,9 +25,9 @@ namespace DataSet {
 class Points;
 class ThreeIds;
 
-//! Holds a set of triangles together with connectivity information.
+//! Set of triangles in 3-space.
 /*!
- *  Intended for sets of triangular elements forming surfaces in 3D.
+ *  Also maintains connectivity information.
  */
 class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtual Core::TriangleProviderInterface {
   public:
@@ -79,6 +79,8 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
+    //! Creates an independent copy of the triangle set.
+    std::unique_ptr<Triangles> Clone() const;
     //! Returns the underlying <c>LineSegments</c> object in which the triangle set stores its triangle edges.
     std::shared_ptr<LineSegments> Edges();
     //! Returns the underlying <c>Points</c> object in which the triangle set stores its vertices.

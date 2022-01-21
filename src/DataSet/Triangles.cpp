@@ -11,6 +11,7 @@
 using std::shared_ptr;
 using std::make_shared;
 using std::make_unique;
+using std::unique_ptr;
 using std::unordered_map;
 using std::unordered_set;
 using std::optional;
@@ -185,6 +186,18 @@ void Triangles::OptimizeForSpace() {
     edges_->OptimizeForSpace();
 }
 
+unique_ptr<Triangles> Triangles::Clone() const {
+    auto clone = make_unique<Triangles>(edges_->Clone());
+    clone->triangles_ = triangles_;
+    if (triangleMap_) {
+        auto map = make_unique<unordered_map<ThreeIds, int, ThreeIds::HashFunction>>(*triangleMap_);
+        clone->triangleMap_ = move(map);
+    }
+    clone->edgeInfos_       = edgeInfos_;
+    clone->vertexInfos_     = vertexInfos_;
+    clone->badConnectivity_ = badConnectivity_;
+    return clone;
+}
 
 shared_ptr<LineSegments> Triangles::Edges() {
     return edges_;

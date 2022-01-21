@@ -5,7 +5,9 @@
 #include <Vectoid/DataSet/Points.h>
 
 using std::shared_ptr;
+using std::unique_ptr;
 using std::make_unique;
+using std::move;
 using std::unordered_map;
 using std::to_string;
 using K::Core::Log;
@@ -66,6 +68,16 @@ void LineSegments::OptimizeForSpace() {
     Log::Print(Log::Level::Debug, this, []{ return "optimizing for space"; });
     segmentMap_.reset();
     vertices_->OptimizeForSpace();
+}
+
+unique_ptr<LineSegments> LineSegments::Clone() const {
+    auto clone = make_unique<LineSegments>(vertices_);
+    clone->segments_ = segments_;
+    if (segmentMap_) {
+        auto map = make_unique<unordered_map<TwoIds, int, TwoIds::HashFunction>>(*segmentMap_);
+        clone->segmentMap_ = move(map);
+    }
+    return clone;
 }
 
 shared_ptr<Points> LineSegments::Vertices() {

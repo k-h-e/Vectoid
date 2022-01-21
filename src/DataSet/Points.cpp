@@ -6,6 +6,7 @@ using std::make_unique;
 using std::nullopt;
 using std::optional;
 using std::to_string;
+using std::unique_ptr;
 using std::unordered_map;
 using K::Core::Log;
 using Vectoid::Core::Vector;
@@ -15,17 +16,6 @@ namespace DataSet {
 
 Points::Points() {
     // Nop.
-}
-
-Points::Points(const Points &other)
-        : points_(other.points_) {
-    // Nop.
-}
-
-Points &Points::operator=(const Points &other) {
-    points_ = other.points_;
-    pointMap_.reset();
-    return *this;
 }
 
 int Points::Size() const {
@@ -46,7 +36,7 @@ int Points::Add(const Core::Vector<float> &point) {
     }
 }
 
-const Vector<float> &Points::operator[](int index) {
+const Vector<float> &Points::operator[](int index) const {
     assert((index >= 0) && (index < static_cast<int>(points_.size())));
     return points_[index];
 }
@@ -64,6 +54,15 @@ optional<int> Points::Id(const Vector<float> &point) {
 void Points::OptimizeForSpace() {
     Log::Print(Log::Level::Debug, this, []{ return "optimizing for space"; });
     pointMap_.reset();
+}
+
+unique_ptr<Points> Points::Clone() const {
+    auto clone = make_unique<Points>();
+    for (int i = 0; i < Size(); ++i) {
+        clone->Add((*this)[i]);
+    }
+    clone->OptimizeForSpace();
+    return clone;
 }
 
 unordered_map<Vector<float>, int, Vector<float>::HashFunction> *Points::PointMap() {

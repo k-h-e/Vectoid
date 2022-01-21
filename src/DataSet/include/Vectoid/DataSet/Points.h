@@ -20,10 +20,10 @@ namespace DataSet {
 class Points : public virtual K::Core::Interface {
   public:
     Points();
-    Points(const Points &other);
-    Points &operator=(const Points &other);
-    Points(Points &&other)                  = default;
-    Points &operator=(Points &&other)       = default;
+    Points(const Points &other)             = delete;
+    Points &operator=(const Points &other)  = delete;
+    Points(Points &&other)                  = delete;
+    Points &operator=(Points &&other)       = delete;
 
     //! Tells the number of points in the set.
     int Size() const;
@@ -37,12 +37,14 @@ class Points : public virtual K::Core::Interface {
     /*!
      *  The specified point id must lie in <c>[0, Count()]</c>.
      */
-    const Core::Vector<float> &operator[](int index);
+    const Core::Vector<float> &operator[](int index) const;
     //! Returns the id of the specified point, or <c>nullopt</c> in case the point is not in the set.
     std::optional<int> Id(const Core::Vector<float> &point);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
+    //! Creates an independent clone of the point set.
+    std::unique_ptr<Points> Clone() const;
 
   private:
     std::unordered_map<Core::Vector<float>, int, Core::Vector<float>::HashFunction> *PointMap();

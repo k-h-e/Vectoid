@@ -12,7 +12,7 @@ namespace DataSet {
 
 class Points;
 
-//! Holds a set of line segments.
+//! Set of line segments in 3-space.
 class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface {
   public:
     LineSegments(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
@@ -37,6 +37,8 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
+    //! Creates an independent copy of the line segment set.
+    std::unique_ptr<LineSegments> Clone() const;
     //! Returns the underlying <c>Points</c> object in which the line segment set stores its vertices.
     std::shared_ptr<Points> Vertices();
 
