@@ -38,6 +38,7 @@ class Terrain;
 class TerrainRenderer;
 class TestTriangle;
 class TextConsole;
+class TransparentTriangles;
 class TreeNode;
 
 //! Interface to <c>Vectoid</c> render targets.
@@ -79,6 +80,8 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::TestTriangle> NewTestTriangle() = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::TextConsole> NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const std::shared_ptr<Glyphs> &glyphs) = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::TransparentTriangles> NewTransparentTriangles(
+        const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider) = 0;
 };
 
 }    // Namespace SceneGraph.

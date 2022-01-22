@@ -18,6 +18,7 @@
 #include <Vectoid/SceneGraph/OpenGL/TerrainRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/TestTriangle.h>
 #include <Vectoid/SceneGraph/OpenGL/TextConsole.h>
+#include <Vectoid/SceneGraph/OpenGL/TransparentTriangles.h>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -50,23 +51,23 @@ void RenderTarget::RenderFrame() {
 
 shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
         const shared_ptr<Particles> &particles) {
-    return shared_ptr<OpenGL::AgeColoredParticles>(new AgeColoredParticles(context_, particles));
+    return make_shared<OpenGL::AgeColoredParticles>(context_, particles);
 }
 
 shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
-    return shared_ptr<OpenGL::Camera>(new Camera(context_));
+    return make_shared<OpenGL::Camera>(context_);
 }
 
 shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
-    return shared_ptr<OpenGL::CoordSys>(new CoordSys(context_));
+    return make_shared<OpenGL::CoordSys>(context_);
 }
 
 shared_ptr<::Vectoid::SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<Geometry> &geometry) {
-    return shared_ptr<OpenGL::Geode>(new Geode(context_, geometry));
+    return make_shared<OpenGL::Geode>(context_, geometry);
 }
 
 shared_ptr<::Vectoid::SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
-    return shared_ptr<OpenGL::Glyphs>(new Glyphs(context_));
+    return make_shared<OpenGL::Glyphs>(context_);
 }
 
 shared_ptr<::Vectoid::SceneGraph::LineSegments> RenderTarget::NewLineSegments(
@@ -86,11 +87,11 @@ shared_ptr<::Vectoid::SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
 
 shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(
         const shared_ptr<Particles> &particles) {
-    return shared_ptr<OpenGL::ParticlesRenderer>(new ParticlesRenderer(context_, particles));
+    return make_shared<OpenGL::ParticlesRenderer>(context_, particles);
 }
 
 shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
-    return shared_ptr<OpenGL::PerspectiveProjection>(new PerspectiveProjection(context_));
+    return make_shared<OpenGL::PerspectiveProjection>(context_);
 }
 
 shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<DataSet::Points> &points) {
@@ -99,7 +100,7 @@ shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_p
 
 shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
         const shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) {
-    return shared_ptr<OpenGL::SimpleGeometryRenderer>(new SimpleGeometryRenderer(context_, geometry));
+    return make_shared<OpenGL::SimpleGeometryRenderer>(context_, geometry);
 }
 
 shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
@@ -109,16 +110,21 @@ shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLightin
 shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> RenderTarget::NewTerrainRenderer(
         const shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
         const shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) {
-    return shared_ptr<OpenGL::TerrainRenderer>(new TerrainRenderer(context_, terrain, mapParameters));
+    return make_shared<OpenGL::TerrainRenderer>(context_, terrain, mapParameters);
 }
 
 shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
-    return shared_ptr<OpenGL::TestTriangle>(new TestTriangle(context_));
+    return make_shared<OpenGL::TestTriangle>(context_);
 }
 
 shared_ptr<::Vectoid::SceneGraph::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<SceneGraph::Glyphs> &glyphs) {
-    return shared_ptr<OpenGL::TextConsole>(new TextConsole(context_, width, height, glyphWidth, glyphHeight, glyphs));
+    return make_shared<OpenGL::TextConsole>(context_, width, height, glyphWidth, glyphHeight, glyphs);
+}
+
+shared_ptr<::Vectoid::SceneGraph::TransparentTriangles> RenderTarget::NewTransparentTriangles(
+        const shared_ptr<TriangleProviderInterface> &triangleProvider) {
+    return make_shared<OpenGL::TransparentTriangles>(context_, triangleProvider);
 }
 
 }    // Namespace OpenGL.
