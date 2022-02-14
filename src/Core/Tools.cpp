@@ -7,6 +7,7 @@
 #include <Vectoid/Core/ThreePoints.h>
 
 using std::atan2;
+using std::isfinite;
 using std::nullopt;
 using std::optional;
 using std::vector;
