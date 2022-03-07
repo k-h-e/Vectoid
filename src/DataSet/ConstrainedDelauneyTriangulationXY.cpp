@@ -7,9 +7,9 @@
 #include <vector>
 #include <K/Core/Log.h>
 #include <K/Core/Result.h>
+#include <K/Core/StreamOperations.h>
 #include <K/Core/StringTools.h>
 #include <K/IO/File.h>
-#include <K/IO/IOTools.h>
 #include <K/IO/StreamBuffer.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TwoPoints.h>
@@ -148,7 +148,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
 
     string line;
     Read(buffer.get(), '\n', &line);
-    if (!buffer->Good()) {
+    if (buffer->ReadFailed()) {
         return nullptr;
     }
     int numVertices;
@@ -162,7 +162,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     double y;
     for (int i = 0; i < numVertices; ++i) {
         Read(buffer.get(), '\n', &line);
-        if (!buffer->Good()) {
+        if (buffer->ReadFailed()) {
             return nullptr;
         }
         tokens = StringTools::Tokenize(line, " \t", true);
@@ -189,7 +189,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
 
     string line;
     Read(buffer.get(), '\n', &line);
-    if (!buffer->Good()) {
+    if (buffer->ReadFailed()) {
         return nullptr;
     }
     int numTriangles;
@@ -202,7 +202,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
         Read(buffer.get(), '\n', &line);
-        if (!buffer->Good()) {
+        if (buffer->ReadFailed()) {
             return nullptr;
         }
 
