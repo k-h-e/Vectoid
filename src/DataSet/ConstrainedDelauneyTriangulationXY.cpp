@@ -5,10 +5,12 @@
 #include <cstdio>
 #include <cerrno>
 #include <vector>
+#include <K/Core/IOOperations.h>
 #include <K/Core/Log.h>
-#include <K/Core/Result.h>
-#include <K/Core/StreamOperations.h>
+#include <K/Core/ResultAcceptor.h>
 #include <K/Core/StringTools.h>
+#include <K/Core/TextReader.h>
+#include <K/Core/TextWriter.h>
 #include <K/IO/File.h>
 #include <K/IO/StreamBuffer.h>
 #include <Vectoid/Core/ThreePoints.h>
@@ -24,8 +26,10 @@ using std::string;
 using std::to_string;
 using std::vector;
 using K::Core::Log;
-using K::Core::Result;
+using K::Core::ResultAcceptor;
 using K::Core::StringTools;
+using K::Core::TextReader;
+using K::Core::TextWriter;
 using K::IO::File;
 using K::IO::StreamBuffer;
 using Vectoid::Core::ThreePoints;
@@ -77,36 +81,35 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
 }
 
 bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
-    auto result = make_shared<Result>();
+    auto result = make_shared<ResultAcceptor>();
     {
-        auto buffer = make_shared<StreamBuffer>(
-                    make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".poly", File::AccessMode::WriteOnly,
-                                      true),
-                    File::AccessMode::WriteOnly,
-                    4 * 1024, result);
+        TextWriter writer(make_shared<StreamBuffer>(
+            make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".poly", File::AccessMode::WriteOnly, true),
+            File::AccessMode::WriteOnly, 4 * 1024));
+        writer.SetFinalResultAcceptor(result);
 
         char line[200];
         std::sprintf(line, "%d 2 0 0\n", vertices_->Size());
-        *buffer << line;
+        writer << line;
         for (int i = 0; i < vertices_->Size(); ++i) {
             const Vector<float> &point = (*vertices_)[i];
             std::sprintf(line, "%d %.12f %.12f\n", (i + 1), point.x, point.y);
-            *buffer << line;
+            writer << line;
         }
 
         std::sprintf(line, "%d 0\n", segments_->Size());
-        *buffer << line;
+        writer << line;
         int segmentIndex = 0;
         for (int i = 0; i < segments_->Size(); ++i) {
             TwoIds segment;
             segments_->GetSegmentVertices(i, &segment);
             std::sprintf(line, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
-            *buffer << line;
+            writer << line;
             ++segmentIndex;
         }
 
         std::sprintf(line, "0\n");    // No holes.
-        *buffer << line;
+        writer << line;
     }
     return result->Success();
 }
@@ -141,14 +144,13 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
 }
 
 unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile() {
-    auto buffer = make_shared<StreamBuffer>(
+    TextReader reader(make_shared<StreamBuffer>(
         make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.node", File::AccessMode::ReadOnly, false),
-        File::AccessMode::ReadOnly,
-        4 * 1024);
+        File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;
-    Read(buffer.get(), '\n', &line);
-    if (buffer->ReadFailed()) {
+    reader.Read('\n', &line);
+    if (reader.ReadFailed()) {
         return nullptr;
     }
     int numVertices;
@@ -161,8 +163,8 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     double x;
     double y;
     for (int i = 0; i < numVertices; ++i) {
-        Read(buffer.get(), '\n', &line);
-        if (buffer->ReadFailed()) {
+        reader.Read('\n', &line);
+        if (reader.ReadFailed()) {
             return nullptr;
         }
         tokens = StringTools::Tokenize(line, " \t", true);
@@ -182,14 +184,13 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     vertices_ = make_shared<Points>();
     segments_ = make_shared<LineSegments>(vertices_);
 
-    auto buffer = make_shared<StreamBuffer>(
+    TextReader reader(make_shared<StreamBuffer>(
         make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.ele", File::AccessMode::ReadOnly, false),
-        File::AccessMode::ReadOnly,
-        4 * 1024);
+        File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;
-    Read(buffer.get(), '\n', &line);
-    if (buffer->ReadFailed()) {
+    reader.Read('\n', &line);
+    if (reader.ReadFailed()) {
         return nullptr;
     }
     int numTriangles;
@@ -201,8 +202,8 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     int vertex0, vertex1, vertex2;
     Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
-        Read(buffer.get(), '\n', &line);
-        if (buffer->ReadFailed()) {
+        reader.Read('\n', &line);
+        if (reader.ReadFailed()) {
             return nullptr;
         }
 
