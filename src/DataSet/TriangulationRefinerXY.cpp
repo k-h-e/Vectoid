@@ -74,7 +74,7 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
         else {
             int blockingTriangleId = -1;
             Vector<float> blockingTriangleLeftVertex;
-            int           blockingTriangleLeftEdge  = -1;
+            //int           blockingTriangleLeftEdge  = -1;
             Vector<float> blockingTriangleRightVertex;
             int           blockingTriangleRightEdge = -1;
             for (int triangleId : vertexToTrianglesMap_[currentVertexId]) {
@@ -96,7 +96,7 @@ bool TriangulationRefinerXY::EnforceEdge(const TwoPoints &edge, std::vector<TwoP
                         else if (!rightSide && (dotProduct <= 0)) {
                             haveLeftEdge               = true;
                             blockingTriangleLeftVertex = otherVertex;
-                            blockingTriangleLeftEdge   = i;
+                            //blockingTriangleLeftEdge   = i;
                         }
                     }
                 }
