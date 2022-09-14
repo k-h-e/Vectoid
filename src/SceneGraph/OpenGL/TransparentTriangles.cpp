@@ -48,7 +48,7 @@ void TransparentTriangles::Render() {
         glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
     }

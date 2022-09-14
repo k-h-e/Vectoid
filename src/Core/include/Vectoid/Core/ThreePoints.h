@@ -21,6 +21,10 @@ class ThreePoints {
         return (point0 == other.point0) && (point1 == other.point1) && (point2 == other.point2);
     }
 
+    bool Valid() const {
+        return point0.Valid() && point1.Valid() && point2.Valid();
+    }
+    
     std::size_t Hash() const {
         std::size_t hash = 17u;
         hash = hash*31u + point0.Hash();

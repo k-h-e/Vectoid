@@ -55,9 +55,10 @@ void LitColorCodedTriangles::Render() {
         glEnable(GL_COLOR_MATERIAL);
 
         glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-        glVertexPointer(3, GL_FLOAT, 9 * sizeof(GLfloat), nullptr);
-        glNormalPointer(GL_FLOAT, 9 * sizeof(GLfloat), reinterpret_cast<void *>(12u));
-        glColorPointer(3, GL_FLOAT, 9 * sizeof(GLfloat), reinterpret_cast<void *>(24u));
+        glVertexPointer(3, GL_FLOAT, 10 * sizeof(GLfloat), nullptr);
+        glNormalPointer(GL_FLOAT, 10 * sizeof(GLfloat), reinterpret_cast<void *>(12u));
+        glColorPointer(4, GL_FLOAT, 10 * sizeof(GLfloat), reinterpret_cast<void *>(24u));
+        
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnableClientState(GL_COLOR_ARRAY);
@@ -69,7 +70,7 @@ void LitColorCodedTriangles::Render() {
         glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glDisable(GL_COLOR_MATERIAL);
         glDisable(GL_LIGHTING);
     }
@@ -116,6 +117,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
             data.push_back(color.x);
             data.push_back(color.y);
             data.push_back(color.z);
+            data.push_back(1.0f);
         }
 
         ++numTriangles;
@@ -131,8 +133,8 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
         Context()->SetResource(vboSlot_, name);
         numTriangles_ = numTriangles;
         Log::Print(Log::Level::Debug, this, [&]{
-            return "generated VBO " + to_string(name) + " for regular shading, size="
-                + to_string(data.size() * sizeof(GLfloat));
+            return "generated VBO " + to_string(name) + " for regular shading, num_triangles="
+                + to_string(numTriangles_) + ", size=" + to_string(data.size() * sizeof(GLfloat));
         });
         return name;
     } else {
@@ -187,6 +189,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateGouraudVBO() {
                 data.push_back(color.x);
                 data.push_back(color.y);
                 data.push_back(color.z);
+                data.push_back(1.0f);
             }
         }
 
@@ -199,8 +202,8 @@ optional<GLuint> LitColorCodedTriangles::GenerateGouraudVBO() {
         Context()->SetResource(vboSlot_, name);
         numTriangles_ = triangles.Size();
         Log::Print(Log::Level::Debug, this, [&]{
-            return "generated VBO " + to_string(name) + " for Gouraud shading, size="
-                + to_string(data.size() * sizeof(GLfloat));
+            return "generated VBO " + to_string(name) + " for Gouraud shading, num_triangles="
+                + to_string(numTriangles_) + ", size=" + to_string(data.size() * sizeof(GLfloat));
         });
         return name;
     } else {

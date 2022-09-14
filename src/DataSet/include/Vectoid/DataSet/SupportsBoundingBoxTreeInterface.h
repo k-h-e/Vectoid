@@ -23,7 +23,7 @@ class SupportsBoundingBoxTreeInterface : public virtual K::Core::Interface {
     virtual void GetItemBoundingBox(int item, Core::BoundingBox<float> *outBoundingBox) const = 0;
     //! Computes the intersection between the specified line and the specified collection item.
     /*!
-     *  \param outIntersectionPoint
+     *  \param outIntersection
      *  Will only be valid in case the computation was successful and an intersection has been found.
      *
      *  \return <c>false</c> in case the computation failed. The output parameters will then be undefined.

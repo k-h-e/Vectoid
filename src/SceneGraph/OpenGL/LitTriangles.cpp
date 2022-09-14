@@ -37,7 +37,7 @@ void LitTriangles::Render() {
     if (vbo) {
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
-        glColor3f(color_.x, color_.y, color_.z);
+        glColor4f(color_.x, color_.y, color_.z, 1.0f);
 
         glBindBuffer(GL_ARRAY_BUFFER, *vbo);
         glVertexPointer(3, GL_FLOAT, 6 * sizeof(GLfloat), nullptr);
@@ -51,7 +51,7 @@ void LitTriangles::Render() {
         glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glDisable(GL_COLOR_MATERIAL);
         glDisable(GL_LIGHTING);
     }

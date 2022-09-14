@@ -44,6 +44,7 @@ void TextConsole::Render() {
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
+    /*
     float margin = .5f * glyphWidth_;
     float backgroundLeft   = left - margin;
     float backgroundRight  = -backgroundLeft;
@@ -59,7 +60,8 @@ void TextConsole::Render() {
         glVertex3f(backgroundRight, backgroundBottom, 0.0f);
         glVertex3f(backgroundRight, backgroundTop,    0.0f);
     glEnd();
-
+    */
+     
     glEnable(GL_TEXTURE_2D);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
@@ -97,7 +99,7 @@ void TextConsole::Render() {
         y = nextY;
     }
 
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_TEXTURE_2D);
@@ -131,7 +133,7 @@ void TextConsole::SetColor(uint8_t colorIndex) {
             default:
                 break;
         }
-        glColor3f(color.x, color.y, color.z);
+        glColor4f(color.x, color.y, color.z, 1.0f);
 
         currentColorIndex_ = colorIndex;
     }
