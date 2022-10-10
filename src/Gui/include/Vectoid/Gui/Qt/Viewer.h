@@ -1,5 +1,5 @@
-#ifndef VECTOID_UI_QT_VIEWER_H_
-#define VECTOID_UI_QT_VIEWER_H_
+#ifndef VECTOID_GUI_QT_VIEWER_H_
+#define VECTOID_GUI_QT_VIEWER_H_
 
 #include <memory>
 #include <QOpenGLWidget>
@@ -20,7 +20,7 @@ namespace SceneGraph {
 }
 
 //! UI elements for Vectoid 3D graphics.
-namespace UI {
+namespace Gui {
 //! <c>Qt</c>-based UI elements for Vectoid 3D graphics.
 namespace Qt {
 //! <c>Qt</c>-based 3D viewer widget for displaying <c>Vectoid</c> scenes.
@@ -103,7 +103,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
 };
 
 }    // Namespace Qt.
-}    // Namespace UI.
+}    // Namespace Gui.
 }    // Namespace Vectoid.
 
-#endif    // VECTOID_UI_QT_VIEWER_H_
+#endif    // VECTOID_GUI_QT_VIEWER_H_

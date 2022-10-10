@@ -20,6 +20,7 @@ namespace SceneGraph {
 
 class AgeColoredParticles;
 class Camera;
+class ComboBarrel;
 class CoordSys;
 class Geometry;
 class Geode;
@@ -55,6 +56,9 @@ class RenderTargetInterface : public virtual K::Core::Interface {
     virtual std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Core::Particles> &particles) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::ComboBarrel> NewComboBarrel(
+        int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
+        const std::shared_ptr<Glyphs> &glyphs) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() = 0;
     //! Can take <c>nullptr</c> as geometry.
     virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(

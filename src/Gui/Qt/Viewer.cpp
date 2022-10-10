@@ -1,4 +1,4 @@
-#include <Vectoid/UI/Qt/Viewer.h>
+#include <Vectoid/Gui/Qt/Viewer.h>
 
 #include <QMouseEvent>
 #include <QOpenGLContext>
@@ -26,7 +26,7 @@ using Vectoid::SceneGraph::OpenGL::Context;
 using Vectoid::SceneGraph::OpenGL::RenderTarget;
 
 namespace Vectoid {
-namespace UI {
+namespace Gui {
 namespace Qt {
 
 Viewer::Viewer(QWidget *parent)
@@ -250,5 +250,5 @@ void Viewer::OnGLContextAboutToBeDestroyed() {
 }
 
 }    // Namespace Qt.
-}    // Namespace UI.
+}    // Namespace Gui.
 }    // Namespace Vectoid.

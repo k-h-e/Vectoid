@@ -3,6 +3,7 @@
 #include <Vectoid/SceneGraph/RenderVisitor.h>
 #include <Vectoid/SceneGraph/OpenGL/AgeColoredParticles.h>
 #include <Vectoid/SceneGraph/OpenGL/Camera.h>
+#include <Vectoid/SceneGraph/OpenGL/ComboBarrel.h>
 #include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/CoordSys.h>
 #include <Vectoid/SceneGraph/OpenGL/Geode.h>
@@ -56,6 +57,13 @@ shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColor
 
 shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
     return make_shared<OpenGL::Camera>(context_);
+}
+
+shared_ptr<::Vectoid::SceneGraph::ComboBarrel> RenderTarget::NewComboBarrel(
+        int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
+        const shared_ptr<SceneGraph::Glyphs> &glyphs) {
+    printf("1: glyphs=%p\n", glyphs.get());
+    return make_shared<OpenGL::ComboBarrel>(context_, width, numVisibleOtherPerSide, glyphWidth, glyphHeight, glyphs);
 }
 
 shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {

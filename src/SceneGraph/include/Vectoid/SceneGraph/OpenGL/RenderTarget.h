@@ -25,6 +25,9 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
     std::shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> NewAgeColoredParticles(
         const std::shared_ptr<Core::Particles> &particles) override;
     std::shared_ptr<::Vectoid::SceneGraph::Camera> NewCamera() override;
+    std::shared_ptr<::Vectoid::SceneGraph::ComboBarrel> NewComboBarrel(
+        int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
+        const std::shared_ptr<Glyphs> &glyphs) override;
     std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() override;
     std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(const std::shared_ptr<Geometry> &geometry) override;
     std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() override;

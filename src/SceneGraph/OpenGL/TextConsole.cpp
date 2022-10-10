@@ -22,8 +22,16 @@ TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int heig
 }
 
 void TextConsole::Render() {
+    float left             = -.5f * width_  * glyphWidth_;
+    float top              =  .5f * height_ * glyphHeight_;
+    float margin           = .5f * glyphWidth_;
+    float backgroundLeft   = left - margin;
+    float backgroundRight  = -backgroundLeft;
+    float backgroundTop    = top + margin;
+    float backgroundBottom = -backgroundTop;
+    
     GLfloat vertices[]  = { 0.0f, 0.0f, 0.0f,
-                            1.0f, 0.0f, 0.0f, 
+                            1.0f, 0.0f, 0.0f,
                             1.0f, 1.0f, 0.0f,
                            
                             0.0f, 0.0f, 0.0f,
@@ -31,41 +39,33 @@ void TextConsole::Render() {
                             0.0f, 1.0f, 0.0f  };
     
     GLfloat texCoords[] = { 0.0f, 0.0f,
-                            1.0f, 0.0f, 
+                            1.0f, 0.0f,
                             1.0f, 1.0f,
                             
                             0.0f, 0.0f,
                             1.0f, 1.0f,
                             0.0f, 1.0f  };
     
-    float left = -.5f * width_  * glyphWidth_;
-    float top  =  .5f * height_ * glyphHeight_;
+    const GLfloat backgroundVertices[18] = { backgroundLeft,  backgroundTop,    0.0f,
+                                             backgroundLeft,  backgroundBottom, 0.0f,
+                                             backgroundRight, backgroundTop,    0.0f,
 
-    glEnable(GL_BLEND);
+                                             backgroundLeft,  backgroundBottom, 0.0f,
+                                             backgroundRight, backgroundBottom, 0.0f,
+                                             backgroundRight, backgroundTop,    0.0f
+    };
+    
     glDisable(GL_DEPTH_TEST);
-
-    /*
-    float margin = .5f * glyphWidth_;
-    float backgroundLeft   = left - margin;
-    float backgroundRight  = -backgroundLeft;
-    float backgroundTop    = top + margin;
-    float backgroundBottom = -backgroundTop;
+    glEnable(GL_BLEND);
+    
     glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(backgroundLeft,  backgroundTop,    0.0f);
-        glVertex3f(backgroundLeft,  backgroundBottom, 0.0f);
-        glVertex3f(backgroundRight, backgroundTop,    0.0f);
-
-        glVertex3f(backgroundLeft,  backgroundBottom, 0.0f);
-        glVertex3f(backgroundRight, backgroundBottom, 0.0f);
-        glVertex3f(backgroundRight, backgroundTop,    0.0f);
-    glEnd();
-    */
+    glVertexPointer(3, GL_FLOAT, 0, backgroundVertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
      
     glEnable(GL_TEXTURE_2D);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-    glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     currentColorIndex_ = 1u;
@@ -88,6 +88,7 @@ void TextConsole::Render() {
                 vertices[15] = x;        vertices[16] = y;
 
                 SetColor(*colorPtr);
+                printf("console: will bind glyph=%u in glyphs=%p\n", (unsigned int)*ptr, glyphs_.get());
                 glyphs_->BindGlyphTexture(*ptr);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }
@@ -104,8 +105,8 @@ void TextConsole::Render() {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_TEXTURE_2D);
 
-    glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void TextConsole::SetColor(uint8_t colorIndex) {
