@@ -79,5 +79,9 @@ Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float
     return Vector<float>((x/width_ - .5f)  * windowWidth, (.5f - y/height_) * windowHeight, 0.0f);
 }
 
+Vector<float> PerspectiveProjection::TransformViewPortCoordinates(float x, float y, float cameraZ) const {
+    return ((eyepointDistance_ - cameraZ) / eyepointDistance_) * TransformViewPortCoordinates(x, y);
+}
+
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.

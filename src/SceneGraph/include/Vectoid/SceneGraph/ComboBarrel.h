@@ -20,6 +20,8 @@ class ComboBarrel : public Geometry {
     ComboBarrel &operator=(ComboBarrel &&other)      = delete;
     ~ComboBarrel()                                   = default;
     
+    //! Removes all items.
+    void Clear();
     //! Adds the specified item.
     /*!
      *  \return The added item's ID.

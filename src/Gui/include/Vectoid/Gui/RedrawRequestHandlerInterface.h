@@ -10,7 +10,7 @@ namespace Gui {
 class RedrawRequestHandlerInterface : public virtual K::Core::Interface {
   public:
     //! Informs the handler that a redraw has been requested.
-    virtual void onRedrawRequested() = 0;
+    virtual void OnRedrawRequested() = 0;
 };
 
 }    // Namespace Gui.

@@ -190,7 +190,7 @@ void Vector<T>::ClampComponents(T min, T max) {
 template<typename T>
 std::string Vector<T>::ToString() const {
     char text[200];
-    std::sprintf(text, "(%f, %f, %f)", x, y, z);
+    std::snprintf(text, 200, "(%f, %f, %f)", x, y, z);
     return std::string(text);
 }
 

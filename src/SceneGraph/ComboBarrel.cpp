@@ -28,7 +28,6 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
           glyphs_{glyphs},
           position_{0.0f} {
     assert(numVisibleOtherPerSide >= 1);
-    printf("2: glyphs=%p\n", glyphs_.get());
     itemAngle_   = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
     float radius = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
     for (int i = 0; i < 2*numVisibleOtherPerSide_ + 3; ++i) {
@@ -41,6 +40,11 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
             return "angle=" + to_string(angle) + ", hand=" + hand.ToString();
         });
     }
+}
+
+void ComboBarrel::Clear() {
+    items_.clear();
+    position_ = 0.0f;
 }
 
 int ComboBarrel::AddItem(const string &item) {

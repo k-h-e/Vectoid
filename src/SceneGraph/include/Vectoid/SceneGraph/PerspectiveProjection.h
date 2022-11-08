@@ -35,6 +35,8 @@ class PerspectiveProjection : public GroupNode {
     void SetViewPort(float width, float height);
     //! Transforms a viewport point to camera coordinates.
     Core::Vector<float> TransformViewPortCoordinates(float x, float y) const;
+    //! Transforms a viewport point to camera coordinates with given <c>z</c> coordinate in camera space.
+    Core::Vector<float> TransformViewPortCoordinates(float x, float y, float cameraZ) const;
     
   protected:
     PerspectiveProjection(const std::shared_ptr<Context> &context);

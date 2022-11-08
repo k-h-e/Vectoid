@@ -18,13 +18,9 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
                          float glyphHeight, const shared_ptr<SceneGraph::Glyphs> &glyphs)
         : SceneGraph::ComboBarrel(context, width, numVisibleOtherPerSide, glyphWidth, glyphHeight, glyphs) {
     // Nop.
-    printf("3. glyphs=%p\n", glyphs_.get());
 }
 
 void ComboBarrel::Render() {
-    
-    printf("4. glyphs=%p\n", glyphs_.get());
-    
     float left = -.5f *width_ * glyphWidth_;
     
     int   positionInteger    = (position_ >= 0.0f) ? static_cast<int>(position_) : static_cast<int>(position_) - 1;
@@ -88,7 +84,6 @@ void ComboBarrel::Render() {
                         vertices[12] = nextX;    vertices[13] = y;        vertices[14] = z;
                         vertices[15] = x;        vertices[16] = y;        vertices[17] = z;
                         
-                        printf("barrel: will bind glyph=%u in glyphs=%p\n", (unsigned int)*ptr, glyphs_.get());
                         glyphs_->BindGlyphTexture(*ptr);
                         glDrawArrays(GL_TRIANGLES, 0, 6);
                     }

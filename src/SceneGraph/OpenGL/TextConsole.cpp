@@ -88,7 +88,6 @@ void TextConsole::Render() {
                 vertices[15] = x;        vertices[16] = y;
 
                 SetColor(*colorPtr);
-                printf("console: will bind glyph=%u in glyphs=%p\n", (unsigned int)*ptr, glyphs_.get());
                 glyphs_->BindGlyphTexture(*ptr);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }

@@ -62,7 +62,6 @@ shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
 shared_ptr<::Vectoid::SceneGraph::ComboBarrel> RenderTarget::NewComboBarrel(
         int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
         const shared_ptr<SceneGraph::Glyphs> &glyphs) {
-    printf("1: glyphs=%p\n", glyphs.get());
     return make_shared<OpenGL::ComboBarrel>(context_, width, numVisibleOtherPerSide, glyphWidth, glyphHeight, glyphs);
 }
 

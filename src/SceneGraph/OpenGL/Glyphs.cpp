@@ -26,7 +26,6 @@ Glyphs::~Glyphs() {
 }
 
 void Glyphs::BindGlyphTexture(uint8_t glyph) {
-    printf("alive, glyph=%u\n", (unsigned int)glyph);
     optional<GLuint> texture = Context()->GetResource(textureSlots_[glyph]);
     if (!texture) {
         GenerateTextures();

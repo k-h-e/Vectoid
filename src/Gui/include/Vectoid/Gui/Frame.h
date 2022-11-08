@@ -12,6 +12,7 @@ struct Frame {
     Position position;
     Size     size;
     
+    Frame(const Position &position, const Size &size) : position{position}, size{size} {}
     Frame()                              = default;
     Frame(const Frame &other)            = default;
     Frame &operator=(const Frame &other) = default;

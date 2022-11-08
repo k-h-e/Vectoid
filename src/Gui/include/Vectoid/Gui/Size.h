@@ -9,6 +9,7 @@ struct Size {
     float width;
     float height;
     
+    Size(float width, float height) : width{width > 0.0f ? width : 0.0f}, height{height > 0.0f ? height : 0.0f} {}
     Size() : width{0.0f}, height{0.0f} {}
     Size(const Size &other)            = default;
     Size &operator=(const Size &other) = default;

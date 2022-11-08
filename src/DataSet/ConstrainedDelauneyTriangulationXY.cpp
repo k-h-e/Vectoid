@@ -88,27 +88,28 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
             File::AccessMode::WriteOnly, 4 * 1024));
         writer.SetFinalResultAcceptor(result);
 
-        char line[200];
-        std::sprintf(line, "%d 2 0 0\n", vertices_->Size());
+        const size_t lineBufferSize = 200;
+        char line[lineBufferSize];
+        std::snprintf(line, lineBufferSize, "%d 2 0 0\n", vertices_->Size());
         writer << line;
         for (int i = 0; i < vertices_->Size(); ++i) {
             const Vector<float> &point = (*vertices_)[i];
-            std::sprintf(line, "%d %.12f %.12f\n", (i + 1), point.x, point.y);
+            std::snprintf(line, lineBufferSize, "%d %.12f %.12f\n", (i + 1), point.x, point.y);
             writer << line;
         }
 
-        std::sprintf(line, "%d 0\n", segments_->Size());
+        std::snprintf(line, lineBufferSize, "%d 0\n", segments_->Size());
         writer << line;
         int segmentIndex = 0;
         for (int i = 0; i < segments_->Size(); ++i) {
             TwoIds segment;
             segments_->GetSegmentVertices(i, &segment);
-            std::sprintf(line, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
+            std::snprintf(line, lineBufferSize, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
             writer << line;
             ++segmentIndex;
         }
 
-        std::sprintf(line, "0\n");    // No holes.
+        std::snprintf(line, lineBufferSize, "0\n");    // No holes.
         writer << line;
     }
     return result->Success();

@@ -9,6 +9,7 @@ struct Position {
     float x;
     float y;
     
+    Position(float x, float y) : x{x}, y{y} {}
     Position() : x{0.0f}, y{0.0f} {}
     Position(const Position &other)            = default;
     Position &operator=(const Position &other) = default;
