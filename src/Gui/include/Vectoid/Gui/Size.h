@@ -16,6 +16,10 @@ struct Size {
     Size(Size &&other)                 = default;
     Size &operator=(Size &&other)      = default;
     ~Size()                            = default;
+    
+    std::string ToString() const {
+        return std::string("(width=") + std::to_string(width) + ", height=" + std::to_string(height) + ")";
+    }
 };
 
 }    // Namespace Gui.

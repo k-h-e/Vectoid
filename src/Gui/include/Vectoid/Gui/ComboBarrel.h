@@ -39,6 +39,7 @@ class ComboBarrel : public GuiElement {
     void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
     void UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
+    GuiElement *TouchedElement(const Vectoid::Gui::TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) override;
     void OnTouchGestureMoved(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) override;
     void OnTouchGestureEnded(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) override;
@@ -48,6 +49,7 @@ class ComboBarrel : public GuiElement {
                 const std::shared_ptr<Context> &context);
     
     std::shared_ptr<SceneGraph::ComboBarrel> comboBarrel_;
+    std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
     float                                    startPosition_;
 };
 

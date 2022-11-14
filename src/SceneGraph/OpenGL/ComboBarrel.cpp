@@ -9,6 +9,7 @@ using std::shared_ptr;
 using std::string;
 using K::Core::NumberTools;
 using Vectoid::Core::Transform;
+using Vectoid::Core::Vector;
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -21,12 +22,13 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
 }
 
 void ComboBarrel::Render() {
-    float left = -.5f *width_ * glyphWidth_;
+    float left = -.5f * width_ * glyphWidth_;
     
     int   positionInteger    = (position_ >= 0.0f) ? static_cast<int>(position_) : static_cast<int>(position_) - 1;
     float positionFractional = position_ - static_cast<float>(positionInteger);
     
     Transform<float> rotation(Core::Axis::X, -positionFractional * itemAngle_);
+    rotation.Append(Transform<float>(Vector<float>(0.0f, 0.0f, -barrelRadius_)));
     glPushMatrix();
     glMultMatrixf(rotation.MatrixElements());
     

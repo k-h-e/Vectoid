@@ -12,6 +12,7 @@ using std::string;
 using std::to_string;
 using K::Core::Log;
 using K::Core::NumberTools;
+using Vectoid::Core::BoundingBox;
 using Vectoid::Core::Vector;
 using Vectoid::Core::Transform;
 
@@ -28,14 +29,16 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
           glyphs_{glyphs},
           position_{0.0f} {
     assert(numVisibleOtherPerSide >= 1);
-    itemAngle_   = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
-    float radius = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
+    itemAngle_    = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
+    barrelRadius_ = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
     for (int i = 0; i < 2*numVisibleOtherPerSide_ + 3; ++i) {
         float angle = static_cast<float>(i) * 180.0f / (2.0f * static_cast<float>(numVisibleOtherPerSide) + 1.0f);
-        Vector<float> hand{0.0f, radius, 0.0f};
+        Vector<float> hand{0.0f, barrelRadius_, 0.0f};
         Transform<float>{Vectoid::Core::Axis::X, angle}.ApplyTo(&hand);
         yCoords_.push_back(hand.y);
         zCoords_.push_back(hand.z);
+        boundingBox_.Grow(Vector<float>(-.5f * width_ * glyphWidth_, hand.y, hand.z));
+        boundingBox_.Grow(Vector<float>( .5f * width_ * glyphWidth_, hand.y, hand.z));
         Log::Print(Log::Level::Debug, this, [&]{
             return "angle=" + to_string(angle) + ", hand=" + hand.ToString();
         });
@@ -78,6 +81,10 @@ void ComboBarrel::SetPosition(float position) {
 
 float ComboBarrel::Position() const {
     return position_;
+}
+
+BoundingBox<float> ComboBarrel::BoundingBox() const {
+    return boundingBox_;
 }
 
 }    // Namespace SceneGraph.

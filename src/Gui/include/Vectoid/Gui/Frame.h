@@ -1,6 +1,7 @@
 #ifndef VECTOID_GUI_FRAME_H_
 #define VECTOID_GUI_FRAME_H_
 
+#include <string>
 #include <Vectoid/Gui/Position.h>
 #include <Vectoid/Gui/Size.h>
 
@@ -19,6 +20,14 @@ struct Frame {
     Frame(Frame &&other)                 = default;
     Frame &operator=(Frame &&other)      = default;
     ~Frame()                             = default;
+    
+    bool Contains(float x, float y) const {
+        return (x >= position.x) && (x <= position.x + size.width)
+                   && (y <= position.y) && (y >= position.y - size.height);
+    }
+    std::string ToString() const {
+        return std::string("(position=") + position.ToString() + ", size=" + size.ToString() + ")";
+    }
 };
 
 }    // Namespace Gui.

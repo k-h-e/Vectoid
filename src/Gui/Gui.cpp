@@ -2,6 +2,7 @@
 
 #include <Vectoid/Gui/ComboBarrel.h>
 #include <Vectoid/Gui/Context.h>
+#include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/Gui/RedrawRequestHandlerInterface.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
 #include <Vectoid/SceneGraph/Glyphs.h>
@@ -19,7 +20,8 @@ namespace Gui {
 
 Gui::Gui(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<CoordSys> &coordSys,
          const shared_ptr<RedrawRequestHandlerInterface> &redrawRequestHandler)
-        : coordSys_{coordSys} {
+        : coordSys_{coordSys},
+          activeElement_{nullptr} {
     auto glyphs = renderTarget->NewGlyphs();
     context_ = make_shared<Context>(renderTarget, glyphs, redrawRequestHandler);
 }
@@ -46,15 +48,38 @@ void Gui::SetFrame(const Frame &frame) {
 }
 
 bool Gui::HandleTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    if (activeScene_) {
+        auto &sceneRoot = scenes_[*activeScene_];
+        if (touches.size() == 1u) {
+            activeElement_ = sceneRoot->TouchedElement(*(touches[0]));
+            if (activeElement_) {
+                activeElement_->OnTouchGestureBegan(touches);
+                return true;
+            }
+        }
+    }
+    
+    activeElement_ = nullptr;
     return false;
 }
 
 bool Gui::HandleTouchGestureMoved(const vector<const TouchInfo *> &touches) {
-    return false;
+    if (activeElement_) {
+        activeElement_->OnTouchGestureMoved(touches);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool Gui::HandleTouchGestureEnded(const vector<const TouchInfo *> &touches) {
-    return false;
+    if (activeElement_) {
+        activeElement_->OnTouchGestureEnded(touches);
+        activeElement_ = nullptr;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 shared_ptr<ComboBarrel> Gui::NewComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth,

@@ -16,6 +16,10 @@ struct Position {
     Position(Position &&other)                 = default;
     Position &operator=(Position &&other)      = default;
     ~Position()                                = default;
+    
+    std::string ToString() const {
+        return std::string("(x=") + std::to_string(x) + ", y=" + std::to_string(y) + ")";
+    }
 };
 
 }    // Namespace Gui.

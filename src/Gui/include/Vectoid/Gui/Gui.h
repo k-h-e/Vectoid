@@ -74,6 +74,7 @@ class Gui : public virtual K::Core::Interface {
     Frame                                              frame_;
     std::vector<std::shared_ptr<GuiElement>>           scenes_;
     std::optional<int>                                 activeScene_;
+    GuiElement                                         *activeElement_;
     std::shared_ptr<Context>                           context_;
 };
 

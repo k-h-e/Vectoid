@@ -37,6 +37,11 @@ class GuiElement : public virtual K::Core::Interface {
     virtual void UpdateRequiredSizes() = 0;
     //! Recursively layouts this GUI element and its children into the specified available frame.
     virtual void Layout(const Frame &frame) = 0;
+    //! Tells which GUI element in the subtree was touched by the specified touch.
+    /*!
+     *  \return <c>nullptr</c> in case no GUI element was touched.
+     */
+    virtual GuiElement *TouchedElement(const Vectoid::Gui::TouchInfo &touch) = 0;
     //! Dispatches a touch gesture began event to the GUI element.
     virtual void OnTouchGestureBegan(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) = 0;
     //! Dispatches a touch gesture moved event to the GUI element.

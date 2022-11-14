@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <vector>
+#include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
@@ -31,6 +32,8 @@ class ComboBarrel : public Geometry {
     std::optional<int> Selection() const;
     void SetPosition(float position);
     float Position() const;
+    //! Tells the combo barrel's bounding box.
+    Core::BoundingBox<float> BoundingBox() const;
     
   protected:
     ComboBarrel(const std::shared_ptr<Context> &context, int width, int numVisibleOtherPerSide, float glyphWidth,
@@ -46,6 +49,8 @@ class ComboBarrel : public Geometry {
     float                    itemAngle_;
     std::vector<float>       yCoords_;
     std::vector<float>       zCoords_;
+    float                    barrelRadius_;
+    Core::BoundingBox<float> boundingBox_;
 };
 
 }    // Namespace SceneGraph.
