@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Geometry.h>
 
@@ -41,6 +42,8 @@ class TextConsole : public Geometry {
     void ClearRow(int row);
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
+    //! Tells the text console's bounding box.
+    Core::BoundingBox<float> BoundingBox() const;
     //! Sets the console's background color, including its alpha channel.
     void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
 

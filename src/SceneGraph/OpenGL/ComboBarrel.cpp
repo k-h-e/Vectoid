@@ -27,11 +27,6 @@ void ComboBarrel::Render() {
     int   positionInteger    = (position_ >= 0.0f) ? static_cast<int>(position_) : static_cast<int>(position_) - 1;
     float positionFractional = position_ - static_cast<float>(positionInteger);
     
-    Transform<float> rotation(Core::Axis::X, -positionFractional * itemAngle_);
-    rotation.Append(Transform<float>(Vector<float>(0.0f, 0.0f, -barrelRadius_)));
-    glPushMatrix();
-    glMultMatrixf(rotation.MatrixElements());
-    
     GLfloat vertices[]  = { 0.0f, 0.0f, 0.0f,
                             1.0f, 0.0f, 0.0f,
                             1.0f, 1.0f, 0.0f,
@@ -50,11 +45,44 @@ void ComboBarrel::Render() {
     
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
-     
+    
+    Transform<float> transform(Vector<float>(0.0f, 0.0f, -barrelRadius_));
+    glPushMatrix();
+    glMultMatrixf(transform.MatrixElements());
+    
+    glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    
+    for (int row = 0; row <= 2*numVisibleOtherPerSide_ + 1; ++row) {
+        float y     = yCoords_[row];
+        float nextY = yCoords_[row + 1];
+        float z     = zCoords_[row];
+        float nextZ = zCoords_[row + 1];
+        float x     = left;
+        float nextX = x + width_*glyphWidth_;
+       
+        vertices[ 0] = x;        vertices[ 1] = nextY;    vertices[ 2] = nextZ;
+        vertices[ 3] = nextX;    vertices[ 4] = nextY;    vertices[ 5] = nextZ;
+        vertices[ 6] = nextX;    vertices[ 7] = y;        vertices[ 8] = z;
+        
+        vertices[ 9] = x;        vertices[10] = nextY;    vertices[11] = nextZ;
+        vertices[12] = nextX;    vertices[13] = y;        vertices[14] = z;
+        vertices[15] = x;        vertices[16] = y;        vertices[17] = z;
+        
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    glPopMatrix();
+    transform = Transform<float>(Core::Axis::X, -positionFractional * itemAngle_);
+    transform.Append(Transform<float>(Vector<float>(0.0f, 0.0f, -barrelRadius_)));
+    glPushMatrix();
+    glMultMatrixf(transform.MatrixElements());
+    
     glEnable(GL_TEXTURE_2D);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-    glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     if (!items_.empty()) {

@@ -10,8 +10,11 @@
 
 using std::make_shared;
 using std::shared_ptr;
+using std::string;
+using std::vector;
 using Vectoid::Core::Vector;
 using Vectoid::Gui::TouchInfo;
+using Vectoid::SceneGraph::CoordSys;
 
 namespace Vectoid {
 namespace Gui {
@@ -19,24 +22,26 @@ namespace Gui {
 struct TouchInfo;
 
 ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
-                         const std::shared_ptr<Context> &context)
+                         const shared_ptr<Context> &context)
         : GuiElement{context},
           startPosition_{0.0f} {
     comboBarrel_ = context_->renderTarget->NewComboBarrel(width, numVisibleOtherPerSide, glyphWidth, glyphHeight,
                                                           context_->glyphs);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(comboBarrel_));
+              
+    SetBackgroundColor(false);
 }
 
 void ComboBarrel::Clear() {
     comboBarrel_->Clear();
 }
 
-int ComboBarrel::AddItem(const std::string &item) {
+int ComboBarrel::AddItem(const string &item) {
     return comboBarrel_->AddItem(item);
 }
 
-void ComboBarrel::AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) {
+void ComboBarrel::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
@@ -56,18 +61,16 @@ void ComboBarrel::Layout(const Frame &frame) {
 }
 
 GuiElement *ComboBarrel::TouchedElement(const TouchInfo &touch) {
-    if (frame_.Contains(touch.x, touch.y)) {
-        return this;
-    } else {
-        return nullptr;
-    }
+    return frame_.Contains(touch.x, touch.y) ? this : nullptr;
 }
 
-void ComboBarrel::OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) {
+void ComboBarrel::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
     startPosition_ = comboBarrel_->Position();
+    SetBackgroundColor(true);
+    context_->redrawRequestHandler->OnRedrawRequested();
 }
 
-void ComboBarrel::OnTouchGestureMoved(const std::vector<const TouchInfo *> &touches) {
+void ComboBarrel::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
     if (touches.size() == 1u) {
         const TouchInfo &touch = *(touches[0]);
         float t = (touch.y - touch.startY) / frame_.size.height;
@@ -76,8 +79,17 @@ void ComboBarrel::OnTouchGestureMoved(const std::vector<const TouchInfo *> &touc
     }
 }
 
-void ComboBarrel::OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) {
-    // Nop.
+void ComboBarrel::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    SetBackgroundColor(false);
+    context_->redrawRequestHandler->OnRedrawRequested();
+}
+
+void ComboBarrel::SetBackgroundColor(bool active) {
+    if (active) {
+        comboBarrel_->SetBackgroundColor(.35f * Vector<float>(.380f, .753f, .749f), 1.0f);
+    } else {
+        comboBarrel_->SetBackgroundColor(Vector<float>(1.0f, 1.0f, 1.0f), .125f);
+    }
 }
 
 }    // Namespace Gui.

@@ -13,6 +13,7 @@ namespace Vectoid {
         class RenderTargetInterface;
     }
     namespace Gui {
+        class Button;
         class ComboBarrel;
         class Context;
         class GuiElement;
@@ -66,6 +67,7 @@ class Gui : public virtual K::Core::Interface {
     bool HandleTouchGestureEnded(const std::vector<const TouchInfo *> &touches);
     std::shared_ptr<ComboBarrel> NewComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth,
                                                 float glyphHeight);
+    std::shared_ptr<Button> NewButton(const std::string &text, float glyphWidth, float glyphHeight);
 
   private:
     void Layout();

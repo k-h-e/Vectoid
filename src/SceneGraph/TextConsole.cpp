@@ -95,6 +95,17 @@ void TextConsole::Resize(int width, int height) {
     }
 }
 
+Core::BoundingBox<float> TextConsole::BoundingBox() const {
+    Core::BoundingBox<float> box;
+    box.Grow(Vector<float>(-.5f * static_cast<float>(width_ + 1) * glyphWidth_,
+                           -.5f * (static_cast<float>(height_)*glyphHeight_ + glyphWidth_),
+                           0.0f));
+    box.Grow(Vector<float>(.5f * static_cast<float>(width_ + 1) * glyphWidth_,
+                           .5f * (static_cast<float>(height_)*glyphHeight_ + glyphWidth_),
+                           0.0f));
+    return box;
+}
+
 void TextConsole::SetBackgroundColor(const Vector<float> &color, float alpha) {
     backgroundColor_ = color;
     NumberTools::Clamp(&backgroundColor_.x, 0.0f, 1.0f);

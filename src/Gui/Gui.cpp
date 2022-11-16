@@ -1,5 +1,6 @@
 #include <Vectoid/Gui/Gui.h>
 
+#include <Vectoid/Gui/Button.h>
 #include <Vectoid/Gui/ComboBarrel.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/TouchInfo.h>
@@ -9,6 +10,7 @@
 #include <Vectoid/SceneGraph/RenderTargetInterface.h>
 
 using std::shared_ptr;
+using std::string;
 using std::vector;
 using Vectoid::SceneGraph::CoordSys;
 using Vectoid::SceneGraph::Glyphs;
@@ -48,6 +50,7 @@ void Gui::SetFrame(const Frame &frame) {
 }
 
 bool Gui::HandleTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    puts("Gui::HandleTouchGestureBegan()");
     if (activeScene_) {
         auto &sceneRoot = scenes_[*activeScene_];
         if (touches.size() == 1u) {
@@ -85,6 +88,10 @@ bool Gui::HandleTouchGestureEnded(const vector<const TouchInfo *> &touches) {
 shared_ptr<ComboBarrel> Gui::NewComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth,
                                             float glyphHeight) {
     return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, glyphWidth, glyphHeight, context_));
+}
+
+shared_ptr<Button> Gui::NewButton(const string &text, float glyphWidth, float glyphHeight) {
+    return shared_ptr<Button>(new Button(text, glyphWidth, glyphHeight, context_));
 }
 
 void Gui::Layout() {

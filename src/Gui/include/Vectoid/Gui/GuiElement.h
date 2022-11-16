@@ -41,13 +41,13 @@ class GuiElement : public virtual K::Core::Interface {
     /*!
      *  \return <c>nullptr</c> in case no GUI element was touched.
      */
-    virtual GuiElement *TouchedElement(const Vectoid::Gui::TouchInfo &touch) = 0;
+    virtual GuiElement *TouchedElement(const TouchInfo &touch) = 0;
     //! Dispatches a touch gesture began event to the GUI element.
-    virtual void OnTouchGestureBegan(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) = 0;
+    virtual void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) = 0;
     //! Dispatches a touch gesture moved event to the GUI element.
-    virtual void OnTouchGestureMoved(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) = 0;
+    virtual void OnTouchGestureMoved(const std::vector<const TouchInfo *> &touches) = 0;
     //! Dispatches a touch gesture ended event to the GUI element.
-    virtual void OnTouchGestureEnded(const std::vector<const Vectoid::Gui::TouchInfo *> &touches) = 0;
+    virtual void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) = 0;
     
   protected:
     Frame                    frame_;

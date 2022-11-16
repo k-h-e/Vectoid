@@ -32,6 +32,8 @@ class ComboBarrel : public Geometry {
     std::optional<int> Selection() const;
     void SetPosition(float position);
     float Position() const;
+    //! Sets the combo barrel's background color, including its alpha channel.
+    void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
     //! Tells the combo barrel's bounding box.
     Core::BoundingBox<float> BoundingBox() const;
     
@@ -51,6 +53,8 @@ class ComboBarrel : public Geometry {
     std::vector<float>       zCoords_;
     float                    barrelRadius_;
     Core::BoundingBox<float> boundingBox_;
+    Core::Vector<float>      backgroundColor_;
+    float                    backgroundAlpha_;
 };
 
 }    // Namespace SceneGraph.
