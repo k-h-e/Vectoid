@@ -1,17 +1,21 @@
 #include <Vectoid/Gui/Gui.h>
 
+#include <K/Core/Log.h>
 #include <Vectoid/Gui/Button.h>
 #include <Vectoid/Gui/ComboBarrel.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/Gui/RedrawRequestHandlerInterface.h>
+#include <Vectoid/Gui/Strip.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
 #include <Vectoid/SceneGraph/Glyphs.h>
 #include <Vectoid/SceneGraph/RenderTargetInterface.h>
 
 using std::shared_ptr;
 using std::string;
+using std::to_string;
 using std::vector;
+using K::Core::Log;
 using Vectoid::SceneGraph::CoordSys;
 using Vectoid::SceneGraph::Glyphs;
 using Vectoid::SceneGraph::RenderTargetInterface;
@@ -36,6 +40,7 @@ int Gui::AddScene(const shared_ptr<GuiElement> &root) {
 
 void Gui::EnterScene(int scene) {
     if ((scene >= 0) && (scene < static_cast<int>(scenes_.size()))) {
+        Log::Print(Log::Level::Debug, this, [&]{ return "entering scene " + to_string(*activeScene_); });
         coordSys_->RemoveAllChildren();
         auto &sceneRoot = scenes_[scene];
         sceneRoot->AddSceneGraphNodes(coordSys_);
@@ -44,13 +49,23 @@ void Gui::EnterScene(int scene) {
     }
 }
 
+bool Gui::InScene(int scene) const {
+    return (activeScene_ && (*activeScene_ == scene));
+}
+
 void Gui::SetFrame(const Frame &frame) {
     frame_ = frame;
     Layout();
 }
 
+void Gui::OnFrameWillBeRendered() {
+    if (context_->LayoutRequired()) {
+        context_->SetLayoutRequired(false);
+        Layout();
+    }
+}
+
 bool Gui::HandleTouchGestureBegan(const vector<const TouchInfo *> &touches) {
-    puts("Gui::HandleTouchGestureBegan()");
     if (activeScene_) {
         auto &sceneRoot = scenes_[*activeScene_];
         if (touches.size() == 1u) {
@@ -77,25 +92,30 @@ bool Gui::HandleTouchGestureMoved(const vector<const TouchInfo *> &touches) {
 
 bool Gui::HandleTouchGestureEnded(const vector<const TouchInfo *> &touches) {
     if (activeElement_) {
-        activeElement_->OnTouchGestureEnded(touches);
+        GuiElement *element = activeElement_;
         activeElement_ = nullptr;
+        element->OnTouchGestureEnded(touches);
         return true;
     } else {
         return false;
     }
 }
 
-shared_ptr<ComboBarrel> Gui::NewComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth,
-                                            float glyphHeight) {
-    return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, glyphWidth, glyphHeight, context_));
+shared_ptr<Button> Gui::MakeButton(const string &text) {
+    return shared_ptr<Button>(new Button(text, context_->GlyphSize(), context_));
 }
 
-shared_ptr<Button> Gui::NewButton(const string &text, float glyphWidth, float glyphHeight) {
-    return shared_ptr<Button>(new Button(text, glyphWidth, glyphHeight, context_));
+shared_ptr<ComboBarrel> Gui::MakeComboBarrel(int width, int numVisibleOtherPerSide) {
+    return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, context_->GlyphSize(), context_));
+}
+
+shared_ptr<Strip> Gui::MakeStrip(Orientation orientation) {
+    return shared_ptr<Strip>(new Strip(orientation, context_));
 }
 
 void Gui::Layout() {
     if (activeScene_) {
+        Log::Print(Log::Level::Debug, this, [&]{ return "updating layout"; });
         auto &sceneRoot = scenes_[*activeScene_];
         sceneRoot->UpdateRequiredSizes();
         sceneRoot->Layout(frame_);

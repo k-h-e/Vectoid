@@ -22,6 +22,11 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
 }
 
 void ComboBarrel::Render() {
+    
+    // TESTING...
+    RenderFlat();
+    return;
+    
     float left = -.5f * width_ * glyphWidth_;
     
     int   positionInteger    = (position_ >= 0.0f) ? static_cast<int>(position_) : static_cast<int>(position_) - 1;
@@ -134,6 +139,95 @@ void ComboBarrel::Render() {
     glEnable(GL_DEPTH_TEST);
     
     glPopMatrix();
+}
+
+void ComboBarrel::RenderFlat() {
+    float left = -.5f * width_ * glyphWidth_;
+    
+    int   positionInteger    = (position_ >= 0.0f) ? static_cast<int>(position_) : static_cast<int>(position_) - 1;
+    float positionFractional = position_ - static_cast<float>(positionInteger);
+    
+    GLfloat vertices[]  = { boundingBox_.MinCorner().x,  boundingBox_.MaxCorner().y, 0.0f,
+                            boundingBox_.MinCorner().x,  boundingBox_.MinCorner().y, 0.0f,
+                            boundingBox_.MaxCorner().x,  boundingBox_.MaxCorner().y, 0.0f,
+
+                            boundingBox_.MinCorner().x,  boundingBox_.MinCorner().y, 0.0f,
+                            boundingBox_.MaxCorner().x,  boundingBox_.MinCorner().y, 0.0f,
+                            boundingBox_.MaxCorner().x,  boundingBox_.MaxCorner().y, 0.0f  };
+    
+    GLfloat texCoords[] = { 0.0f, 0.0f,
+                            1.0f, 0.0f,
+                            1.0f, 1.0f,
+                            
+                            0.0f, 0.0f,
+                            1.0f, 1.0f,
+                            0.0f, 1.0f  };
+    
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    
+    glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    glEnable(GL_TEXTURE_2D);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+    //glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    if (!items_.empty()) {
+        Transform<float> transform(Core::Axis::X, -positionFractional * itemAngle_);
+        int   selection = *Selection();
+        int   item      = positionInteger - numVisibleOtherPerSide_;
+        for (int row = 0; row <= 2*numVisibleOtherPerSide_ + 1; ++row) {
+            Vector<float> current{0.0f, yCoords_[row], zCoords_[row]};
+            Vector<float> next{0.0f, yCoords_[row + 1], zCoords_[row + 1]};
+            transform.ApplyTo(&current);
+            transform.ApplyTo(&next);
+            
+            float y     = current.y;
+            float nextY = next.y;
+            float x     = left;
+            
+            if ((item >= 0) && (item < static_cast<int>(items_.size()))) {
+                if (item == selection) {
+                    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                } else {
+                    glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+                }
+                string &itemText = items_[item];
+                for (int col = 0; (col < width_) && (col < static_cast<int>(itemText.length())); ++col) {
+                    float nextX = x + glyphWidth_;
+                    char *ptr = &itemText[col];
+                    if (*ptr != ' ') {
+                        vertices[ 0] = x;        vertices[ 1] = nextY;    vertices[ 2] = 0.0f;
+                        vertices[ 3] = nextX;    vertices[ 4] = nextY;    vertices[ 5] = 0.0f;
+                        vertices[ 6] = nextX;    vertices[ 7] = y;        vertices[ 8] = 0.0f;
+                        
+                        vertices[ 9] = x;        vertices[10] = nextY;    vertices[11] = 0.0f;
+                        vertices[12] = nextX;    vertices[13] = y;        vertices[14] = 0.0f;
+                        vertices[15] = x;        vertices[16] = y;        vertices[17] = 0.0f;
+                        
+                        glyphs_->BindGlyphTexture(*ptr);
+                        glDrawArrays(GL_TRIANGLES, 0, 6);
+                    }
+                    x = nextX;
+                }
+            }
+            
+            ++item;
+        }
+    }
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisable(GL_TEXTURE_2D);
+
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 }
 
 }    // Namespace OpenGL.

@@ -45,6 +45,7 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
             return "angle=" + to_string(angle) + ", hand=" + hand.ToString();
         });
     }
+    boundingBox_.Expand(.5f * glyphWidth_, 0.0f, 0.0f);
 }
 
 void ComboBarrel::Clear() {

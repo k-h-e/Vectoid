@@ -52,6 +52,12 @@ class BoundingBox {
         yRange_.Expand(length);
         zRange_.Expand(length);
     }
+    //! Expands the bounding box at each side by the respective specified length.
+    void Expand(T lengthX, T lengthY, T lengthZ) {
+        xRange_.Expand(lengthX);
+        yRange_.Expand(lengthY);
+        zRange_.Expand(lengthZ);
+    }
     //! Scales the bounding box by the specified scaling factor.
     void Scale(T scalingFactor) {
         xRange_.Scale(scalingFactor);

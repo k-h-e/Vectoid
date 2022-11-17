@@ -21,12 +21,11 @@ namespace Gui {
 
 struct TouchInfo;
 
-ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
-                         const shared_ptr<Context> &context)
+ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, const shared_ptr<Context> &context)
         : GuiElement{context},
           startPosition_{0.0f} {
-    comboBarrel_ = context_->renderTarget->NewComboBarrel(width, numVisibleOtherPerSide, glyphWidth, glyphHeight,
-                                                          context_->glyphs);
+    comboBarrel_ = context_->renderTarget->NewComboBarrel(width, numVisibleOtherPerSide, glyphSize.width,
+                                                          glyphSize.height, context_->glyphs);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(comboBarrel_));
               
@@ -45,10 +44,11 @@ void ComboBarrel::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-void ComboBarrel::UpdateRequiredSizes() {
+Size ComboBarrel::UpdateRequiredSizes() {
     Vector<float> extents = comboBarrel_->BoundingBox().Extents();
     requiredSize_.width  = extents.x;
     requiredSize_.height = extents.y;
+    return requiredSize_;
 }
 
 void ComboBarrel::Layout(const Frame &frame) {

@@ -37,7 +37,7 @@ class ComboBarrel : public GuiElement {
     int AddItem(const std::string &item);
     
     void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
-    void UpdateRequiredSizes() override;
+    Size UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;
@@ -45,8 +45,7 @@ class ComboBarrel : public GuiElement {
     void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) override;
     
   private:
-    ComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
-                const std::shared_ptr<Context> &context);
+    ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, const std::shared_ptr<Context> &context);
     void SetBackgroundColor(bool active);
     
     std::shared_ptr<SceneGraph::ComboBarrel> comboBarrel_;

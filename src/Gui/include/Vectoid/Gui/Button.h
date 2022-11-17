@@ -20,6 +20,11 @@ namespace Gui {
 //! Button GUI element.
 class Button : public GuiElement {
   public:
+    class HandlerInterface : public virtual K::Core::Interface {
+      public:
+        virtual void OnButtonPressed(Button *button) = 0;
+    };
+    
     friend class Gui;
     
     Button()                               = delete;
@@ -29,8 +34,11 @@ class Button : public GuiElement {
     Button &operator=(Button &&other)      = delete;
     ~Button()                              = default;
     
+    //! Pass <c>nullptr</c> to unregister a potentially registered handler.
+    void SetHandler(HandlerInterface *handler);
+    
     void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
-    void UpdateRequiredSizes() override;
+    Size UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;
@@ -38,9 +46,10 @@ class Button : public GuiElement {
     void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) override;
     
   private:
-    Button(const std::string &text, float glyphWidth, float glyphHeight, const std::shared_ptr<Context> &context);
+    Button(const std::string &text, Size glyphSize, const std::shared_ptr<Context> &context);
     void SetBackgroundColor(bool active);
     
+    HandlerInterface                         *handler_;
     std::shared_ptr<SceneGraph::TextConsole> textConsole_;
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
     bool                                     touchInside_;

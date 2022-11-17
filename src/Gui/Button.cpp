@@ -22,12 +22,14 @@ using Vectoid::SceneGraph::TextConsole;
 namespace Vectoid {
 namespace Gui {
 
-Button::Button(const string &text, float glyphWidth, float glyphHeight, const shared_ptr<Context> &context)
+Button::Button(const string &text, Size glyphSize, const shared_ptr<Context> &context)
         : GuiElement{context},
+          handler_{nullptr},
           touchInside_{false} {
     int width = static_cast<int>(text.size());
     NumberTools::ClampMin(&width, 1);
-    textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphWidth, glyphHeight, context_->glyphs);
+    textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphSize.width, glyphSize.height,
+                                                          context_->glyphs);
     textConsole_->WriteAt(0, 0, text.c_str(), TextConsole::Color::White);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(textConsole_));
@@ -35,14 +37,19 @@ Button::Button(const string &text, float glyphWidth, float glyphHeight, const sh
     SetBackgroundColor(false);
 }
 
+void Button::SetHandler(HandlerInterface *handler) {
+    handler_ = handler;
+}
+
 void Button::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-void Button::UpdateRequiredSizes() {
+Size Button::UpdateRequiredSizes() {
     Vector<float> extents = textConsole_->BoundingBox().Extents();
     requiredSize_.width  = extents.x;
     requiredSize_.height = extents.y;
+    return requiredSize_;
 }
 
 void Button::Layout(const Frame &frame) {
@@ -55,9 +62,6 @@ void Button::Layout(const Frame &frame) {
 }
 
 GuiElement *Button::TouchedElement(const TouchInfo &touch) {
-    Log::Print(Log::Level::Debug, this, [&]{
-        return "TouchedElement(), pos=(x=" + to_string(touch.x) + " ,y=" + to_string(touch.y) + ")";
-    });
     return frame_.Contains(touch.x, touch.y) ? this : nullptr;
 }
 
@@ -83,8 +87,9 @@ void Button::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
     context_->redrawRequestHandler->OnRedrawRequested();
     
     if (inside) {
-        puts("button clicked");
-        // Activate handler.
+        if (handler_) {
+            handler_->OnButtonPressed(this);
+        }
     }
 }
 

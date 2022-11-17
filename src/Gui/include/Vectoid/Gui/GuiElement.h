@@ -34,7 +34,10 @@ class GuiElement : public virtual K::Core::Interface {
     //! its children.
     virtual void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) = 0;
     //! Recursively updates the required sizes of this GUI element and its children.
-    virtual void UpdateRequiredSizes() = 0;
+    /*!
+     *  \return Required size of the GUI element.
+     */
+    virtual Size UpdateRequiredSizes() = 0;
     //! Recursively layouts this GUI element and its children into the specified available frame.
     virtual void Layout(const Frame &frame) = 0;
     //! Tells which GUI element in the subtree was touched by the specified touch.

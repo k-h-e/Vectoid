@@ -6,6 +6,7 @@
 #include <vector>
 #include <K/Core/Interface.h>
 #include <Vectoid/Gui/Frame.h>
+#include <Vectoid/Gui/Types.h>
 
 namespace Vectoid {
     namespace SceneGraph {
@@ -18,6 +19,7 @@ namespace Vectoid {
         class Context;
         class GuiElement;
         class RedrawRequestHandlerInterface;
+        class Strip;
         struct TouchInfo;
     }
 }
@@ -48,8 +50,12 @@ class Gui : public virtual K::Core::Interface {
     int AddScene(const std::shared_ptr<GuiElement> &root);
     //! Makes the GUI enter the specified scene.
     void EnterScene(int scene);
+    //! Tells whether the GUI is currently in the specified scene.
+    bool InScene(int scene) const;
     //! Sets the GUI frame as specified.
     void SetFrame(const Frame &frame);
+    //! Informs the GUI that a new frame is about to be rendered.
+    void OnFrameWillBeRendered();
     //! Dispatches a touch gesture began event to the GUI and asks it to handle it.
     /*!
      *  \return <c>true</c> in case the GUI handled the touch gesture event.
@@ -65,9 +71,10 @@ class Gui : public virtual K::Core::Interface {
      *  \return <c>true</c> in case the GUI handled the touch gesture event.
      */
     bool HandleTouchGestureEnded(const std::vector<const TouchInfo *> &touches);
-    std::shared_ptr<ComboBarrel> NewComboBarrel(int width, int numVisibleOtherPerSide, float glyphWidth,
-                                                float glyphHeight);
-    std::shared_ptr<Button> NewButton(const std::string &text, float glyphWidth, float glyphHeight);
+    
+    std::shared_ptr<Button> MakeButton(const std::string &text);
+    std::shared_ptr<ComboBarrel> MakeComboBarrel(int width, int numVisibleOtherPerSide);
+    std::shared_ptr<Strip> MakeStrip(Orientation orientation);
 
   private:
     void Layout();
