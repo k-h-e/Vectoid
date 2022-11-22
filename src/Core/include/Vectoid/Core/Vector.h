@@ -3,8 +3,7 @@
 
 #include <cmath>
 #include <string>
-#include <K/Core/ItemReadInterface.h>
-#include <K/Core/ItemWriteInterface.h>
+#include <K/Core/IOOperations.h>
 #include <K/Core/NumberTools.h>
 #include <K/Core/SerializableInterface.h>
 
@@ -60,8 +59,8 @@ class Vector : public virtual K::Core::SerializableInterface {
     //! Produces a verbose representation of the current vector state.
     std::string ToString() const;
 
-    void Serialize(K::Core::ItemWriteInterface *stream) const override;
-    void Deserialize(K::Core::ItemReadInterface *stream) override;
+    void Serialize(K::Core::BinaryWriterInterface *writer) const override;
+    void Deserialize(K::Core::BinaryReaderInterface *reader) override;
     
     T x;
     T y;
@@ -195,17 +194,17 @@ std::string Vector<T>::ToString() const {
 }
 
 template<typename T>
-void Vector<T>::Serialize(K::Core::ItemWriteInterface *stream) const {
-    stream->WriteItem(&x, sizeof(x));
-    stream->WriteItem(&y, sizeof(y));
-    stream->WriteItem(&z, sizeof(z));
+void Vector<T>::Serialize(K::Core::BinaryWriterInterface *writer) const {
+    (*writer) << x;
+    (*writer) << y;
+    (*writer) << z;
 }
 
 template<typename T>
-void Vector<T>::Deserialize(K::Core::ItemReadInterface *stream) {
-    stream->ReadItem(&x, sizeof(x));
-    stream->ReadItem(&y, sizeof(y));
-    stream->ReadItem(&z, sizeof(z));
+void Vector<T>::Deserialize(K::Core::BinaryReaderInterface *reader) {
+    (*reader) >> x;
+    (*reader) >> y;
+    (*reader) >> z;
 }
 
 //! Scaling.
