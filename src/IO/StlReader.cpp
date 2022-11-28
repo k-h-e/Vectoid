@@ -1,7 +1,6 @@
 #include <Vectoid/IO/StlReader.h>
 
 #include <K/Core/BinaryReader.h>
-#include <K/Core/IOOperations.h>
 #include <K/Core/Log.h>
 #include <K/IO/File.h>
 #include <K/IO/StreamBuffer.h>

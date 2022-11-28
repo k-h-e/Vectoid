@@ -5,7 +5,6 @@
 #include <cstdio>
 #include <cerrno>
 #include <vector>
-#include <K/Core/IOOperations.h>
 #include <K/Core/Log.h>
 #include <K/Core/ResultAcceptor.h>
 #include <K/Core/StringTools.h>
@@ -86,7 +85,7 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
         TextWriter writer(make_shared<StreamBuffer>(
             make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".poly", File::AccessMode::WriteOnly, true),
             File::AccessMode::WriteOnly, 4 * 1024));
-        writer.SetFinalResultAcceptor(result);
+        writer.SetCloseResultAcceptor(result);
 
         const size_t lineBufferSize = 200;
         char line[lineBufferSize];
@@ -151,7 +150,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
 
     string line;
     reader.Read('\n', &line);
-    if (reader.ReadFailed()) {
+    if (reader.ErrorState()) {
         return nullptr;
     }
     int numVertices;
@@ -165,7 +164,7 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     double y;
     for (int i = 0; i < numVertices; ++i) {
         reader.Read('\n', &line);
-        if (reader.ReadFailed()) {
+        if (reader.ErrorState()) {
             return nullptr;
         }
         tokens = StringTools::Tokenize(line, " \t", true);
@@ -191,7 +190,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
 
     string line;
     reader.Read('\n', &line);
-    if (reader.ReadFailed()) {
+    if (reader.ErrorState()) {
         return nullptr;
     }
     int numTriangles;
@@ -204,7 +203,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
         reader.Read('\n', &line);
-        if (reader.ReadFailed()) {
+        if (reader.ErrorState()) {
             return nullptr;
         }
 

@@ -1,19 +1,15 @@
 #include <Vectoid/IO/StlWriter.h>
 
-#include <K/Core/BinaryWriter.h>
 #include <K/Core/Log.h>
 #include <K/Core/ResultAcceptor.h>
 #include <K/IO/File.h>
-#include <K/Core/IOOperations.h>
 #include <K/IO/StreamBuffer.h>
-#include <K/Core/BinaryWriter.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
 
 using std::make_shared;
 using std::string;
 using std::to_string;
-using K::Core::BinaryWriter;
 using K::Core::Log;
 using K::Core::ResultAcceptor;
 using K::IO::File;
@@ -33,35 +29,30 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, const string 
 
     {
         auto file = make_shared<File>(fileName, File::AccessMode::WriteOnly, true);
-        file->SetFinalResultAcceptor(result);
         auto buffer = make_shared<StreamBuffer>(file, File::AccessMode::WriteOnly, 4 * 1024);
-        buffer->SetFinalResultAcceptor(result);
+        buffer->SetCloseResultAcceptor(result);
         buffer->Seek(headerSize + 4);
-        {
-            auto writer = make_shared<BinaryWriter>(buffer);
-            writer->SetFinalResultAcceptor(result);
 
-            triangleProvider->PrepareToProvideTriangles();
-            ThreePoints   triangle;
-            Vector<float> normal;
-            uint16_t      numAttributes = 0u;
-            while (triangleProvider->ProvideNextTriangle(&triangle)) {
-                triangle.ComputeNormal(&normal);
-                if (!normal.Valid()) {
-                    return false;
-                } else {
-                    (*writer) << normal.x;
-                    (*writer) << normal.y;
-                    (*writer) << normal.z;
-                    for (int i = 0; i < 3; ++i) {
-                        Vector<float> &vertex = triangle[i];
-                        (*writer) << vertex.x;
-                        (*writer) << vertex.y;
-                        (*writer) << vertex.z;
-                    }
-                    writer->WriteItem(&numAttributes, sizeof(numAttributes));
-                    ++numTriangles;
+        triangleProvider->PrepareToProvideTriangles();
+        ThreePoints   triangle;
+        Vector<float> normal;
+        uint16_t      numAttributes = 0u;
+        while (triangleProvider->ProvideNextTriangle(&triangle)) {
+            triangle.ComputeNormal(&normal);
+            if (!normal.Valid()) {
+                return false;
+            } else {
+                (*buffer) << normal.x;
+                (*buffer) << normal.y;
+                (*buffer) << normal.z;
+                for (int i = 0; i < 3; ++i) {
+                    Vector<float> &vertex = triangle[i];
+                    (*buffer) << vertex.x;
+                    (*buffer) << vertex.y;
+                    (*buffer) << vertex.z;
                 }
+                WriteItem(buffer.get(), &numAttributes, sizeof(numAttributes));
+                ++numTriangles;
             }
         }
 

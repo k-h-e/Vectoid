@@ -59,8 +59,8 @@ class Vector : public virtual K::Core::SerializableInterface {
     //! Produces a verbose representation of the current vector state.
     std::string ToString() const;
 
-    void Serialize(K::Core::BinaryWriterInterface *writer) const override;
-    void Deserialize(K::Core::BinaryReaderInterface *reader) override;
+    void Serialize(K::Core::BlockingOutStreamInterface *stream) const override;
+    void Deserialize(K::Core::BlockingInStreamInterface *stream) override;
     
     T x;
     T y;
@@ -194,17 +194,17 @@ std::string Vector<T>::ToString() const {
 }
 
 template<typename T>
-void Vector<T>::Serialize(K::Core::BinaryWriterInterface *writer) const {
-    (*writer) << x;
-    (*writer) << y;
-    (*writer) << z;
+void Vector<T>::Serialize(K::Core::BlockingOutStreamInterface *stream) const {
+    (*stream) << x;
+    (*stream) << y;
+    (*stream) << z;
 }
 
 template<typename T>
-void Vector<T>::Deserialize(K::Core::BinaryReaderInterface *reader) {
-    (*reader) >> x;
-    (*reader) >> y;
-    (*reader) >> z;
+void Vector<T>::Deserialize(K::Core::BlockingInStreamInterface *stream) {
+    (*stream) >> x;
+    (*stream) >> y;
+    (*stream) >> z;
 }
 
 //! Scaling.
