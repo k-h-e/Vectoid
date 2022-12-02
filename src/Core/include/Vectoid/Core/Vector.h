@@ -3,7 +3,8 @@
 
 #include <cmath>
 #include <string>
-#include <K/Core/IOOperations.h>
+#include <K/Core/BlockingInStreamInterface.h>
+#include <K/Core/BlockingOutStreamInterface.h>
 #include <K/Core/NumberTools.h>
 #include <K/Core/SerializableInterface.h>
 
