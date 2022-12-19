@@ -3,6 +3,11 @@
 
 #include <string>
 
+namespace K {
+    namespace Core {
+        class SeekableBlockingOutStreamInterface;
+    }
+}
 namespace Vectoid {
     namespace Core {
         class TriangleProviderInterface;
@@ -15,6 +20,12 @@ namespace IO {
 //! Writes (binary) STL files.
 class StlWriter {
   public:
+    //! Writes triangles to a binary STL file.
+    /*!
+     *  \return <c>true</c> in case of success. Otherwise, the state of the output stream is undefined.
+     */
+    static bool Write(Core::TriangleProviderInterface *triangleProvider,
+                      K::Core::SeekableBlockingOutStreamInterface *outStream);
     //! Writes triangles to a binary STL file.
     /*!
      *  \return <c>true</c> in case of success. Otherwise, the state of the written file is undefined.

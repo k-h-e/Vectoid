@@ -1,17 +1,18 @@
 #include <Vectoid/IO/StlReader.h>
 
-#include <K/Core/BinaryReader.h>
+#include <K/Core/BlockingInStreamInterface.h>
 #include <K/Core/Log.h>
 #include <K/IO/File.h>
 #include <K/IO/StreamBuffer.h>
+#include <K/IO/SubStream.h>
 #include <Vectoid/Core/ThreePoints.h>
 
 using std::string;
 using std::to_string;
-using K::Core::BinaryReader;
 using K::Core::Log;
 using K::IO::File;
 using K::IO::StreamBuffer;
+using K::IO::SubStream;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::Vector;
 
@@ -20,6 +21,20 @@ namespace IO {
 
 StlReader::StlReader(const string &fileName)
         : fileName_{fileName},
+          useSubFile_{false},
+          subFileOffset_{0},
+          subFileSize_{0},
+          error_{false},
+          numTriangles_{0u},
+          numTrianglesProvided_{0u} {
+    // Nop.
+}
+
+StlReader::StlReader(const string &fileName, uint64_t offset, uint64_t size)
+        : fileName_{fileName},
+          useSubFile_{true},
+          subFileOffset_{offset},
+          subFileSize_{size},
           error_{false},
           numTriangles_{0u},
           numTrianglesProvided_{0u} {
@@ -28,14 +43,16 @@ StlReader::StlReader(const string &fileName)
 
 void StlReader::PrepareToProvideTriangles() {
     auto file   = make_shared<File>(fileName_, File::AccessMode::ReadOnly, false);
-    auto buffer = make_shared<StreamBuffer>(file, File::AccessMode::ReadOnly, 2048);
-    reader_     = make_shared<BinaryReader>(buffer);
+    fileStream_ = make_shared<StreamBuffer>(file, File::AccessMode::ReadOnly, 2048);
+    if (useSubFile_) {
+        fileStream_ = make_shared<SubStream>(fileStream_, subFileOffset_, subFileSize_);
+    }
     
     const int headerSize = 80;
     uint8_t header[headerSize];
-    reader_->ReadItem(&header, headerSize);
-    (*reader_) >> numTriangles_;
-    if (!reader_->ReadFailed()) {
+    ReadItem(fileStream_.get(), &header, headerSize);
+    (*fileStream_) >> numTriangles_;
+    if (!fileStream_->ErrorState()) {
         numTrianglesProvided_ = 0u;
         normal_               = Vector<float>(0.0f, 1.0f, 0.0f);
         error_                = false;
@@ -44,7 +61,7 @@ void StlReader::PrepareToProvideTriangles() {
         });
         CheckFinished();
     } else {
-        reader_.reset();
+        fileStream_.reset();
         numTriangles_         = 0u;
         numTrianglesProvided_ = 0u;
         error_                = true;
@@ -55,25 +72,25 @@ void StlReader::PrepareToProvideTriangles() {
 }
 
 bool StlReader::ProvideNextTriangle(ThreePoints *outTriangle) {
-    if (reader_) {
-        (*reader_) >> normal_.x;
-        (*reader_) >> normal_.y;
-        (*reader_) >> normal_.z;
+    if (fileStream_) {
+        (*fileStream_) >> normal_.x;
+        (*fileStream_) >> normal_.y;
+        (*fileStream_) >> normal_.z;
         for (int i = 0; i < 3; ++i) {
             Vector<float> &point = (*outTriangle)[i];
-            (*reader_) >> point.x;
-            (*reader_) >> point.y;
-            (*reader_) >> point.z;
+            (*fileStream_) >> point.x;
+            (*fileStream_) >> point.y;
+            (*fileStream_) >> point.z;
         }
         uint16_t dummy;
-        reader_->ReadItem(&dummy, 2);
+        ReadItem(fileStream_.get(), &dummy, 2);
         
-        if (!reader_->ReadFailed() && normal_.Valid() && outTriangle->Valid()) {
+        if (!fileStream_->ErrorState() && normal_.Valid() && outTriangle->Valid()) {
             ++numTrianglesProvided_;
             CheckFinished();
             return true;
         } else {
-            reader_.reset();
+            fileStream_.reset();
             error_ = true;
             Log::Print(Log::Level::Error, this, [&]{
                 return "error while reading STL file \"" + fileName_ + "\"!";
@@ -94,7 +111,7 @@ bool StlReader::TriangleError() {
 
 void StlReader::CheckFinished() {
     if (numTrianglesProvided_ >= numTriangles_) {
-        reader_.reset();
+        fileStream_.reset();
         Log::Print(Log::Level::Info, this, [&]{
             return "successfully read " + to_string(numTriangles_) + " triangles from STL file \""
                 + fileName_ + "\"";
