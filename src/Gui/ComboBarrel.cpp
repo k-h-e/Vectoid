@@ -9,6 +9,7 @@
 #include <Vectoid/SceneGraph/RenderTargetInterface.h>
 
 using std::make_shared;
+using std::optional;
 using std::shared_ptr;
 using std::string;
 using std::vector;
@@ -34,10 +35,21 @@ ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, 
 
 void ComboBarrel::Clear() {
     comboBarrel_->Clear();
+    context_->redrawRequestHandler->OnRedrawRequested();
 }
 
 int ComboBarrel::AddItem(const string &item) {
-    return comboBarrel_->AddItem(item);
+    int id = comboBarrel_->AddItem(item);
+    context_->redrawRequestHandler->OnRedrawRequested();
+    return id;
+}
+
+optional<int> ComboBarrel::Selection() const {
+    return comboBarrel_->Selection();
+}
+
+void ComboBarrel::SetSelection(int itemId) {
+    comboBarrel_->SetSelection(itemId);
 }
 
 void ComboBarrel::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {

@@ -33,7 +33,6 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
     LitColorCodedTriangles &operator=(LitColorCodedTriangles &&other)      = delete;
     ~LitColorCodedTriangles();
 
-    void EnableGouraudShading(bool enabled) override;
     void Render() override;
 
   private:
@@ -45,7 +44,6 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
 
     int  vboSlot_;
     int  numTriangles_;             // Valid <=> VBO present.
-    bool gouraudShadingEnabled_;
 };
 
 }    // Namespace OpenGL.

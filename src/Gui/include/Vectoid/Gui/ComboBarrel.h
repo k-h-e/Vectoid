@@ -1,6 +1,7 @@
 #ifndef VECTOID_GUI_COMBOBARREL_H_
 #define VECTOID_GUI_COMBOBARREL_H_
 
+#include <optional>
 #include <Vectoid/Gui/GuiElement.h>
 
 namespace Vectoid {
@@ -35,6 +36,10 @@ class ComboBarrel : public GuiElement {
      *  \return The added item's ID.
      */
     int AddItem(const std::string &item);
+    //! Tells the currently selected item, or <c>nullopt</c> in case no items are present.
+    std::optional<int> Selection() const;
+    //! Sets the selection as specified (if the given id exists).
+    void SetSelection(int itemId);
     
     void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
     Size UpdateRequiredSizes() override;

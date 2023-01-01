@@ -6,9 +6,10 @@
 #include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
-namespace Core {
-    class TriangleProviderInterface;
-}
+    namespace Core {
+        class ExtendedTriangleProviderInterface;
+        class TriangleProviderInterface;
+    }
 }
 
 namespace Vectoid {
@@ -25,14 +26,17 @@ class LitColorCodedTriangles : public Geometry {
     //! Sets a color coding function. Pass empty function to unset.
     void SetColorCodingFunction(
         const std::function<Vectoid::Core::Vector<float>(const Vectoid::Core::Vector<float> &)> &colorCodingFunction);
-    //! Switches Gouraud shading on and off.
-    virtual void EnableGouraudShading(bool enabled) = 0;
-
+    //! Turns on Gouraud shading.
+    void EnableGouraudShading(const std::shared_ptr<Core::ExtendedTriangleProviderInterface> &triangleProvider);
+    //! Turns off Gouraud shading.
+    void DisableGouraudShading();
+    
   protected:
     LitColorCodedTriangles(const std::shared_ptr<Context> &context,
                            const std::shared_ptr<Core::TriangleProviderInterface> &triangleProvider);
 
     std::shared_ptr<Core::TriangleProviderInterface>                                  triangleProvider_;
+    std::shared_ptr<Core::ExtendedTriangleProviderInterface>                          gouraudTriangleProvider_;
     std::function<Vectoid::Core::Vector<float>(const Vectoid::Core::Vector<float> &)> colorCodingFunction_;
 };
 

@@ -30,6 +30,8 @@ class ComboBarrel : public Geometry {
     int AddItem(const std::string &item);
     //! Tells the currently selected item, or <c>nullopt</c> in case no items are present.
     std::optional<int> Selection() const;
+    //! Sets the selection as specified (if the given id exists).
+    void SetSelection(int itemId);
     void SetPosition(float position);
     float Position() const;
     //! Sets the combo barrel's background color, including its alpha channel.

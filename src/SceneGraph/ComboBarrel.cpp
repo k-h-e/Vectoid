@@ -73,6 +73,12 @@ optional<int> ComboBarrel::Selection() const {
     }
 }
 
+void ComboBarrel::SetSelection(int itemId) {
+    if ((itemId >= 0) && (itemId < static_cast<int>(items_.size()))) {
+        position_ = static_cast<float>(itemId);
+    }
+}
+
 void ComboBarrel::SetPosition(float position) {
     if (!items_.empty()) {
         NumberTools::Clamp(&position, -.5f, static_cast<float>(items_.size()) - .5f);

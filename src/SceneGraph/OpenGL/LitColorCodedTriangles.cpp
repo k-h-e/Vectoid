@@ -2,6 +2,7 @@
 
 #include <K/Core/Log.h>
 #include <K/Core/NumberTools.h>
+#include <Vectoid/Core/ExtendedTriangleProviderInterface.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/DataSet/Points.h>
@@ -30,10 +31,9 @@ namespace OpenGL {
 
 LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<class Context> &context,
                                                const shared_ptr<TriangleProviderInterface> &triangleProvider)
-        : SceneGraph::LitColorCodedTriangles(context, triangleProvider),
-          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
-          numTriangles_(0),
-          gouraudShadingEnabled_(false) {
+        : SceneGraph::LitColorCodedTriangles{context, triangleProvider},
+          vboSlot_{context->AddResourceSlot(Context::ResourceType::VBO)},
+          numTriangles_{0} {
     // Nop.
 }
 
@@ -41,15 +41,8 @@ LitColorCodedTriangles::~LitColorCodedTriangles() {
     Context()->RemoveResourceSlot(vboSlot_);
 }
 
-void LitColorCodedTriangles::EnableGouraudShading(bool enabled) {
-    if (enabled != gouraudShadingEnabled_) {
-        gouraudShadingEnabled_ = enabled;
-        Context()->ClearResource(vboSlot_);
-    }
-}
-
 void LitColorCodedTriangles::Render() {
-    optional<GLuint> vbo = GenerateVBO();
+    optional<GLuint> vbo{GenerateVBO()};
     if (vbo) {
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
@@ -77,9 +70,9 @@ void LitColorCodedTriangles::Render() {
 }
 
 optional<GLuint> LitColorCodedTriangles::GenerateVBO() {
-    optional<GLuint> vbo = Context()->GetResource(vboSlot_);
+    optional<GLuint> vbo{Context()->GetResource(vboSlot_)};
     if (!vbo) {
-        if (gouraudShadingEnabled_) {
+        if (gouraudTriangleProvider_) {
             vbo = GenerateGouraudVBO();
         } else {
             vbo = GenerateRegularVBO();
@@ -94,20 +87,20 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
 
     ThreePoints   triangle;
     Vector<float> normal;
-    int           numTriangles = 0;
+    int           numTriangles{0};
     triangleProvider_->PrepareToProvideTriangles();
     while (triangleProvider_->ProvideNextTriangle(&triangle)) {
         triangle.ComputeNormal(&normal);
         if (!normal.Valid()) {
-            normal = Vector<float>(1.0f, 0.0f, 0.0f);
+            normal = Vector<float>{1.0f, 0.0f, 0.0f};
             Log::Print(Log::Level::Warning, this, [&]{
                 return "failed to compute triangle normal, substituting default";
             });
         }
 
         for (int i = 0; i < 3; ++i) {
-            const Vector<float> &vertex = triangle[i];
-            const Vector<float> color   = GetColor(vertex);
+            const Vector<float> &vertex{triangle[i]};
+            const Vector<float> color{GetColor(vertex)};
             data.push_back(vertex.x);
             data.push_back(vertex.y);
             data.push_back(vertex.z);
@@ -144,76 +137,56 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
 }
 
 optional<GLuint> LitColorCodedTriangles::GenerateGouraudVBO() {
-    Triangles triangles(triangleProvider_.get());
-    if (triangles.Size()) {
-        int numVertices = triangles.Vertices()->Size();
-        vector<Vector<float>> normals(static_cast<vector<Vector<float>>::size_type>(numVertices));
-
-        unordered_set<int> neighbors;
-        ThreePoints        triangle;
-        Vector<float>      normal;
-        Vector<float>      normalSum;
-        for (int i = 0; i < numVertices; ++i) {
-            triangles.GetTrianglesSharingVertex(i, &neighbors);
-            for (int neighbor : neighbors) {
-                triangles.GetTriangleVertices(neighbor, &triangle);
-                triangle.ComputeNormal(&normal);
-                normalSum += normal;
-            }
-            normalSum.Normalize();
-            if (normalSum.Valid()) {
-                normals[i] = normalSum;
-            } else {
-                normals[i] = Vector<float>(1.0f, 0.0f, 0.0f);
-                Log::Print(Log::Level::Warning, this, [&]{
-                    return "failed to compute vertex normal, substituting default";
-                });
-            }
+    vector<GLfloat> data;
+    
+    ThreePoints triangle;
+    ThreePoints vertexNormals;
+    int         numTriangles = 0;
+    gouraudTriangleProvider_->PrepareToProvideTriangles();
+    while (gouraudTriangleProvider_->ProvideNextTriangle(&triangle)) {
+        ++numTriangles;
+        gouraudTriangleProvider_->ProvideVertexNormals(&vertexNormals);
+        for (int i = 0; i < 3; ++i) {
+            const Vector<float> &vertex = triangle[i];
+            data.push_back(vertex.x);
+            data.push_back(vertex.y);
+            data.push_back(vertex.z);
+            const Vector<float> &normal = vertexNormals[i];
+            data.push_back(normal.x);
+            data.push_back(normal.y);
+            data.push_back(normal.z);
+            const Vector<float> color = GetColor(vertex);
+            data.push_back(color.x);
+            data.push_back(color.y);
+            data.push_back(color.z);
+            data.push_back(1.0f);
         }
-
-        vector<GLfloat> data;
-        ThreeIds        vertexIds;
-        for (int i = 0; i < triangles.Size(); ++i) {
-            triangles.GetTriangleVertexIds(i, &vertexIds);
-            for (int j = 0; j < 3; ++j) {
-                int vertexId = vertexIds[j];
-                const Vector<float> &vertex = (*triangles.Vertices())[vertexId];
-                data.push_back(vertex.x);
-                data.push_back(vertex.y);
-                data.push_back(vertex.z);
-                const Vector<float> &normal = normals[vertexId];
-                data.push_back(normal.x);
-                data.push_back(normal.y);
-                data.push_back(normal.z);
-                const Vector<float> color = GetColor(vertex);
-                data.push_back(color.x);
-                data.push_back(color.y);
-                data.push_back(color.z);
-                data.push_back(1.0f);
-            }
-        }
-
+    }
+    
+    if (gouraudTriangleProvider_->TriangleError()) {
+        numTriangles_ = 0;
+        
+        Log::Print(Log::Level::Error, this, [&]{ return "failed to generate VBO for Gouraud shading"; });
+        return nullopt;
+    } else {
         GLuint name;
         glGenBuffers(1u, &name);
         glBindBuffer(GL_ARRAY_BUFFER, name);
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
-
         Context()->SetResource(vboSlot_, name);
-        numTriangles_ = triangles.Size();
+        numTriangles_ = numTriangles;
+        
         Log::Print(Log::Level::Debug, this, [&]{
             return "generated VBO " + to_string(name) + " for Gouraud shading, num_triangles="
                 + to_string(numTriangles_) + ", size=" + to_string(data.size() * sizeof(GLfloat));
         });
         return name;
-    } else {
-        Log::Print(Log::Level::Error, this, [&]{ return "failed to generate VBO for Gouraud shading"; });
-        return nullopt;
     }
 }
 
 Vector<float> LitColorCodedTriangles::GetColor(const Vector<float> &vertex) {
-    auto color = colorCodingFunction_ ? colorCodingFunction_(vertex) : Vector<float>(.5f, .5f, .5f);
+    auto color{colorCodingFunction_ ? colorCodingFunction_(vertex) : Vector<float>{.5f, .5f, .5f}};
     color.ClampComponents(0.0f, 1.0f);
     return color;
 }

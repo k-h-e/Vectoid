@@ -21,8 +21,7 @@ class TriangleProviderInterface : public virtual K::Core::Interface {
      *  <c>TriangleError()</c> should be checked.
      */
     virtual bool ProvideNextTriangle(ThreePoints *outTriangle) = 0;
-    //! Provides the normal for the current triangle if normals are supported by the provider, and <c>(0, 1, 0)</c>
-    //! otherwise.
+    //! Provides the normal for the current triangle.
     virtual void ProvideNormal(Vector<float> *outNormal) = 0;
     //! Tells whether or not the last triangle readout ended because of an error.
     virtual bool TriangleError() = 0;
