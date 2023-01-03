@@ -21,7 +21,7 @@ void Strip::AddChild(const shared_ptr<GuiElement> &guiElement) {
     context_->SetLayoutRequired(true);
 }
 
-void Strip::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
+void Strip::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     for (auto &info : children_) {
         info.child->AddSceneGraphNodes(guiCoordSys);
     }

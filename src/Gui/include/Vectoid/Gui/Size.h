@@ -1,6 +1,8 @@
 #ifndef VECTOID_GUI_SIZE_H_
 #define VECTOID_GUI_SIZE_H_
 
+#include <string>
+
 namespace Vectoid {
 namespace Gui {
 

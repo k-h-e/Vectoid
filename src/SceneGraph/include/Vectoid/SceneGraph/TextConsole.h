@@ -20,7 +20,8 @@ class TextConsole : public Geometry {
                        Green,
                        Yellow,
                        Red,
-                       LightBlue };
+                       LightBlue,
+                       Custom     };
 
     TextConsole()                                    = delete;
     TextConsole(const TextConsole &other)            = delete;
@@ -46,6 +47,8 @@ class TextConsole : public Geometry {
     Core::BoundingBox<float> BoundingBox() const;
     //! Sets the console's background color, including its alpha channel.
     void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
+    //! Sets the console's custom text color.
+    void SetCustomColor(const Vectoid::Core::Vector<float> &color);
 
   protected:
     TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
@@ -60,6 +63,7 @@ class TextConsole : public Geometry {
     std::vector<uint8_t>         colorBuffer_;
     Vectoid::Core::Vector<float> backgroundColor_;
     float                        backgroundAlpha_;
+    Vectoid::Core::Vector<float> customColor_;
     std::shared_ptr<Glyphs>      glyphs_;
 };
 

@@ -24,6 +24,10 @@ class LitTriangles : public Geometry {
     LitTriangles &operator=(LitTriangles &&other)      = delete;
 
     void SetColor(const Core::Vector<float> &color);
+    //! Toggles lighting, default is on.
+    void EnableLighting(bool enabled);
+    //! Toggles depth test, default is on.
+    void EnableDepthTest(bool enabled);
 
   protected:
     LitTriangles(const std::shared_ptr<Context> &context,
@@ -31,6 +35,8 @@ class LitTriangles : public Geometry {
 
     std::shared_ptr<Core::TriangleProviderInterface> triangleProvider_;
     Core::Vector<float>                              color_;
+    bool                                             lightingEnabled_;
+    bool                                             depthTestEnabled_;
 };
 
 }    // Namespace SceneGraph.

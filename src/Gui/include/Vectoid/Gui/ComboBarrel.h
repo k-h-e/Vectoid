@@ -41,7 +41,7 @@ class ComboBarrel : public GuiElement {
     //! Sets the selection as specified (if the given id exists).
     void SetSelection(int itemId);
     
-    void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
+    void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     Size UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
@@ -51,7 +51,7 @@ class ComboBarrel : public GuiElement {
     
   private:
     ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, const std::shared_ptr<Context> &context);
-    void SetBackgroundColor(bool active);
+    void SetColors(bool active);
     
     std::shared_ptr<SceneGraph::ComboBarrel> comboBarrel_;
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;

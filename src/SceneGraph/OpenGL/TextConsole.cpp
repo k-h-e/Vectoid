@@ -111,29 +111,43 @@ void TextConsole::Render() {
 void TextConsole::SetColor(uint8_t colorIndex) {
     if (colorIndex != currentColorIndex_) {
         Vector<float> color;
-        switch (colorIndex) {
-            case 0u:
+        switch (static_cast<Color>(colorIndex)) {
+            case Color::White:
                 color = Vector<float>(1.0f, 1.0f, 1.0f);
                 break;
-            case 1u:
+            case Color::Grey:
                 color = Vector<float>(0.5f, 0.5f, 0.5f);
                 break;
-            case 2u:
+            case Color::Green:
                 color = Vector<float>(0.0f, 1.0f, 0.0f);
                 break;
-            case 3u:
+            case Color::Yellow:
                 color = Vector<float>(1.0f, 1.0f, 0.0f);
                 break;
-            case 4u:
+            case Color::Red:
                 color = Vector<float>(1.0f, 0.0f, 0.0f);
                 break;
-            case 5u:
+            case Color::LightBlue:
                 color = Vector<float>(0.5f, 0.5f, 1.0f);
+                break;
+            case Color::Custom:
+                color = customColor_;
                 break;
             default:
                 break;
         }
         glColor4f(color.x, color.y, color.z, 1.0f);
+
+    enum class Color { White,
+                       Grey,
+                       Green,
+                       Yellow,
+                       Red,
+                       LightBlue,
+                       Custom     };
+
+
+
 
         currentColorIndex_ = colorIndex;
     }

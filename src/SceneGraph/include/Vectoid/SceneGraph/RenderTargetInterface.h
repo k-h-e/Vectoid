@@ -22,6 +22,7 @@ class AgeColoredParticles;
 class Camera;
 class ComboBarrel;
 class CoordSys;
+class CustomPanel;
 class Geometry;
 class Geode;
 class Glyphs;
@@ -60,6 +61,7 @@ class RenderTargetInterface : public virtual K::Core::Interface {
         int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
         const std::shared_ptr<Glyphs> &glyphs) = 0;
     virtual std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() = 0;
+    virtual std::shared_ptr<::Vectoid::SceneGraph::CustomPanel> NewCustomPanel(float width, float height) = 0;
     //! Can take <c>nullptr</c> as geometry.
     virtual std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(
         const std::shared_ptr<Geometry> &geometry) = 0;

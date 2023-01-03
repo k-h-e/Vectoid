@@ -16,7 +16,9 @@ namespace Vectoid {
     namespace Gui {
         class Button;
         class ComboBarrel;
+        class CustomContentInterface;
         class Context;
+        class CustomButton;
         class GuiElement;
         class RedrawRequestHandlerInterface;
         class Strip;
@@ -30,9 +32,17 @@ namespace Gui {
 //! Graphical user interface.
 class Gui : public virtual K::Core::Interface {
   public:
+    //! Interface to GUI handlers.
+    class HandlerInterface : public virtual K::Core::Interface {
+      public:
+        //! Informs the handler that the GUI requests a redraw.
+        virtual void OnGuiRequestsRedraw() = 0;
+        //! Informs the handler whether or not the GUI requests cyclic update calls.
+        virtual void OnGuiRequestsCyclicUpdateCalls(bool requested) = 0;
+    };
+  
     Gui(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,
-        const std::shared_ptr<SceneGraph::CoordSys> &coordSys,
-        const std::shared_ptr<RedrawRequestHandlerInterface> &redrawRequestHandler);
+        const std::shared_ptr<SceneGraph::CoordSys> &coordSys);
     Gui()                            = delete;
     Gui(const Gui &other)            = delete;
     Gui &operator=(const Gui &other) = delete;
@@ -40,6 +50,12 @@ class Gui : public virtual K::Core::Interface {
     Gui &operator=(Gui &&other)      = delete;
     ~Gui()                           = default;
     
+    //! Registers the specified handler.
+    /*!
+     *  Pass <c>nullptr</c> to unregister a previously registered handler. In that case, when the method returns it is
+     *  guaranteed that the handler will not be called again.
+     */
+    void Register(HandlerInterface *handler);
     //! Adds the specified scene.
     /*!
      *  \param root
@@ -56,6 +72,8 @@ class Gui : public virtual K::Core::Interface {
     void SetFrame(const Frame &frame);
     //! Informs the GUI that a new frame is about to be rendered.
     void OnFrameWillBeRendered();
+    //! Handles a cyclic update call (requested earlier).
+    void OnCyclicUpdate(float deltaTimeS);
     //! Dispatches a touch gesture began event to the GUI and asks it to handle it.
     /*!
      *  \return <c>true</c> in case the GUI handled the touch gesture event.
@@ -71,9 +89,20 @@ class Gui : public virtual K::Core::Interface {
      *  \return <c>true</c> in case the GUI handled the touch gesture event.
      */
     bool HandleTouchGestureEnded(const std::vector<const TouchInfo *> &touches);
+    //! Returns the global glyph size setting.
+    Size GlyphSize() const;
     
     std::shared_ptr<Button> MakeButton(const std::string &text);
     std::shared_ptr<ComboBarrel> MakeComboBarrel(int width, int numVisibleOtherPerSide);
+    //! Creates a new custom button.
+    /*!
+     *  \param width
+     *  Custom button width in multiples of the GUI's glyph size.
+     *
+     *  \param height
+     *  Custom button height in multiples of the GUI's glyph height.
+     */
+    std::shared_ptr<CustomButton> MakeCustomButton(const std::shared_ptr<CustomContentInterface> &content);
     std::shared_ptr<Strip> MakeStrip(Orientation orientation);
 
   private:
@@ -85,6 +114,7 @@ class Gui : public virtual K::Core::Interface {
     std::optional<int>                                 activeScene_;
     GuiElement                                         *activeElement_;
     std::shared_ptr<Context>                           context_;
+    std::chrono::steady_clock::time_point              lastFrameTime_;
 };
 
 }    // Namespace Gui.

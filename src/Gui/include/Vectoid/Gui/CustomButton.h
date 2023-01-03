@@ -1,7 +1,6 @@
-#ifndef VECTOID_GUI_BUTTON_H_
-#define VECTOID_GUI_BUTTON_H_
+#ifndef VECTOID_GUI_CUSTOMBUTTON_H_
+#define VECTOID_GUI_CUSTOMBUTTON_H_
 
-#include <string>
 #include <Vectoid/Gui/GuiElement.h>
 
 namespace Vectoid {
@@ -10,52 +9,59 @@ namespace Vectoid {
         struct TouchInfo;
     }
     namespace SceneGraph {
-        class TextConsole;
+        class CustomPanel;
     }
 }
 
 namespace Vectoid {
 namespace Gui {
 
-//! Button GUI element.
-class Button : public GuiElement {
+class CustomContentInterface;
+
+//! Custom button GUI element.
+class CustomButton : public GuiElement {
   public:
     class HandlerInterface : public virtual K::Core::Interface {
       public:
-        virtual void OnButtonPressed(Button *button) = 0;
+        virtual void OnCustomButtonPressed(CustomButton *button) = 0;
     };
     
     friend class Gui;
     
-    Button()                               = delete;
-    Button(const Button &other)            = delete;
-    Button &operator=(const Button &other) = delete;
-    Button(Button &&other)                 = delete;
-    Button &operator=(Button &&other)      = delete;
-    ~Button()                              = default;
+    CustomButton()                                     = delete;
+    CustomButton(const CustomButton &other)            = delete;
+    CustomButton &operator=(const CustomButton &other) = delete;
+    CustomButton(CustomButton &&other)                 = delete;
+    CustomButton &operator=(CustomButton &&other)      = delete;
+    ~CustomButton()                                    = default;
     
     //! Pass <c>nullptr</c> to unregister a potentially registered handler.
     void SetHandler(HandlerInterface *handler);
+    //! Toggles content animation.
+    void EnableAnimation(bool enabled);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     Size UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
+    void OnCyclicUpdate(float deltaTimeS) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;
     void OnTouchGestureMoved(const std::vector<const TouchInfo *> &touches) override;
     void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) override;
     
   private:
-    Button(const std::string &text, Size glyphSize, const std::shared_ptr<Context> &context);
+    CustomButton(const std::shared_ptr<CustomContentInterface> &content, const std::shared_ptr<Context> &context);
     void SetColors(bool active);
     
     HandlerInterface                         *handler_;
-    std::shared_ptr<SceneGraph::TextConsole> textConsole_;
+    std::shared_ptr<CustomContentInterface>  content_;
+    std::shared_ptr<SceneGraph::CustomPanel> panel_;
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
     bool                                     touchInside_;
+    bool                                     animationEnabled_;
 };
 
 }    // Namespace Gui.
 }    // Namespace Vectoid.
 
-#endif    // VECTOID_GUI_BUTTON_H_
+#endif    // VECTOID_GUI_CUSTOMBUTTON_H_

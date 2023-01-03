@@ -35,10 +35,15 @@ LitTriangles::~LitTriangles() {
 void LitTriangles::Render() {
     optional<GLuint> vbo = GenerateVBO();
     if (vbo) {
-        glEnable(GL_LIGHTING);
-        glEnable(GL_COLOR_MATERIAL);
+        if (!depthTestEnabled_) {
+           glDisable(GL_DEPTH_TEST);
+        }
+        if (lightingEnabled_) {
+            glEnable(GL_LIGHTING);
+            glEnable(GL_COLOR_MATERIAL);
+        }
         glColor4f(color_.x, color_.y, color_.z, 1.0f);
-
+        
         glBindBuffer(GL_ARRAY_BUFFER, *vbo);
         glVertexPointer(3, GL_FLOAT, 6 * sizeof(GLfloat), nullptr);
         glNormalPointer(GL_FLOAT, 6 * sizeof(GLfloat), reinterpret_cast<void *>(12u));
@@ -52,8 +57,13 @@ void LitTriangles::Render() {
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glDisable(GL_COLOR_MATERIAL);
-        glDisable(GL_LIGHTING);
+        if (lightingEnabled_) {
+            glDisable(GL_COLOR_MATERIAL);
+            glDisable(GL_LIGHTING);
+        }
+        if (!depthTestEnabled_) {
+           glEnable(GL_DEPTH_TEST);
+        }
     }
 }
 

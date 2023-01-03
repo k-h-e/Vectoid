@@ -2,10 +2,14 @@
 #define VECTOID_GUI_CONTEXT_H_
 
 #include <memory>
+#include <optional>
+#include <unordered_set>
+#include <Vectoid/Core/Vector.h>
+#include <Vectoid/Gui/Gui.h>
 
 namespace Vectoid {
     namespace Gui {
-        class RedrawRequestHandlerInterface;
+        class GuiElement;
     }
     namespace SceneGraph {
         class Glyphs;
@@ -17,27 +21,36 @@ namespace Vectoid {
 namespace Gui {
 
 //! Holds context information for GUI elements.
-class Context {
+class Context : public virtual K::Core::Interface {
   public:
-    float Spacing() const { return .025f; }
-    Size GlyphSize() const { return Size{.025f, .025f}; }
-    void SetLayoutRequired(bool required) { layoutRequired_ = required; }
-    bool LayoutRequired() const { return layoutRequired_; }
+    Context(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,
+            const std::shared_ptr<SceneGraph::Glyphs> &glyphs);
+
+    void SetHandler(Gui::HandlerInterface *handler);
+    void Unregister(GuiElement *element);
+    float Spacing() const;
+    Size GlyphSize() const;
+    void SetLayoutRequired(bool required);
+    bool LayoutRequired() const;
+    void RequestRedraw();
+    void RequestCyclicUpdateCalls(GuiElement *element, bool requested);
+    void OnCyclicUpdate(float deltaTimeS);
     
     const std::shared_ptr<SceneGraph::RenderTargetInterface> renderTarget;
     const std::shared_ptr<SceneGraph::Glyphs>                glyphs;
-    const std::shared_ptr<RedrawRequestHandlerInterface>     redrawRequestHandler;
-    
-    Context(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,
-            const std::shared_ptr<SceneGraph::Glyphs> &glyphs,
-            const std::shared_ptr<RedrawRequestHandlerInterface> &redrawRequestHandler)
-        : renderTarget(renderTarget),
-          glyphs(glyphs),
-          redrawRequestHandler(redrawRequestHandler),
-          layoutRequired_{false} {}
+    const Vectoid::Core::Vector<float>                       menuBackgroundColor;
+    const float                                              menuBackgroundAlpha;
+    const Vectoid::Core::Vector<float>                       menuTextColor;
+    const Vectoid::Core::Vector<float>                       selectionTextColor;
+    const Vectoid::Core::Vector<float>                       selectionBackgroundColor;
     
   private:
-    bool layoutRequired_;
+    void UpdateCyclicUpdateCallsRequest();
+  
+    Gui::HandlerInterface            *handler_;
+    std::optional<bool>              cyclicUpdateCallsRequested_;
+    bool                             layoutRequired_;
+    std::unordered_set<GuiElement *> elementsNeedingCyclicUpdateCalls_;
 };
 
 }    // Namespace Gui.

@@ -28,11 +28,11 @@ class GuiElement : public virtual K::Core::Interface {
     GuiElement &operator=(const GuiElement &other) = delete;
     GuiElement(GuiElement &&other)                 = delete;
     GuiElement &operator=(GuiElement &&other)      = delete;
-    ~GuiElement()                                  = default;
+    ~GuiElement();
     
     //! Recursively adds to the specified GUI coordinate system scene graph nodes that represent this GUI element and
     //! its children.
-    virtual void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) = 0;
+    virtual void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) = 0;
     //! Recursively updates the required sizes of this GUI element and its children.
     /*!
      *  \return Required size of the GUI element.
@@ -40,6 +40,8 @@ class GuiElement : public virtual K::Core::Interface {
     virtual Size UpdateRequiredSizes() = 0;
     //! Recursively layouts this GUI element and its children into the specified available frame.
     virtual void Layout(const Frame &frame) = 0;
+    //! Handles a cyclic update call (requested earlier).
+    virtual void OnCyclicUpdate(float deltaTimeS);
     //! Tells which GUI element in the subtree was touched by the specified touch.
     /*!
      *  \return <c>nullptr</c> in case no GUI element was touched.

@@ -18,6 +18,7 @@ TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int heig
           glyphHeight_(glyphHeight),
           backgroundColor_(1.0f, 1.0f, 1.0f),
           backgroundAlpha_(.125f),
+          customColor_(1.0f, 1.0f, 1.0f),
           glyphs_(glyphs) {
     Resize(width, height);
 }
@@ -114,6 +115,13 @@ void TextConsole::SetBackgroundColor(const Vector<float> &color, float alpha) {
 
     backgroundAlpha_ = alpha;
     NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
+}
+
+void TextConsole::SetCustomColor(const Vector<float> &color) {
+    customColor_ = color;
+    NumberTools::Clamp(&customColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(&customColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(&customColor_.z, 0.0f, 1.0f);
 }
 
 }    // Namespace SceneGraph.

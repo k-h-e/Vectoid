@@ -3,7 +3,6 @@
 #include <K/Core/Log.h>
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Gui/Context.h>
-#include <Vectoid/Gui/RedrawRequestHandlerInterface.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
 #include <Vectoid/SceneGraph/Geode.h>
@@ -30,18 +29,18 @@ Button::Button(const string &text, Size glyphSize, const shared_ptr<Context> &co
     NumberTools::ClampMin(&width, 1);
     textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphSize.width, glyphSize.height,
                                                           context_->glyphs);
-    textConsole_->WriteAt(0, 0, text.c_str(), TextConsole::Color::White);
+    textConsole_->WriteAt(0, 0, text.c_str(), TextConsole::Color::Custom);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(textConsole_));
               
-    SetBackgroundColor(false);
+    SetColors(false);
 }
 
 void Button::SetHandler(HandlerInterface *handler) {
     handler_ = handler;
 }
 
-void Button::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
+void Button::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
@@ -58,7 +57,7 @@ void Button::Layout(const Frame &frame) {
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
-    context_->redrawRequestHandler->OnRedrawRequested();
+    context_->RequestRedraw();
 }
 
 GuiElement *Button::TouchedElement(const TouchInfo &touch) {
@@ -67,15 +66,15 @@ GuiElement *Button::TouchedElement(const TouchInfo &touch) {
 
 void Button::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
     touchInside_ = true;
-    SetBackgroundColor(true);
-    context_->redrawRequestHandler->OnRedrawRequested();
+    SetColors(true);
+    context_->RequestRedraw();
 }
 
 void Button::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
     if (touches.size() == 1u) {
         touchInside_ = frame_.Contains(touches[0]->x, touches[0]->y);
-        SetBackgroundColor(touchInside_);
-        context_->redrawRequestHandler->OnRedrawRequested();
+        SetColors(touchInside_);
+        context_->RequestRedraw();
     }
 }
 
@@ -83,8 +82,8 @@ void Button::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
     bool inside = touchInside_;
     
     touchInside_ = false;
-    SetBackgroundColor(false);
-    context_->redrawRequestHandler->OnRedrawRequested();
+    SetColors(false);
+    context_->RequestRedraw();
     
     if (inside) {
         if (handler_) {
@@ -93,11 +92,13 @@ void Button::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
     }
 }
 
-void Button::SetBackgroundColor(bool active) {
+void Button::SetColors(bool active) {
     if (active) {
-        textConsole_->SetBackgroundColor(.35f * Vector<float>(.380f, .753f, .749f), 1.0f);
+        textConsole_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
+        textConsole_->SetCustomColor(context_->selectionTextColor);
     } else {
-        textConsole_->SetBackgroundColor(Vector<float>(1.0f, 1.0f, 1.0f), .125f);
+        textConsole_->SetBackgroundColor(context_->menuBackgroundColor, context_->menuBackgroundAlpha);
+        textConsole_->SetCustomColor(context_->menuTextColor);
     }
 }
     

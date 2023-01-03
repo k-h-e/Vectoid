@@ -29,6 +29,7 @@ class RenderTarget : public virtual Vectoid::SceneGraph::RenderTargetInterface {
         int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
         const std::shared_ptr<Glyphs> &glyphs) override;
     std::shared_ptr<::Vectoid::SceneGraph::CoordSys> NewCoordSys() override;
+    std::shared_ptr<::Vectoid::SceneGraph::CustomPanel> NewCustomPanel(float width, float height) override;
     std::shared_ptr<::Vectoid::SceneGraph::Geode> NewGeode(const std::shared_ptr<Geometry> &geometry) override;
     std::shared_ptr<::Vectoid::SceneGraph::Glyphs> NewGlyphs() override;
     std::shared_ptr<::Vectoid::SceneGraph::LineSegments> NewLineSegments(

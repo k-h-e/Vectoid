@@ -6,6 +6,7 @@
 #include <Vectoid/SceneGraph/OpenGL/ComboBarrel.h>
 #include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/CoordSys.h>
+#include <Vectoid/SceneGraph/OpenGL/CustomPanel.h>
 #include <Vectoid/SceneGraph/OpenGL/Geode.h>
 #include <Vectoid/SceneGraph/OpenGL/Glyphs.h>
 #include <Vectoid/SceneGraph/OpenGL/LineSegments.h>
@@ -67,6 +68,10 @@ shared_ptr<::Vectoid::SceneGraph::ComboBarrel> RenderTarget::NewComboBarrel(
 
 shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
     return make_shared<OpenGL::CoordSys>(context_);
+}
+
+shared_ptr<::Vectoid::SceneGraph::CustomPanel> RenderTarget::NewCustomPanel(float width, float height) {
+    return make_shared<OpenGL::CustomPanel>(context_, width, height);
 }
 
 shared_ptr<::Vectoid::SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<Geometry> &geometry) {

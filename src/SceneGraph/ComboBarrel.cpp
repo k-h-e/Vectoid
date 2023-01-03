@@ -29,7 +29,8 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
           glyphs_{glyphs},
           position_{0.0f},
           backgroundColor_{1.0f, 1.0f, 1.0f},
-          backgroundAlpha_{.125f} {
+          backgroundAlpha_{.125f},
+          color_{1.0f, 1.0f, 1.0f} {
     assert(numVisibleOtherPerSide >= 1);
     itemAngle_    = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
     barrelRadius_ = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
@@ -104,6 +105,13 @@ void ComboBarrel::SetBackgroundColor(const Vector<float> &color, float alpha) {
 
     backgroundAlpha_ = alpha;
     NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
+}
+
+void ComboBarrel::SetColor(const Vectoid::Core::Vector<float> &color) {
+    color_ = color;
+    NumberTools::Clamp(&color_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(&color_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(&color_.z, 0.0f, 1.0f);
 }
 
 }    // Namespace SceneGraph.

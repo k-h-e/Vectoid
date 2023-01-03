@@ -91,6 +91,9 @@ void ComboBarrel::Render() {
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     if (!items_.empty()) {
+        Vector<float> unselectedColor = .5f * color_;
+        glColor4f(unselectedColor.x, unselectedColor.y, unselectedColor.z, 1.0f);
+    
         int   selection = *Selection();
         int   item      = positionInteger - numVisibleOtherPerSide_;
         for (int row = 0; row <= 2*numVisibleOtherPerSide_ + 1; ++row) {
@@ -102,9 +105,7 @@ void ComboBarrel::Render() {
             
             if ((item >= 0) && (item < static_cast<int>(items_.size()))) {
                 if (item == selection) {
-                    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                } else {
-                    glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+                    glColor4f(color_.x, color_.y, color_.z, 1.0f);
                 }
                 string &itemText = items_[item];
                 for (int col = 0; (col < width_) && (col < static_cast<int>(itemText.length())); ++col) {
@@ -123,6 +124,10 @@ void ComboBarrel::Render() {
                         glDrawArrays(GL_TRIANGLES, 0, 6);
                     }
                     x = nextX;
+                }
+                
+                if (item == selection) {
+                    glColor4f(unselectedColor.x, unselectedColor.y, unselectedColor.z, 1.0f);
                 }
             }
             
@@ -178,6 +183,9 @@ void ComboBarrel::RenderFlat() {
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     if (!items_.empty()) {
+        Vector<float> unselectedColor = .5f * color_;
+        glColor4f(unselectedColor.x, unselectedColor.y, unselectedColor.z, 1.0f);
+        
         Transform<float> transform(Core::Axis::X, -positionFractional * itemAngle_);
         int   selection = *Selection();
         int   item      = positionInteger - numVisibleOtherPerSide_;
@@ -193,10 +201,9 @@ void ComboBarrel::RenderFlat() {
             
             if ((item >= 0) && (item < static_cast<int>(items_.size()))) {
                 if (item == selection) {
-                    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                } else {
-                    glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+                    glColor4f(color_.x, color_.y, color_.z, 1.0f);
                 }
+                
                 string &itemText = items_[item];
                 for (int col = 0; (col < width_) && (col < static_cast<int>(itemText.length())); ++col) {
                     float nextX = x + glyphWidth_;
@@ -214,6 +221,10 @@ void ComboBarrel::RenderFlat() {
                         glDrawArrays(GL_TRIANGLES, 0, 6);
                     }
                     x = nextX;
+                }
+                
+                if (item == selection) {
+                    glColor4f(unselectedColor.x, unselectedColor.y, unselectedColor.z, 1.0f);
                 }
             }
             

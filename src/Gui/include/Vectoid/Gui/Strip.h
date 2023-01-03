@@ -31,7 +31,7 @@ class Strip : public GuiElement {
     //! Adds the specified GUI element as child.
     void AddChild(const std::shared_ptr<GuiElement> &guiElement);
     
-    void AddSceneGraphNodes(const std::shared_ptr<SceneGraph::CoordSys> &guiCoordSys) override;
+    void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     Size UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;

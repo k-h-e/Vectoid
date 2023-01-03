@@ -1,7 +1,6 @@
 #include <Vectoid/Gui/ComboBarrel.h>
 
 #include <Vectoid/Gui/Context.h>
-#include <Vectoid/Gui/RedrawRequestHandlerInterface.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/SceneGraph/ComboBarrel.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
@@ -30,17 +29,17 @@ ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, 
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(comboBarrel_));
               
-    SetBackgroundColor(false);
+    SetColors(false);
 }
 
 void ComboBarrel::Clear() {
     comboBarrel_->Clear();
-    context_->redrawRequestHandler->OnRedrawRequested();
+    context_->RequestRedraw();
 }
 
 int ComboBarrel::AddItem(const string &item) {
     int id = comboBarrel_->AddItem(item);
-    context_->redrawRequestHandler->OnRedrawRequested();
+    context_->RequestRedraw();
     return id;
 }
 
@@ -52,7 +51,7 @@ void ComboBarrel::SetSelection(int itemId) {
     comboBarrel_->SetSelection(itemId);
 }
 
-void ComboBarrel::AddSceneGraphNodes(const shared_ptr<CoordSys> &guiCoordSys) {
+void ComboBarrel::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
@@ -69,7 +68,7 @@ void ComboBarrel::Layout(const Frame &frame) {
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
-    context_->redrawRequestHandler->OnRedrawRequested();
+    context_->RequestRedraw();
 }
 
 GuiElement *ComboBarrel::TouchedElement(const TouchInfo &touch) {
@@ -78,8 +77,8 @@ GuiElement *ComboBarrel::TouchedElement(const TouchInfo &touch) {
 
 void ComboBarrel::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
     startPosition_ = comboBarrel_->Position();
-    SetBackgroundColor(true);
-    context_->redrawRequestHandler->OnRedrawRequested();
+    SetColors(true);
+    context_->RequestRedraw();
 }
 
 void ComboBarrel::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
@@ -87,20 +86,22 @@ void ComboBarrel::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) 
         const TouchInfo &touch = *(touches[0]);
         float t = (touch.y - touch.startY) / frame_.size.height;
         comboBarrel_->SetPosition(startPosition_ + t*8.0f);
-        context_->redrawRequestHandler->OnRedrawRequested();
+        context_->RequestRedraw();
     }
 }
 
 void ComboBarrel::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
-    SetBackgroundColor(false);
-    context_->redrawRequestHandler->OnRedrawRequested();
+    SetColors(false);
+    context_->RequestRedraw();
 }
 
-void ComboBarrel::SetBackgroundColor(bool active) {
+void ComboBarrel::SetColors(bool active) {
     if (active) {
-        comboBarrel_->SetBackgroundColor(.35f * Vector<float>(.380f, .753f, .749f), 1.0f);
+        comboBarrel_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
+        comboBarrel_->SetColor(context_->selectionTextColor);
     } else {
-        comboBarrel_->SetBackgroundColor(Vector<float>(1.0f, 1.0f, 1.0f), .125f);
+        comboBarrel_->SetBackgroundColor(context_->menuBackgroundColor, context_->menuBackgroundAlpha);
+        comboBarrel_->SetColor(context_->menuTextColor);
     }
 }
 
