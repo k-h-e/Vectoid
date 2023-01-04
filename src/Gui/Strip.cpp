@@ -41,21 +41,21 @@ Size Strip::UpdateRequiredSizes() {
         if (vertical_) {
             requiredSize_.height += size.height;
             if (!first) {
-                requiredSize_.height += context_->Spacing();
+                requiredSize_.height += context_->spacing;
             }
             if (size.width > requiredSize_.width) {
                 requiredSize_.width = size.width;
             }
-            offset = requiredSize_.height + context_->Spacing();
+            offset = requiredSize_.height + context_->spacing;
         } else {
             requiredSize_.width += size.width;
             if (!first) {
-                requiredSize_.width += context_->Spacing();
+                requiredSize_.width += context_->spacing;
             }
             if (size.height > requiredSize_.height) {
                 requiredSize_.height = size.height;
             }
-            offset = requiredSize_.width + context_->Spacing();
+            offset = requiredSize_.width + context_->spacing;
         }
         
         first  = false;

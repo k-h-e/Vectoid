@@ -43,7 +43,7 @@ class Gui : public virtual K::Core::Interface {
     };
   
     Gui(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,
-        const std::shared_ptr<SceneGraph::CoordSys> &coordSys);
+        const std::shared_ptr<SceneGraph::CoordSys> &coordSys, float scale);
     Gui()                            = delete;
     Gui(const Gui &other)            = delete;
     Gui &operator=(const Gui &other) = delete;

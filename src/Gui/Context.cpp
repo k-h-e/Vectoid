@@ -12,15 +12,17 @@ using Vectoid::SceneGraph::RenderTargetInterface;
 namespace Vectoid {
 namespace Gui {
 
-Context::Context(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<Glyphs> &glyphs)
-        : renderTarget(renderTarget),
-          glyphs(glyphs),
+Context::Context(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<Glyphs> &glyphs, float scale)
+        : renderTarget{renderTarget},
+          glyphs{glyphs},
+          glyphSize{ValidateScale(scale) * .025f, ValidateScale(scale) * .025f},
+          spacing{ValidateScale(scale) * .02f},
           menuBackgroundColor{1.0f, 1.0f, 1.0f},
           menuBackgroundAlpha{.125f},
           menuTextColor{.380f, .753f, .749f},
           selectionTextColor{1.0f, 1.0f, 1.0f},
           selectionBackgroundColor{.35f * menuTextColor},
-          handler_(nullptr),
+          handler_{nullptr},
           layoutRequired_{false} {
     // Nop.
 }
@@ -35,14 +37,6 @@ void Context::SetHandler(Gui::HandlerInterface *handler) {
 void Context::Unregister(GuiElement *element) {
     elementsNeedingCyclicUpdateCalls_.erase(element);
     UpdateCyclicUpdateCallsRequest();
-}
-
-float Context::Spacing() const {
-    return .025f;
-}
-
-Size Context::GlyphSize() const {
-    return Size{.025f, .025f};
 }
 
 void Context::SetLayoutRequired(bool required) {
@@ -90,6 +84,10 @@ void Context::UpdateCyclicUpdateCallsRequest() {
             handler_->OnGuiRequestsCyclicUpdateCalls(*cyclicUpdateCallsRequested_);
         }
     }
+}
+
+float Context::ValidateScale(float scale) {
+    return (scale > 0.0f) ? scale : 1.0f;
 }
 
 }    // Namespace Gui.

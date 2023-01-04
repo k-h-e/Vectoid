@@ -28,8 +28,8 @@ CustomButton::CustomButton(const shared_ptr<CustomContentInterface> &content, co
           content_{content},
           touchInside_{false},
           animationEnabled_{false} {
-    panel_    = context_->renderTarget->NewCustomPanel(content_->Size().width + context_->GlyphSize().width,
-                                                       content_->Size().height + context_->GlyphSize().width);
+    panel_    = context_->renderTarget->NewCustomPanel(content_->Size().width + context_->glyphSize.width,
+                                                       content_->Size().height + context_->glyphSize.width);
     coordSys_ = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(panel_));
     content_->AddSceneGraphNodes(coordSys_.get());

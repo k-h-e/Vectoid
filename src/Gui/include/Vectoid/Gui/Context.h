@@ -24,12 +24,10 @@ namespace Gui {
 class Context : public virtual K::Core::Interface {
   public:
     Context(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,
-            const std::shared_ptr<SceneGraph::Glyphs> &glyphs);
+            const std::shared_ptr<SceneGraph::Glyphs> &glyphs, float scale);
 
     void SetHandler(Gui::HandlerInterface *handler);
     void Unregister(GuiElement *element);
-    float Spacing() const;
-    Size GlyphSize() const;
     void SetLayoutRequired(bool required);
     bool LayoutRequired() const;
     void RequestRedraw();
@@ -38,6 +36,8 @@ class Context : public virtual K::Core::Interface {
     
     const std::shared_ptr<SceneGraph::RenderTargetInterface> renderTarget;
     const std::shared_ptr<SceneGraph::Glyphs>                glyphs;
+    const Size                                               glyphSize;
+    const float                                              spacing;
     const Vectoid::Core::Vector<float>                       menuBackgroundColor;
     const float                                              menuBackgroundAlpha;
     const Vectoid::Core::Vector<float>                       menuTextColor;
@@ -46,6 +46,7 @@ class Context : public virtual K::Core::Interface {
     
   private:
     void UpdateCyclicUpdateCallsRequest();
+    static float ValidateScale(float scale);
   
     Gui::HandlerInterface            *handler_;
     std::optional<bool>              cyclicUpdateCallsRequested_;

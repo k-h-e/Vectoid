@@ -26,13 +26,13 @@ using Vectoid::Gui::RedrawRequestHandlerInterface;
 namespace Vectoid {
 namespace Gui {
 
-Gui::Gui(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<CoordSys> &coordSys)
+Gui::Gui(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<CoordSys> &coordSys, float scale)
         : coordSys_{coordSys},
           touchGestureOngoing_{false},
           gestureNumTouches_{0},
           touchGestureElement_{nullptr} {
     auto glyphs = renderTarget->NewGlyphs();
-    context_ = make_shared<Context>(renderTarget, glyphs);
+    context_ = make_shared<Context>(renderTarget, glyphs, scale);
 }
 
 void Gui::Register(HandlerInterface *handler) {
@@ -127,15 +127,15 @@ void Gui::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
 }
 
 Size Gui::GlyphSize() const {
-    return context_->GlyphSize();
+    return context_->glyphSize;
 }
 
 shared_ptr<Button> Gui::MakeButton(const string &text) {
-    return shared_ptr<Button>(new Button(text, context_->GlyphSize(), context_));
+    return shared_ptr<Button>(new Button(text, context_->glyphSize, context_));
 }
 
 shared_ptr<ComboBarrel> Gui::MakeComboBarrel(int width, int numVisibleOtherPerSide) {
-    return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, context_->GlyphSize(), context_));
+    return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, context_->glyphSize, context_));
 }
 
 shared_ptr<CustomButton> Gui::MakeCustomButton(const shared_ptr<CustomContentInterface> &content) {
@@ -143,11 +143,11 @@ shared_ptr<CustomButton> Gui::MakeCustomButton(const shared_ptr<CustomContentInt
 }
 
 shared_ptr<Label> Gui::MakeLabel(const string &text) {
-    return shared_ptr<Label>(new Label(text, context_->GlyphSize(), context_));
+    return shared_ptr<Label>(new Label(text, context_->glyphSize, context_));
 }
 
 shared_ptr<Label> Gui::MakeLabel(int width, int height) {
-    return shared_ptr<Label>(new Label(width, height, context_->GlyphSize(), context_));
+    return shared_ptr<Label>(new Label(width, height, context_->glyphSize, context_));
 }
 
 shared_ptr<Strip> Gui::MakeStrip(Orientation orientation) {
