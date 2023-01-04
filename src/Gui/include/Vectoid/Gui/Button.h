@@ -46,7 +46,7 @@ class Button : public GuiElement {
     void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) override;
     
   private:
-    Button(const std::string &text, Size glyphSize, const std::shared_ptr<Context> &context);
+    Button(const std::string &text, const Size &glyphSize, const std::shared_ptr<Context> &context);
     void SetColors(bool active);
     
     HandlerInterface                         *handler_;

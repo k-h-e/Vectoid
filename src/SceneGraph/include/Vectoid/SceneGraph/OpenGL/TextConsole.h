@@ -25,7 +25,6 @@ class TextConsole : public Vectoid::SceneGraph::TextConsole {
     void SetColor(uint8_t colorIndex);
 
     uint8_t currentColorIndex_;
-    
 };
 
 }    // Namespace OpenGL.

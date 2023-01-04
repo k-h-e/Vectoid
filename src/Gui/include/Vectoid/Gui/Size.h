@@ -19,6 +19,10 @@ struct Size {
     Size &operator=(Size &&other)      = default;
     ~Size()                            = default;
     
+    void EnsurePositive() {
+        width  = (width > 0.0f) ? width : 1.0f;
+        height = (height > 0.0f) ? height : 1.0f;
+    }
     std::string ToString() const {
         return std::string("(width=") + std::to_string(width) + ", height=" + std::to_string(height) + ")";
     }

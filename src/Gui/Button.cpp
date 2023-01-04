@@ -21,7 +21,7 @@ using Vectoid::SceneGraph::TextConsole;
 namespace Vectoid {
 namespace Gui {
 
-Button::Button(const string &text, Size glyphSize, const shared_ptr<Context> &context)
+Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Context> &context)
         : GuiElement{context},
           handler_{nullptr},
           touchInside_{false} {

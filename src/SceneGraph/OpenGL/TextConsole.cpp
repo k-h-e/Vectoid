@@ -16,8 +16,8 @@ namespace OpenGL {
 
 TextConsole::TextConsole(const shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
                          const shared_ptr<SceneGraph::Glyphs> &glyphs)
-        : SceneGraph::TextConsole(context, width, height, glyphWidth, glyphHeight, glyphs),
-          currentColorIndex_(0u) {
+        : SceneGraph::TextConsole{context, width, height, glyphWidth, glyphHeight, glyphs},
+          currentColorIndex_{0u} {
     // Nop.
 }
 
@@ -58,10 +58,12 @@ void TextConsole::Render() {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     
-    glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
-    glVertexPointer(3, GL_FLOAT, 0, backgroundVertices);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    if (backgroundEnabled_) {
+        glColor4f(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, backgroundAlpha_);
+        glVertexPointer(3, GL_FLOAT, 0, backgroundVertices);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
      
     glEnable(GL_TEXTURE_2D);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
@@ -70,14 +72,14 @@ void TextConsole::Render() {
 
     currentColorIndex_ = 1u;
     SetColor(0u);
-    float x           = left;
-    float y           = top;
-    uint8_t *ptr      = &buffer_[0];
-    uint8_t *colorPtr = &colorBuffer_[0];
+    float x           { left };
+    float y           { top };
+    uint8_t *ptr      { &buffer_[0] };
+    uint8_t *colorPtr { &colorBuffer_[0] };
     for (int row = 0; row < height_; ++row) {
-        float nextY = y - glyphHeight_;
+        float nextY { y - glyphHeight_ };
         for (int col = 0; col < width_; ++col) {
-            float nextX = x + glyphWidth_;
+            float nextX { x + glyphWidth_ };
             if (*ptr != ' ') {
                 vertices[ 0] = x;        vertices[ 1] = nextY;
                 vertices[ 3] = nextX;    vertices[ 4] = nextY;
@@ -137,17 +139,6 @@ void TextConsole::SetColor(uint8_t colorIndex) {
                 break;
         }
         glColor4f(color.x, color.y, color.z, 1.0f);
-
-    enum class Color { White,
-                       Grey,
-                       Green,
-                       Yellow,
-                       Red,
-                       LightBlue,
-                       Custom     };
-
-
-
 
         currentColorIndex_ = colorIndex;
     }

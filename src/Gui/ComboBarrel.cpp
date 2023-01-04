@@ -49,6 +49,7 @@ optional<int> ComboBarrel::Selection() const {
 
 void ComboBarrel::SetSelection(int itemId) {
     comboBarrel_->SetSelection(itemId);
+    context_->RequestRedraw();
 }
 
 void ComboBarrel::AddSceneGraphNodes(CoordSys *guiCoordSys) {

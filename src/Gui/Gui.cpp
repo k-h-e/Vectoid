@@ -5,18 +5,18 @@
 #include <Vectoid/Gui/ComboBarrel.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/CustomButton.h>
+#include <Vectoid/Gui/Label.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/Gui/Strip.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
 #include <Vectoid/SceneGraph/Glyphs.h>
 #include <Vectoid/SceneGraph/RenderTargetInterface.h>
 
+using std::optional;
 using std::shared_ptr;
 using std::string;
 using std::to_string;
 using std::vector;
-using std::chrono::milliseconds;
-using std::chrono::steady_clock;
 using K::Core::Log;
 using Vectoid::SceneGraph::CoordSys;
 using Vectoid::SceneGraph::Glyphs;
@@ -28,8 +28,9 @@ namespace Gui {
 
 Gui::Gui(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<CoordSys> &coordSys)
         : coordSys_{coordSys},
-          activeElement_{nullptr},
-          lastFrameTime_{steady_clock::now()} {
+          touchGestureOngoing_{false},
+          gestureNumTouches_{0},
+          touchGestureElement_{nullptr} {
     auto glyphs = renderTarget->NewGlyphs();
     context_ = make_shared<Context>(renderTarget, glyphs);
 }
@@ -46,17 +47,21 @@ int Gui::AddScene(const shared_ptr<GuiElement> &root) {
 
 void Gui::EnterScene(int scene) {
     if ((scene >= 0) && (scene < static_cast<int>(scenes_.size()))) {
-        Log::Print(Log::Level::Debug, this, [&]{ return "entering scene " + to_string(*activeScene_); });
+        Log::Print(Log::Level::Debug, this, [&]{ return "entering scene " + to_string(*currentScene_); });
         coordSys_->RemoveAllChildren();
         auto &sceneRoot = scenes_[scene];
         sceneRoot->AddSceneGraphNodes(coordSys_.get());
-        activeScene_ = scene;
+        currentScene_ = scene;
         Layout();
     }
 }
 
+optional<int> Gui::CurrentScene() const {
+    return currentScene_;
+}
+
 bool Gui::InScene(int scene) const {
-    return (activeScene_ && (*activeScene_ == scene));
+    return (currentScene_ && (*currentScene_ == scene));
 }
 
 void Gui::SetFrame(const Frame &frame) {
@@ -75,39 +80,49 @@ void Gui::OnCyclicUpdate(float deltaTimeS) {
     context_->OnCyclicUpdate(deltaTimeS);
 }
 
-bool Gui::HandleTouchGestureBegan(const vector<const TouchInfo *> &touches) {
-    if (activeScene_) {
-        auto &sceneRoot = scenes_[*activeScene_];
-        if (touches.size() == 1u) {
-            activeElement_ = sceneRoot->TouchedElement(*(touches[0]));
-            if (activeElement_) {
-                activeElement_->OnTouchGestureBegan(touches);
-                return true;
+bool Gui::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    if (!touchGestureOngoing_) {
+        int numTouches = static_cast<int>(touches.size());
+        if (numTouches == 1) {
+            if (currentScene_) {
+                auto &sceneRoot = scenes_[*currentScene_];
+                touchGestureElement_ = sceneRoot->TouchedElement(*(touches[0]));
+                if (touchGestureElement_) {
+                    touchGestureOngoing_ = true;
+                    gestureNumTouches_   = numTouches;
+                    touchGestureElement_->OnTouchGestureBegan(touches);
+                    return true;
+                }
             }
         }
+    } else {
+        Log::Print(Log::Level::Error, this, [&]{ return "ignoring bad OnTouchGestureBegan() call!"; });
     }
     
-    activeElement_ = nullptr;
     return false;
 }
 
-bool Gui::HandleTouchGestureMoved(const vector<const TouchInfo *> &touches) {
-    if (activeElement_) {
-        activeElement_->OnTouchGestureMoved(touches);
-        return true;
+void Gui::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
+    if (touchGestureOngoing_ && (static_cast<int>(touches.size()) == gestureNumTouches_)) {
+        if (touchGestureElement_) {
+            touchGestureElement_->OnTouchGestureMoved(touches);
+        }
     } else {
-        return false;
+      Log::Print(Log::Level::Error, this, [&]{ return "ignoring bad OnTouchGestureMoved() call!"; });
     }
 }
 
-bool Gui::HandleTouchGestureEnded(const vector<const TouchInfo *> &touches) {
-    if (activeElement_) {
-        GuiElement *element = activeElement_;
-        activeElement_ = nullptr;
-        element->OnTouchGestureEnded(touches);
-        return true;
+void Gui::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    if (touchGestureOngoing_ && (static_cast<int>(touches.size()) == gestureNumTouches_)) {
+        GuiElement *element = touchGestureElement_;
+        touchGestureOngoing_ = false;
+        gestureNumTouches_   = 0;
+        touchGestureElement_ = nullptr;
+        if (element) {
+            element->OnTouchGestureEnded(touches);
+        }
     } else {
-        return false;
+      Log::Print(Log::Level::Error, this, [&]{ return "ignoring bad OnTouchGestureEnded() call!"; });
     }
 }
 
@@ -127,14 +142,22 @@ shared_ptr<CustomButton> Gui::MakeCustomButton(const shared_ptr<CustomContentInt
     return shared_ptr<CustomButton>(new CustomButton(content, context_));
 }
 
+shared_ptr<Label> Gui::MakeLabel(const string &text) {
+    return shared_ptr<Label>(new Label(text, context_->GlyphSize(), context_));
+}
+
+shared_ptr<Label> Gui::MakeLabel(int width, int height) {
+    return shared_ptr<Label>(new Label(width, height, context_->GlyphSize(), context_));
+}
+
 shared_ptr<Strip> Gui::MakeStrip(Orientation orientation) {
     return shared_ptr<Strip>(new Strip(orientation, context_));
 }
 
 void Gui::Layout() {
-    if (activeScene_) {
+    if (currentScene_) {
         Log::Print(Log::Level::Debug, this, [&]{ return "updating layout"; });
-        auto &sceneRoot = scenes_[*activeScene_];
+        auto &sceneRoot = scenes_[*currentScene_];
         sceneRoot->UpdateRequiredSizes();
         sceneRoot->Layout(frame_);
         context_->RequestRedraw();

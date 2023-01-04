@@ -41,10 +41,14 @@ class TextConsole : public Geometry {
     void WriteAt(int column, int row, const char *text, Color color);
     //! Clears the specified row.
     void ClearRow(int row);
+    //! Clears the entire console.
+    void Clear();
     //! Resizes the text console as specified, clearing it in the process.
     void Resize(int width, int height);
     //! Tells the text console's bounding box.
     Core::BoundingBox<float> BoundingBox() const;
+    //! Toggles rendering of the console background, default is on.
+    void EnableBackground(bool enabled);
     //! Sets the console's background color, including its alpha channel.
     void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
     //! Sets the console's custom text color.
@@ -59,12 +63,13 @@ class TextConsole : public Geometry {
     int                          rowCursor_;
     float                        glyphWidth_;
     float                        glyphHeight_;
+    std::shared_ptr<Glyphs>      glyphs_;
     std::vector<uint8_t>         buffer_;
     std::vector<uint8_t>         colorBuffer_;
     Vectoid::Core::Vector<float> backgroundColor_;
     float                        backgroundAlpha_;
     Vectoid::Core::Vector<float> customColor_;
-    std::shared_ptr<Glyphs>      glyphs_;
+    bool                         backgroundEnabled_;
 };
 
 }    // Namespace SceneGraph;
