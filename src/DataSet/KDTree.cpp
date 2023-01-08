@@ -1,6 +1,7 @@
 #include <Vectoid/DataSet/KDTree.h>
 
 #include <algorithm>
+#include <cassert>
 #include <limits>
 #include <K/Core/Log.h>
 #include <Vectoid/DataSet/Points.h>

@@ -1,5 +1,6 @@
 #include <Vectoid/DataSet/Points.h>
 
+#include <cassert>
 #include <K/Core/Log.h>
 
 using std::make_unique;

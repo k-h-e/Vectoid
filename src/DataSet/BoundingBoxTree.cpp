@@ -1,7 +1,8 @@
 #include <Vectoid/DataSet/BoundingBoxTree.h>
 
-#include <vector>
 #include <algorithm>
+#include <cassert>
+#include <vector>
 #include <K/Core/Log.h>
 #include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Math/Intersection/LineBoundingBoxIntersection.h>

@@ -1,6 +1,7 @@
 #ifndef VECTOID_DATASET_TWOIDS_H_
 #define VECTOID_DATASET_TWOIDS_H_
 
+#include <cassert>
 #include <string>
 
 namespace Vectoid {
