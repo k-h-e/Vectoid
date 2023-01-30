@@ -30,6 +30,7 @@ using K::Core::StringTools;
 using K::Core::TextReader;
 using K::Core::TextWriter;
 using K::IO::File;
+using K::IO::Path;
 using K::IO::StreamBuffer;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TwoPoints;
@@ -41,7 +42,7 @@ namespace Vectoid {
 namespace DataSet {
 
 ConstrainedDelauneyTriangulationXY::ConstrainedDelauneyTriangulationXY(
-    const string &workingDirectory, const string &fileNamePrefix)
+    const Path &workingDirectory, const string &fileNamePrefix)
         : vertices_(make_shared<Points>()),
           segments_(make_shared<LineSegments>(vertices_)),
           workingDirectory_(workingDirectory),
@@ -83,7 +84,7 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
     auto result = make_shared<ResultAcceptor>();
     {
         TextWriter writer(make_shared<StreamBuffer>(
-            make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".poly", File::AccessMode::WriteOnly, true),
+            make_shared<File>(workingDirectory_ + (fileNamePrefix_ + ".poly"), File::AccessMode::WriteOnly, true),
             File::AccessMode::WriteOnly, 4 * 1024));
         writer.SetCloseResultAcceptor(result);
 
@@ -116,7 +117,7 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
 
 bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     Log::Print(Log::Level::Debug, this, []{ return "running triangle tool..."; });
-    auto fileName = workingDirectory_ + "/" + fileNamePrefix_ + ".poly";
+    string fileName = (workingDirectory_ + (fileNamePrefix_ + ".poly")).ToOsPath();
     const char *fileNameDumb = fileName.c_str();
     pid_t id = fork();
     if (id == -1) {
@@ -145,7 +146,7 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
 
 unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriangleVertexFile() {
     TextReader reader(make_shared<StreamBuffer>(
-        make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.node", File::AccessMode::ReadOnly, false),
+        make_shared<File>(workingDirectory_ + (fileNamePrefix_ + ".1.node"), File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;
@@ -185,7 +186,7 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
     segments_ = make_shared<LineSegments>(vertices_);
 
     TextReader reader(make_shared<StreamBuffer>(
-        make_shared<File>(workingDirectory_ + "/" + fileNamePrefix_ + ".1.ele", File::AccessMode::ReadOnly, false),
+        make_shared<File>(workingDirectory_ + (fileNamePrefix_ + ".1.ele"), File::AccessMode::ReadOnly, false),
         File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;

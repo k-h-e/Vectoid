@@ -2,7 +2,7 @@
 #define VECTOID_DATASET_CONSTRAINEDDELAUNEYTRIANGULATIONXY_H_
 
 #include <unordered_set>
-#include <K/Core/Interface.h>
+#include <K/IO/Path.h>
 #include <Vectoid/DataSet/Triangles.h>
 #include <Vectoid/DataSet/TwoIds.h>
 
@@ -20,7 +20,7 @@ class Points;
 //! Generates a constrained Delauney triangulation in the <c>x/y</c>-plane.
 class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
   public:
-    ConstrainedDelauneyTriangulationXY(const std::string &workingDirectory, const std::string &fileNamePrefix);
+    ConstrainedDelauneyTriangulationXY(const K::IO::Path &workingDirectory, const std::string &fileNamePrefix);
     ConstrainedDelauneyTriangulationXY(const ConstrainedDelauneyTriangulationXY &other)             = delete;
     ConstrainedDelauneyTriangulationXY &operator=(const ConstrainedDelauneyTriangulationXY &other)  = delete;
     ConstrainedDelauneyTriangulationXY(const ConstrainedDelauneyTriangulationXY &&other)            = delete;
@@ -54,7 +54,7 @@ class ConstrainedDelauneyTriangulationXY : public virtual K::Core::Interface {
 
     std::shared_ptr<Vectoid::DataSet::Points>       vertices_;
     std::shared_ptr<Vectoid::DataSet::LineSegments> segments_;
-    std::string                                     workingDirectory_;
+    K::IO::Path                                     workingDirectory_;
     std::string                                     fileNamePrefix_;
 };
 

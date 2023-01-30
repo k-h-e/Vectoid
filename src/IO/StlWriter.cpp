@@ -3,6 +3,7 @@
 #include <K/Core/Log.h>
 #include <K/Core/ResultAcceptor.h>
 #include <K/IO/File.h>
+#include <K/IO/Path.h>
 #include <K/IO/StreamBuffer.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
@@ -14,6 +15,7 @@ using K::Core::SeekableBlockingOutStreamInterface;
 using K::Core::Log;
 using K::Core::ResultAcceptor;
 using K::IO::File;
+using K::IO::Path;
 using K::IO::StreamBuffer;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TriangleProviderInterface;
@@ -65,7 +67,7 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, SeekableBlock
     return (!triangleProvider->TriangleError() && !outStream->ErrorState());
 }
 
-bool StlWriter::Write(TriangleProviderInterface *triangleProvider, const string &fileName) {
+bool StlWriter::Write(TriangleProviderInterface *triangleProvider, const Path &fileName) {
     auto result = make_shared<ResultAcceptor>();
     {
         auto file = make_shared<File>(fileName, File::AccessMode::WriteOnly, true);
@@ -77,10 +79,14 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, const string 
     }
 
     if (result->Success()) {
-        Log::Print(Log::Level::Info, nullptr, [&]{ return "STL file \"" + fileName + "\" successfully written"; });
+        Log::Print(Log::Level::Info, nullptr, [&]{
+            return "STL file \"" + fileName.ToString() + "\" successfully written";
+        });
         return true;
     } else {
-        Log::Print(Log::Level::Error, nullptr, [&]{ return "failed to write STL file \"" + fileName + "\""; });
+        Log::Print(Log::Level::Error, nullptr, [&]{
+            return "failed to write STL file \"" + fileName.ToString() + "\"";
+        });
         return false;
     }
 }

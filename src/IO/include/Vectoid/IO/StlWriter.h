@@ -1,11 +1,12 @@
 #ifndef VECTOID_IO_STLWRITER_H_
 #define VECTOID_IO_STLWRITER_H_
 
-#include <string>
-
 namespace K {
     namespace Core {
         class SeekableBlockingOutStreamInterface;
+    }
+    namespace IO {
+        class Path;
     }
 }
 namespace Vectoid {
@@ -30,7 +31,7 @@ class StlWriter {
     /*!
      *  \return <c>true</c> in case of success. Otherwise, the state of the written file is undefined.
      */
-    static bool Write(Core::TriangleProviderInterface *triangleProvider, const std::string &fileName);
+    static bool Write(Core::TriangleProviderInterface *triangleProvider, const K::IO::Path &fileName);
 };
 
 }    // Namespace IO.
