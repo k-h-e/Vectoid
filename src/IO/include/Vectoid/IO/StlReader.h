@@ -1,7 +1,7 @@
 #ifndef VECTOID_IO_STLREADER_H_
 #define VECTOID_IO_STLREADER_H_
 
-#include <string>
+#include <K/IO/Path.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/Core/Vector.h>
 
@@ -19,9 +19,9 @@ namespace IO {
 class StlReader : public virtual Core::TriangleProviderInterface {
   public:
     //! Constructs a reader for the specified STL file.
-    StlReader(const std::string &fileName);
+    StlReader(const K::IO::Path &fileName);
     //! Constructs a reader for the STL file content embedded as the specified subregion in the specified file.
-    StlReader(const std::string &fileName, uint64_t offset, uint64_t size);
+    StlReader(const K::IO::Path &fileName, uint64_t offset, uint64_t size);
     StlReader()                                  = delete;
     StlReader(const StlReader &other)            = delete;
     StlReader &operator=(const StlReader &other) = delete;
@@ -37,7 +37,7 @@ class StlReader : public virtual Core::TriangleProviderInterface {
   private:
     void CheckFinished();
     
-    std::string                                                 fileName_;
+    K::IO::Path                                                 fileName_;
     bool                                                        useSubFile_;
     uint64_t                                                    subFileOffset_;    // Unchecked, validated by SubStream.
     uint64_t                                                    subFileSize_;      // Unchecked, validated by SubStream.

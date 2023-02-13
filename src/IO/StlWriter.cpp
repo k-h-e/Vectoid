@@ -80,12 +80,12 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, const Path &f
 
     if (result->Success()) {
         Log::Print(Log::Level::Info, nullptr, [&]{
-            return "STL file \"" + fileName.ToString() + "\" successfully written";
+            return "STL file \"" + fileName.ToShortString() + "\" successfully written";
         });
         return true;
     } else {
         Log::Print(Log::Level::Error, nullptr, [&]{
-            return "failed to write STL file \"" + fileName.ToString() + "\"";
+            return "failed to write STL file \"" + fileName.ToShortString() + "\"";
         });
         return false;
     }

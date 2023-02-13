@@ -7,10 +7,11 @@
 #include <K/IO/SubStream.h>
 #include <Vectoid/Core/ThreePoints.h>
 
-using std::string;
+using std::make_shared;
 using std::to_string;
 using K::Core::Log;
 using K::IO::File;
+using K::IO::Path;
 using K::IO::StreamBuffer;
 using K::IO::SubStream;
 using Vectoid::Core::ThreePoints;
@@ -19,7 +20,7 @@ using Vectoid::Core::Vector;
 namespace Vectoid {
 namespace IO {
 
-StlReader::StlReader(const string &fileName)
+StlReader::StlReader(const Path &fileName)
         : fileName_{fileName},
           useSubFile_{false},
           subFileOffset_{0},
@@ -30,7 +31,7 @@ StlReader::StlReader(const string &fileName)
     // Nop.
 }
 
-StlReader::StlReader(const string &fileName, uint64_t offset, uint64_t size)
+StlReader::StlReader(const Path &fileName, uint64_t offset, uint64_t size)
         : fileName_{fileName},
           useSubFile_{true},
           subFileOffset_{offset},
@@ -57,7 +58,8 @@ void StlReader::PrepareToProvideTriangles() {
         normal_               = Vector<float>(0.0f, 1.0f, 0.0f);
         error_                = false;
         Log::Print(Log::Level::Info, this, [&]{
-            return "reading STL file \"" + fileName_ + "\" with " + to_string(numTriangles_) + " triangles";
+            return "reading STL file \"" + fileName_.ToShortString() + "\" with " + to_string(numTriangles_)
+                + " triangles";
         });
         CheckFinished();
     } else {
@@ -66,7 +68,7 @@ void StlReader::PrepareToProvideTriangles() {
         numTrianglesProvided_ = 0u;
         error_                = true;
         Log::Print(Log::Level::Error, this, [&]{
-            return "failed to read STL file \"" + fileName_ + "\"!";
+            return "failed to read STL file \"" + fileName_.ToShortString() + "\"!";
         });
     }
 }
@@ -93,7 +95,7 @@ bool StlReader::ProvideNextTriangle(ThreePoints *outTriangle) {
             fileStream_.reset();
             error_ = true;
             Log::Print(Log::Level::Error, this, [&]{
-                return "error while reading STL file \"" + fileName_ + "\"!";
+                return "error while reading STL file \"" + fileName_.ToShortString() + "\"!";
             });
         }
     }
@@ -114,7 +116,7 @@ void StlReader::CheckFinished() {
         fileStream_.reset();
         Log::Print(Log::Level::Info, this, [&]{
             return "successfully read " + to_string(numTriangles_) + " triangles from STL file \""
-                + fileName_ + "\"";
+                + fileName_.ToShortString() + "\"";
         });
     }
 }
