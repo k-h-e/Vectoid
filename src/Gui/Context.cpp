@@ -15,7 +15,7 @@ namespace Gui {
 Context::Context(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<Glyphs> &glyphs, float scale)
         : renderTarget{renderTarget},
           glyphs{glyphs},
-          glyphSize{ValidateScale(scale) * .025f, ValidateScale(scale) * .025f},
+          glyphSize{ValidateScale(scale) * .02f, ValidateScale(scale) * .03f},
           spacing{ValidateScale(scale) * .02f},
           menuBackgroundColor{1.0f, 1.0f, 1.0f},
           menuBackgroundAlpha{.125f},
