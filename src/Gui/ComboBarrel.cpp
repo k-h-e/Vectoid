@@ -23,13 +23,20 @@ struct TouchInfo;
 
 ComboBarrel::ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, const shared_ptr<Context> &context)
         : GuiElement{context},
+          handler_{nullptr},
           startPosition_{0.0f} {
     comboBarrel_ = context_->renderTarget->NewComboBarrel(width, numVisibleOtherPerSide, glyphSize.width,
                                                           glyphSize.height, context_->glyphs);
+    comboBarrel_->SetFrameWidth(context_->frameWidth);
+    comboBarrel_->EnableFrame(true);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(comboBarrel_));
               
     SetColors(false);
+}
+
+void ComboBarrel::Register(HandlerInterface *handler) {
+    handler_ = handler;
 }
 
 void ComboBarrel::Clear() {
@@ -84,10 +91,19 @@ void ComboBarrel::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) 
 
 void ComboBarrel::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
     if (touches.size() == 1u) {
+        optional<int> oldSelection = comboBarrel_->Selection();
+        
         const TouchInfo &touch = *(touches[0]);
         float t = (touch.y - touch.startY) / frame_.size.height;
         comboBarrel_->SetPosition(startPosition_ + t*8.0f);
         context_->RequestRedraw();
+        
+        if (handler_) {
+            optional<int> selection = comboBarrel_->Selection();
+            if (selection && (!oldSelection || (*selection != *oldSelection))) {
+                handler_->OnComboBarrelSelectionChanged(this, *selection);
+            }
+        }
     }
 }
 

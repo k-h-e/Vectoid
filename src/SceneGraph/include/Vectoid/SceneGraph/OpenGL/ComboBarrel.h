@@ -2,6 +2,7 @@
 #define VECTOID_SCENEGRAPH_OPENGL_COMBOBARREL_H_
 
 #include <Vectoid/SceneGraph/ComboBarrel.h>
+#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -24,7 +25,7 @@ class ComboBarrel : public SceneGraph::ComboBarrel {
     void Render() override;
     
   private:
-    void RenderFlat();
+    void SetupRectangle(float left, float top, float right, float bottom, GLfloat *outVertices);
 };
 
 }    // Namespace OpenGL.

@@ -37,7 +37,7 @@ CustomButton::CustomButton(const shared_ptr<CustomContentInterface> &content, co
     SetColors(false);
 }
 
-void CustomButton::SetHandler(HandlerInterface *handler) {
+void CustomButton::Register(HandlerInterface *handler) {
     handler_ = handler;
 }
 

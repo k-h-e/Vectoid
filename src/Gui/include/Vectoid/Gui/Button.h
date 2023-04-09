@@ -35,7 +35,7 @@ class Button : public GuiElement {
     ~Button()                              = default;
     
     //! Pass <c>nullptr</c> to unregister a potentially registered handler.
-    void SetHandler(HandlerInterface *handler);
+    void Register(HandlerInterface *handler);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     Size UpdateRequiredSizes() override;

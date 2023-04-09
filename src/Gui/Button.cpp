@@ -29,6 +29,8 @@ Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Conte
     NumberTools::ClampMin(&width, 1);
     textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphSize.width, glyphSize.height,
                                                           context_->glyphs);
+    textConsole_->SetFrameWidth(context_->frameWidth);
+    textConsole_->EnableFrame(true);
     textConsole_->WriteAt(0, 0, text.c_str(), TextConsole::Color::Custom);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(textConsole_));
@@ -36,7 +38,7 @@ Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Conte
     SetColors(false);
 }
 
-void Button::SetHandler(HandlerInterface *handler) {
+void Button::Register(HandlerInterface *handler) {
     handler_ = handler;
 }
 
@@ -96,9 +98,11 @@ void Button::SetColors(bool active) {
     if (active) {
         textConsole_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
         textConsole_->SetCustomColor(context_->selectionTextColor);
+        textConsole_->SetFrameColor(.6f * context_->selectionTextColor);
     } else {
         textConsole_->SetBackgroundColor(context_->menuBackgroundColor, context_->menuBackgroundAlpha);
         textConsole_->SetCustomColor(context_->menuTextColor);
+        textConsole_->SetFrameColor(.6f * context_->menuTextColor);
     }
 }
     

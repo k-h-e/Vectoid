@@ -31,6 +31,8 @@ class Label : public GuiElement {
     void SetText(const std::string &text);
     //! Sets the label text as specified.
     void SetText(int line, const std::string &text, Vectoid::SceneGraph::TextConsole::Color color);
+    //! Writes the specified line of text to the console, wrapping it into multiple rows if necessary.
+    void WriteLine(const std::string &line, Vectoid::SceneGraph::TextConsole::Color color);
     //! Clears the label text.
     void ClearText();
     

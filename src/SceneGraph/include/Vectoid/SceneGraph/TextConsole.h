@@ -33,7 +33,7 @@ class TextConsole : public Geometry {
     /*!
      *  \note Encoding is ASCII for now.
      */
-    void WriteLine(const char *line, Color color);
+    void WriteLine(const std::string &line, Color color);
     //! Writes text at specified coordinates, without breaking into any new lines.
     /*!
      *  Does not change the \ref WriteLine() cursor.
@@ -53,6 +53,12 @@ class TextConsole : public Geometry {
     void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
     //! Sets the console's custom text color.
     void SetCustomColor(const Vectoid::Core::Vector<float> &color);
+    //! Toggles rendering of the console frame, default is off.
+    void EnableFrame(bool enabled);
+    //! Sets the console's frame width.
+    void SetFrameWidth(float width);
+    //! Sets the console's frame color.
+    void SetFrameColor(const Vectoid::Core::Vector<float> &color);
 
   protected:
     TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,
@@ -60,9 +66,9 @@ class TextConsole : public Geometry {
   
     int                          width_;
     int                          height_;
-    int                          rowCursor_;
     float                        glyphWidth_;
     float                        glyphHeight_;
+    float                        frameWidth_;
     std::shared_ptr<Glyphs>      glyphs_;
     std::vector<uint8_t>         buffer_;
     std::vector<uint8_t>         colorBuffer_;
@@ -70,6 +76,17 @@ class TextConsole : public Geometry {
     float                        backgroundAlpha_;
     Vectoid::Core::Vector<float> customColor_;
     bool                         backgroundEnabled_;
+    Vectoid::Core::Vector<float> frameColor_;
+    bool                         frameEnabled_;
+    
+  private:
+    void FinishLine();
+  
+    int     currentRow_;
+    int     numLeftInCurrentRow_;
+    uint8_t *writePosition_;
+    uint8_t *colorWritePosition_;
+    bool    linesFinished_;
 };
 
 }    // Namespace SceneGraph;

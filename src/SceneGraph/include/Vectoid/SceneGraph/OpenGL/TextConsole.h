@@ -2,6 +2,7 @@
 #define VECTOID_SCENEGRAPH_OPENGL_TEXTCONSOLE_H_
 
 #include <Vectoid/SceneGraph/TextConsole.h>
+#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -23,6 +24,7 @@ class TextConsole : public Vectoid::SceneGraph::TextConsole {
 
   private:
     void SetColor(uint8_t colorIndex);
+    void SetupRectangle(float left, float top, float right, float bottom, GLfloat *outVertices);
 
     uint8_t currentColorIndex_;
 };

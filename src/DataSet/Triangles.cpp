@@ -191,7 +191,7 @@ unique_ptr<Triangles> Triangles::Clone() const {
     clone->triangles_ = triangles_;
     if (triangleMap_) {
         auto map = make_unique<unordered_map<ThreeIds, int, ThreeIds::HashFunction>>(*triangleMap_);
-        clone->triangleMap_ = move(map);
+        clone->triangleMap_ = std::move(map);
     }
     clone->edgeInfos_       = edgeInfos_;
     clone->vertexInfos_     = vertexInfos_;

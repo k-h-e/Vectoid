@@ -30,7 +30,9 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
           position_{0.0f},
           backgroundColor_{1.0f, 1.0f, 1.0f},
           backgroundAlpha_{.125f},
-          color_{1.0f, 1.0f, 1.0f} {
+          color_{1.0f, 1.0f, 1.0f},
+          frameEnabled_{false},
+          frameWidth_{0.25f * glyphWidth_} {
     assert(numVisibleOtherPerSide >= 1);
     itemAngle_    = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
     barrelRadius_ = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
@@ -94,7 +96,11 @@ float ComboBarrel::Position() const {
 }
 
 BoundingBox<float> ComboBarrel::BoundingBox() const {
-    return boundingBox_;
+    Vectoid::Core::BoundingBox<float> box { boundingBox_ };
+    if (frameEnabled_) {
+        box.Expand(frameWidth_);
+    }
+    return box;
 }
 
 void ComboBarrel::SetBackgroundColor(const Vector<float> &color, float alpha) {
@@ -112,6 +118,18 @@ void ComboBarrel::SetColor(const Vectoid::Core::Vector<float> &color) {
     NumberTools::Clamp(&color_.x, 0.0f, 1.0f);
     NumberTools::Clamp(&color_.y, 0.0f, 1.0f);
     NumberTools::Clamp(&color_.z, 0.0f, 1.0f);
+}
+
+void ComboBarrel::EnableFrame(bool enabled) {
+    frameEnabled_ = enabled;
+}
+
+void ComboBarrel::SetFrameWidth(float width) {
+    if (!(width > 0.0f)) {
+        width = .125f * glyphWidth_;
+    }
+    
+    frameWidth_ = width;
 }
 
 }    // Namespace SceneGraph.

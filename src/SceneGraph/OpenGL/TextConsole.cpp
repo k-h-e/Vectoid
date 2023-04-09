@@ -5,7 +5,6 @@
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Glyphs.h>
 #include <Vectoid/SceneGraph/OpenGL/Context.h>
-#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::shared_ptr;
 using Vectoid::Core::Vector;
@@ -81,14 +80,7 @@ void TextConsole::Render() {
         for (int col = 0; col < width_; ++col) {
             float nextX { x + glyphWidth_ };
             if (*ptr != ' ') {
-                vertices[ 0] = x;        vertices[ 1] = nextY;
-                vertices[ 3] = nextX;    vertices[ 4] = nextY;
-                vertices[ 6] = nextX;    vertices[ 7] = y;
-
-                vertices[ 9] = x;        vertices[10] = nextY;
-                vertices[12] = nextX;    vertices[13] = y;
-                vertices[15] = x;        vertices[16] = y;
-
+                SetupRectangle(x, y, nextX, nextY, &vertices[0]);
                 SetColor(*colorPtr);
                 glyphs_->BindGlyphTexture(*ptr);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -101,12 +93,26 @@ void TextConsole::Render() {
         y = nextY;
     }
 
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_TEXTURE_2D);
-
     glDisable(GL_BLEND);
+    
+    if (frameEnabled_) {
+        glColor4f(frameColor_.x, frameColor_.y, frameColor_.z, 1.0f);
+        SetupRectangle(backgroundLeft - frameWidth_, backgroundTop + frameWidth_,
+                       backgroundRight + frameWidth_, backgroundTop, &vertices[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        SetupRectangle(backgroundLeft - frameWidth_, backgroundBottom,
+                       backgroundRight + frameWidth_, backgroundBottom - frameWidth_, &vertices[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        SetupRectangle(backgroundLeft - frameWidth_, backgroundTop, backgroundLeft, backgroundBottom, &vertices[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        SetupRectangle(backgroundRight, backgroundTop, backgroundRight + frameWidth_, backgroundBottom, &vertices[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glDisableClientState(GL_VERTEX_ARRAY);
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -118,7 +124,7 @@ void TextConsole::SetColor(uint8_t colorIndex) {
                 color = Vector<float>(1.0f, 1.0f, 1.0f);
                 break;
             case Color::Grey:
-                color = Vector<float>(0.5f, 0.5f, 0.5f);
+                color = Vector<float>(0.6f, 0.6f, 0.6f);
                 break;
             case Color::Green:
                 color = Vector<float>(0.0f, 1.0f, 0.0f);
@@ -138,10 +144,21 @@ void TextConsole::SetColor(uint8_t colorIndex) {
             default:
                 break;
         }
+        
         glColor4f(color.x, color.y, color.z, 1.0f);
 
         currentColorIndex_ = colorIndex;
     }
+}
+
+void TextConsole::SetupRectangle(float left, float top, float right, float bottom, GLfloat *outVertices) {
+    outVertices[ 0] = left;     outVertices[ 1] = bottom;
+    outVertices[ 3] = right;    outVertices[ 4] = bottom;
+    outVertices[ 6] = right;    outVertices[ 7] = top;
+
+    outVertices[ 9] = left;     outVertices[10] = bottom;
+    outVertices[12] = right;    outVertices[13] = top;
+    outVertices[15] = left;     outVertices[16] = top;
 }
 
 }    // Namespace OpenGL.

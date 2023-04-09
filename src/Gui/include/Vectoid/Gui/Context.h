@@ -37,7 +37,10 @@ class Context : public virtual K::Core::Interface {
     const std::shared_ptr<SceneGraph::RenderTargetInterface> renderTarget;
     const std::shared_ptr<SceneGraph::Glyphs>                glyphs;
     const Size                                               glyphSize;
+    const float                                              frameWidth;
     const float                                              spacing;
+    const Vectoid::Core::Vector<float>                       labelBackgroundColor;
+    const float                                              labelBackgroundAlpha;
     const Vectoid::Core::Vector<float>                       menuBackgroundColor;
     const float                                              menuBackgroundAlpha;
     const Vectoid::Core::Vector<float>                       menuTextColor;

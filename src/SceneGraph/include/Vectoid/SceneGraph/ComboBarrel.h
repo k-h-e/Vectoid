@@ -40,6 +40,10 @@ class ComboBarrel : public Geometry {
     void SetColor(const Vectoid::Core::Vector<float> &color);
     //! Tells the combo barrel's bounding box.
     Core::BoundingBox<float> BoundingBox() const;
+    //! Enables/disables the combo barrel's frame.
+    void EnableFrame(bool enabled);
+    //! Sets the combo barrel's frame width.
+    void SetFrameWidth(float width);
     
   protected:
     ComboBarrel(const std::shared_ptr<Context> &context, int width, int numVisibleOtherPerSide, float glyphWidth,
@@ -60,6 +64,8 @@ class ComboBarrel : public Geometry {
     Core::Vector<float>      backgroundColor_;
     float                    backgroundAlpha_;
     Core::Vector<float>      color_;
+    float                    frameWidth_;
+    bool                     frameEnabled_;
 };
 
 }    // Namespace SceneGraph.

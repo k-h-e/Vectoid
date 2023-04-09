@@ -13,17 +13,20 @@ namespace Vectoid {
 namespace Gui {
 
 Context::Context(const shared_ptr<RenderTargetInterface> &renderTarget, const shared_ptr<Glyphs> &glyphs, float scale)
-        : renderTarget{renderTarget},
-          glyphs{glyphs},
-          glyphSize{ValidateScale(scale) * .02f, ValidateScale(scale) * .03f},
-          spacing{ValidateScale(scale) * .02f},
-          menuBackgroundColor{1.0f, 1.0f, 1.0f},
-          menuBackgroundAlpha{.125f},
-          menuTextColor{.380f, .753f, .749f},
-          selectionTextColor{1.0f, 1.0f, 1.0f},
-          selectionBackgroundColor{.35f * menuTextColor},
-          handler_{nullptr},
-          layoutRequired_{false} {
+        : renderTarget { renderTarget },
+          glyphs { glyphs },
+          glyphSize { ValidateScale(scale) * .018f, ValidateScale(scale) * .03f },
+          frameWidth { ValidateScale(scale) * .0025f },
+          spacing { ValidateScale(scale) * .02f },
+          labelBackgroundColor { 0.0f, 0.0f, 0.0f },
+          labelBackgroundAlpha { .65f },
+          menuBackgroundColor { 0.0f, 0.0f, 0.0f },
+          menuBackgroundAlpha { .65f },
+          menuTextColor { .380f, .753f, .749f },
+          selectionTextColor { 1.0f, 1.0f, 1.0f },
+          selectionBackgroundColor { .35f * menuTextColor },
+          handler_ { nullptr },
+          layoutRequired_ { false } {
     // Nop.
 }
 

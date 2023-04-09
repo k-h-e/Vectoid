@@ -22,6 +22,11 @@ class ComboBarrel : public GuiElement {
   public:
     friend class Gui;
     
+    class HandlerInterface : public virtual K::Core::Interface {
+      public:
+        virtual void OnComboBarrelSelectionChanged(ComboBarrel *comboBarrel, int selection) = 0;
+    };
+    
     ComboBarrel()                                    = delete;
     ComboBarrel(const ComboBarrel &other)            = delete;
     ComboBarrel &operator=(const ComboBarrel &other) = delete;
@@ -29,6 +34,8 @@ class ComboBarrel : public GuiElement {
     ComboBarrel &operator=(ComboBarrel &&other)      = delete;
     ~ComboBarrel()                                   = default;
     
+    //! Pass <c>nullptr</c> to unregister a potentially registered handler.
+    void Register(HandlerInterface *handler);
     //! Removes all items.
     void Clear();
     //! Adds the specified item.
@@ -53,6 +60,7 @@ class ComboBarrel : public GuiElement {
     ComboBarrel(int width, int numVisibleOtherPerSide, Size glyphSize, const std::shared_ptr<Context> &context);
     void SetColors(bool active);
     
+    HandlerInterface                         *handler_;
     std::shared_ptr<SceneGraph::ComboBarrel> comboBarrel_;
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
     float                                    startPosition_;

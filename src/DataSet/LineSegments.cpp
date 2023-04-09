@@ -7,7 +7,6 @@
 using std::shared_ptr;
 using std::unique_ptr;
 using std::make_unique;
-using std::move;
 using std::unordered_map;
 using std::to_string;
 using K::Core::Log;
@@ -75,7 +74,7 @@ unique_ptr<LineSegments> LineSegments::Clone() const {
     clone->segments_ = segments_;
     if (segmentMap_) {
         auto map = make_unique<unordered_map<TwoIds, int, TwoIds::HashFunction>>(*segmentMap_);
-        clone->segmentMap_ = move(map);
+        clone->segmentMap_ = std::move(map);
     }
     return clone;
 }

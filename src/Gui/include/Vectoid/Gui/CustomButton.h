@@ -36,7 +36,7 @@ class CustomButton : public GuiElement {
     ~CustomButton()                                    = default;
     
     //! Pass <c>nullptr</c> to unregister a potentially registered handler.
-    void SetHandler(HandlerInterface *handler);
+    void Register(HandlerInterface *handler);
     //! Toggles content animation.
     void EnableAnimation(bool enabled);
     

@@ -1,5 +1,6 @@
 #include <Vectoid/Gui/Label.h>
 
+#include <K/Core/StringTools.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/SceneGraph/CoordSys.h>
@@ -10,6 +11,7 @@
 using std::shared_ptr;
 using std::string;
 using std::vector;
+using K::Core::StringTools;
 using Vectoid::Core::Vector;
 using Vectoid::SceneGraph::CoordSys;
 using Vectoid::SceneGraph::TextConsole;
@@ -37,7 +39,7 @@ void Label::Construct(int width, int height, const Size &glyphSize) {
     size.EnsurePositive();
     textConsole_ = context_->renderTarget->NewTextConsole(width, height, size.width, size.height, context_->glyphs);
     textConsole_->SetCustomColor(context_->menuTextColor);
-    textConsole_->EnableBackground(false);
+    textConsole_->SetBackgroundColor(context_->labelBackgroundColor, context_->labelBackgroundAlpha);
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(textConsole_));
 }
@@ -49,6 +51,11 @@ void Label::SetText(const string &text) {
 void Label::SetText(int line, const string &text, TextConsole::Color color) {
     textConsole_->ClearRow(line);
     textConsole_->WriteAt(0, line, text.c_str(), color);
+    context_->RequestRedraw();
+}
+
+void Label::WriteLine(const string &line, TextConsole::Color color) {
+    textConsole_->WriteLine(line, color);
     context_->RequestRedraw();
 }
 
