@@ -31,15 +31,15 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
           backgroundColor_{1.0f, 1.0f, 1.0f},
           backgroundAlpha_{.125f},
           color_{1.0f, 1.0f, 1.0f},
-          frameEnabled_{false},
-          frameWidth_{0.25f * glyphWidth_} {
+          frameWidth_{0.25f * glyphWidth_},
+          frameEnabled_{false} {
     assert(numVisibleOtherPerSide >= 1);
     itemAngle_    = 180.0f / (2.0f*static_cast<float>(numVisibleOtherPerSide) + 1.0f);
     barrelRadius_ = .5f * glyphHeight_ / sin(.5f * itemAngle_ / 180.0f * static_cast<float>(NumberTools::pi));
     for (int i = 0; i < 2*numVisibleOtherPerSide_ + 3; ++i) {
-        float angle = static_cast<float>(i) * 180.0f / (2.0f * static_cast<float>(numVisibleOtherPerSide) + 1.0f);
-        Vector<float> hand{0.0f, barrelRadius_, 0.0f};
-        Transform<float>{Vectoid::Core::Axis::X, angle}.ApplyTo(&hand);
+        float angle { static_cast<float>(i) * 180.0f / (2.0f * static_cast<float>(numVisibleOtherPerSide) + 1.0f) };
+        Vector<float> hand { 0.0f, barrelRadius_, 0.0f };
+        Transform<float> { Vectoid::Core::Axis::X, angle }.ApplyTo(&hand);
         yCoords_.push_back(hand.y);
         zCoords_.push_back(hand.z);
         boundingBox_.Grow(Vector<float>(-.5f * width_ * glyphWidth_, hand.y, hand.z));
@@ -57,7 +57,7 @@ void ComboBarrel::Clear() {
 }
 
 int ComboBarrel::AddItem(const string &item) {
-    int index = static_cast<int>(items_.size());
+    int index { static_cast<int>(items_.size()) };
     items_.push_back(item);
     return index;
 }
@@ -67,7 +67,7 @@ optional<int> ComboBarrel::Selection() const {
         if (position_ < 0.0f) {
             return 0;
         } else {
-            int selection = static_cast<int>(position_ + .5f);
+            int selection { static_cast<int>(position_ + .5f) };
             NumberTools::Clamp(&selection, 0, static_cast<int>(items_.size()) - 1);
             return selection;
         }
