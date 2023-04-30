@@ -19,8 +19,11 @@ class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
     SimpleLineSegmentList &operator=(const SimpleLineSegmentList &other) = default;
     SimpleLineSegmentList(SimpleLineSegmentList &&other)                 = default;
     SimpleLineSegmentList &operator=(SimpleLineSegmentList &&other)      = default;
+
     //! Appends the specified line segment to the list.
     void Add(const Core::TwoPoints &lineSegment);
+    //! Tells the number of line segments in the list.
+    int Size() const;
     virtual void PrepareToProvideLineSegments();
     virtual bool ProvideNextLineSegment(Core::TwoPoints *outLineSegment);
     virtual bool LineSegmentError();

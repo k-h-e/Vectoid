@@ -18,6 +18,10 @@ void SimpleLineSegmentList::Add(const TwoPoints &lineSegment) {
     boundingBox_.Grow(lineSegment.point1);
 }
 
+int SimpleLineSegmentList::Size() const {
+    return static_cast<int>(lineSegments_.size());
+}
+
 void SimpleLineSegmentList::PrepareToProvideLineSegments() {
     cursor_ = -1;
 }

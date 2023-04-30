@@ -16,6 +16,7 @@ class SimpleTriangleList : public virtual Core::TriangleProviderInterface {
     SimpleTriangleList &operator=(const SimpleTriangleList &other) = default;
     SimpleTriangleList(SimpleTriangleList &&other)                 = default;
     SimpleTriangleList &operator=(SimpleTriangleList &&other)      = default;
+
     //! Appends the specified triangle to the list.
     void Add(const Core::ThreePoints &triangle);
     //! Scales the geometry to match the specified extents.
