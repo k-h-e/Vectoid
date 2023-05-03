@@ -35,7 +35,7 @@ class Points : public virtual K::Core::Interface {
     int Add(const Core::Vector<float> &point);
     //! Gives access to the specified point.
     /*!
-     *  The specified point id must lie in <c>[0, Count()]</c>.
+     *  The specified point id must lie in <c>[ 0, Count() )</c>.
      */
     const Core::Vector<float> &operator[](int index) const;
     //! Returns the id of the specified point, or <c>nullopt</c> in case the point is not in the set.
