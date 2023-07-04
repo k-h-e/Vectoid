@@ -20,7 +20,7 @@ namespace DataSet {
 class Points : public virtual K::Core::Interface {
   public:
     Points();
-    Points(const Points &other)             = delete;
+    Points(const Points &other);
     Points &operator=(const Points &other)  = delete;
     Points(Points &&other)                  = delete;
     Points &operator=(Points &&other)       = delete;

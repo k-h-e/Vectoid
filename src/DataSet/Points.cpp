@@ -19,6 +19,14 @@ Points::Points() {
     // Nop.
 }
 
+Points::Points(const Points &other) {
+    for (int i = 0; i < other.Size(); ++i) {
+        Add(other[i]);
+    }
+
+    OptimizeForSpace();
+}
+
 int Points::Size() const {
     return static_cast<int>(points_.size());
 }
