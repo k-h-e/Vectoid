@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////      //                               //
+//                                                                                  //                 //            //
+//    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
+//    (C) Copyright Kai Hergenröther          //     //   //      //  //      //  //     //      //  //     //     //
+//    All rights reserved.                   //   //    //////////  //           //    //        // //    //      //
+//                                          // //       //          //      //  //     //      //  //     //     //
+///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
+
 #ifndef VECTOID_MATH_INTERSECTION_LINETRIANGLEINTERSECTION_H_
 #define VECTOID_MATH_INTERSECTION_LINETRIANGLEINTERSECTION_H_
 

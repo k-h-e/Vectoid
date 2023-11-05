@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////      //                               //
+//                                                                                  //                 //            //
+//    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
+//    (C) Copyright Kai Hergenröther          //     //   //      //  //      //  //     //      //  //     //     //
+//    All rights reserved.                   //   //    //////////  //           //    //        // //    //      //
+//                                          // //       //          //      //  //     //      //  //     //     //
+///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
+
 #ifndef VECTOID_MATH_DISTANCE_POINTLINEDISTANCEXY_H_
 #define VECTOID_MATH_DISTANCE_POINTLINEDISTANCEXY_H_
 

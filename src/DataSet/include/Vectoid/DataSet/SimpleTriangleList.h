@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////      //                               //
+//                                                                                  //                 //            //
+//    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
+//    (C) Copyright Kai Hergenröther          //     //   //      //  //      //  //     //      //  //     //     //
+//    All rights reserved.                   //   //    //////////  //           //    //        // //    //      //
+//                                          // //       //          //      //  //     //      //  //     //     //
+///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
+
 #ifndef VECTOID_DATASET_SIMPLETRIANGLELIST_H_
 #define VECTOID_DATASET_SIMPLETRIANGLELIST_H_
 

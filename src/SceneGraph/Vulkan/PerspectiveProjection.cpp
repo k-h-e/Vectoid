@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////      //                               //
+//                                                                                  //                 //            //
+//    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
+//    (C) Copyright Kai Hergenröther          //     //   //      //  //      //  //     //      //  //     //     //
+//    All rights reserved.                   //   //    //////////  //           //    //        // //    //      //
+//                                          // //       //          //      //  //     //      //  //     //     //
+///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
+
 #include <Vectoid/SceneGraph/Vulkan/PerspectiveProjection.h>
 
 #include <Vectoid/SceneGraph/Vulkan/Context.h>

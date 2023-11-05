@@ -1,3 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////      //                               //
+//                                                                                  //                 //            //
+//    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
+//    (C) Copyright Kai Hergenröther          //     //   //      //  //      //  //     //      //  //     //     //
+//    All rights reserved.                   //   //    //////////  //           //    //        // //    //      //
+//                                          // //       //          //      //  //     //      //  //     //     //
+///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
+
 #ifndef VECTOID_SCENEGRAPH_OPENGL_SIMPLELIGHTING_H_
 #define VECTOID_SCENEGRAPH_OPENGL_SIMPLELIGHTING_H_
 
