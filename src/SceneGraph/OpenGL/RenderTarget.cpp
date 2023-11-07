@@ -23,6 +23,7 @@
 #include <Vectoid/SceneGraph/OpenGL/ParticlesRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/PerspectiveProjection.h>
 #include <Vectoid/SceneGraph/OpenGL/Points.h>
+#include <Vectoid/SceneGraph/OpenGL/ScalarGrid2D.h>
 #include <Vectoid/SceneGraph/OpenGL/SimpleGeometryRenderer.h>
 #include <Vectoid/SceneGraph/OpenGL/SimpleLighting.h>
 #include <Vectoid/SceneGraph/OpenGL/TerrainRenderer.h>
@@ -59,92 +60,96 @@ void RenderTarget::RenderFrame() {
     }
 }
 
-shared_ptr<::Vectoid::SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
+shared_ptr<SceneGraph::AgeColoredParticles> RenderTarget::NewAgeColoredParticles(
         const shared_ptr<Particles> &particles) {
-    return make_shared<OpenGL::AgeColoredParticles>(context_, particles);
+    return make_shared<AgeColoredParticles>(context_, particles);
 }
 
-shared_ptr<::Vectoid::SceneGraph::Camera> RenderTarget::NewCamera() {
-    return make_shared<OpenGL::Camera>(context_);
+shared_ptr<SceneGraph::Camera> RenderTarget::NewCamera() {
+    return make_shared<Camera>(context_);
 }
 
-shared_ptr<::Vectoid::SceneGraph::ComboBarrel> RenderTarget::NewComboBarrel(
+shared_ptr<SceneGraph::ComboBarrel> RenderTarget::NewComboBarrel(
         int width, int numVisibleOtherPerSide, float glyphWidth, float glyphHeight,
         const shared_ptr<SceneGraph::Glyphs> &glyphs) {
-    return make_shared<OpenGL::ComboBarrel>(context_, width, numVisibleOtherPerSide, glyphWidth, glyphHeight, glyphs);
+    return make_shared<ComboBarrel>(context_, width, numVisibleOtherPerSide, glyphWidth, glyphHeight, glyphs);
 }
 
-shared_ptr<::Vectoid::SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
-    return make_shared<OpenGL::CoordSys>(context_);
+shared_ptr<SceneGraph::CoordSys> RenderTarget::NewCoordSys() {
+    return make_shared<CoordSys>(context_);
 }
 
-shared_ptr<::Vectoid::SceneGraph::CustomPanel> RenderTarget::NewCustomPanel(float width, float height) {
-    return make_shared<OpenGL::CustomPanel>(context_, width, height);
+shared_ptr<SceneGraph::CustomPanel> RenderTarget::NewCustomPanel(float width, float height) {
+    return make_shared<CustomPanel>(context_, width, height);
 }
 
-shared_ptr<::Vectoid::SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<Geometry> &geometry) {
-    return make_shared<OpenGL::Geode>(context_, geometry);
+shared_ptr<SceneGraph::Geode> RenderTarget::NewGeode(const std::shared_ptr<SceneGraph::Geometry> &geometry) {
+    return make_shared<Geode>(context_, geometry);
 }
 
-shared_ptr<::Vectoid::SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
-    return make_shared<OpenGL::Glyphs>(context_);
+shared_ptr<SceneGraph::Glyphs> RenderTarget::NewGlyphs() {
+    return make_shared<Glyphs>(context_);
 }
 
-shared_ptr<::Vectoid::SceneGraph::LineSegments> RenderTarget::NewLineSegments(
+shared_ptr<SceneGraph::LineSegments> RenderTarget::NewLineSegments(
         const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider) {
-    return make_shared<OpenGL::LineSegments>(context_, lineSegmentProvider);
+    return make_shared<LineSegments>(context_, lineSegmentProvider);
 }
 
-shared_ptr<::Vectoid::SceneGraph::LitColorCodedTriangles> RenderTarget::NewLitColorCodedTriangles(
+shared_ptr<SceneGraph::LitColorCodedTriangles> RenderTarget::NewLitColorCodedTriangles(
         const shared_ptr<TriangleProviderInterface> &triangleProvider) {
-    return make_shared<OpenGL::LitColorCodedTriangles>(context_, triangleProvider);
+    return make_shared<LitColorCodedTriangles>(context_, triangleProvider);
 }
 
-shared_ptr<::Vectoid::SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
+shared_ptr<SceneGraph::LitTriangles> RenderTarget::NewLitTriangles(
         const shared_ptr<TriangleProviderInterface> &triangleProvider) {
-    return make_shared<OpenGL::LitTriangles>(context_, triangleProvider);
+    return make_shared<LitTriangles>(context_, triangleProvider);
 }
 
-shared_ptr<::Vectoid::SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(
+shared_ptr<SceneGraph::ParticlesRenderer> RenderTarget::NewParticlesRenderer(
         const shared_ptr<Particles> &particles) {
-    return make_shared<OpenGL::ParticlesRenderer>(context_, particles);
+    return make_shared<ParticlesRenderer>(context_, particles);
 }
 
-shared_ptr<::Vectoid::SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
-    return make_shared<OpenGL::PerspectiveProjection>(context_);
+shared_ptr<SceneGraph::PerspectiveProjection> RenderTarget::NewPerspectiveProjection() {
+    return make_shared<PerspectiveProjection>(context_);
 }
 
-shared_ptr<::Vectoid::SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<DataSet::Points> &points) {
-    return make_shared<OpenGL::Points>(context_, points);
+shared_ptr<SceneGraph::Points> RenderTarget::NewPoints(const shared_ptr<DataSet::Points> &points) {
+    return make_shared<Points>(context_, points);
 }
 
-shared_ptr<::Vectoid::SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
-        const shared_ptr<::Vectoid::SceneGraph::SimpleGeometry> &geometry) {
-    return make_shared<OpenGL::SimpleGeometryRenderer>(context_, geometry);
+shared_ptr<SceneGraph::ScalarGrid2D> RenderTarget::NewScalarGrid2D(
+        float width, float height, int numColumns, int numRows) {
+    return make_shared<ScalarGrid2D>(context_, width, height, numColumns, numRows);
 }
 
-shared_ptr<::Vectoid::SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
-    return make_shared<OpenGL::SimpleLighting>(context_);
+shared_ptr<SceneGraph::SimpleGeometryRenderer> RenderTarget::NewSimpleGeometryRenderer(
+        const shared_ptr<SceneGraph::SimpleGeometry> &geometry) {
+    return make_shared<SimpleGeometryRenderer>(context_, geometry);
 }
 
-shared_ptr<::Vectoid::SceneGraph::TerrainRenderer> RenderTarget::NewTerrainRenderer(
-        const shared_ptr<::Vectoid::SceneGraph::Terrain> &terrain,
-        const shared_ptr<::Vectoid::SceneGraph::MapParameters> &mapParameters) {
-    return make_shared<OpenGL::TerrainRenderer>(context_, terrain, mapParameters);
+shared_ptr<SceneGraph::SimpleLighting> RenderTarget::NewSimpleLighting() {
+    return make_shared<SimpleLighting>(context_);
 }
 
-shared_ptr<::Vectoid::SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
-    return make_shared<OpenGL::TestTriangle>(context_);
+shared_ptr<SceneGraph::TerrainRenderer> RenderTarget::NewTerrainRenderer(
+        const shared_ptr<SceneGraph::Terrain> &terrain, const shared_ptr<SceneGraph::MapParameters> &mapParameters) {
+    return make_shared<TerrainRenderer>(context_, terrain, mapParameters);
 }
 
-shared_ptr<::Vectoid::SceneGraph::TextConsole> RenderTarget::NewTextConsole(
+shared_ptr<SceneGraph::TestTriangle> RenderTarget::NewTestTriangle() {
+    return make_shared<TestTriangle>(context_);
+}
+
+shared_ptr<SceneGraph::TextConsole> RenderTarget::NewTextConsole(
         int width, int height, float glyphWidth, float glyphHeight, const shared_ptr<SceneGraph::Glyphs> &glyphs) {
-    return make_shared<OpenGL::TextConsole>(context_, width, height, glyphWidth, glyphHeight, glyphs);
+    return make_shared<TextConsole>(context_, width, height, glyphWidth, glyphHeight, glyphs);
 }
 
-shared_ptr<::Vectoid::SceneGraph::TransparentTriangles> RenderTarget::NewTransparentTriangles(
+shared_ptr<SceneGraph::TransparentTriangles> RenderTarget::NewTransparentTriangles(
         const shared_ptr<TriangleProviderInterface> &triangleProvider) {
-    return make_shared<OpenGL::TransparentTriangles>(context_, triangleProvider);
+    return make_shared<TransparentTriangles>(context_, triangleProvider);
 }
 
 }    // Namespace OpenGL.
