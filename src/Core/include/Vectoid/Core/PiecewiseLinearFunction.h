@@ -9,6 +9,8 @@
 #ifndef VECTOID_CORE_PIECEWISELINEARFUNCTION_H_
 #define VECTOID_CORE_PIECEWISELINEARFUNCTION_H_
 
+#include <vector>
+
 namespace Vectoid {
 namespace Core {
 
