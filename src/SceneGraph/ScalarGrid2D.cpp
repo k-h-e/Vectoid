@@ -100,7 +100,11 @@ float ScalarGrid2D::RowPosition(int row) {
 
 Vector<float> ScalarGrid2D::ColorAt(int column, int row) {
     uint8_t data = data_[ApplyRowOffset(row)*numColumns_ + column];
-    return colorCoding_.Evaluate(255.0f - static_cast<float>(data));
+    if (data == 255u) {
+        return Vector<float>{1.0f, 1.0f, 1.0f};
+    } else {
+        return colorCoding_.Evaluate(255.0f - static_cast<float>(data));
+    }
 }
 
 int ScalarGrid2D::ApplyRowOffset(int row) {
