@@ -8,6 +8,7 @@
 
 #include <Vectoid/SceneGraph/OpenGL/ScalarGrid2D.h>
 
+#include <K/Core/config.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 using std::shared_ptr;
@@ -24,6 +25,7 @@ ScalarGrid2D::ScalarGrid2D(const shared_ptr<SceneGraph::Context> &context, float
 }
 
 void ScalarGrid2D::Render() {
+#if defined(K_PLATFORM_MAC)
     glBegin(GL_TRIANGLES);
     for (int row = 1; row < numRows_; ++ row) {
         for (int column = 1; column < numColumns_; ++column) {
@@ -56,6 +58,7 @@ void ScalarGrid2D::Render() {
     glEnd();
 
     glColor3f(1.0f, 1.0f, 1.0f);
+#endif
 }
 
 }    // Namespace OpenGL.
