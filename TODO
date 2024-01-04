@@ -1,4 +1,0 @@
-General
-- make GUI elements request redraw only in case they are currently visible. 
-- Check everywhere regarding default move operations!
-- Add locking to Log().Stream().
