@@ -12,6 +12,7 @@
 #include <memory>
 #include <K/Core/Interface.h>
 #include <Vectoid/Gui/Frame.h>
+#include <Vectoid/Gui/RequiredSize.h>
 
 namespace Vectoid {
     namespace SceneGraph {
@@ -45,7 +46,7 @@ class GuiElement : public virtual K::Core::Interface {
     /*!
      *  \return Required size of the GUI element.
      */
-    virtual Size UpdateRequiredSizes() = 0;
+    virtual RequiredSize UpdateRequiredSizes() = 0;
     //! Recursively layouts this GUI element and its children into the specified available frame.
     virtual void Layout(const Frame &frame) = 0;
     //! Handles a cyclic update call (requested earlier).
@@ -64,7 +65,7 @@ class GuiElement : public virtual K::Core::Interface {
     
   protected:
     Frame                    frame_;
-    Size                     requiredSize_;
+    RequiredSize             requiredSize_;
     std::shared_ptr<Context> context_;
 };
 

@@ -10,6 +10,7 @@
 #define VECTOID_SCENEGRAPH_OPENGL_CUSTOMPANEL_H_
 
 #include <Vectoid/SceneGraph/CustomPanel.h>
+#include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
 namespace Vectoid {
 namespace SceneGraph {
@@ -29,6 +30,9 @@ class CustomPanel : public SceneGraph::CustomPanel {
     ~CustomPanel()                                   = default;
     
     void Render() override;
+
+  private:
+    void SetupRectangle(float left, float top, float right, float bottom, GLfloat *outVertices);
 };
 
 }    // Namespace OpenGL.

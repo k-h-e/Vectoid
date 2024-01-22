@@ -71,16 +71,16 @@ void ComboBarrel::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-Size ComboBarrel::UpdateRequiredSizes() {
+RequiredSize ComboBarrel::UpdateRequiredSizes() {
     Vector<float> extents = comboBarrel_->BoundingBox().Extents();
-    requiredSize_.width  = extents.x;
-    requiredSize_.height = extents.y;
+    requiredSize_.size.width  = extents.x;
+    requiredSize_.size.height = extents.y;
     return requiredSize_;
 }
 
 void ComboBarrel::Layout(const Frame &frame) {
     frame_.position = frame.position;
-    frame_.size     = requiredSize_;
+    frame_.size     = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
@@ -92,6 +92,7 @@ GuiElement *ComboBarrel::TouchedElement(const TouchInfo &touch) {
 }
 
 void ComboBarrel::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     startPosition_ = comboBarrel_->Position();
     SetColors(true);
     context_->RequestRedraw();
@@ -116,6 +117,7 @@ void ComboBarrel::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) 
 }
 
 void ComboBarrel::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     SetColors(false);
     context_->RequestRedraw();
 }

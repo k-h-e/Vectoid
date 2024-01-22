@@ -54,16 +54,16 @@ void Button::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-Size Button::UpdateRequiredSizes() {
+RequiredSize Button::UpdateRequiredSizes() {
     Vector<float> extents = textConsole_->BoundingBox().Extents();
-    requiredSize_.width  = extents.x;
-    requiredSize_.height = extents.y;
+    requiredSize_.size.width  = extents.x;
+    requiredSize_.size.height = extents.y;
     return requiredSize_;
 }
 
 void Button::Layout(const Frame &frame) {
     frame_.position = frame.position;
-    frame_.size     = requiredSize_;
+    frame_.size     = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
@@ -75,6 +75,7 @@ GuiElement *Button::TouchedElement(const TouchInfo &touch) {
 }
 
 void Button::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     touchInside_ = true;
     SetColors(true);
     context_->RequestRedraw();
@@ -89,6 +90,8 @@ void Button::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
 }
 
 void Button::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    (void) touches;
+
     bool inside = touchInside_;
     
     touchInside_ = false;

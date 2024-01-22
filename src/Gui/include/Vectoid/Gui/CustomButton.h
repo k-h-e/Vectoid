@@ -49,7 +49,7 @@ class CustomButton : public GuiElement {
     void EnableAnimation(bool enabled);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
-    Size UpdateRequiredSizes() override;
+    RequiredSize UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     void OnCyclicUpdate(float deltaTimeS) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;

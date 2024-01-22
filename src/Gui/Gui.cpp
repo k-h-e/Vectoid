@@ -13,6 +13,7 @@
 #include <Vectoid/Gui/ComboBarrel.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/CustomButton.h>
+#include <Vectoid/Gui/EmptySpace.h>
 #include <Vectoid/Gui/Label.h>
 #include <Vectoid/Gui/TouchInfo.h>
 #include <Vectoid/Gui/Strip.h>
@@ -72,8 +73,16 @@ bool Gui::InScene(int scene) const {
     return (currentScene_ && (*currentScene_ == scene));
 }
 
-void Gui::SetFrame(const Frame &frame) {
+void Gui::SetFrame(const Frame &frame, bool addMargin) {
     frame_ = frame;
+    if (addMargin) {
+        if ((frame_.size.width > 2.0f * context_->spacing) && (frame_.size.height > 2.0f * context_->spacing)) {
+            frame_.position.x  += context_->spacing;
+            frame_.position.y  -= context_->spacing;
+            frame_.size.width  -= 2.0f * context_->spacing;
+            frame_.size.height -= 2.0f * context_->spacing;
+        }
+    }
     Layout();
 }
 
@@ -139,27 +148,31 @@ Size Gui::GlyphSize() const {
 }
 
 shared_ptr<Button> Gui::MakeButton(const string &text) {
-    return shared_ptr<Button>(new Button(text, context_->glyphSize, context_));
+    return shared_ptr<Button>{new Button{text, context_->glyphSize, context_}};
 }
 
 shared_ptr<ComboBarrel> Gui::MakeComboBarrel(int width, int numVisibleOtherPerSide) {
-    return shared_ptr<ComboBarrel>(new ComboBarrel(width, numVisibleOtherPerSide, context_->glyphSize, context_));
+    return shared_ptr<ComboBarrel>{new ComboBarrel{width, numVisibleOtherPerSide, context_->glyphSize, context_}};
 }
 
 shared_ptr<CustomButton> Gui::MakeCustomButton(const shared_ptr<CustomContentInterface> &content) {
-    return shared_ptr<CustomButton>(new CustomButton(content, context_));
+    return shared_ptr<CustomButton>{new CustomButton{content, context_}};
+}
+
+shared_ptr<EmptySpace> Gui::MakeEmptySpace(bool extendsHorizontally, bool extendsVertically) {
+    return shared_ptr<EmptySpace>{new EmptySpace{extendsHorizontally, extendsVertically, context_}};
 }
 
 shared_ptr<Label> Gui::MakeLabel(const string &text) {
-    return shared_ptr<Label>(new Label(text, context_->glyphSize, context_));
+    return shared_ptr<Label>{new Label{text, context_->glyphSize, context_}};
 }
 
 shared_ptr<Label> Gui::MakeLabel(int width, int height) {
-    return shared_ptr<Label>(new Label(width, height, context_->glyphSize, context_));
+    return shared_ptr<Label>{new Label{width, height, context_->glyphSize, context_}};
 }
 
 shared_ptr<Strip> Gui::MakeStrip(Orientation orientation) {
-    return shared_ptr<Strip>(new Strip(orientation, context_));
+    return shared_ptr<Strip>{new Strip{orientation, context_}};
 }
 
 void Gui::Layout() {

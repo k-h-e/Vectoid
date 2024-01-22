@@ -38,14 +38,21 @@ class Label : public GuiElement {
     //! Sets the label text as specified.
     void SetText(const std::string &text);
     //! Sets the label text as specified.
-    void SetText(int line, const std::string &text, Vectoid::SceneGraph::TextConsole::Color color);
+    void SetText(int row, const std::string &text, Vectoid::SceneGraph::TextConsole::Color color);
     //! Writes the specified line of text to the console, wrapping it into multiple rows if necessary.
     void WriteLine(const std::string &line, Vectoid::SceneGraph::TextConsole::Color color);
+    //! Writes text at specified coordinates, without breaking into any new lines.
+    /*!
+     *  Does not change the \ref WriteLine() cursor.
+     */
+    void WriteAt(int column, int row, const std::string &text, Vectoid::SceneGraph::TextConsole::Color color);
     //! Clears the label text.
     void ClearText();
+    //! Clears the specified row.
+    void ClearRow(int row);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
-    Size UpdateRequiredSizes() override;
+    RequiredSize UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;

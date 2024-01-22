@@ -10,6 +10,7 @@
 
 #include <K/Core/Log.h>
 #include <K/Core/NumberTools.h>
+#include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Gui/Context.h>
 #include <Vectoid/Gui/CustomContentInterface.h>
 #include <Vectoid/Gui/TouchInfo.h>
@@ -38,6 +39,8 @@ CustomButton::CustomButton(const shared_ptr<CustomContentInterface> &content, co
           animationEnabled_{false} {
     panel_    = context_->renderTarget->NewCustomPanel(content_->Size().width + context_->glyphSize.width,
                                                        content_->Size().height + context_->glyphSize.width);
+    panel_->SetFrameWidth(context_->frameWidth);
+    panel_->EnableFrame(true);
     coordSys_ = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(panel_));
     content_->AddSceneGraphNodes(coordSys_.get());
@@ -62,15 +65,16 @@ void CustomButton::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-Size CustomButton::UpdateRequiredSizes() {
-    requiredSize_.width  = panel_->Width();
-    requiredSize_.height = panel_->Height();
+RequiredSize CustomButton::UpdateRequiredSizes() {
+    Vector<float> extents = panel_->BoundingBox().Extents();
+    requiredSize_.size.width  = extents.x;
+    requiredSize_.size.height = extents.y;
     return requiredSize_;
 }
 
 void CustomButton::Layout(const Frame &frame) {
     frame_.position = frame.position;
-    frame_.size     = requiredSize_;
+    frame_.size     = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
@@ -89,6 +93,7 @@ GuiElement *CustomButton::TouchedElement(const TouchInfo &touch) {
 }
 
 void CustomButton::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     touchInside_ = true;
     SetColors(true);
     context_->RequestRedraw();
@@ -103,6 +108,8 @@ void CustomButton::OnTouchGestureMoved(const vector<const TouchInfo *> &touches)
 }
 
 void CustomButton::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    (void) touches;
+
     bool inside = touchInside_;
     
     touchInside_ = false;
@@ -120,9 +127,11 @@ void CustomButton::SetColors(bool active) {
     if (active) {
         panel_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
         content_->SetColor(context_->selectionTextColor);
+        panel_->SetFrameColor(.6f * context_->selectionTextColor);
     } else {
         panel_->SetBackgroundColor(context_->menuBackgroundColor, context_->menuBackgroundAlpha);
         content_->SetColor(context_->menuTextColor);
+        panel_->SetFrameColor(.6f * context_->menuTextColor);
     }
 }
     

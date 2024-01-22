@@ -40,7 +40,7 @@ class Strip : public GuiElement {
     void AddChild(const std::shared_ptr<GuiElement> &guiElement);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
-    Size UpdateRequiredSizes() override;
+    RequiredSize UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;
@@ -50,10 +50,9 @@ class Strip : public GuiElement {
   private:
     struct ChildInfo {
         std::shared_ptr<GuiElement> child;
-        float                       offset;
-        Size                        requiredSize;
+        RequiredSize                requiredSize;
         
-        ChildInfo(const std::shared_ptr<GuiElement> &child) : child{child}, offset{0.0f} {}
+        ChildInfo(const std::shared_ptr<GuiElement> &child) : child{child} {}
         ChildInfo()                                  = delete;
         ChildInfo(const ChildInfo &other)            = default;
         ChildInfo &operator=(const ChildInfo &other) = default;
@@ -66,6 +65,7 @@ class Strip : public GuiElement {
     
     std::vector<ChildInfo> children_;
     bool                   vertical_;
+    int                    numExtendable_;
 };
 
 }    // Namespace Gui.

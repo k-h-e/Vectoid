@@ -16,8 +16,8 @@ namespace Gui {
 
 //! Holds the size of an UI element.
 struct Size {
-    float width;
-    float height;
+    float width;     // Non-negative.
+    float height;    // Non-negative.
     
     Size(float width, float height) : width{width > 0.0f ? width : 0.0f}, height{height > 0.0f ? height : 0.0f} {}
     Size() : width{0.0f}, height{0.0f} {}

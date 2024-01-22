@@ -13,6 +13,12 @@
 #include <Vectoid/SceneGraph/Geometry.h>
 
 namespace Vectoid {
+    namespace Core {
+        template<typename T> class BoundingBox;
+    }
+}
+
+namespace Vectoid {
 namespace SceneGraph {
 
 //! Custom panel geometry.
@@ -26,16 +32,25 @@ class CustomPanel : public Geometry {
     CustomPanel &operator=(CustomPanel &&other)      = delete;
     ~CustomPanel()                                   = default;
     
-    float Width() const;
-    float Height() const;
+    //! Tells the panel's bounding box.
+    Core::BoundingBox<float> BoundingBox() const;
     //! Sets the panel's background color, including its alpha channel.
     void SetBackgroundColor(const Vectoid::Core::Vector<float> &color, float alpha);
+     //! Toggles rendering of the panel frame, default is off.
+    void EnableFrame(bool enabled);
+    //! Sets the panel's frame color.
+    void SetFrameColor(const Vectoid::Core::Vector<float> &color);
+    //! Sets the panel's frame width.
+    void SetFrameWidth(float width);
     
   protected:
     float                        width_;
     float                        height_;
+    float                        frameWidth_;
     Vectoid::Core::Vector<float> backgroundColor_;
     float                        backgroundAlpha_;
+    Vectoid::Core::Vector<float> frameColor_;
+    bool                         frameEnabled_;
 };
 
 }    // Namespace SceneGraph.

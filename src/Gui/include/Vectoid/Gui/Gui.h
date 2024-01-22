@@ -27,6 +27,7 @@ namespace Vectoid {
         class CustomContentInterface;
         class Context;
         class CustomButton;
+        class EmptySpace;
         class GuiElement;
         class Label;
         class RedrawRequestHandlerInterface;
@@ -80,7 +81,7 @@ class Gui : public virtual K::Core::Interface {
     //! Tells whether the GUI is currently in the specified scene.
     bool InScene(int scene) const;
     //! Sets the GUI frame as specified.
-    void SetFrame(const Frame &frame);
+    void SetFrame(const Frame &frame, bool addMargin);
     //! Informs the GUI that a new frame is about to be rendered.
     void OnFrameWillBeRendered();
     //! Handles a cyclic update call (requested earlier).
@@ -100,6 +101,7 @@ class Gui : public virtual K::Core::Interface {
     std::shared_ptr<Button> MakeButton(const std::string &text);
     std::shared_ptr<ComboBarrel> MakeComboBarrel(int width, int numVisibleOtherPerSide);
     std::shared_ptr<CustomButton> MakeCustomButton(const std::shared_ptr<CustomContentInterface> &content);
+    std::shared_ptr<EmptySpace> MakeEmptySpace(bool extendsHorizontally, bool extendsVertically);
     std::shared_ptr<Label> MakeLabel(const std::string &text);
     std::shared_ptr<Label> MakeLabel(int width, int height);
     std::shared_ptr<Strip> MakeStrip(Orientation orientation);

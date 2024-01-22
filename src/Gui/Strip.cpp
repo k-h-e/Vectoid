@@ -20,7 +20,8 @@ namespace Gui {
 
 Strip::Strip(Orientation orientation, const shared_ptr<Context> &context)
         : GuiElement{context},
-          vertical_{orientation == Orientation::Vertical} {
+          vertical_{orientation == Orientation::Vertical},
+          numExtendable_{0} {
     // Nop.
 }
 
@@ -35,55 +36,110 @@ void Strip::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     }
 }
 
-Size Strip::UpdateRequiredSizes() {
-    requiredSize_ = Size{};
+RequiredSize Strip::UpdateRequiredSizes() {
+    requiredSize_ = RequiredSize{};
     
-    float offset{0.0f};
+    numExtendable_ = 0;
     bool  first{true};
     for (auto &info : children_) {
-        Size size = info.child->UpdateRequiredSizes();
-        
-        info.offset       = offset;
-        info.requiredSize = size;
-        
+        info.requiredSize = info.child->UpdateRequiredSizes();
+        if (info.requiredSize.canUseMoreWidth) {
+            requiredSize_.canUseMoreWidth = true;
+        }
+        if (info.requiredSize.canUseMoreHeight) {
+            requiredSize_.canUseMoreHeight = true;
+        }
+
         if (vertical_) {
-            requiredSize_.height += size.height;
+            if (info.requiredSize.canUseMoreHeight) {
+                ++numExtendable_;
+            }
+
+            requiredSize_.size.height += info.requiredSize.size.height;
             if (!first) {
-                requiredSize_.height += context_->spacing;
+                requiredSize_.size.height += context_->spacing;
             }
-            if (size.width > requiredSize_.width) {
-                requiredSize_.width = size.width;
+            if (info.requiredSize.size.width > requiredSize_.size.width) {
+                requiredSize_.size.width = info.requiredSize.size.width;
             }
-            offset = requiredSize_.height + context_->spacing;
         } else {
-            requiredSize_.width += size.width;
+            if (info.requiredSize.canUseMoreWidth) {
+                ++numExtendable_;
+            }
+
+            requiredSize_.size.width += info.requiredSize.size.width;
             if (!first) {
-                requiredSize_.width += context_->spacing;
+                requiredSize_.size.width += context_->spacing;
             }
-            if (size.height > requiredSize_.height) {
-                requiredSize_.height = size.height;
+            if (info.requiredSize.size.height > requiredSize_.size.height) {
+                requiredSize_.size.height = info.requiredSize.size.height;
             }
-            offset = requiredSize_.width + context_->spacing;
         }
         
-        first  = false;
+        first = false;
     }
     
     return requiredSize_;
 }
 
 void Strip::Layout(const Frame &frame) {
+    float extraWidth   { 0.0f };
+    float extraHeight  { 0.0f };
+
     frame_.position = frame.position;
-    frame_.size     = requiredSize_;
+    frame_.size     = requiredSize_.size;
+    if ((frame.size.width > frame_.size.width) && requiredSize_.canUseMoreWidth) {
+        extraWidth        = frame.size.width - frame_.size.width;
+        frame_.size.width = frame.size.width;
+    }
+    if ((frame.size.height > frame_.size.height) && requiredSize_.canUseMoreHeight) {
+        extraHeight        = frame.size.height - frame_.size.height;
+        frame_.size.height = frame.size.height;
+    }
+
+    int   numToExtend  { 0    };
+    float extraPortion { 0.0f };
+    if (numExtendable_ > 0) {
+        numToExtend = numExtendable_;
+        if (vertical_) {
+            extraPortion = extraHeight / static_cast<float>(numToExtend);
+        } else {
+            extraPortion = extraWidth / static_cast<float>(numToExtend);
+        }
+    }
+
+    float offset{0.0f};
     for (auto &info : children_) {
         Frame frame;
         if (vertical_) {
-            frame = Frame{Position{frame_.position.x, frame_.position.y - info.offset}, info.requiredSize};
+            float height = info.requiredSize.size.height;
+            if (info.requiredSize.canUseMoreHeight && (numToExtend > 0)) {
+                float extra = (numToExtend > 1) ? extraPortion : extraHeight;
+                height      += extra;
+                extraHeight -= extra;
+                --numToExtend;
+            }
+            frame = Frame{Position{frame_.position.x, frame_.position.y - offset}, Size{frame_.size.width, height}};
+            offset += height;
         } else {
-            frame = Frame{Position{frame_.position.x + info.offset, frame_.position.y}, info.requiredSize};
+            float width = info.requiredSize.size.width;
+            if (info.requiredSize.canUseMoreWidth && (numToExtend > 0)) {
+                float extra = (numToExtend > 1) ? extraPortion : extraWidth;
+                width      += extra;
+                extraWidth -= extra;
+                --numToExtend;
+            }
+            frame = Frame{Position{frame_.position.x + offset, frame_.position.y}, Size{width, frame_.size.height}};
+            offset += width;
         }
+
         info.child->Layout(frame);
+
+        offset += context_->spacing;
     }
+
+    (void) extraWidth;
+    (void) extraHeight;
 }
 
 GuiElement *Strip::TouchedElement(const TouchInfo &touch) {
@@ -100,14 +156,17 @@ GuiElement *Strip::TouchedElement(const TouchInfo &touch) {
 }
 
 void Strip::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 
 void Strip::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 
 void Strip::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 

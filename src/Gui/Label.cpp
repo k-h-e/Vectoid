@@ -56,9 +56,9 @@ void Label::SetText(const string &text) {
     SetText(0, text, TextConsole::Color::White);
 }
 
-void Label::SetText(int line, const string &text, TextConsole::Color color) {
-    textConsole_->ClearRow(line);
-    textConsole_->WriteAt(0, line, text.c_str(), color);
+void Label::SetText(int row, const string &text, TextConsole::Color color) {
+    textConsole_->ClearRow(row);
+    textConsole_->WriteAt(0, row, text.c_str(), color);
     context_->RequestRedraw();
 }
 
@@ -67,8 +67,18 @@ void Label::WriteLine(const string &line, TextConsole::Color color) {
     context_->RequestRedraw();
 }
 
+void Label::WriteAt(int column, int row, const string &text, TextConsole::Color color) {
+    textConsole_->WriteAt(column, row, text.c_str(), color);
+    context_->RequestRedraw();
+}
+
 void Label::ClearText() {
     textConsole_->Clear();
+    context_->RequestRedraw();
+}
+
+void Label::ClearRow(int row) {
+    textConsole_->ClearRow(row);
     context_->RequestRedraw();
 }
 
@@ -76,16 +86,16 @@ void Label::AddSceneGraphNodes(CoordSys *guiCoordSys) {
     guiCoordSys->AddChild(coordSys_);
 }
 
-Size Label::UpdateRequiredSizes() {
+RequiredSize Label::UpdateRequiredSizes() {
     Vector<float> extents = textConsole_->BoundingBox().Extents();
-    requiredSize_.width  = extents.x;
-    requiredSize_.height = extents.y;
+    requiredSize_.size.width  = extents.x;
+    requiredSize_.size.height = extents.y;
     return requiredSize_;
 }
 
 void Label::Layout(const Frame &frame) {
     frame_.position = frame.position;
-    frame_.size     = requiredSize_;
+    frame_.size     = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
@@ -93,18 +103,22 @@ void Label::Layout(const Frame &frame) {
 }
 
 GuiElement *Label::TouchedElement(const TouchInfo &touch) {
+    (void) touch;
     return nullptr;
 }
 
 void Label::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 
 void Label::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 
 void Label::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
+    (void) touches;
     // Nop.
 }
 

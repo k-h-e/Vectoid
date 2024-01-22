@@ -13,20 +13,25 @@
 #include <QOpenGLWidget>
 #include <K/Core/Interface.h>
 #include <Vectoid/Core/Transform.h>
+#include <Vectoid/Gui/TouchInfo.h>
 
 namespace Vectoid {
-
-namespace SceneGraph {
-    class Camera;
-    class PerspectiveProjection;
-    class RenderTargetInterface;
-    class TreeNode;
-    namespace OpenGL {
-        class Context;
-        class RenderTarget;
+    namespace SceneGraph {
+        class Camera;
+        class PerspectiveProjection;
+        class RenderTargetInterface;
+        class TreeNode;
+        namespace OpenGL {
+            class Context;
+            class RenderTarget;
+        }
+    }
+    namespace Gui {
+        class Gui;
     }
 }
 
+namespace Vectoid {
 //! UI elements for Vectoid 3D graphics.
 namespace Gui {
 //! <c>Qt</c>-based UI elements for Vectoid 3D graphics.
@@ -49,6 +54,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void SetSceneGraph(const std::shared_ptr<Vectoid::SceneGraph::TreeNode> &root,
                        const std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> &projection,
                        const std::shared_ptr<Vectoid::SceneGraph::Camera> &camera);
+    //! Sets the specified GUI.
+    void SetGui(const std::shared_ptr<Vectoid::Gui::Gui> &gui, float guiDeltaZ);
     //! Toggles interactive camera navigation.
     /*!
      *  When camera navigation is disabled, mouse dragging is reported via the respective signals.
@@ -86,14 +93,17 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void OnGLContextAboutToBeDestroyed();
 
   private:
+    void SetViewPort();
+
     QOpenGLContext                                              *qtGLContext_;
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::Context>       context_;
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::RenderTarget>  renderTarget_;
-    std::shared_ptr<Vectoid::SceneGraph::TreeNode>              root_;
     std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> projection_;
     std::shared_ptr<Vectoid::SceneGraph::Camera>                camera_;
     int                                                         width_;
     int                                                         height_;
+    std::shared_ptr<Vectoid::Gui::Gui>                          gui_;
+    float                                                       guiDeltaZ_;
     int                                                         startX_;
     int                                                         startY_;
     Vectoid::Core::Vector<float>                                start_;
@@ -108,6 +118,9 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     bool                                                        cameraNavigationEnabled_;
     bool                                                        altKeyDown_;
     bool                                                        controlKeyDown_;
+    Vectoid::Gui::TouchInfo                                     touchInfo_;
+    std::vector<const Vectoid::Gui::TouchInfo *>                touches_;
+    bool                                                        guiIsHandlingMouse_;
 };
 
 }    // Namespace Qt.

@@ -6,44 +6,25 @@
 //                                          // //       //          //      //  //     //      //  //     //     //
 ///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
 
-#ifndef VECTOID_GUI_BUTTON_H_
-#define VECTOID_GUI_BUTTON_H_
+#ifndef VECTOID_GUI_EMPTYSPACE_H_
+#define VECTOID_GUI_EMPTYSPACE_H_
 
-#include <string>
 #include <Vectoid/Gui/GuiElement.h>
-
-namespace Vectoid {
-    namespace Gui {
-        class Gui;
-        struct TouchInfo;
-    }
-    namespace SceneGraph {
-        class TextConsole;
-    }
-}
 
 namespace Vectoid {
 namespace Gui {
 
-//! Button GUI element.
-class Button : public GuiElement {
+//! Empty space.
+class EmptySpace : public GuiElement {
   public:
-    class HandlerInterface : public virtual K::Core::Interface {
-      public:
-        virtual void OnButtonPressed(Button *button) = 0;
-    };
-    
     friend class Gui;
     
-    Button()                               = delete;
-    Button(const Button &other)            = delete;
-    Button &operator=(const Button &other) = delete;
-    Button(Button &&other)                 = delete;
-    Button &operator=(Button &&other)      = delete;
-    ~Button()                              = default;
-    
-    //! Pass <c>nullptr</c> to unregister a potentially registered handler.
-    void Register(HandlerInterface *handler);
+    EmptySpace()                                   = delete;
+    EmptySpace(const EmptySpace &other)            = delete;
+    EmptySpace &operator=(const EmptySpace &other) = delete;
+    EmptySpace(EmptySpace &&other)                 = delete;
+    EmptySpace &operator=(EmptySpace &&other)      = delete;
+    ~EmptySpace()                                  = default;
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     RequiredSize UpdateRequiredSizes() override;
@@ -54,16 +35,10 @@ class Button : public GuiElement {
     void OnTouchGestureEnded(const std::vector<const TouchInfo *> &touches) override;
     
   private:
-    Button(const std::string &text, const Size &glyphSize, const std::shared_ptr<Context> &context);
-    void SetColors(bool active);
-    
-    HandlerInterface                         *handler_;
-    std::shared_ptr<SceneGraph::TextConsole> textConsole_;
-    std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
-    bool                                     touchInside_;
+    EmptySpace(bool extendsHorizontally, bool extendsVertically, const std::shared_ptr<Context> &context);
 };
 
 }    // Namespace Gui.
 }    // Namespace Vectoid.
 
-#endif    // VECTOID_GUI_BUTTON_H_
+#endif    // VECTOID_GUI_EMPTYSPACE_H_

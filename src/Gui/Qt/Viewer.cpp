@@ -14,9 +14,11 @@
 #include <K/Core/NumberTools.h>
 #include <K/Core/Log.h>
 #include <Vectoid/SceneGraph/Camera.h>
+#include <Vectoid/SceneGraph/Context.h>
 #include <Vectoid/SceneGraph/PerspectiveProjection.h>
 #include <Vectoid/SceneGraph/OpenGL/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/RenderTarget.h>
+#include <Vectoid/Gui/Gui.h>
 
 using std::make_shared;
 using std::shared_ptr;
@@ -32,29 +34,35 @@ using Vectoid::SceneGraph::RenderTargetInterface;
 using Vectoid::SceneGraph::TreeNode;
 using Vectoid::SceneGraph::OpenGL::Context;
 using Vectoid::SceneGraph::OpenGL::RenderTarget;
+using Vectoid::Gui::Position;
+using Vectoid::Gui::Size;
 
 namespace Vectoid {
 namespace Gui {
 namespace Qt {
 
 Viewer::Viewer(QWidget *parent)
-        : QOpenGLWidget(parent),
-          qtGLContext_(nullptr),
-          width_(1),
-          height_(1),
-          rotating_(false),
-          panning_(false),
-          movingRolling_(false),
-          dragging_(false),
-          mouseMovedWhilePressed_(false),
-          cameraNavigationEnabled_(true),
-          altKeyDown_(false),
-          controlKeyDown_(false) {
+        : QOpenGLWidget{parent},
+          qtGLContext_{nullptr},
+          width_{1},
+          height_{1},
+          guiDeltaZ_{0.0f},
+          rotating_{false},
+          panning_{false},
+          movingRolling_{false},
+          dragging_{false},
+          mouseMovedWhilePressed_{false},
+          cameraNavigationEnabled_{true},
+          altKeyDown_{false},
+          controlKeyDown_{false},
+          guiIsHandlingMouse_{false} {
     setMouseTracking(true);
     setFocusPolicy(::Qt::ClickFocus);
 
-    context_      = make_shared<Context>();
+    context_      = make_shared<SceneGraph::OpenGL::Context>();
     renderTarget_ = make_shared<class RenderTarget>(context_);
+
+    touches_.push_back(&touchInfo_);
 }
 
 Viewer::~Viewer() {
@@ -73,17 +81,20 @@ shared_ptr<RenderTargetInterface> Viewer::RenderTarget() {
 
 void Viewer::SetSceneGraph(const shared_ptr<TreeNode> &root, const shared_ptr<PerspectiveProjection> &projection,
                            const shared_ptr<Camera> &camera) {
-    root_       = root;
     projection_ = projection;
     camera_     = camera;
 
-    renderTarget_->SetSceneGraph(root_);
-    if (projection_) {
-        projection_->SetViewPort(width_, height_);
-        emit ProjectionUpdated();
-    }
+    renderTarget_->SetSceneGraph(root);
 
-    update();
+    SetViewPort();
+}
+
+void Viewer::SetGui(const shared_ptr<Gui> &gui, float guiDeltaZ) {
+    gui_       = gui;
+    guiDeltaZ_ = guiDeltaZ;
+    NumberTools::ClampMin(&guiDeltaZ_, 0.0f);
+
+    SetViewPort();
 }
 
 void Viewer::EnableCameraNavigation(bool enabled) {
@@ -101,6 +112,9 @@ void Viewer::initializeGL() {
 }
 
 void Viewer::paintGL() {
+    if (gui_) {
+        gui_->OnFrameWillBeRendered();
+    }
     renderTarget_->RenderFrame();
 }
 
@@ -109,118 +123,145 @@ void Viewer::resizeGL(int width, int height) {
     NumberTools::ClampMin(&height, 1);
     width_  = width;
     height_ = height;
-    if (root_ && projection_) {
-        projection_->SetViewPort(width_, height_);
-        emit ProjectionUpdated();
-    }
-    Log::Print(Log::Level::Debug, this, [&]{ return "viewport_size=" + to_string(width_) + "x" + to_string(height_); });
+    SetViewPort();
 }
 
 void Viewer::mousePressEvent(QMouseEvent *event) {
-    rotating_      = false;
-    panning_       = false;
-    movingRolling_ = false;
-    dragging_      = false;
+    guiIsHandlingMouse_ = false;
 
-    if (cameraNavigationEnabled_) {
-        if (camera_) {
-            camera_->GetTransform(&startCameraTransform_);
-            if (altKeyDown_) {
-                panning_ = true;
-            } else if (controlKeyDown_) {
-                movingRolling_ = true;
-            } else {
-                rotating_ = true;
-            }
-        }
-    } else {
-        dragging_ = true;
+    if (projection_ && gui_) {
+        auto point = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
+                                                               static_cast<float>(event->pos().y()), -guiDeltaZ_);
+        touchInfo_ = TouchInfo{point.x, point.y};
+
+        guiIsHandlingMouse_ = gui_->OnTouchGestureBegan(touches_);
     }
 
-    if (rotating_ || panning_ || movingRolling_ || dragging_) {
-        startX_                 = event->pos().x();
-        startY_                 = event->pos().y();
-        mouseMovedWhilePressed_ = false;
+    if (!guiIsHandlingMouse_) {
+        rotating_      = false;
+        panning_       = false;
+        movingRolling_ = false;
+        dragging_      = false;
 
-        if (dragging_) {
-            emit MouseDragStateChanged(true);
+        if (cameraNavigationEnabled_) {
+            if (camera_) {
+                camera_->GetTransform(&startCameraTransform_);
+                if (altKeyDown_) {
+                    panning_ = true;
+                } else if (controlKeyDown_) {
+                    movingRolling_ = true;
+                } else {
+                    rotating_ = true;
+                }
+            }
+        } else {
+            dragging_ = true;
+        }
+
+        if (rotating_ || panning_ || movingRolling_ || dragging_) {
+            startX_                 = event->pos().x();
+            startY_                 = event->pos().y();
+            mouseMovedWhilePressed_ = false;
+
+            if (dragging_) {
+                emit MouseDragStateChanged(true);
+            }
         }
     }
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *event) {
-    (void)event;
+    if (guiIsHandlingMouse_) {
+        if (projection_ && gui_) {
+            auto point = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
+                                                                   static_cast<float>(event->pos().y()), -guiDeltaZ_);
+            touchInfo_.x = point.x;
+            touchInfo_.y = point.y;
+            gui_->OnTouchGestureEnded(touches_);
+        }
+        guiIsHandlingMouse_ = false;
+    } else {
+        bool didDrag = dragging_;
 
-    bool didDrag = dragging_;
+        rotating_      = false;
+        panning_       = false;
+        movingRolling_ = false;
+        dragging_      = false;
 
-    rotating_      = false;
-    panning_       = false;
-    movingRolling_ = false;
-    dragging_      = false;
-
-    if (didDrag) {
-        emit MouseDragStateChanged(false);
-    }
-    if (!mouseMovedWhilePressed_) {
-        emit MouseClicked();
+        if (didDrag) {
+            emit MouseDragStateChanged(false);
+        }
+        if (!mouseMovedWhilePressed_) {
+            emit MouseClicked();
+        }
     }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *event) {
-    if (!mouseMovedWhilePressed_) {
-        if ((event->pos().x() != startX_) || (event->pos().y() != startY_)) {
-            mouseMovedWhilePressed_ = true;
+    if (guiIsHandlingMouse_) {
+        if (projection_ && gui_) {
+            auto point = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
+                                                                   static_cast<float>(event->pos().y()), -guiDeltaZ_);
+            touchInfo_.x = point.x;
+            touchInfo_.y = point.y;
+            gui_->OnTouchGestureMoved(touches_);
         }
-    }
-
-    if (projection_) {
-        Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
-                                                                          static_cast<float>(event->pos().y()));
-        Vector<float> start   = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
-                                                                          static_cast<float>(startY_));
-        if (rotating_) {
-            if (camera_) {
-                float yawAngle   =  (current.x - start.x)/projection_->WindowSize() * 90.0f;
-                float pitchAngle = -(current.y - start.y)/projection_->WindowSize() * 90.0f;
-                Transform<float> transform = startCameraTransform_;
-                transform.Prepend(Transform(Axis::Y, yawAngle));
-                transform.Prepend(Transform(Axis::X, pitchAngle));
-                camera_->SetTransform(transform);
-                update();
-                emit CameraUpdated();
+    } else {
+        if (!mouseMovedWhilePressed_) {
+            if ((event->pos().x() != startX_) || (event->pos().y() != startY_)) {
+                mouseMovedWhilePressed_ = true;
             }
-        } else if (panning_) {
-            if (camera_) {
-                Transform<float> cameraRotation = startCameraTransform_;
-                cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
-                Vector<float> up(0.0f, 1.0f, 0.0f);
-                cameraRotation.ApplyTo(&up);
-                Vector<float> right(1.0f, 0.0f, 0.0f);
-                cameraRotation.ApplyTo(&right);
-
-                Vector<float> position;
-                startCameraTransform_.GetTranslationPart(&position);
-                position = position - 20.0f*(current.x - start.x)*right - 20.0f*(current.y - start.y)*up;
-                camera_->SetPosition(position);
-                update();
-                emit CameraUpdated();
-            }
-        } else if (movingRolling_) {
-            if (camera_) {
-                Transform<float> transform = startCameraTransform_;
-                transform.Prepend(Transform<float>((100.0f * (current.y - start.y)/projection_->WindowSize())
-                                                      * Vector<float>(0.0f, 0.0f, 1.0f)));
-                transform.Prepend(Transform<float>(Axis::Z, 90.0f * (current.x - start.x)/projection_->WindowSize()));
-                camera_->SetTransform(transform);
-                update();
-                emit CameraUpdated();
-            }
-        } else if (dragging_) {
-            emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
-                              (current.y - start.y)/projection_->WindowSize());
         }
 
-        emit MouseMoved(current);
+        if (projection_) {
+            Vector<float> current = projection_->TransformViewPortCoordinates(static_cast<float>(event->pos().x()),
+                                                                              static_cast<float>(event->pos().y()));
+            Vector<float> start   = projection_->TransformViewPortCoordinates(static_cast<float>(startX_),
+                                                                              static_cast<float>(startY_));
+            if (rotating_) {
+                if (camera_) {
+                    float yawAngle   =  (current.x - start.x)/projection_->WindowSize() * 90.0f;
+                    float pitchAngle = -(current.y - start.y)/projection_->WindowSize() * 90.0f;
+                    Transform<float> transform = startCameraTransform_;
+                    transform.Prepend(Transform(Axis::Y, yawAngle));
+                    transform.Prepend(Transform(Axis::X, pitchAngle));
+                    camera_->SetTransform(transform);
+                    update();
+                    emit CameraUpdated();
+                }
+            } else if (panning_) {
+                if (camera_) {
+                    Transform<float> cameraRotation = startCameraTransform_;
+                    cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
+                    Vector<float> up(0.0f, 1.0f, 0.0f);
+                    cameraRotation.ApplyTo(&up);
+                    Vector<float> right(1.0f, 0.0f, 0.0f);
+                    cameraRotation.ApplyTo(&right);
+
+                    Vector<float> position;
+                    startCameraTransform_.GetTranslationPart(&position);
+                    position = position - 20.0f*(current.x - start.x)*right - 20.0f*(current.y - start.y)*up;
+                    camera_->SetPosition(position);
+                    update();
+                    emit CameraUpdated();
+                }
+            } else if (movingRolling_) {
+                if (camera_) {
+                    Transform<float> transform = startCameraTransform_;
+                    transform.Prepend(Transform<float>((100.0f * (current.y - start.y)/projection_->WindowSize())
+                                                          * Vector<float>(0.0f, 0.0f, 1.0f)));
+                    transform.Prepend(Transform<float>(Axis::Z, 90.0f * (current.x - start.x)/projection_->WindowSize()));
+                    camera_->SetTransform(transform);
+                    update();
+                    emit CameraUpdated();
+                }
+            } else if (dragging_) {
+                emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
+                                  (current.y - start.y)/projection_->WindowSize());
+            }
+
+            emit MouseMoved(current);
+        }
     }
 }
 
@@ -255,6 +296,30 @@ void Viewer::keyReleaseEvent(QKeyEvent *event) {
 void Viewer::OnGLContextAboutToBeDestroyed() {
     makeCurrent();
     context_->ReleaseOpenGLResources();
+}
+
+void Viewer::SetViewPort() {
+    Log::Print(Log::Level::Debug, this, [&]{ return "viewport_size=" + to_string(width_) + "x" + to_string(height_); });
+
+    if (projection_) {
+        projection_->SetViewPort(width_, height_);
+        if (gui_) {
+            float windowWidth;
+            float windowHeight;
+            projection_->GetWindowDimensions(&windowWidth, &windowHeight);
+            float scaling     { (projection_->EyepointDistance() + guiDeltaZ_) / projection_->EyepointDistance() };
+            float frameWidth  { scaling * windowWidth };
+            float frameHeight { scaling * windowHeight };
+
+            Position position{-.5f * frameWidth, .5f * frameHeight};
+            Size     size{frameWidth, frameHeight};
+            gui_->SetFrame(Frame(position, size), true);
+        }
+
+        update();
+
+        emit ProjectionUpdated();
+    }
 }
 
 }    // Namespace Qt.

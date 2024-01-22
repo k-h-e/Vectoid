@@ -63,10 +63,10 @@ class TextConsole : public Geometry {
     void SetCustomColor(const Vectoid::Core::Vector<float> &color);
     //! Toggles rendering of the console frame, default is off.
     void EnableFrame(bool enabled);
-    //! Sets the console's frame width.
-    void SetFrameWidth(float width);
     //! Sets the console's frame color.
     void SetFrameColor(const Vectoid::Core::Vector<float> &color);
+     //! Sets the console's frame width.
+    void SetFrameWidth(float width);
 
   protected:
     TextConsole(const std::shared_ptr<Context> &context, int width, int height, float glyphWidth, float glyphHeight,

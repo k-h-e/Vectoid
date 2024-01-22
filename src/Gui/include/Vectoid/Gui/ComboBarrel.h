@@ -57,7 +57,7 @@ class ComboBarrel : public GuiElement {
     void SetSelection(int itemId);
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
-    Size UpdateRequiredSizes() override;
+    RequiredSize UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
     GuiElement *TouchedElement(const TouchInfo &touch) override;
     void OnTouchGestureBegan(const std::vector<const TouchInfo *> &touches) override;
