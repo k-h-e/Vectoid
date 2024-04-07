@@ -19,6 +19,7 @@
 #include <Vectoid/SceneGraph/Geode.h>
 #include <Vectoid/SceneGraph/RenderTargetInterface.h>
 
+using std::nullopt;
 using std::shared_ptr;
 using std::string;
 using std::vector;
@@ -45,7 +46,7 @@ CustomButton::CustomButton(const shared_ptr<CustomContentInterface> &content, co
     coordSys_->AddChild(context_->renderTarget->NewGeode(panel_));
     content_->AddSceneGraphNodes(coordSys_.get());
     
-    SetColors(false);
+    SetColors();
 }
 
 void CustomButton::Register(HandlerInterface *handler) {
@@ -59,6 +60,20 @@ void CustomButton::EnableAnimation(bool enabled) {
         content_->ResetAnimation();
         context_->RequestRedraw();
     }
+}
+
+void CustomButton::SetCustomColors(const Vector<float> &foregroundColor, const Vector<float> &backgroundColor) {
+    foregroundColor_ = foregroundColor;
+    backgroundColor_ = backgroundColor;
+    SetColors();
+    context_->RequestRedraw();
+}
+
+void CustomButton::ClearCustomColors() {
+    foregroundColor_ = nullopt;
+    backgroundColor_ = nullopt;
+    SetColors();
+    context_->RequestRedraw();
 }
 
 void CustomButton::AddSceneGraphNodes(CoordSys *guiCoordSys) {
@@ -95,14 +110,14 @@ GuiElement *CustomButton::TouchedElement(const TouchInfo &touch) {
 void CustomButton::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
     (void) touches;
     touchInside_ = true;
-    SetColors(true);
+    SetColors();
     context_->RequestRedraw();
 }
 
 void CustomButton::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
     if (touches.size() == 1u) {
         touchInside_ = frame_.Contains(touches[0]->x, touches[0]->y);
-        SetColors(touchInside_);
+        SetColors();
         context_->RequestRedraw();
     }
 }
@@ -113,7 +128,7 @@ void CustomButton::OnTouchGestureEnded(const vector<const TouchInfo *> &touches)
     bool inside = touchInside_;
     
     touchInside_ = false;
-    SetColors(false);
+    SetColors();
     context_->RequestRedraw();
     
     if (inside) {
@@ -123,14 +138,16 @@ void CustomButton::OnTouchGestureEnded(const vector<const TouchInfo *> &touches)
     }
 }
 
-void CustomButton::SetColors(bool active) {
-    if (active) {
+void CustomButton::SetColors() {
+    if (touchInside_) {
         panel_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
         content_->SetColor(context_->selectionTextColor);
         panel_->SetFrameColor(.6f * context_->selectionTextColor);
     } else {
-        panel_->SetBackgroundColor(context_->menuBackgroundColor, context_->menuBackgroundAlpha);
-        content_->SetColor(context_->menuTextColor);
+        Vector<float> foregroundColor = foregroundColor_ ? *foregroundColor_ : context_->menuTextColor;
+        Vector<float> backgroundColor = backgroundColor_ ? *backgroundColor_ : context_->menuBackgroundColor;
+        panel_->SetBackgroundColor(backgroundColor, context_->menuBackgroundAlpha);
+        content_->SetColor(foregroundColor);
         panel_->SetFrameColor(.6f * context_->menuTextColor);
     }
 }

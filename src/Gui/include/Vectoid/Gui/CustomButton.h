@@ -9,6 +9,9 @@
 #ifndef VECTOID_GUI_CUSTOMBUTTON_H_
 #define VECTOID_GUI_CUSTOMBUTTON_H_
 
+#include <optional>
+
+#include <Vectoid/Core/Vector.h>
 #include <Vectoid/Gui/GuiElement.h>
 
 namespace Vectoid {
@@ -47,6 +50,11 @@ class CustomButton : public GuiElement {
     void Register(HandlerInterface *handler);
     //! Toggles content animation.
     void EnableAnimation(bool enabled);
+    //! Sets the specified custom colors.
+    void SetCustomColors(const Core::Vector<float> &foregroundColor,
+                         const Core::Vector<float> &backgroundColor);
+    //! Clears custom colors if any are set.
+    void ClearCustomColors();
     
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     RequiredSize UpdateRequiredSizes() override;
@@ -59,7 +67,7 @@ class CustomButton : public GuiElement {
     
   private:
     CustomButton(const std::shared_ptr<CustomContentInterface> &content, const std::shared_ptr<Context> &context);
-    void SetColors(bool active);
+    void SetColors();
     
     HandlerInterface                         *handler_;
     std::shared_ptr<CustomContentInterface>  content_;
@@ -67,6 +75,8 @@ class CustomButton : public GuiElement {
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
     bool                                     touchInside_;
     bool                                     animationEnabled_;
+    std::optional<Core::Vector<float>>       foregroundColor_;
+    std::optional<Core::Vector<float>>       backgroundColor_;
 };
 
 }    // Namespace Gui.

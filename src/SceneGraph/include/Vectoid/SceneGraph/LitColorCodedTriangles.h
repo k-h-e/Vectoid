@@ -9,6 +9,7 @@
 #ifndef VECTOID_SCENEGRAPH_LITCOLORCODEDTRIANGLES_H_
 #define VECTOID_SCENEGRAPH_LITCOLORCODEDTRIANGLES_H_
 
+#include <functional>
 #include <memory>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Geometry.h>
