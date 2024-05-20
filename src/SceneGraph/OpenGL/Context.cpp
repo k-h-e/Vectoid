@@ -135,7 +135,7 @@ void Context::ClearResource(int slot) {
 bool Context::Release(ResourceInfo *info) {
     if (info->resource) {
         switch (info->type) {
-            case ResourceType::VBO:
+            case ResourceType::Vbo:
                 glDeleteBuffers(1, &*info->resource);
                 Log::Print(Log::Level::Debug, this, [&]{ return "deleted VBO " + to_string(*info->resource); });
                 break;

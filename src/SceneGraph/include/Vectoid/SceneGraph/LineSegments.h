@@ -32,6 +32,7 @@ class LineSegments : public Geometry {
     LineSegments &operator=(LineSegments &&other)      = delete;
 
     void SetColor(const Core::Vector<float> &color);
+    void EnableDynamicGeometry(bool enabled);
 
   protected:
     LineSegments(const std::shared_ptr<Context> &context,
@@ -39,6 +40,7 @@ class LineSegments : public Geometry {
 
     std::shared_ptr<Core::LineSegmentProviderInterface> lineSegmentProvider_;
     Core::Vector<float>                                 color_;
+    bool                                                dynamicGeometryEnabled_;
 };
 
 }    // Namespace SceneGraph.

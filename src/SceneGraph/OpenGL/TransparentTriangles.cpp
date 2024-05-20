@@ -31,7 +31,7 @@ namespace OpenGL {
 TransparentTriangles::TransparentTriangles(const shared_ptr<class Context> &context,
                                            const shared_ptr<TriangleProviderInterface> &triangleProvider)
         : SceneGraph::TransparentTriangles(context, triangleProvider),
-          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
+          vboSlot_(context->AddResourceSlot(Context::ResourceType::Vbo)),
           numTriangles_(0) {
     // Nop.
 }
@@ -41,7 +41,7 @@ TransparentTriangles::~TransparentTriangles() {
 }
 
 void TransparentTriangles::Render() {
-    optional<GLuint> vbo = GenerateVBO();
+    optional<GLuint> vbo = GenerateVbo();
     if (vbo) {
         glEnable(GL_BLEND);
         glDisable(GL_DEPTH_TEST);
@@ -62,7 +62,7 @@ void TransparentTriangles::Render() {
     }
 }
 
-optional<GLuint> TransparentTriangles::GenerateVBO() {
+optional<GLuint> TransparentTriangles::GenerateVbo() {
     optional<GLuint> vbo = Context()->GetResource(vboSlot_);
     if (!vbo) {
         vector<GLfloat> data;

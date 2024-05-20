@@ -35,7 +35,7 @@ class Points : public Vectoid::SceneGraph::Points {
 
   private:
     Context *Context() { return static_cast<class Context *>(context_.get()); }
-    std::optional<GLuint> GenerateVBO();
+    std::optional<GLuint> GenerateVbo();
 
     int vboSlot_;
     int numPoints_;    // Valid <=> VBO present.

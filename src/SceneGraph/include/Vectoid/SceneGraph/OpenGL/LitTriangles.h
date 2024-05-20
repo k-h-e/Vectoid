@@ -35,7 +35,7 @@ class LitTriangles : public Vectoid::SceneGraph::LitTriangles {
 
   private:
     Context *Context() { return static_cast<class Context *>(context_.get()); }
-    std::optional<GLuint> GenerateVBO();
+    std::optional<GLuint> GenerateVbo();
 
     int vboSlot_;
     int numTriangles_;    // Valid <=> VBO present.

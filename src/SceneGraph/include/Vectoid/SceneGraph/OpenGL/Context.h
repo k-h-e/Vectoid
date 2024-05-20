@@ -21,7 +21,7 @@ namespace OpenGL {
 //! Holds context information for the <c>OpenGL</c> renderer.
 class Context : public SceneGraph::Context {
   public:
-    enum class ResourceType { VBO,
+    enum class ResourceType { Vbo,
                               Texture };
 
     Context();
@@ -85,7 +85,7 @@ class Context : public SceneGraph::Context {
         ResourceType          type;
         std::optional<GLuint> resource;
 
-        ResourceInfo() : type(ResourceType::VBO) {}
+        ResourceInfo() : type(ResourceType::Vbo) {}
         ResourceInfo(ResourceType aType) : type(aType) {}
         ResourceInfo(const ResourceInfo &other)            = default;
         ResourceInfo &operator=(const ResourceInfo &other) = default;

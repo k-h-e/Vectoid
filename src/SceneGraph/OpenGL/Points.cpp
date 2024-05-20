@@ -27,7 +27,7 @@ namespace OpenGL {
 
 Points::Points(const shared_ptr<class Context> &context, const shared_ptr<DataSet::Points> &points)
         : SceneGraph::Points(context, points),
-          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
+          vboSlot_(context->AddResourceSlot(Context::ResourceType::Vbo)),
           numPoints_(0) {
     // Nop.
 }
@@ -37,7 +37,7 @@ Points::~Points() {
 }
 
 void Points::Render() {
-    optional<GLuint> vbo = GenerateVBO();
+    optional<GLuint> vbo = GenerateVbo();
     if (vbo) {
         glColor4f(color_.x, color_.y, color_.z, 1.0f);
 
@@ -54,7 +54,7 @@ void Points::Render() {
     }
 }
 
-optional<GLuint> Points::GenerateVBO() {
+optional<GLuint> Points::GenerateVbo() {
     optional<GLuint> vbo = Context()->GetResource(vboSlot_);
     if (!vbo) {
         if (points_->Size()) {

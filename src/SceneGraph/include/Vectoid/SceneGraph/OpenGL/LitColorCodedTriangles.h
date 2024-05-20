@@ -44,9 +44,9 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
 
   private:
     Context *Context() { return static_cast<class Context *>(context_.get()); }
-    std::optional<GLuint> GenerateVBO();
-    std::optional<GLuint> GenerateRegularVBO();
-    std::optional<GLuint> GenerateGouraudVBO();
+    std::optional<GLuint> GenerateVbo();
+    std::optional<GLuint> GenerateRegularVbo();
+    std::optional<GLuint> GenerateGouraudVbo();
     Vectoid::Core::Vector<float> GetColor(const Vectoid::Core::Vector<float> &vertex);
 
     int  vboSlot_;

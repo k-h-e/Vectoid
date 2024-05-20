@@ -29,9 +29,9 @@ namespace OpenGL {
 
 LineSegments::LineSegments(const shared_ptr<class Context> &context,
                            const shared_ptr<LineSegmentProviderInterface> &lineSegmentProvider)
-        : SceneGraph::LineSegments(context, lineSegmentProvider),
-          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
-          numSegments_(0) {
+        : SceneGraph::LineSegments{context, lineSegmentProvider},
+          vboSlot_{context->AddResourceSlot(Context::ResourceType::Vbo)},
+          numSegments_{0} {
     // Nop.
 }
 
@@ -40,7 +40,38 @@ LineSegments::~LineSegments() {
 }
 
 void LineSegments::Render() {
-    optional<GLuint> vbo = GenerateVBO();
+    if (dynamicGeometryEnabled_) {
+        RenderDynamic();
+    } else {
+        RenderVbo();
+    }
+}
+
+void LineSegments::RenderDynamic() {
+    glColor4f(color_.x, color_.y, color_.z, 1.0f);
+    glVertexPointer(3, GL_FLOAT, 0, vertexData_);
+   	glEnableClientState(GL_VERTEX_ARRAY);
+    
+    TwoPoints segment;
+    lineSegmentProvider_->PrepareToProvideLineSegments();
+    while (lineSegmentProvider_->ProvideNextLineSegment(&segment)) {
+        int j{0};
+        for (int i{0}; i < 2; ++i) {
+            const Vector<float> &vertex{segment[i]};
+            vertexData_[j++] = vertex.x;
+            vertexData_[j++] = vertex.y;
+            vertexData_[j++] = vertex.z;
+        }
+
+        glDrawArrays(GL_LINES, 0, 2);
+    }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void LineSegments::RenderVbo() {
+    optional<GLuint> vbo { GenerateVbo() };
     if (vbo) {
         glColor4f(color_.x, color_.y, color_.z, 1.0f);
 
@@ -57,17 +88,17 @@ void LineSegments::Render() {
     }
 }
 
-optional<GLuint> LineSegments::GenerateVBO() {
-    optional<GLuint> vbo = Context()->GetResource(vboSlot_);
+optional<GLuint> LineSegments::GenerateVbo() {
+    optional<GLuint> vbo { Context()->GetResource(vboSlot_) };
     if (!vbo) {
         vector<GLfloat> data;
-        int             numSegments = 0;
+        int             numSegments{0};
 
         TwoPoints segment;
         lineSegmentProvider_->PrepareToProvideLineSegments();
         while (lineSegmentProvider_->ProvideNextLineSegment(&segment)) {
             for (int i = 0; i < 2; ++i) {
-                const Vector<float> &vertex = segment[i];
+                const Vector<float> &vertex{segment[i]};
                 data.push_back(vertex.x);
                 data.push_back(vertex.y);
                 data.push_back(vertex.z);

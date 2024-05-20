@@ -40,7 +40,7 @@ namespace OpenGL {
 LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<class Context> &context,
                                                const shared_ptr<TriangleProviderInterface> &triangleProvider)
         : SceneGraph::LitColorCodedTriangles{context, triangleProvider},
-          vboSlot_{context->AddResourceSlot(Context::ResourceType::VBO)},
+          vboSlot_{context->AddResourceSlot(Context::ResourceType::Vbo)},
           numTriangles_{0} {
     // Nop.
 }
@@ -50,7 +50,7 @@ LitColorCodedTriangles::~LitColorCodedTriangles() {
 }
 
 void LitColorCodedTriangles::Render() {
-    optional<GLuint> vbo{GenerateVBO()};
+    optional<GLuint> vbo{GenerateVbo()};
     if (vbo) {
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
@@ -77,20 +77,20 @@ void LitColorCodedTriangles::Render() {
     }
 }
 
-optional<GLuint> LitColorCodedTriangles::GenerateVBO() {
+optional<GLuint> LitColorCodedTriangles::GenerateVbo() {
     optional<GLuint> vbo{Context()->GetResource(vboSlot_)};
     if (!vbo) {
         if (gouraudTriangleProvider_) {
-            vbo = GenerateGouraudVBO();
+            vbo = GenerateGouraudVbo();
         } else {
-            vbo = GenerateRegularVBO();
+            vbo = GenerateRegularVbo();
         }
     }
 
     return vbo;
 }
 
-optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
+optional<GLuint> LitColorCodedTriangles::GenerateRegularVbo() {
     vector<GLfloat> data;
 
     ThreePoints   triangle;
@@ -144,7 +144,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVBO() {
     }
 }
 
-optional<GLuint> LitColorCodedTriangles::GenerateGouraudVBO() {
+optional<GLuint> LitColorCodedTriangles::GenerateGouraudVbo() {
     vector<GLfloat> data;
     
     ThreePoints triangle;

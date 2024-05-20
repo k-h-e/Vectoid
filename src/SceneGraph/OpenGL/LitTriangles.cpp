@@ -31,7 +31,7 @@ namespace OpenGL {
 LitTriangles::LitTriangles(const shared_ptr<class Context> &context,
                            const shared_ptr<TriangleProviderInterface> &triangleProvider)
         : SceneGraph::LitTriangles(context, triangleProvider),
-          vboSlot_(context->AddResourceSlot(Context::ResourceType::VBO)),
+          vboSlot_(context->AddResourceSlot(Context::ResourceType::Vbo)),
           numTriangles_(0) {
     // Nop.
 }
@@ -41,7 +41,7 @@ LitTriangles::~LitTriangles() {
 }
 
 void LitTriangles::Render() {
-    optional<GLuint> vbo = GenerateVBO();
+    optional<GLuint> vbo = GenerateVbo();
     if (vbo) {
         if (!depthTestEnabled_) {
            glDisable(GL_DEPTH_TEST);
@@ -75,7 +75,7 @@ void LitTriangles::Render() {
     }
 }
 
-optional<GLuint> LitTriangles::GenerateVBO() {
+optional<GLuint> LitTriangles::GenerateVbo() {
     optional<GLuint> vbo = Context()->GetResource(vboSlot_);
     if (!vbo) {
         vector<GLfloat> data;

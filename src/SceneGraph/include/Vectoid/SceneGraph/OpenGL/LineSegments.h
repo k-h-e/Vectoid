@@ -35,10 +35,13 @@ class LineSegments : public Vectoid::SceneGraph::LineSegments {
 
   private:
     Context *Context() { return static_cast<class Context *>(context_.get()); }
-    std::optional<GLuint> GenerateVBO();
+    void RenderDynamic();
+    void RenderVbo();
+    std::optional<GLuint> GenerateVbo();
 
-    int vboSlot_;
-    int numSegments_;    // Valid <=> VBO present.
+    int     vboSlot_;
+    int     numSegments_;      // Valid <=> VBO present.
+    GLfloat vertexData_[6];
 };
 
 }    // Namespace OpenGL.
