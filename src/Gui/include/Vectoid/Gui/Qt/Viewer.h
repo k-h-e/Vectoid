@@ -143,7 +143,8 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     K::Core::StopWatch                                          timerStopWatch_;
     float                                                       moveSpeedMPerS_;
     float                                                       rotateSpeedDegreesPerS_;
-    float                                                       slowFactor_;
+    float                                                       moveSlowFactor_;
+    float                                                       rotateSlowFactor_;
 };
 
 }    // Namespace Qt.

@@ -70,7 +70,8 @@ Viewer::Viewer(QWidget *parent)
           guiIsHandlingMouse_{false},
           moveSpeedMPerS_{120.0f},
           rotateSpeedDegreesPerS_{180.0f},
-          slowFactor_{.1f} {
+          moveSlowFactor_{.1f},
+          rotateSlowFactor_{.2f} {
     setMouseTracking(true);
     setFocusPolicy(::Qt::ClickFocus);
 
@@ -364,39 +365,40 @@ void Viewer::OnTimer() {
             || currentRotateSpeedLeftRightDegreesPerS_ || currentRotateSpeedUpDownDegreesPerS_
             || currentRollSpeedDegreesPerS_) {
         if (camera_) {
-            float deltaS     { static_cast<float>(timerStopWatch_.DeltaMs()) / 1000.0f };
-            float slowFactor { slowKeyDown_ ? slowFactor_ : 1.0f };
+            float deltaS           { static_cast<float>(timerStopWatch_.DeltaMs()) / 1000.0f };
+            float moveSlowFactor   { slowKeyDown_ ? moveSlowFactor_   : 1.0f };
+            float rotateSlowFactor { slowKeyDown_ ? rotateSlowFactor_ : 1.0f };
 
             Transform<float> transform;
             camera_->GetTransform(&transform);
 
             if (currentMoveSpeedMPerS_) {
-                transform.Prepend(Transform<float>{(deltaS * *currentMoveSpeedMPerS_ * slowFactor)
+                transform.Prepend(Transform<float>{(deltaS * *currentMoveSpeedMPerS_ * moveSlowFactor)
                                                        * Vector<float>{0.0f, 0.0f, -1.0f}});
             }
 
             if (currentStrafeSpeedLeftRightMPerS_) {
-                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedLeftRightMPerS_ * slowFactor)
+                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedLeftRightMPerS_ * moveSlowFactor)
                                                        * Vector<float>{1.0f, 0.0f, 0.0f}});
             }
 
             if (currentStrafeSpeedUpDownMPerS_) {
-                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedUpDownMPerS_ * slowFactor)
+                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedUpDownMPerS_ * moveSlowFactor)
                                                        * Vector<float>{0.0f, 1.0f, 0.0f}});
             }
 
             if (currentRotateSpeedLeftRightDegreesPerS_) {
-                transform.Prepend(Transform<float>{Axis::Y,
-                                                   deltaS * *currentRotateSpeedLeftRightDegreesPerS_ * slowFactor});
+                transform.Prepend(
+                    Transform<float>{Axis::Y, deltaS * *currentRotateSpeedLeftRightDegreesPerS_ * rotateSlowFactor});
             }
 
             if (currentRotateSpeedUpDownDegreesPerS_) {
-                transform.Prepend(Transform<float>{Axis::X,
-                                                   deltaS * *currentRotateSpeedUpDownDegreesPerS_ * slowFactor});
+                transform.Prepend(
+                    Transform<float>{Axis::X, deltaS * *currentRotateSpeedUpDownDegreesPerS_ * rotateSlowFactor});
             }
 
             if (currentRollSpeedDegreesPerS_) {
-                transform.Prepend(Transform<float>{Axis::Z, deltaS * *currentRollSpeedDegreesPerS_ * slowFactor});
+                transform.Prepend(Transform<float>{Axis::Z, deltaS * *currentRollSpeedDegreesPerS_ * rotateSlowFactor});
             }
 
             camera_->SetTransform(transform);
