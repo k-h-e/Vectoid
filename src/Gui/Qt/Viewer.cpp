@@ -10,7 +10,9 @@
 
 #include <QMouseEvent>
 #include <QOpenGLContext>
+#include <QTimer>
 #include <QWheelEvent>
+
 #include <K/Core/NumberTools.h>
 #include <K/Core/Log.h>
 #include <Vectoid/SceneGraph/Camera.h>
@@ -21,6 +23,7 @@
 #include <Vectoid/Gui/Gui.h>
 
 using std::make_shared;
+using std::nullopt;
 using std::shared_ptr;
 using std::to_string;
 using K::Core::NumberTools;
@@ -47,18 +50,34 @@ Viewer::Viewer(QWidget *parent)
           width_{1},
           height_{1},
           guiDeltaZ_{0.0f},
+          moveForwardKeyDown_{false},
+          moveBackwardKeyDown_{false},
+          strafeLeftKeyDown_{false},
+          strafeRightKeyDown_{false},
+          strafeUpKeyDown_{false},
+          strafeDownKeyDown_{false},
+          rotateLeftKeyDown_{false},
+          rotateRightKeyDown_{false},
+          rotateUpKeyDown_{false},
+          rotateDownKeyDown_{false},
+          rollLeftKeyDown_{false},
+          rollRightKeyDown_{false},
+          slowKeyDown_{false},
           rotating_{false},
-          panning_{false},
-          movingRolling_{false},
           dragging_{false},
           mouseMovedWhilePressed_{false},
           cameraNavigationEnabled_{true},
-          altKeyDown_{false},
-          controlKeyDown_{false},
-          guiIsHandlingMouse_{false} {
+          guiIsHandlingMouse_{false},
+          moveSpeedMPerS_{120.0f},
+          rotateSpeedDegreesPerS_{180.0f},
+          slowFactor_{.1f} {
     setMouseTracking(true);
     setFocusPolicy(::Qt::ClickFocus);
 
+    timer_ = new QTimer{this};
+    timer_->setInterval(0);
+    QObject::connect(timer_, &QTimer::timeout, this, &Viewer::OnTimer);
+    
     context_      = make_shared<SceneGraph::OpenGL::Context>();
     renderTarget_ = make_shared<class RenderTarget>(context_);
 
@@ -100,8 +119,9 @@ void Viewer::SetGui(const shared_ptr<Gui> &gui, float guiDeltaZ) {
 void Viewer::EnableCameraNavigation(bool enabled) {
     cameraNavigationEnabled_ = enabled;
     rotating_ = false;
-    panning_  = false;
     dragging_ = false;
+
+    UpdateKeyNavigation();
 }
 
 void Viewer::initializeGL() {
@@ -139,29 +159,22 @@ void Viewer::mousePressEvent(QMouseEvent *event) {
 
     if (!guiIsHandlingMouse_) {
         rotating_      = false;
-        panning_       = false;
-        movingRolling_ = false;
         dragging_      = false;
 
         if (cameraNavigationEnabled_) {
             if (camera_) {
                 camera_->GetTransform(&startCameraTransform_);
-                if (altKeyDown_) {
-                    panning_ = true;
-                } else if (controlKeyDown_) {
-                    movingRolling_ = true;
-                } else {
-                    rotating_ = true;
-                }
+                rotating_ = true;
             }
         } else {
             dragging_ = true;
         }
 
-        if (rotating_ || panning_ || movingRolling_ || dragging_) {
+        if (rotating_ || dragging_) {
             startX_                 = event->pos().x();
             startY_                 = event->pos().y();
             mouseMovedWhilePressed_ = false;
+            UpdateKeyNavigation();
 
             if (dragging_) {
                 emit MouseDragStateChanged(true);
@@ -183,10 +196,9 @@ void Viewer::mouseReleaseEvent(QMouseEvent *event) {
     } else {
         bool didDrag = dragging_;
 
-        rotating_      = false;
-        panning_       = false;
-        movingRolling_ = false;
-        dragging_      = false;
+        rotating_  = false;
+        dragging_  = false;
+        UpdateKeyNavigation();
 
         if (didDrag) {
             emit MouseDragStateChanged(false);
@@ -229,32 +241,6 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
                     update();
                     emit CameraUpdated();
                 }
-            } else if (panning_) {
-                if (camera_) {
-                    Transform<float> cameraRotation = startCameraTransform_;
-                    cameraRotation.SetTranslationPart(Vector<float>(0.0f, 0.0f, 0.0f));
-                    Vector<float> up(0.0f, 1.0f, 0.0f);
-                    cameraRotation.ApplyTo(&up);
-                    Vector<float> right(1.0f, 0.0f, 0.0f);
-                    cameraRotation.ApplyTo(&right);
-
-                    Vector<float> position;
-                    startCameraTransform_.GetTranslationPart(&position);
-                    position = position - 20.0f*(current.x - start.x)*right - 20.0f*(current.y - start.y)*up;
-                    camera_->SetPosition(position);
-                    update();
-                    emit CameraUpdated();
-                }
-            } else if (movingRolling_) {
-                if (camera_) {
-                    Transform<float> transform = startCameraTransform_;
-                    transform.Prepend(Transform<float>((100.0f * (current.y - start.y)/projection_->WindowSize())
-                                                          * Vector<float>(0.0f, 0.0f, 1.0f)));
-                    transform.Prepend(Transform<float>(Axis::Z, 90.0f * (current.x - start.x)/projection_->WindowSize()));
-                    camera_->SetTransform(transform);
-                    update();
-                    emit CameraUpdated();
-                }
             } else if (dragging_) {
                 emit MouseDragged((current.x - start.x)/projection_->WindowSize(),
                                   (current.y - start.y)/projection_->WindowSize());
@@ -266,30 +252,157 @@ void Viewer::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void Viewer::keyPressEvent(QKeyEvent *event) {
-    switch (event->key()) {
-        case ::Qt::Key_Alt:
-            altKeyDown_ = true;
-            break;
-        case ::Qt::Key_Meta:
-            controlKeyDown_ = true;
-            break;
-        default:
-            QOpenGLWidget::keyPressEvent(event);
-            break;
+    if (!event->isAutoRepeat()) {
+        switch (event->key()) {
+            case ::Qt::Key_W:
+                moveForwardKeyDown_  = true;
+                break;
+            case ::Qt::Key_S:
+                moveBackwardKeyDown_ = true;
+                break;
+            case ::Qt::Key_A:
+                strafeLeftKeyDown_   = true;
+                break;
+            case ::Qt::Key_D:
+                strafeRightKeyDown_  = true;
+                break;
+            case ::Qt::Key_R:
+                strafeUpKeyDown_     = true;
+                break;
+            case ::Qt::Key_F:
+                strafeDownKeyDown_   = true;
+                break;
+            case ::Qt::Key_Left:
+                rotateLeftKeyDown_   = true;
+                break;
+            case ::Qt::Key_Right:
+                rotateRightKeyDown_  = true;
+                break;
+            case ::Qt::Key_Up:
+                rotateDownKeyDown_   = true;      // Inversion.
+                break;
+            case ::Qt::Key_Down:
+                rotateUpKeyDown_     = true;        // Inversion.
+                break;
+            case ::Qt::Key_Q:
+                rollLeftKeyDown_     = true;
+                break;
+            case ::Qt::Key_E:
+                rollRightKeyDown_    = true;
+                break;
+            case ::Qt::Key_Shift:
+                slowKeyDown_         = true;
+                break;
+            default:
+                QOpenGLWidget::keyPressEvent(event);
+                break;
+        }
+
+        UpdateKeyNavigation();
+        
+    } else {
+        QOpenGLWidget::keyPressEvent(event);
     }
 }
 
 void Viewer::keyReleaseEvent(QKeyEvent *event) {
-    switch (event->key()) {
-        case ::Qt::Key_Alt:
-            altKeyDown_ = false;
-            break;
-        case ::Qt::Key_Meta:
-            controlKeyDown_ = false;
-            break;
-        default:
-            QOpenGLWidget::keyReleaseEvent(event);
-            break;
+    if (!event->isAutoRepeat()) {
+        switch (event->key()) {
+            case ::Qt::Key_W:
+                moveForwardKeyDown_  = false;
+                break;
+            case ::Qt::Key_S:
+                moveBackwardKeyDown_ = false;
+                break;
+            case ::Qt::Key_A:
+                strafeLeftKeyDown_   = false;
+                break;
+            case ::Qt::Key_D:
+                strafeRightKeyDown_  = false;
+                break;
+            case ::Qt::Key_R:
+                strafeUpKeyDown_     = false;
+                break;
+            case ::Qt::Key_F:
+                strafeDownKeyDown_   = false;
+                break;
+            case ::Qt::Key_Left:
+                rotateLeftKeyDown_   = false;
+                break;
+            case ::Qt::Key_Right:
+                rotateRightKeyDown_  = false;
+                break;
+            case ::Qt::Key_Up:
+                rotateDownKeyDown_   = false;      // Inversion.
+                break;
+            case ::Qt::Key_Down:
+                rotateUpKeyDown_     = false;        // Inversion.
+                break;
+            case ::Qt::Key_Q:
+                rollLeftKeyDown_     = false;
+                break;
+            case ::Qt::Key_E:
+                rollRightKeyDown_    = false;
+                break;
+            case ::Qt::Key_Shift:
+                slowKeyDown_         = false;
+                break;
+            default:
+                QOpenGLWidget::keyReleaseEvent(event);
+                break;
+        }
+
+        UpdateKeyNavigation();
+
+    }  else {
+        QOpenGLWidget::keyPressEvent(event);
+    }
+}
+
+void Viewer::OnTimer() {
+    if (currentMoveSpeedMPerS_ || currentStrafeSpeedLeftRightMPerS_ || currentStrafeSpeedUpDownMPerS_
+            || currentRotateSpeedLeftRightDegreesPerS_ || currentRotateSpeedUpDownDegreesPerS_
+            || currentRollSpeedDegreesPerS_) {
+        if (camera_) {
+            float deltaS     { static_cast<float>(timerStopWatch_.DeltaMs()) / 1000.0f };
+            float slowFactor { slowKeyDown_ ? slowFactor_ : 1.0f };
+
+            Transform<float> transform;
+            camera_->GetTransform(&transform);
+
+            if (currentMoveSpeedMPerS_) {
+                transform.Prepend(Transform<float>{(deltaS * *currentMoveSpeedMPerS_ * slowFactor)
+                                                       * Vector<float>{0.0f, 0.0f, -1.0f}});
+            }
+
+            if (currentStrafeSpeedLeftRightMPerS_) {
+                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedLeftRightMPerS_ * slowFactor)
+                                                       * Vector<float>{1.0f, 0.0f, 0.0f}});
+            }
+
+            if (currentStrafeSpeedUpDownMPerS_) {
+                transform.Prepend(Transform<float>{(deltaS * *currentStrafeSpeedUpDownMPerS_ * slowFactor)
+                                                       * Vector<float>{0.0f, 1.0f, 0.0f}});
+            }
+
+            if (currentRotateSpeedLeftRightDegreesPerS_) {
+                transform.Prepend(Transform<float>{Axis::Y,
+                                                   deltaS * *currentRotateSpeedLeftRightDegreesPerS_ * slowFactor});
+            }
+
+            if (currentRotateSpeedUpDownDegreesPerS_) {
+                transform.Prepend(Transform<float>{Axis::X,
+                                                   deltaS * *currentRotateSpeedUpDownDegreesPerS_ * slowFactor});
+            }
+
+            if (currentRollSpeedDegreesPerS_) {
+                transform.Prepend(Transform<float>{Axis::Z, deltaS * *currentRollSpeedDegreesPerS_ * slowFactor});
+            }
+
+            camera_->SetTransform(transform);
+            update();
+            emit CameraUpdated();
+        }
     }
 }
 
@@ -319,6 +432,78 @@ void Viewer::SetViewPort() {
         update();
 
         emit ProjectionUpdated();
+    }
+}
+
+void Viewer::UpdateKeyNavigation() {
+    if (cameraNavigationEnabled_ && !rotating_) {
+        if (moveForwardKeyDown_ == moveBackwardKeyDown_) {
+            currentMoveSpeedMPerS_ = nullopt;
+        } else if (moveForwardKeyDown_) {
+            currentMoveSpeedMPerS_ = moveSpeedMPerS_;
+        } else if (moveBackwardKeyDown_) {
+            currentMoveSpeedMPerS_ = -moveSpeedMPerS_;
+        }
+
+        if (strafeLeftKeyDown_ == strafeRightKeyDown_) {
+            currentStrafeSpeedLeftRightMPerS_ = nullopt;
+        } else if (strafeLeftKeyDown_) {
+            currentStrafeSpeedLeftRightMPerS_ = -moveSpeedMPerS_;
+        } else if (strafeRightKeyDown_) {
+            currentStrafeSpeedLeftRightMPerS_ = moveSpeedMPerS_;
+        }
+
+        if (strafeUpKeyDown_ == strafeDownKeyDown_) {
+            currentStrafeSpeedUpDownMPerS_ = nullopt;
+        } else if (strafeUpKeyDown_) {
+            currentStrafeSpeedUpDownMPerS_ = moveSpeedMPerS_;
+        } else if (strafeDownKeyDown_) {
+            currentStrafeSpeedUpDownMPerS_ = -moveSpeedMPerS_;
+        }
+
+        if (rotateLeftKeyDown_ == rotateRightKeyDown_) {
+            currentRotateSpeedLeftRightDegreesPerS_ = nullopt;
+        } else if (rotateLeftKeyDown_) {
+            currentRotateSpeedLeftRightDegreesPerS_ = rotateSpeedDegreesPerS_;
+        } else if (rotateRightKeyDown_) {
+            currentRotateSpeedLeftRightDegreesPerS_ = -rotateSpeedDegreesPerS_;
+        }
+
+        if (rotateUpKeyDown_ == rotateDownKeyDown_) {
+            currentRotateSpeedUpDownDegreesPerS_ = nullopt;
+        } else if (rotateUpKeyDown_) {
+            currentRotateSpeedUpDownDegreesPerS_ = rotateSpeedDegreesPerS_;
+        } else if (rotateDownKeyDown_) {
+            currentRotateSpeedUpDownDegreesPerS_ = -rotateSpeedDegreesPerS_;
+        }
+
+        if (rollLeftKeyDown_ == rollRightKeyDown_) {
+            currentRollSpeedDegreesPerS_ = nullopt;
+        } else if (rollLeftKeyDown_) {
+            currentRollSpeedDegreesPerS_ = rotateSpeedDegreesPerS_;
+        } else if (rollRightKeyDown_) {
+            currentRollSpeedDegreesPerS_ = -rotateSpeedDegreesPerS_;
+        }
+    } else {
+        currentMoveSpeedMPerS_                  = nullopt;
+        currentStrafeSpeedLeftRightMPerS_       = nullopt;
+        currentStrafeSpeedUpDownMPerS_          = nullopt;
+        currentRotateSpeedLeftRightDegreesPerS_ = nullopt;
+        currentRotateSpeedUpDownDegreesPerS_    = nullopt;
+        currentRollSpeedDegreesPerS_            = nullopt;
+    }
+    
+    bool timerNeeded { currentMoveSpeedMPerS_.has_value()
+                           || currentStrafeSpeedLeftRightMPerS_.has_value()
+                           || currentStrafeSpeedUpDownMPerS_.has_value()
+                           || currentRotateSpeedLeftRightDegreesPerS_.has_value()
+                           || currentRotateSpeedUpDownDegreesPerS_.has_value()
+                           || currentRollSpeedDegreesPerS_.has_value()};
+    if (timerNeeded && !timer_->isActive()) {
+        timer_->start();
+        (void) timerStopWatch_.DeltaMs();
+    } else if (!timerNeeded && timer_->isActive()) {
+        timer_->stop();
     }
 }
 

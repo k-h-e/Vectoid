@@ -12,6 +12,7 @@
 #include <memory>
 #include <QOpenGLWidget>
 #include <K/Core/Interface.h>
+#include <K/Core/StopWatch.h>
 #include <Vectoid/Core/Transform.h>
 #include <Vectoid/Gui/TouchInfo.h>
 
@@ -90,12 +91,15 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     void keyReleaseEvent(QKeyEvent *event) override;
 
   private slots:
+    void OnTimer();
     void OnGLContextAboutToBeDestroyed();
 
   private:
     void SetViewPort();
+    void UpdateKeyNavigation();
 
     QOpenGLContext                                              *qtGLContext_;
+    QTimer                                                      *timer_;
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::Context>       context_;
     std::shared_ptr<Vectoid::SceneGraph::OpenGL::RenderTarget>  renderTarget_;
     std::shared_ptr<Vectoid::SceneGraph::PerspectiveProjection> projection_;
@@ -110,17 +114,36 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     Vectoid::Core::Transform<float>                             startCameraTransform_;
     Vectoid::Core::Vector<float>                                rotationCenter_;
     Vectoid::Core::Vector<float>                                virtualRotationCenter_;
+    bool                                                        moveForwardKeyDown_;
+    bool                                                        moveBackwardKeyDown_;
+    bool                                                        strafeLeftKeyDown_;
+    bool                                                        strafeRightKeyDown_;
+    bool                                                        strafeUpKeyDown_;
+    bool                                                        strafeDownKeyDown_;
+    bool                                                        rotateLeftKeyDown_;
+    bool                                                        rotateRightKeyDown_;
+    bool                                                        rotateUpKeyDown_;
+    bool                                                        rotateDownKeyDown_;
+    bool                                                        rollLeftKeyDown_;
+    bool                                                        rollRightKeyDown_;
+    bool                                                        slowKeyDown_;
+    std::optional<float>                                        currentMoveSpeedMPerS_;
+    std::optional<float>                                        currentStrafeSpeedLeftRightMPerS_;
+    std::optional<float>                                        currentStrafeSpeedUpDownMPerS_;
+    std::optional<float>                                        currentRotateSpeedLeftRightDegreesPerS_;
+    std::optional<float>                                        currentRotateSpeedUpDownDegreesPerS_;
+    std::optional<float>                                        currentRollSpeedDegreesPerS_;
     bool                                                        rotating_;
-    bool                                                        panning_;
-    bool                                                        movingRolling_;
     bool                                                        dragging_;
     bool                                                        mouseMovedWhilePressed_;
     bool                                                        cameraNavigationEnabled_;
-    bool                                                        altKeyDown_;
-    bool                                                        controlKeyDown_;
     Vectoid::Gui::TouchInfo                                     touchInfo_;
     std::vector<const Vectoid::Gui::TouchInfo *>                touches_;
     bool                                                        guiIsHandlingMouse_;
+    K::Core::StopWatch                                          timerStopWatch_;
+    float                                                       moveSpeedMPerS_;
+    float                                                       rotateSpeedDegreesPerS_;
+    float                                                       slowFactor_;
 };
 
 }    // Namespace Qt.
