@@ -33,16 +33,16 @@ namespace Vectoid {
 namespace IO {
 
 bool StlWriter::Write(TriangleProviderInterface *triangleProvider, SeekableBlockingOutStreamInterface *outStream) {
-    static const int headerSize = 80;
+    static const int headerSize { 80 };
 
-    int64_t headerPosition = outStream->StreamPosition();
+    int64_t headerPosition { outStream->StreamPosition() };
     outStream->Seek(headerPosition + headerSize + 4);
 
     triangleProvider->PrepareToProvideTriangles();
     ThreePoints   triangle;
     Vector<float> normal;
-    uint16_t      numAttributes = 0u;
-    uint32_t      numTriangles = 0u;
+    uint16_t      attributes   { 0u };
+    uint32_t      numTriangles { 0u };
     while (triangleProvider->ProvideNextTriangle(&triangle)) {
         triangle.ComputeNormal(&normal);
         if (!normal.Valid()) {
@@ -57,7 +57,7 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, SeekableBlock
                 (*outStream) << vertex.y;
                 (*outStream) << vertex.z;
             }
-            WriteItem(outStream, &numAttributes, sizeof(numAttributes));
+            (*outStream) << attributes;
             ++numTriangles;
         }
     }
@@ -68,8 +68,8 @@ bool StlWriter::Write(TriangleProviderInterface *triangleProvider, SeekableBlock
     for (int i = 0; i < headerSize; ++i) {
         header[i] = '_';
     }
-    outStream->WriteBlocking(&header, headerSize);
-    outStream->WriteBlocking(&numTriangles, 4);
+    WriteItem(outStream, &header, headerSize);
+    (*outStream) << numTriangles;
     outStream->Seek(currentPosition);
 
     return (!triangleProvider->TriangleError() && !outStream->ErrorState());
