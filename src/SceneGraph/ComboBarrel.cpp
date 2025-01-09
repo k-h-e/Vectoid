@@ -9,6 +9,7 @@
 #include <Vectoid/SceneGraph/ComboBarrel.h>
 
 #include <cassert>
+
 #include <K/Core/Log.h>
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Core/Transform.h>
@@ -76,7 +77,7 @@ optional<int> ComboBarrel::Selection() const {
             return 0;
         } else {
             int selection { static_cast<int>(position_ + .5f) };
-            NumberTools::Clamp(&selection, 0, static_cast<int>(items_.size()) - 1);
+            NumberTools::Clamp(selection, 0, static_cast<int>(items_.size()) - 1);
             return selection;
         }
     } else {
@@ -92,7 +93,7 @@ void ComboBarrel::SetSelection(int itemId) {
 
 void ComboBarrel::SetPosition(float position) {
     if (!items_.empty()) {
-        NumberTools::Clamp(&position, -.5f, static_cast<float>(items_.size()) - .5f);
+        NumberTools::Clamp(position, -.5f, static_cast<float>(items_.size()) - .5f);
         position_ = position;
     } else {
         position_ = 0.0f;
@@ -113,19 +114,19 @@ BoundingBox<float> ComboBarrel::BoundingBox() const {
 
 void ComboBarrel::SetBackgroundColor(const Vector<float> &color, float alpha) {
     backgroundColor_ = color;
-    NumberTools::Clamp(&backgroundColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.z, 0.0f, 1.0f);
 
     backgroundAlpha_ = alpha;
-    NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundAlpha_, 0.0f, 1.0f);
 }
 
 void ComboBarrel::SetColor(const Vectoid::Core::Vector<float> &color) {
     color_ = color;
-    NumberTools::Clamp(&color_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&color_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&color_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(color_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(color_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(color_.z, 0.0f, 1.0f);
 }
 
 void ComboBarrel::EnableFrame(bool enabled) {

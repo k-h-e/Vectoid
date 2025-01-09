@@ -43,7 +43,7 @@ void GeometryTools::AddFilledCircleXY(SimpleTriangleList *triangleList, const Ve
     Vector<float> centerXY{center};
     centerXY.z = 0.0f;
     radius = (radius > 0.0f) ? radius : 1.0f;
-    NumberTools::ClampMin(&numSectors, 3);
+    NumberTools::ClampMin(numSectors, 3);
     Vector<float> firstHand;
     Vector<float> oldHand;
     for (int i = 0; i < numSectors; ++i) {
@@ -67,14 +67,14 @@ void GeometryTools::AddFilledCircleXY(SimpleTriangleList *triangleList, const Ve
 void GeometryTools::AddFilledCircleSectorXY(SimpleTriangleList *triangleList, float radius, float centerAngle,
                                             float openingAngle, int numSubdivisions) {
     radius = (radius > 0.0f) ? radius : 1.0f;
-    NumberTools::Clamp(&centerAngle, 0.0f, 360.0f);
+    NumberTools::Clamp(centerAngle, 0.0f, 360.0f);
     openingAngle = (openingAngle > 0.0f) ? openingAngle : 1.0f;
     openingAngle = (openingAngle < 360.0f) ? openingAngle : 359.0f;
-    NumberTools::ClampMin(&numSubdivisions, 3);
+    NumberTools::ClampMin(numSubdivisions, 3);
     Vector<float> oldHand;
     for (int i = 0; i <= numSubdivisions; ++i) {
          float t = static_cast<float>(i) / static_cast<float>(numSubdivisions);
-         NumberTools::Clamp(&t, 0.0f, 1.0f);
+         NumberTools::Clamp(t, 0.0f, 1.0f);
          float angle = (1.0f - t)*(centerAngle - .5f*openingAngle) + t*(centerAngle + .5f*openingAngle);
          if (angle < 0.0f) {
              angle += 360.0f;
@@ -95,7 +95,7 @@ void GeometryTools::AddFilledCircleSectorXY(SimpleTriangleList *triangleList, fl
 
 void GeometryTools::AddCircleXY(SimpleTriangleList *triangleList, float radius, int numSectors, float width) {
     radius = (radius > 0.0f) ? radius : 1.0f;
-    NumberTools::ClampMin(&numSectors, 3);
+    NumberTools::ClampMin(numSectors, 3);
     width = (width > 0.0f) ? width : .5f*radius;
     width = (width < radius) ? width : .5f*radius;
     Vector<float> firstHand;

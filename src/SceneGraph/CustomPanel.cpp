@@ -26,8 +26,8 @@ CustomPanel::CustomPanel(const shared_ptr<Context> &context, float width, float 
           backgroundAlpha_{1.0f},
           frameColor_{1.0f, 1.0f, 1.0f},
           frameEnabled_{false} {
-    NumberTools::ClampMin(&width_, 0.0f);
-    NumberTools::ClampMin(&height_, 0.0f);
+    NumberTools::ClampMin(width_, 0.0f);
+    NumberTools::ClampMin(height_, 0.0f);
 }
 
 Core::BoundingBox<float> CustomPanel::BoundingBox() const {
@@ -42,12 +42,12 @@ Core::BoundingBox<float> CustomPanel::BoundingBox() const {
 
 void CustomPanel::SetBackgroundColor(const Vector<float> &color, float alpha) {
     backgroundColor_ = color;
-    NumberTools::Clamp(&backgroundColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.z, 0.0f, 1.0f);
 
     backgroundAlpha_ = alpha;
-    NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundAlpha_, 0.0f, 1.0f);
 }
 
 void CustomPanel::EnableFrame(bool enabled) {
@@ -56,9 +56,9 @@ void CustomPanel::EnableFrame(bool enabled) {
 
 void CustomPanel::SetFrameColor(const Vector<float> &color) {
     frameColor_ = color;
-    NumberTools::Clamp(&frameColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&frameColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&frameColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.z, 0.0f, 1.0f);
 }
 
 void CustomPanel::SetFrameWidth(float width) {

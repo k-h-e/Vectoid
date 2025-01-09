@@ -97,7 +97,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVbo() {
     Vector<float> normal;
     int           numTriangles{0};
     triangleProvider_->PrepareToProvideTriangles();
-    while (triangleProvider_->ProvideNextTriangle(&triangle)) {
+    while (triangleProvider_->ProvideNextTriangle(triangle)) {
         triangle.ComputeNormal(&normal);
         if (!normal.Valid()) {
             normal = Vector<float>{1.0f, 0.0f, 0.0f};
@@ -151,7 +151,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateGouraudVbo() {
     ThreePoints vertexNormals;
     int         numTriangles = 0;
     gouraudTriangleProvider_->PrepareToProvideTriangles();
-    while (gouraudTriangleProvider_->ProvideNextTriangle(&triangle)) {
+    while (gouraudTriangleProvider_->ProvideNextTriangle(triangle)) {
         ++numTriangles;
         gouraudTriangleProvider_->ProvideVertexNormals(&vertexNormals);
         for (int i = 0; i < 3; ++i) {

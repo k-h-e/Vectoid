@@ -75,8 +75,8 @@ class TriangleTreeXY : public virtual Core::TriangleProviderInterface {
     static int Mod3(int value);
 
     virtual void PrepareToProvideTriangles();
-    virtual bool ProvideNextTriangle(Core::ThreePoints *outTriangle);
-    virtual void ProvideNormal(Core::Vector<float> *outNormal);
+    virtual bool ProvideNextTriangle(Core::ThreePoints &outTriangle);
+    virtual void ProvideNormal(Core::Vector<float> &outNormal);
     virtual bool TriangleError();
 
   private:

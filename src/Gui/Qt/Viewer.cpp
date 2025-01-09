@@ -112,7 +112,7 @@ void Viewer::SetSceneGraph(const shared_ptr<TreeNode> &root, const shared_ptr<Pe
 void Viewer::SetGui(const shared_ptr<Gui> &gui, float guiDeltaZ) {
     gui_       = gui;
     guiDeltaZ_ = guiDeltaZ;
-    NumberTools::ClampMin(&guiDeltaZ_, 0.0f);
+    NumberTools::ClampMin(guiDeltaZ_, 0.0f);
 
     SetViewPort();
 }
@@ -140,8 +140,8 @@ void Viewer::paintGL() {
 }
 
 void Viewer::resizeGL(int width, int height) {
-    NumberTools::ClampMin(&width, 1);
-    NumberTools::ClampMin(&height, 1);
+    NumberTools::ClampMin(width, 1);
+    NumberTools::ClampMin(height, 1);
     width_  = width;
     height_ = height;
     SetViewPort();

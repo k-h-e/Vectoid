@@ -37,14 +37,14 @@ void ScalarGrid2D::Clear() {
 }
 
 void ScalarGrid2D::SetRowData(int row, const uint8_t *data, int dataSize) {
-    NumberTools::Clamp(&row, 0, numRows_ - 1);
+    NumberTools::Clamp(row, 0, numRows_ - 1);
     int numToCopy = (dataSize <= numColumns_) ? dataSize : numColumns_;
     memcpy(&data_[row * numColumns_], data, numToCopy);
 }
 
 void ScalarGrid2D::SetRowOffset(int offset) {
     rowOffset_ = offset;
-    NumberTools::Clamp(&rowOffset_, 0, numRows_ - 1);
+    NumberTools::Clamp(rowOffset_, 0, numRows_ - 1);
 }
 
 int ScalarGrid2D::RowOffset() {
@@ -67,8 +67,8 @@ ScalarGrid2D::ScalarGrid2D(const shared_ptr<Context> &context, float width, floa
     if (!(height_ > 0.0f)) {
         height_ = 1.0f;
     }
-    NumberTools::ClampMin(&numColumns_, 2);
-    NumberTools::ClampMin(&numRows_, 2);
+    NumberTools::ClampMin(numColumns_, 2);
+    NumberTools::ClampMin(numRows_, 2);
 
     data_ = new uint8_t[numRows_ * numColumns_];
 
@@ -88,13 +88,13 @@ ScalarGrid2D::ScalarGrid2D(const shared_ptr<Context> &context, float width, floa
 
 float ScalarGrid2D::ColumnPosition(int column) {
     float t = static_cast<float>(column) / static_cast<float>(numColumns_ - 1);
-    NumberTools::Clamp(&t, 0.0f, 1.0f);
+    NumberTools::Clamp(t, 0.0f, 1.0f);
     return (1.0f - t) * (-.5f) * width_ + t * .5f * width_;
 }
 
 float ScalarGrid2D::RowPosition(int row) {
     float t = static_cast<float>(row) / static_cast<float>(numRows_ - 1);
-    NumberTools::Clamp(&t, 0.0f, 1.0f);
+    NumberTools::Clamp(t, 0.0f, 1.0f);
     return (1.0f - t) * .5f * height_ + t * (-.5f) * height_;
 }
 

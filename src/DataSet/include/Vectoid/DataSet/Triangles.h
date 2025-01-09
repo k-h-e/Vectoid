@@ -100,8 +100,8 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
                                      int item, bool *outIntersects, ItemIntersection *outIntersection) override;
 
     void PrepareToProvideTriangles() override;
-    bool ProvideNextTriangle(Core::ThreePoints *outTriangle) override;
-    void ProvideNormal(Core::Vector<float> *outNormal) override;
+    bool ProvideNextTriangle(Core::ThreePoints &outTriangle) override;
+    void ProvideNormal(Core::Vector<float> &outNormal) override;
     bool TriangleError() override;
 
   private:

@@ -96,17 +96,17 @@ void VertexNormalTriangleProvider::PrepareToProvideTriangles() {
     error_           = !Precompute();
 }
 
-bool VertexNormalTriangleProvider::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool VertexNormalTriangleProvider::ProvideNextTriangle(ThreePoints &outTriangle) {
     if (!error_ && triangles_&& (currentTriangle_ < triangles_->Size())) {
         ThreeIds vertexIds;
         triangles_->GetTriangleVertexIds(currentTriangle_, &vertexIds);
         for (int i = 0; i < 3; ++i) {
             int vertexId = vertexIds[i];
-            (*outTriangle)[i]                = (*(triangles_->Vertices()))[vertexId];
+            outTriangle[i]                   = (*(triangles_->Vertices()))[vertexId];
             currentTriangleVertexNormals_[i] = (*vertexNormals_)[vertexId];
         }
-        outTriangle->ComputeNormal(&currentTriangleNormal_);
-        if (outTriangle->Valid()) {
+        outTriangle.ComputeNormal(&currentTriangleNormal_);
+        if (outTriangle.Valid()) {
             ++currentTriangle_;
             return true;
         } else {
@@ -119,9 +119,9 @@ bool VertexNormalTriangleProvider::ProvideNextTriangle(ThreePoints *outTriangle)
     return false;
 }
 
-void VertexNormalTriangleProvider::ProvideNormal(Vector<float> *outNormal) {
+void VertexNormalTriangleProvider::ProvideNormal(Vector<float> &outNormal) {
     if (!error_) {
-        *outNormal = currentTriangleNormal_;
+        outNormal = currentTriangleNormal_;
     }
 }
 

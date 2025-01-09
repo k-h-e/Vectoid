@@ -43,7 +43,7 @@ bool LineBoundingBoxIntersection::Compute(const Vector<float> &linePoint, const 
            return false;
        }
        if (t0 > t1) {
-           NumberTools::Swap(&t0, &t1);
+           NumberTools::Swap(t0, t1);
        }
        if (t0 > tNear) {
            tNear = t0;

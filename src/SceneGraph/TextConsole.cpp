@@ -9,6 +9,7 @@
 #include <Vectoid/SceneGraph/TextConsole.h>
 
 #include <string>
+
 #include <K/Core/NumberTools.h>
 #include <K/Core/StringTools.h>
 
@@ -123,8 +124,8 @@ void TextConsole::Clear() {
 }
 
 void TextConsole::Resize(int width, int height) {
-    NumberTools::ClampMin(&width, 1);
-    NumberTools::ClampMin(&height, 1);
+    NumberTools::ClampMin(width, 1);
+    NumberTools::ClampMin(height, 1);
     width_  = width;
     height_ = height;
 
@@ -154,19 +155,19 @@ void TextConsole::EnableBackground(bool enabled) {
 
 void TextConsole::SetBackgroundColor(const Vector<float> &color, float alpha) {
     backgroundColor_ = color;
-    NumberTools::Clamp(&backgroundColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&backgroundColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundColor_.z, 0.0f, 1.0f);
 
     backgroundAlpha_ = alpha;
-    NumberTools::Clamp(&backgroundAlpha_, 0.0f, 1.0f);
+    NumberTools::Clamp(backgroundAlpha_, 0.0f, 1.0f);
 }
 
 void TextConsole::SetCustomColor(const Vector<float> &color) {
     customColor_ = color;
-    NumberTools::Clamp(&customColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&customColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&customColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(customColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(customColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(customColor_.z, 0.0f, 1.0f);
 }
 
 void TextConsole::EnableFrame(bool enabled) {
@@ -175,9 +176,9 @@ void TextConsole::EnableFrame(bool enabled) {
 
 void TextConsole::SetFrameColor(const Vector<float> &color) {
     frameColor_ = color;
-    NumberTools::Clamp(&frameColor_.x, 0.0f, 1.0f);
-    NumberTools::Clamp(&frameColor_.y, 0.0f, 1.0f);
-    NumberTools::Clamp(&frameColor_.z, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.x, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.y, 0.0f, 1.0f);
+    NumberTools::Clamp(frameColor_.z, 0.0f, 1.0f);
 }
 
 void TextConsole::SetFrameWidth(float width) {

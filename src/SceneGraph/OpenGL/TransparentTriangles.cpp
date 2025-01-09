@@ -9,6 +9,7 @@
 #include <Vectoid/SceneGraph/OpenGL/TransparentTriangles.h>
 
 #include <vector>
+
 #include <K/Core/Log.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
@@ -70,7 +71,7 @@ optional<GLuint> TransparentTriangles::GenerateVbo() {
 
         ThreePoints   triangle;
         triangleProvider_->PrepareToProvideTriangles();
-        while (triangleProvider_->ProvideNextTriangle(&triangle)) {
+        while (triangleProvider_->ProvideNextTriangle(triangle)) {
             for (int i = 0; i < 3; ++i) {
                 const Vector<float> &vertex = triangle[i];
                 data.push_back(vertex.x);

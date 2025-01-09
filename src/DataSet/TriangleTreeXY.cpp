@@ -32,14 +32,14 @@ void TriangleTreeXY::PrepareToProvideTriangles() {
     cursor_ = -1;
 }
 
-bool TriangleTreeXY::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool TriangleTreeXY::ProvideNextTriangle(ThreePoints &outTriangle) {
     ++cursor_;
     while (cursor_ < static_cast<int>(triangles_.size())) {
         TriangleInfo &info = triangles_[cursor_];
         if (!info.HasChildren()) {
-            outTriangle->point0 = (*vertices_)[info.vertices.id0];
-            outTriangle->point1 = (*vertices_)[info.vertices.id1];
-            outTriangle->point2 = (*vertices_)[info.vertices.id2];
+            outTriangle.point0 = (*vertices_)[info.vertices.id0];
+            outTriangle.point1 = (*vertices_)[info.vertices.id1];
+            outTriangle.point2 = (*vertices_)[info.vertices.id2];
             return true;
         }
         ++cursor_;
@@ -48,8 +48,8 @@ bool TriangleTreeXY::ProvideNextTriangle(ThreePoints *outTriangle) {
     return false;
 }
 
-void TriangleTreeXY::ProvideNormal(Vector<float> *outNormal) {
-    *outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
+void TriangleTreeXY::ProvideNormal(Vector<float> &outNormal) {
+    outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
 }
 
 bool TriangleTreeXY::TriangleError() {

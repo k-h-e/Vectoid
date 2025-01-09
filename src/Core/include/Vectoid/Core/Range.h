@@ -144,7 +144,7 @@ void Range<T>::Expand(T value) {
     if (!undefined_) {
         T center        = Center();
         T newHalfExtent = (T)0.5*Extent() + value;
-        NumberTools::ClampMin(&newHalfExtent, (T)0.0f);
+        NumberTools::ClampMin(newHalfExtent, (T)0.0f);
         min_ = center - newHalfExtent;
         max_ = center + newHalfExtent;
     }
@@ -152,7 +152,7 @@ void Range<T>::Expand(T value) {
 
 template<typename T>
 void Range<T>::Scale(T scalingFactor) {
-    assert (scalingFactor > (T)0.0);
+    assert(scalingFactor > (T)0.0);
     if (!undefined_) {
         T center        = Center();
         T newHalfExtent = scalingFactor * (T)0.5 * Extent();

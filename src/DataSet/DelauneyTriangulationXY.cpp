@@ -98,11 +98,11 @@ void DelauneyTriangulationXY::PrepareToProvideTriangles() {
     triangleTree_->PrepareToProvideTriangles();
 }
 
-bool DelauneyTriangulationXY::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool DelauneyTriangulationXY::ProvideNextTriangle(ThreePoints &outTriangle) {
     while (triangleTree_->ProvideNextTriangle(outTriangle)) {
-        if (!outTriangle->Contains((*vertices_)[outerTriangleVertex0Id_])
-                && !outTriangle->Contains((*vertices_)[outerTriangleVertex1Id_])
-                && !outTriangle->Contains((*vertices_)[outerTriangleVertex2Id_])) {
+        if (!outTriangle.Contains((*vertices_)[outerTriangleVertex0Id_])
+                && !outTriangle.Contains((*vertices_)[outerTriangleVertex1Id_])
+                && !outTriangle.Contains((*vertices_)[outerTriangleVertex2Id_])) {
             return true;
         }
     }
@@ -110,7 +110,7 @@ bool DelauneyTriangulationXY::ProvideNextTriangle(ThreePoints *outTriangle) {
     return false;
 }
 
-void DelauneyTriangulationXY::ProvideNormal(Vector<float> *outNormal) {
+void DelauneyTriangulationXY::ProvideNormal(Vector<float> &outNormal) {
     triangleTree_->ProvideNormal(outNormal);
 }
 
@@ -411,24 +411,24 @@ DelauneyTriangulationXY::FourIdsCanonical::FourIdsCanonical(int anId0, int anId1
     id3 = anId3;
 
     if (id1 < id0) {
-        NumberTools::Swap(&id0, &id1);
+        NumberTools::Swap(id0, id1);
     }
     if (id2 < id0) {
-        NumberTools::Swap(&id0, &id2);
+        NumberTools::Swap(id0, id2);
     }
     if (id3 < id0) {
-        NumberTools::Swap(&id0, &id3);
+        NumberTools::Swap(id0, id3);
     }
 
     if (id2 < id1) {
-        NumberTools::Swap(&id1, &id2);
+        NumberTools::Swap(id1, id2);
     }
     if (id3 < id1) {
-        NumberTools::Swap(&id1, &id3);
+        NumberTools::Swap(id1, id3);
     }
 
     if (id3 < id2) {
-        NumberTools::Swap(&id2, &id3);
+        NumberTools::Swap(id2, id3);
     }
 }
 

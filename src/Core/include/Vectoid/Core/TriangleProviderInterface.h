@@ -28,9 +28,9 @@ class TriangleProviderInterface : public virtual K::Core::Interface {
      *  <c>false</c> in case there are no more triangles. The output parameter is then undefined, and
      *  <c>TriangleError()</c> should be checked.
      */
-    virtual bool ProvideNextTriangle(ThreePoints *outTriangle) = 0;
+    virtual bool ProvideNextTriangle(ThreePoints &outTriangle) = 0;
     //! Provides the normal for the current triangle.
-    virtual void ProvideNormal(Vector<float> *outNormal) = 0;
+    virtual void ProvideNormal(Vector<float> &outNormal) = 0;
     //! Tells whether or not the last triangle readout ended because of an error.
     virtual bool TriangleError() = 0;
 };

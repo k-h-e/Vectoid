@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cerrno>
 #include <vector>
+
 #include <K/Core/Log.h>
 #include <K/Core/ResultAcceptor.h>
 #include <K/Core/StringTools.h>
@@ -158,13 +159,13 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
         File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;
-    reader.Read('\n', &line);
+    reader.Read('\n', line);
     if (reader.ErrorState()) {
         return nullptr;
     }
     int numVertices;
     auto tokens = StringTools::Tokenize(line, " \t", true);
-    if ((tokens.size() != 4u) || !StringTools::Parse(tokens[0], &numVertices)) {
+    if ((tokens.size() != 4u) || !StringTools::Parse(tokens[0], numVertices)) {
         return nullptr;
     }
 
@@ -172,12 +173,12 @@ unique_ptr<vector<Vector<float>>> ConstrainedDelauneyTriangulationXY::ReadTriang
     double x;
     double y;
     for (int i = 0; i < numVertices; ++i) {
-        reader.Read('\n', &line);
+        reader.Read('\n', line);
         if (reader.ErrorState()) {
             return nullptr;
         }
         tokens = StringTools::Tokenize(line, " \t", true);
-        if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], &x) || !StringTools::Parse(tokens[2], &y)) {
+        if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], x) || !StringTools::Parse(tokens[2], y)) {
             return nullptr;
         }
         vertices->push_back(Vector<float>(static_cast<float>(x), static_cast<float>(y), 0.0f));
@@ -198,27 +199,27 @@ std::unique_ptr<Vectoid::DataSet::Triangles> ConstrainedDelauneyTriangulationXY:
         File::AccessMode::ReadOnly, 4 * 1024));
 
     string line;
-    reader.Read('\n', &line);
+    reader.Read('\n', line);
     if (reader.ErrorState()) {
         return nullptr;
     }
     int numTriangles;
     auto tokens = StringTools::Tokenize(line, " \t", true);
-    if ((tokens.size() != 3u) || !StringTools::Parse(tokens[0], &numTriangles)) {
+    if ((tokens.size() != 3u) || !StringTools::Parse(tokens[0], numTriangles)) {
         return nullptr;
     }
 
     int vertex0, vertex1, vertex2;
     Points &vertices = *triangles->Vertices();
     for (int i = 0; i < numTriangles; ++i) {
-        reader.Read('\n', &line);
+        reader.Read('\n', line);
         if (reader.ErrorState()) {
             return nullptr;
         }
 
         tokens = StringTools::Tokenize(line, " \t", true);
-        if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], &vertex0)
-                || !StringTools::Parse(tokens[2], &vertex1) || !StringTools::Parse(tokens[3], &vertex2)) {
+        if ((tokens.size() != 4u) || !StringTools::Parse(tokens[1], vertex0)
+                || !StringTools::Parse(tokens[2], vertex1) || !StringTools::Parse(tokens[3], vertex2)) {
             return nullptr;
         }
         if ((vertex0 < 1) || (vertex0 > vertices.Size())

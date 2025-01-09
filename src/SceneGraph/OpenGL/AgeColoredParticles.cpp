@@ -23,7 +23,7 @@ namespace SceneGraph {
 namespace OpenGL {
 
 AgeColoredParticles::AgeColoredParticles(const shared_ptr<Context> &context, const shared_ptr<Particles> &particles)
-        : SceneGraph::AgeColoredParticles(context, particles) {
+        : SceneGraph::AgeColoredParticles{context, particles} {
     // Nop.
 }
     
@@ -48,9 +48,9 @@ void AgeColoredParticles::Render() {
         if (particle.hidden)
             continue;
         int color = (int)(particle.age / highAge_ * (float)numColorSlots);
-        NumberTools::Clamp(&color, 0, numColorSlots - 1);
+        NumberTools::Clamp(color, 0, numColorSlots - 1);
         float t = (particle.age - (float)color*colorSlotSize) / colorSlotSize;
-        NumberTools::Clamp(&t, 0.0f, 1.0f);
+        NumberTools::Clamp(t, 0.0f, 1.0f);
         particleColor = (1.0f - t)*colors_[color] + t*colors_[color + 1];
         *vertexPtr++ = particle.position.x;
         *vertexPtr++ = particle.position.y;

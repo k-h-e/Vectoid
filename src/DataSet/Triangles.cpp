@@ -102,7 +102,7 @@ int Triangles::Add(const ThreePoints &triangle) {
 bool Triangles::Add(Core::TriangleProviderInterface *triangleProvider) {
     triangleProvider->PrepareToProvideTriangles();
     ThreePoints triangle;
-    while (triangleProvider->ProvideNextTriangle(&triangle)) {
+    while (triangleProvider->ProvideNextTriangle(triangle)) {
         (void)Add(triangle);
     }
     return !triangleProvider->TriangleError();
@@ -247,11 +247,11 @@ void Triangles::PrepareToProvideTriangles() {
     cursor_ = -1;
 }
 
-bool Triangles::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool Triangles::ProvideNextTriangle(ThreePoints &outTriangle) {
     if (cursor_ + 1 < Size()) {
         ++cursor_;
-        GetTriangleVertices(cursor_, outTriangle);
-        outTriangle->ComputeNormal(&currentNormal_);
+        GetTriangleVertices(cursor_, &outTriangle);
+        outTriangle.ComputeNormal(&currentNormal_);
         if (!currentNormal_.Valid()) {
             currentNormal_ = Vector(0.0f, 1.0f, 0.0f);
         }
@@ -261,8 +261,8 @@ bool Triangles::ProvideNextTriangle(ThreePoints *outTriangle) {
     return false;
 }
 
-void Triangles::ProvideNormal(Vector<float> *outNormal) {
-    *outNormal = currentNormal_;
+void Triangles::ProvideNormal(Vector<float> &outNormal) {
+    outNormal = currentNormal_;
 }
 
 bool Triangles::TriangleError() {

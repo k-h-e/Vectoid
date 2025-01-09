@@ -58,24 +58,22 @@ void SimpleTriangleList::PrepareToProvideTriangles() {
     cursor_ = -1;
 }
 
-bool SimpleTriangleList::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool SimpleTriangleList::ProvideNextTriangle(ThreePoints &outTriangle) {
     ++cursor_;
     if (cursor_ < static_cast<int>(triangles_.size())) {
-        *outTriangle = triangles_[cursor_];
+        outTriangle = triangles_[cursor_];
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-void SimpleTriangleList::ProvideNormal(Vector<float> *outNormal) {
+void SimpleTriangleList::ProvideNormal(Vector<float> &outNormal) {
     if (cursor_ < static_cast<int>(triangles_.size())) {
         EnsureNormalsValid();
-        *outNormal = normals_[cursor_];
-    }
-    else {
-        *outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
+        outNormal = normals_[cursor_];
+    } else {
+        outNormal = Vector<float>(0.0f, 1.0f, 0.0f);
     }
 }
 

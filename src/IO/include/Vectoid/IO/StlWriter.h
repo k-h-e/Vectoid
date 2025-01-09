@@ -33,13 +33,13 @@ class StlWriter {
     /*!
      *  \return <c>true</c> in case of success. Otherwise, the state of the output stream is undefined.
      */
-    static bool Write(Core::TriangleProviderInterface *triangleProvider,
-                      K::Core::SeekableBlockingOutStreamInterface *outStream);
+    static bool Write(Core::TriangleProviderInterface &triangleProvider,
+                      K::Core::SeekableBlockingOutStreamInterface &outStream);
     //! Writes triangles to a binary STL file.
     /*!
      *  \return <c>true</c> in case of success. Otherwise, the state of the written file is undefined.
      */
-    static bool Write(Core::TriangleProviderInterface *triangleProvider, const K::IO::Path &fileName);
+    static bool Write(Core::TriangleProviderInterface &triangleProvider, const K::IO::Path &fileName);
 };
 
 }    // Namespace IO.

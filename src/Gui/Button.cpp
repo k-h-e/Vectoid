@@ -34,7 +34,7 @@ Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Conte
           handler_{nullptr},
           touchInside_{false} {
     int width = static_cast<int>(text.size());
-    NumberTools::ClampMin(&width, 1);
+    NumberTools::ClampMin(width, 1);
     textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphSize.width, glyphSize.height,
                                                           context_->glyphs);
     textConsole_->SetFrameWidth(context_->frameWidth);

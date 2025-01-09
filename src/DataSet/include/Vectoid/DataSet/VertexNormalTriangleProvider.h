@@ -31,8 +31,8 @@ class VertexNormalTriangleProvider : public virtual Core::ExtendedTriangleProvid
     bool Precompute();
 
     void PrepareToProvideTriangles() override;
-    bool ProvideNextTriangle(Core::ThreePoints *outTriangle) override;
-    void ProvideNormal(Core::Vector<float> *outNormal) override;
+    bool ProvideNextTriangle(Core::ThreePoints &outTriangle) override;
+    void ProvideNormal(Core::Vector<float> &outNormal) override;
     void ProvideVertexNormals(Core::ThreePoints *outVertexNormals) override;
     bool TriangleError() override;
 

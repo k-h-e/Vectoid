@@ -9,6 +9,7 @@
 #include <Vectoid/SceneGraph/OpenGL/LitTriangles.h>
 
 #include <vector>
+
 #include <K/Core/Log.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
@@ -84,7 +85,7 @@ optional<GLuint> LitTriangles::GenerateVbo() {
         ThreePoints   triangle;
         Vector<float> normal;
         triangleProvider_->PrepareToProvideTriangles();
-        while (triangleProvider_->ProvideNextTriangle(&triangle)) {
+        while (triangleProvider_->ProvideNextTriangle(triangle)) {
             triangle.ComputeNormal(&normal);
             if (!normal.Valid()) {
                 normal = Vector<float>(1.0f, 0.0f, 0.0f);

@@ -1,3 +1,4 @@
+
 ///////////////////////////////////////////////////////////////////////////////      //                               //
 //                                                                                  //                 //            //
 //    vectoid 3D Graphics & Processing         //       //  ///////     ///////  //////    ///////            ////////
@@ -30,8 +31,8 @@ class SimpleTriangleList : public virtual Core::TriangleProviderInterface {
     //! Scales the geometry to match the specified extents.
     void ScaleToExtents(const Core::Vector<float> &extents);
     virtual void PrepareToProvideTriangles();
-    virtual bool ProvideNextTriangle(Core::ThreePoints *outTriangle);
-    virtual void ProvideNormal(Core::Vector<float> *outNormal);
+    virtual bool ProvideNextTriangle(Core::ThreePoints &outTriangle);
+    virtual void ProvideNormal(Core::Vector<float> &outNormal);
     virtual bool TriangleError();
 
   private:

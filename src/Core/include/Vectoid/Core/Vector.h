@@ -11,6 +11,7 @@
 
 #include <cmath>
 #include <string>
+
 #include <K/Core/BlockingInStreamInterface.h>
 #include <K/Core/BlockingOutStreamInterface.h>
 #include <K/Core/NumberTools.h>
@@ -68,8 +69,8 @@ class Vector : public virtual K::Core::SerializableInterface {
     //! Produces a verbose representation of the current vector state.
     std::string ToString() const;
 
-    void Serialize(K::Core::BlockingOutStreamInterface *stream) const override;
-    void Deserialize(K::Core::BlockingInStreamInterface *stream) override;
+    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
+    void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
     
     T x;
     T y;
@@ -190,9 +191,9 @@ bool Vector<T>::Valid() const {
 
 template<typename T>
 void Vector<T>::ClampComponents(T min, T max) {
-    K::Core::NumberTools::Clamp(&x, min, max);
-    K::Core::NumberTools::Clamp(&y, min, max);
-    K::Core::NumberTools::Clamp(&z, min, max);
+    K::Core::NumberTools::Clamp(x, min, max);
+    K::Core::NumberTools::Clamp(y, min, max);
+    K::Core::NumberTools::Clamp(z, min, max);
 }
 
 template<typename T>
@@ -203,17 +204,17 @@ std::string Vector<T>::ToString() const {
 }
 
 template<typename T>
-void Vector<T>::Serialize(K::Core::BlockingOutStreamInterface *stream) const {
-    (*stream) << x;
-    (*stream) << y;
-    (*stream) << z;
+void Vector<T>::Serialize(K::Core::BlockingOutStreamInterface &stream) const {
+    stream << x;
+    stream << y;
+    stream << z;
 }
 
 template<typename T>
-void Vector<T>::Deserialize(K::Core::BlockingInStreamInterface *stream) {
-    (*stream) >> x;
-    (*stream) >> y;
-    (*stream) >> z;
+void Vector<T>::Deserialize(K::Core::BlockingInStreamInterface &stream) {
+    stream >> x;
+    stream >> y;
+    stream >> z;
 }
 
 //! Scaling.
@@ -249,7 +250,7 @@ inline Vector<T> CombineAffine(T t, const Vector<T> &u, const Vector<T> &v) {
 template<typename T>
 inline Vector<T> CombineConvex(T a, T b, const Vector<T> &point0, const Vector<T> &point1) {
     T t = a / (a + b);
-    K::Core::NumberTools::Clamp(&t, 0.0f, 1.0f);
+    K::Core::NumberTools::Clamp(t, 0.0f, 1.0f);
     return CombineAffine(t, point0, point1);
 }
 
