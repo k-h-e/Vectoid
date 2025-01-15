@@ -83,7 +83,7 @@ void Context::OnCyclicUpdate(float deltaTimeS) {
 }
 
 void Context::UpdateCyclicUpdateCallsRequest() {
-    bool cyclicUpdateCallsRequired = !elementsNeedingCyclicUpdateCalls_.empty();
+    bool cyclicUpdateCallsRequired { !elementsNeedingCyclicUpdateCalls_.empty() };
     if (!cyclicUpdateCallsRequested_ || (cyclicUpdateCallsRequired != *cyclicUpdateCallsRequested_)) {
         cyclicUpdateCallsRequested_ = cyclicUpdateCallsRequired;
         if (handler_) {

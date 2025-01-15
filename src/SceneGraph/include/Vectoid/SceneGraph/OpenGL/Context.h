@@ -10,6 +10,7 @@
 #define VECTOID_SCENEGRAPH_OPENGL_CONTEXT_H_
 
 #include <optional>
+
 #include <K/Core/ReusableItems.h>
 #include <Vectoid/SceneGraph/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
@@ -91,9 +92,10 @@ class Context : public SceneGraph::Context {
         ResourceInfo &operator=(const ResourceInfo &other) = default;
         ResourceInfo(ResourceInfo &&other)                 = default;
         ResourceInfo &operator=(ResourceInfo &&other)      = default;
+        ~ResourceInfo()                                    = default;
     };
 
-    bool Release(ResourceInfo *info);
+    bool Release(ResourceInfo &info);
 
     K::Core::ReusableItems<ResourceInfo> resources_;
     std::vector<int>                     resourceSlotsToRemove_;

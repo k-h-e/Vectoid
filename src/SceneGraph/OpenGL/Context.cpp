@@ -23,14 +23,14 @@ namespace SceneGraph {
 namespace OpenGL {
 
 Context::Context()
-        : resources_(1) {
+        : resources_{1} {
     // Nop.
 }
 
 Context::~Context() {
     Log::Print(Log::Level::Debug, this, [&]{ return "signing off..."; });
 
-    int numLeaked = 0;
+    int numLeaked { 0 };
     for (ResourceInfo &info : resources_.Iterate(0)) {
         if (info.resource) {
             ++numLeaked;
@@ -56,9 +56,9 @@ void Context::InitializeGL() {
 void Context::ReleaseOpenGLResources() {
     Log::Print(Log::Level::Debug, this, [&]{ return "releasing OpenGL resources..."; });
 
-    int numReleased = 0;
+    int numReleased { 0 };
     for (ResourceInfo &info : resources_.Iterate(0)) {
-        if (Release(&info)) {
+        if (Release(info)) {
             ++numReleased;
         }
     }
@@ -76,9 +76,9 @@ void Context::ReleaseOpenGLResources() {
 }
 
 void Context::ReleaseScheduledOpenGLResources() {
-    int numReleased = 0;
+    int numReleased { 0 };
     for (int slot : resourceSlotsToRemove_) {
-        if (Release(&resources_.Item(slot))) {
+        if (Release(resources_.Item(slot))) {
             ++numReleased;
         }
         resources_.Put(slot);
@@ -92,12 +92,12 @@ void Context::ReleaseScheduledOpenGLResources() {
 
 int Context::AddResourceSlot(Context::ResourceType type) {
     int slot;
-    resources_.Get(0, &slot) = ResourceInfo(type);
+    resources_.Get(0, slot) = ResourceInfo(type);
     return slot;
 }
 
 void Context::RemoveResourceSlot(int slot) {
-    ResourceInfo &info = resources_.Item(slot);
+    ResourceInfo &info { resources_.Item(slot) };
     if (info.resource) {
         resourceSlotsToRemove_.push_back(slot);
     } else {
@@ -118,10 +118,10 @@ optional<GLuint> Context::GetResource(int slot) {
 }
 
 void Context::ClearResource(int slot) {
-    ResourceInfo &info = resources_.Item(slot);
+    ResourceInfo &info { resources_.Item(slot) };
     if (info.resource) {
         int newSlot;
-        resources_.Get(0, &newSlot) = info;
+        resources_.Get(0, newSlot) = info;
         resourceSlotsToRemove_.push_back(newSlot);
 
         Log::Print(Log::Level::Debug, this, [&]{
@@ -132,26 +132,26 @@ void Context::ClearResource(int slot) {
     }
 }
 
-bool Context::Release(ResourceInfo *info) {
-    if (info->resource) {
-        switch (info->type) {
+bool Context::Release(ResourceInfo &info) {
+    if (info.resource) {
+        switch (info.type) {
             case ResourceType::Vbo:
-                glDeleteBuffers(1, &*info->resource);
-                Log::Print(Log::Level::Debug, this, [&]{ return "deleted VBO " + to_string(*info->resource); });
+                glDeleteBuffers(1, &*info.resource);
+                Log::Print(Log::Level::Debug, this, [&]{ return "deleted VBO " + to_string(*info.resource); });
                 break;
             case ResourceType::Texture:
-                glDeleteTextures(1, &*info->resource);
-                Log::Print(Log::Level::Debug, this, [&]{ return "deleted texture " + to_string(*info->resource); });
+                glDeleteTextures(1, &*info.resource);
+                Log::Print(Log::Level::Debug, this, [&]{ return "deleted texture " + to_string(*info.resource); });
                 break;
             default:
                 Log::Print(Log::Level::Error, this, [&]{
-                    return "leaking OpenGL resource " + to_string(*info->resource) + " of unknown type "
-                        + to_string(static_cast<int>(info->type));
+                    return "leaking OpenGL resource " + to_string(*info.resource) + " of unknown type "
+                        + to_string(static_cast<int>(info.type));
                 });
                 break;
         }
 
-        info->resource.reset();
+        info.resource.reset();
         return true;
     } else {
         return false;
