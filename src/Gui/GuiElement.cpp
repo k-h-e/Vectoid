@@ -16,12 +16,24 @@ namespace Vectoid {
 namespace Gui {
 
 GuiElement::GuiElement(const shared_ptr<Context> &context)
-        : context_{context} {
+        : horizontalAlignment_{HorizontalAlignment::Left},
+          verticalAlignment_{VerticalAlignment::Top},
+          context_{context} {
     // Nop.
 }
 
 GuiElement::~GuiElement() {
     context_->Unregister(this);
+}
+
+void GuiElement::SetHorizontalAlignment(HorizontalAlignment alignment) {
+    horizontalAlignment_ = alignment;
+    context_->SetLayoutRequired(true);
+}
+
+void GuiElement::SetVerticalAlignment(VerticalAlignment alignment) {
+    verticalAlignment_ = alignment;
+    context_->SetLayoutRequired(true);
 }
 
 void GuiElement::OnCyclicUpdate(float deltaTimeS) {

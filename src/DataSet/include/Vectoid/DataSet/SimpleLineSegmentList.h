@@ -10,6 +10,7 @@
 #define VECTOID_DATASET_SIMPLELINESEGMENTLIST_H_
 
 #include <vector>
+
 #include <Vectoid/Core/TwoPoints.h>
 #include <Vectoid/Core/LineSegmentProviderInterface.h>
 #include <Vectoid/Core/HasBoundingBoxInterface.h>
@@ -27,14 +28,19 @@ class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
     SimpleLineSegmentList &operator=(const SimpleLineSegmentList &other) = default;
     SimpleLineSegmentList(SimpleLineSegmentList &&other)                 = default;
     SimpleLineSegmentList &operator=(SimpleLineSegmentList &&other)      = default;
+    ~SimpleLineSegmentList()                                             = default;
 
     //! Appends the specified line segment to the list.
     void Add(const Core::TwoPoints &lineSegment);
     //! Tells the number of line segments in the list.
     int Size() const;
+
+    // LineSegmentProviderInterface...
     virtual void PrepareToProvideLineSegments();
     virtual bool ProvideNextLineSegment(Core::TwoPoints *outLineSegment);
     virtual bool LineSegmentError();
+
+    // HasBoundingBoxInterface...
     virtual void GetBoundingBox(Core::BoundingBox<float> *outBoundingBox);
 
   private:

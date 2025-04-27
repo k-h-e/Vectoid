@@ -10,6 +10,7 @@
 #define VECTOID_SCENEGRAPH_GLYPHS_H_
 
 #include <stdint.h>
+
 #include <Vectoid/SceneGraph/Node.h>
 
 namespace Vectoid {
@@ -31,12 +32,14 @@ class Glyphs : public Node {
     virtual void BindGlyphTexture(uint8_t glyph) = 0;
     
   protected:
-    Glyphs(const std::shared_ptr<Context> &context);
+    static constexpr int numGlyphs   { 78 };
+    static constexpr int glyphWidth  { 19 };
+    static constexpr int glyphHeight { 34 };
 
-    static const int     numGlyphs,
-                         glyphWidth, glyphHeight;
-    static const uint8_t glyphData[],
-                         glyphCodes[];
+    static const uint8_t glyphData[];
+    static const uint8_t glyphCodes[];
+
+    Glyphs(const std::shared_ptr<Context> &context);
 };
 
 }    // Namespace SceneGraph.

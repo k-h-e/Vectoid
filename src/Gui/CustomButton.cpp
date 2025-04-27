@@ -88,8 +88,15 @@ RequiredSize CustomButton::UpdateRequiredSizes() {
 }
 
 void CustomButton::Layout(const Frame &frame) {
-    frame_.position = frame.position;
-    frame_.size     = requiredSize_.size;
+    if (verticalAlignment_ == VerticalAlignment::Bottom) {
+        float y { frame.position.y - frame.size.height + requiredSize_.size.height };
+        NumberTools::ClampMax(y, frame.position.y);
+        frame_.position.y = y;
+        frame_.position.x = frame.position.x;
+    } else {
+        frame_.position = frame.position;
+    }
+    frame_.size = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));

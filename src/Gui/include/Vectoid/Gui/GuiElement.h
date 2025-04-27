@@ -10,6 +10,8 @@
 #define VECTOID_GUI_GUIELEMENT_H_
 
 #include <memory>
+#include <vector>
+
 #include <K/Core/Interface.h>
 #include <Vectoid/Gui/Frame.h>
 #include <Vectoid/Gui/RequiredSize.h>
@@ -31,6 +33,13 @@ namespace Gui {
 //! Base class to Vectoid graphical user interface elements.
 class GuiElement : public virtual K::Core::Interface {
   public:
+    enum class HorizontalAlignment { Left,
+                                     Center,
+                                     Right   };
+    enum class VerticalAlignment { Top,
+                                   Center,
+                                   Bottom  };
+
     GuiElement(const std::shared_ptr<Context> &context);
     GuiElement()                                   = delete;
     GuiElement(const GuiElement &other)            = delete;
@@ -39,6 +48,11 @@ class GuiElement : public virtual K::Core::Interface {
     GuiElement &operator=(GuiElement &&other)      = delete;
     ~GuiElement();
     
+    //! Sets the UI element's horizontal alignment.
+    void SetHorizontalAlignment(HorizontalAlignment alignment);
+    //! Sets the UI element's vertical alignment.
+    void SetVerticalAlignment(VerticalAlignment alignment);
+
     //! Recursively adds to the specified GUI coordinate system scene graph nodes that represent this GUI element and
     //! its children.
     virtual void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) = 0;
@@ -66,6 +80,8 @@ class GuiElement : public virtual K::Core::Interface {
   protected:
     Frame                    frame_;
     RequiredSize             requiredSize_;
+    HorizontalAlignment      horizontalAlignment_;
+    VerticalAlignment        verticalAlignment_;
     std::shared_ptr<Context> context_;
 };
 

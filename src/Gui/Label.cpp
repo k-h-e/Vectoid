@@ -94,8 +94,15 @@ RequiredSize Label::UpdateRequiredSizes() {
 }
 
 void Label::Layout(const Frame &frame) {
-    frame_.position = frame.position;
-    frame_.size     = requiredSize_.size;
+    if (horizontalAlignment_ == HorizontalAlignment::Right) {
+        float x { frame.position.x + frame.size.width - requiredSize_.size.width };
+        NumberTools::ClampMin(x, frame.position.x);
+        frame_.position.x = x;
+        frame_.position.y = frame.position.y;
+    } else {
+        frame_.position = frame.position;
+    }
+    frame_.size = requiredSize_.size;
     coordSys_->SetPosition(Vector<float>(frame_.position.x + .5f*frame_.size.width,
                                          frame_.position.y - .5f*frame_.size.height,
                                          0.0f));
