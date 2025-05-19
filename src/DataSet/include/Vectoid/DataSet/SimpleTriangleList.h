@@ -30,6 +30,8 @@ class SimpleTriangleList : public virtual Core::TriangleProviderInterface {
     void Add(const Core::ThreePoints &triangle);
     //! Scales the geometry to match the specified extents.
     void ScaleToExtents(const Core::Vector<float> &extents);
+    
+    // TriangleProviderInterface...
     virtual void PrepareToProvideTriangles();
     virtual bool ProvideNextTriangle(Core::ThreePoints &outTriangle);
     virtual void ProvideNormal(Core::Vector<float> &outNormal);
