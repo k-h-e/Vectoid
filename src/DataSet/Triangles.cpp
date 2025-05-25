@@ -15,6 +15,7 @@
 #include <Vectoid/Math/Intersection/LineTriangleIntersection.h>
 #include <Vectoid/DataSet/ItemIntersection.h>
 #include <Vectoid/DataSet/Points.h>
+#include <Vectoid/DataSet/SimpleLineSegmentList.h>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -26,6 +27,7 @@ using std::optional;
 using std::to_string;
 using std::vector;
 using K::Core::Log;
+using K::Core::StreamInterface;
 using Vectoid::Core::BoundingBox;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TwoPoints;
@@ -39,9 +41,9 @@ namespace DataSet {
 
 Triangles::Triangles() : Triangles(make_shared<LineSegments>(make_shared<Points>())) {}
 
-Triangles::Triangles(Core::TriangleProviderInterface *triangleProvider)
+Triangles::Triangles(Core::TriangleProviderInterface &triangleProvider)
         : Triangles(make_shared<LineSegments>(make_shared<Points>())) {
-    (void)Add(triangleProvider);
+    (void) Add(triangleProvider);
 }
 
 Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices) : Triangles(make_shared<LineSegments>(vertices)) {}
@@ -63,12 +65,12 @@ int Triangles::Add(const ThreePoints &triangle) {
 
     edges = edges.MakeCanonical();
     int triangleId = -1;
-    auto *triangleMap = TriangleMap();
-    auto iter = triangleMap->find(edges);
-    if (iter == triangleMap->end()) {
+    auto &triangleMap = TriangleMap();
+    auto iter = triangleMap.find(edges);
+    if (iter == triangleMap.end()) {
         triangleId = static_cast<int>(triangles_.size());
         triangles_.push_back(edges);
-        (*triangleMap)[edges] = triangleId;
+        triangleMap[edges] = triangleId;
         for (int i = 0; i < 3; ++i) {
             int edge = edges[i];
             if (static_cast<int>(edgeInfos_.size()) < edge + 1) {
@@ -76,14 +78,32 @@ int Triangles::Add(const ThreePoints &triangle) {
             }
             if (!edgeInfos_[edge].AddTriangle(triangleId)) {
                 badConnectivity_ = true;
+                ThreePoints vertices;
+                GetTriangleVertices(triangleId, vertices);
                 Log::Print(Log::Level::Warning, this, [&]{
-                    return "bad connectivity detected, triangle=" + to_string(triangleId);
+                    return "bad connectivity detected, triangle=" + to_string(triangleId) + ":" + edges.ToString()
+                               + "=" + vertices.ToString();
                 });
+                if (debugGeometry_) {
+                    debugGeometry_->Add(vertices.TriangleEdge(0));
+                    debugGeometry_->Add(vertices.TriangleEdge(1));
+                    debugGeometry_->Add(vertices.TriangleEdge(2));
+
+                    GetTriangleVertices(edgeInfos_[edge].triangle0, vertices);
+                    debugGeometry_->Add(vertices.TriangleEdge(0));
+                    debugGeometry_->Add(vertices.TriangleEdge(1));
+                    debugGeometry_->Add(vertices.TriangleEdge(2));
+
+                    GetTriangleVertices(edgeInfos_[edge].triangle1, vertices);
+                    debugGeometry_->Add(vertices.TriangleEdge(0));
+                    debugGeometry_->Add(vertices.TriangleEdge(1));
+                    debugGeometry_->Add(vertices.TriangleEdge(2));
+                }
             }
         }
 
         ThreeIds vertices;
-        GetTriangleVertexIds(triangleId, &vertices);
+        GetTriangleVertexIds(triangleId, vertices);
         for (int i = 0; i < 3; ++i) {
             int vertex = vertices[i];
             if (static_cast<int>(vertexInfos_.size()) < vertex + 1) {
@@ -99,44 +119,46 @@ int Triangles::Add(const ThreePoints &triangle) {
     return triangleId;
 }
 
-bool Triangles::Add(Core::TriangleProviderInterface *triangleProvider) {
-    triangleProvider->PrepareToProvideTriangles();
+bool Triangles::Add(Core::TriangleProviderInterface &triangleProvider) {
+    triangleProvider.PrepareToProvideTriangles();
     ThreePoints triangle;
-    while (triangleProvider->ProvideNextTriangle(triangle)) {
-        (void)Add(triangle);
+    while (triangleProvider.ProvideNextTriangle(triangle)) {
+        (void) Add(triangle);
     }
-    return !triangleProvider->TriangleError();
+    return !triangleProvider.TriangleError();
 }
 
 bool Triangles::BadConnectivity() {
     return badConnectivity_;
 }
 
-void Triangles::GetTriangleVertices(int triangle, ThreePoints *outVertices) const {
+void Triangles::GetTriangleVertices(int triangle, ThreePoints &outVertices) const {
     const ThreeIds &edges = triangles_[triangle];
-    TwoIds vertices0, vertices1;
+    TwoIds vertices0;
+    TwoIds vertices1;
     for (int i = 0; i < 3; ++i) {
-        edges_->GetSegmentVertices(edges[i - 1], &vertices0);
-        edges_->GetSegmentVertices(edges[i],     &vertices1);
-        (*outVertices)[i] = (*vertices_)[vertices0.SharedId(vertices1)];
+        edges_->GetSegmentVertices(edges[i - 1], vertices0);
+        edges_->GetSegmentVertices(edges[i],     vertices1);
+        outVertices[i] = (*vertices_)[vertices0.SharedId(vertices1)];
     }
 }
 
-void Triangles::GetTriangleVertexIds(int triangle, ThreeIds *outVertexIds) const {
+void Triangles::GetTriangleVertexIds(int triangle, ThreeIds &outVertexIds) const {
     const ThreeIds &edges = triangles_[triangle];
-    TwoIds vertices0, vertices1;
+    TwoIds vertices0;
+    TwoIds vertices1;
     for (int i = 0; i < 3; ++i) {
-        edges_->GetSegmentVertices(edges[i - 1], &vertices0);
-        edges_->GetSegmentVertices(edges[i],     &vertices1);
-        (*outVertexIds)[i] = vertices0.SharedId(vertices1);
+        edges_->GetSegmentVertices(edges[i - 1], vertices0);
+        edges_->GetSegmentVertices(edges[i],     vertices1);
+        outVertexIds[i] = vertices0.SharedId(vertices1);
     }
 }
 
-void Triangles::GetTriangleEdges(int triangle, ThreeIds *outEdges) {
-    *outEdges = triangles_[triangle];
+void Triangles::GetTriangleEdges(int triangle, ThreeIds &outEdges) {
+    outEdges = triangles_[triangle];
 }
 
-void Triangles::GetEdgeVertices(int edge, TwoIds *outVertices) {
+void Triangles::GetEdgeVertices(int edge, TwoIds &outVertices) {
     edges_->GetSegmentVertices(edge, outVertices);
 }
 
@@ -151,8 +173,8 @@ int Triangles::GetNeighbor(int triangle, int edge) {
     }
 }
 
-void Triangles::GetTrianglesSharingVertex(int vertex, unordered_set<int> *outTriangles) {
-    outTriangles->clear();
+void Triangles::GetTrianglesSharingVertex(int vertex, unordered_set<int> &outTriangles) {
+    outTriangles.clear();
     if ((vertex >= 0) && (vertex < static_cast<int>(vertexInfos_.size()))
             && (vertexInfos_[vertex].firstTriangle != -1)) {
         unordered_set<int> toProcess;
@@ -163,13 +185,13 @@ void Triangles::GetTrianglesSharingVertex(int vertex, unordered_set<int> *outTri
         while (!toProcess.empty()) {
             int currentTriangle = *toProcess.begin();
             toProcess.erase(currentTriangle);
-            GetTriangleVertexIds(currentTriangle, &vertexIds);
+            GetTriangleVertexIds(currentTriangle, vertexIds);
             if (vertexIds.Contains(vertex)) {
-                outTriangles->insert(currentTriangle);
+                outTriangles.insert(currentTriangle);
                 ThreeIds &edges = triangles_[currentTriangle];
                 for (int i = 0; i < 3; ++i) {
                     optional<int> neighbor = edgeInfos_[edges[i]].OtherTriangle(currentTriangle);
-                    if (neighbor && !outTriangles->contains(*neighbor) && !negatives.contains(*neighbor)) {
+                    if (neighbor && !outTriangles.contains(*neighbor) && !negatives.contains(*neighbor)) {
                         toProcess.insert(*neighbor);
                     }
                 }
@@ -180,8 +202,8 @@ void Triangles::GetTrianglesSharingVertex(int vertex, unordered_set<int> *outTri
     }
 }
 
-void Triangles::GetTrianglesSharingVertex(const Vector<float> &vertex, unordered_set<int> *outTriangles) {
-    outTriangles->clear();
+void Triangles::GetTrianglesSharingVertex(const Vector<float> &vertex, unordered_set<int> &outTriangles) {
+    outTriangles.clear();
     optional<int> vertexId = vertices_->Id(vertex);
     if (vertexId) {
         GetTrianglesSharingVertex(*vertexId, outTriangles);
@@ -215,27 +237,31 @@ shared_ptr<Points> Triangles::Vertices() {
     return vertices_;
 }
 
+void Triangles::SetDebugGeometry(const shared_ptr<SimpleLineSegmentList> &debugGeometry) {
+    debugGeometry_ = debugGeometry;
+}
+
 int Triangles::Size() const {
     return static_cast<int>(triangles_.size());
 }
 
-void Triangles::GetItemBoundingBox(int item, BoundingBox<float> *outBoundingBox) const {
+void Triangles::GetItemBoundingBox(int item, BoundingBox<float> &outBoundingBox) const {
     ThreePoints triangle;
-    GetTriangleVertices(item, &triangle);
-    *outBoundingBox = BoundingBox<float>();
+    GetTriangleVertices(item, triangle);
+    outBoundingBox = BoundingBox<float>();
     for (int i = 0; i < 3; ++i) {
-        outBoundingBox->Grow(triangle[i]);
+        outBoundingBox.Grow(triangle[i]);
     }
 }
 
 bool Triangles::ComputeLineItemIntersection(const Vector<float> &linePoint, const Vector<float> &lineDirection,
-                                            int item, bool *outIntersects, ItemIntersection *outIntersection) {
+                                            int item, bool &outIntersects, ItemIntersection &outIntersection) {
     ThreePoints triangle;
-    GetTriangleVertices(item, &triangle);
+    GetTriangleVertices(item, triangle);
     Vector<float> intersectionPoint;
-    if (LineTriangleIntersection::Compute(linePoint, lineDirection, triangle, outIntersects, &intersectionPoint)) {
-        if (*outIntersects) {
-            *outIntersection = ItemIntersection(item, intersectionPoint);
+    if (LineTriangleIntersection::Compute(linePoint, lineDirection, triangle, outIntersects, intersectionPoint)) {
+        if (outIntersects) {
+            outIntersection = ItemIntersection{item, intersectionPoint};
         }
         return true;
     } else {
@@ -250,10 +276,10 @@ void Triangles::PrepareToProvideTriangles() {
 bool Triangles::ProvideNextTriangle(ThreePoints &outTriangle) {
     if (cursor_ + 1 < Size()) {
         ++cursor_;
-        GetTriangleVertices(cursor_, &outTriangle);
-        outTriangle.ComputeNormal(&currentNormal_);
+        GetTriangleVertices(cursor_, outTriangle);
+        currentNormal_ = outTriangle.Normal();
         if (!currentNormal_.Valid()) {
-            currentNormal_ = Vector(0.0f, 1.0f, 0.0f);
+            currentNormal_ = Vector{0.0f, 1.0f, 0.0f};
         }
         return true;
     }
@@ -269,7 +295,19 @@ bool Triangles::TriangleError() {
     return false;
 }
 
-unordered_map<ThreeIds, int, ThreeIds::HashFunction> *Triangles::TriangleMap() {
+void Triangles::OnTriangle(const ThreePoints &triangle) {
+    (void) Add(triangle);
+}
+
+void Triangles::OnStreamError(StreamInterface::Error error) {
+    (void) error;
+
+    // Nop.
+} 
+
+// ---
+
+unordered_map<ThreeIds, int, ThreeIds::HashFunction> &Triangles::TriangleMap() {
     if (!triangleMap_) {
         Log::Print(Log::Level::Debug, this, []{ return "(re-)generating triangle map"; });
         triangleMap_ = make_unique<unordered_map<ThreeIds, int, ThreeIds::HashFunction>>();
@@ -278,7 +316,7 @@ unordered_map<ThreeIds, int, ThreeIds::HashFunction> *Triangles::TriangleMap() {
         }
     }
 
-    return triangleMap_.get();
+    return *triangleMap_;
 }
 
 }    // Namespace DataSet.

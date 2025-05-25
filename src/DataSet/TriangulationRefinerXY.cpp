@@ -231,7 +231,7 @@ bool TriangulationRefinerXY::SelectSurface(Core::LineSegmentProviderInterface &b
     boundaryCurve.PrepareToProvideLineSegments();
     TwoPoints segment;
     TwoIds    edge;
-    while (boundaryCurve.ProvideNextLineSegment(&segment)) {
+    while (boundaryCurve.ProvideNextLineSegment(segment)) {
         optional<int> id0 = vertices_->Id(segment.point0);
         optional<int> id1 = vertices_->Id(segment.point1);
         if (!id0 || !id1) {

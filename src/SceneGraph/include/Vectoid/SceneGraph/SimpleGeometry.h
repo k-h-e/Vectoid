@@ -37,7 +37,7 @@ class SimpleGeometry : public virtual Vectoid::Core::HasBoundingBoxInterface {
     SimpleGeometry();
     SimpleGeometry(const SimpleGeometry &other) = delete;
     SimpleGeometry &operator=(const SimpleGeometry &other) = delete;
-    void GetBoundingBox(Vectoid::Core::BoundingBox<float> *outBoundingBox);
+    void GetBoundingBox(Vectoid::Core::BoundingBox<float> &outBoundingBox);
     void AddTriangle(
         const Vectoid::Core::Vector<float> &vertex0, const Vectoid::Core::Vector<float> &vertex1,
         const Vectoid::Core::Vector<float> &vertex2, const Vectoid::Core::Vector<float> &color);

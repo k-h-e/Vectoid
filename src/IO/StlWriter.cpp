@@ -38,13 +38,12 @@ bool StlWriter::Write(TriangleProviderInterface &triangleProvider, SeekableBlock
     int64_t headerPosition { outStream.StreamPosition() };
     outStream.Seek(headerPosition + headerSize + 4);
 
+    uint16_t attributes   { 0u };
+    uint32_t numTriangles { 0u };
     triangleProvider.PrepareToProvideTriangles();
-    ThreePoints   triangle;
-    Vector<float> normal;
-    uint16_t      attributes   { 0u };
-    uint32_t      numTriangles { 0u };
+    ThreePoints triangle;
     while (triangleProvider.ProvideNextTriangle(triangle)) {
-        triangle.ComputeNormal(&normal);
+        Vector<float> normal { triangle.Normal() };
         if (!normal.Valid()) {
             return false;
         } else {

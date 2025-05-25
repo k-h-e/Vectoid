@@ -23,15 +23,14 @@ namespace Intersection {
 
 bool LineTriangleIntersection::Compute(
         const Vector<float> &linePoint, const Vector<float> &lineDirection, const ThreePoints &triangle,
-        bool *outIntersects, Vector<float> *outIntersectionPoint) {
-    Vector<float> normal;
-    triangle.ComputeNormal(&normal);
+        bool &outIntersects, Vector<float> &outIntersectionPoint) {
+    Vector<float> normal = triangle.Normal();
     if (!normal.Valid()) {
         return false;
     }
 
     Vector<float> u, v;
-    Tools::CreateCoordinateSystem(DotProduct(lineDirection, normal) > 0 ? lineDirection : -lineDirection, &u, &v);
+    Tools::CreateCoordinateSystem(DotProduct(lineDirection, normal) > 0 ? lineDirection : -lineDirection, u, v);
     ThreePoints triangleXY(Vector<float>(DotProduct(triangle.point0 - linePoint, u),
                                          DotProduct(triangle.point0 - linePoint, v), 0.0f),
                            Vector<float>(DotProduct(triangle.point1 - linePoint, u),
@@ -42,15 +41,15 @@ bool LineTriangleIntersection::Compute(
         return false;
     }
 
-    if (*outIntersects) {
+    if (outIntersects) {
         Vector<float> barycentricCoordinates;
         if (!Tools::ComputeBarycentricCoordinates(Vector<float>(0.0f, 0.0f, 0.0f), triangleXY,
                                                   &barycentricCoordinates)) {
             return false;
         }
-        *outIntersectionPoint =   barycentricCoordinates.x * triangle.point0
-                                + barycentricCoordinates.y * triangle.point1
-                                + barycentricCoordinates.z * triangle.point2;
+        outIntersectionPoint =   barycentricCoordinates.x * triangle.point0
+                               + barycentricCoordinates.y * triangle.point1
+                               + barycentricCoordinates.z * triangle.point2;
     }
 
     return true;

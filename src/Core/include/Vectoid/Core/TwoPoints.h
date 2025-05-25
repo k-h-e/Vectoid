@@ -33,6 +33,11 @@ class TwoPoints {
         }
     }
 
+    //! Tells the length of the line segment delimited by the two points.
+    float LineSegmentLength() const {
+        return (point1 - point0).Length();
+    }
+
     std::string ToString() const {
         return "( " + point0.ToString() + ", " + point1.ToString() + " )";
     }

@@ -34,10 +34,10 @@ void SimpleLineSegmentList::PrepareToProvideLineSegments() {
     cursor_ = -1;
 }
 
-bool SimpleLineSegmentList::ProvideNextLineSegment(TwoPoints *outLineSegment) {
+bool SimpleLineSegmentList::ProvideNextLineSegment(TwoPoints &outLineSegment) {
     ++cursor_;
     if (cursor_ < static_cast<int>(lineSegments_.size())) {
-        *outLineSegment = lineSegments_[cursor_];
+        outLineSegment = lineSegments_[cursor_];
         return true;
     }
     else {
@@ -49,8 +49,8 @@ bool SimpleLineSegmentList::LineSegmentError() {
     return false;
 }
 
-void SimpleLineSegmentList::GetBoundingBox(BoundingBox<float> *outBoundingBox) {
-    *outBoundingBox = boundingBox_;
+void SimpleLineSegmentList::GetBoundingBox(BoundingBox<float> &outBoundingBox) {
+    outBoundingBox = boundingBox_;
 }
 
 }    // Namespace DataSet.

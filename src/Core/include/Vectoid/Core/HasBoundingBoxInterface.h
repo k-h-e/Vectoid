@@ -20,7 +20,7 @@ template<typename T> class BoundingBox;
 class HasBoundingBoxInterface : public virtual K::Core::Interface {
   public:
     //! Retrieves the associated bounding box.
-    virtual void GetBoundingBox(BoundingBox<float> *outBoundingBox) = 0;
+    virtual void GetBoundingBox(BoundingBox<float> &outBoundingBox) = 0;
 };
 
 }    // Namespace Core.

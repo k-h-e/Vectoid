@@ -54,7 +54,7 @@ void LineSegments::RenderDynamic() {
     
     TwoPoints segment;
     lineSegmentProvider_->PrepareToProvideLineSegments();
-    while (lineSegmentProvider_->ProvideNextLineSegment(&segment)) {
+    while (lineSegmentProvider_->ProvideNextLineSegment(segment)) {
         int j{0};
         for (int i{0}; i < 2; ++i) {
             const Vector<float> &vertex{segment[i]};
@@ -96,7 +96,7 @@ optional<GLuint> LineSegments::GenerateVbo() {
 
         TwoPoints segment;
         lineSegmentProvider_->PrepareToProvideLineSegments();
-        while (lineSegmentProvider_->ProvideNextLineSegment(&segment)) {
+        while (lineSegmentProvider_->ProvideNextLineSegment(segment)) {
             for (int i = 0; i < 2; ++i) {
                 const Vector<float> &vertex{segment[i]};
                 data.push_back(vertex.x);

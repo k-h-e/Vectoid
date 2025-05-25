@@ -42,7 +42,7 @@ bool VertexNormalTriangleProvider::Precompute() {
         Log::Print(Log::Level::Debug, this, [&]{ return "computing vertex normals..."; });
         auto startTime{steady_clock::now()};
         
-        triangles_ = make_unique<Triangles>(triangleProvider_.get());
+        triangles_ = make_unique<Triangles>(*triangleProvider_);
         if (triangleProvider_->TriangleError()) {
             triangles_.reset();
             return false;
@@ -55,14 +55,12 @@ bool VertexNormalTriangleProvider::Precompute() {
 
             unordered_set<int> neighbors;
             ThreePoints        triangle;
-            Vector<float>      normal;
             Vector<float>      normalSum;
             for (int i = 0; i < numVertices; ++i) {
-                triangles_->GetTrianglesSharingVertex(i, &neighbors);
+                triangles_->GetTrianglesSharingVertex(i, neighbors);
                 for (int neighbor : neighbors) {
-                    triangles_->GetTriangleVertices(neighbor, &triangle);
-                    triangle.ComputeNormal(&normal);
-                    normalSum += normal;
+                    triangles_->GetTriangleVertices(neighbor, triangle);
+                    normalSum += triangle.Normal();
                 }
                 normalSum.Normalize();
                 if (normalSum.Valid()) {
@@ -99,14 +97,14 @@ void VertexNormalTriangleProvider::PrepareToProvideTriangles() {
 bool VertexNormalTriangleProvider::ProvideNextTriangle(ThreePoints &outTriangle) {
     if (!error_ && triangles_&& (currentTriangle_ < triangles_->Size())) {
         ThreeIds vertexIds;
-        triangles_->GetTriangleVertexIds(currentTriangle_, &vertexIds);
+        triangles_->GetTriangleVertexIds(currentTriangle_, vertexIds);
         for (int i = 0; i < 3; ++i) {
             int vertexId = vertexIds[i];
             outTriangle[i]                   = (*(triangles_->Vertices()))[vertexId];
             currentTriangleVertexNormals_[i] = (*vertexNormals_)[vertexId];
         }
-        outTriangle.ComputeNormal(&currentTriangleNormal_);
-        if (outTriangle.Valid()) {
+        currentTriangleNormal_ = outTriangle.Normal();
+        if (outTriangle.Valid() && currentTriangleNormal_.Valid()) {
             ++currentTriangle_;
             return true;
         } else {

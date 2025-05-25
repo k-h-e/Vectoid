@@ -28,7 +28,7 @@ class LineSegmentProviderInterface : public virtual K::Core::Interface {
      *  <c>false</c> in case there are no more line segments. The output parameter is then undefined, and
      *  <c>LineSegmentError()</c> should be checked.
      */
-    virtual bool ProvideNextLineSegment(TwoPoints *outLineSegment) = 0;
+    virtual bool ProvideNextLineSegment(TwoPoints &outLineSegment) = 0;
     //! Tells whether or not the last line segment readout ended because of an error.
     virtual bool LineSegmentError() = 0;
 };

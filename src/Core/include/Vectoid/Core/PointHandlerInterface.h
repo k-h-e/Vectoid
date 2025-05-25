@@ -6,28 +6,28 @@
 //                                          // //       //          //      //  //     //      //  //     //     //
 ///////////////////////////////////////    ///          /////////   ////////    /////  ////////    /////  ////////
 
-#ifndef VECTOID_MATH_INTERSECTION_POINTTRIANGLEINTERSECTIONXY_H_
-#define VECTOID_MATH_INTERSECTION_POINTTRIANGLEINTERSECTIONXY_H_
+#ifndef VECTOID_CORE_POINTHANDLERINTERFACE_H_
+#define VECTOID_CORE_POINTHANDLERINTERFACE_H_
+
+#include <K/Core/StreamHandlerInterface.h>
+
+namespace Vectoid {
+    namespace Core {
+        template<typename T> class Vector;
+    }
+}
 
 namespace Vectoid {
 namespace Core {
-    template<typename T> class Vector;
-    class ThreePoints;
-}
-}
 
-namespace Vectoid {
-namespace Math {
-namespace Intersection {
-
-//! Tests whether a point in the <c>x/y</c> plane lies inside a tringle in the <c>x/y</c>.
-class PointTriangleIntersectionXY {
+//! Interface to entities handling a stream of points.
+class PointHandlerInterface : public virtual K::Core::StreamHandlerInterface {
   public:
-    static bool Compute(const Core::Vector<float> &point, const Core::ThreePoints &triangle, bool &outIntersects);
+    //! Hands over the next point to the handler.
+    virtual void OnPoint(const Vector<float> &point) = 0;
 };
 
-}    // Namespace Intersection.
-}    // Namespace Math.
+}    // Namespace Core.
 }    // Namespace Vectoid.
 
-#endif    // VECTOID_MATH_INTERSECTION_POINTTRIANGLEINTERSECTIONXY_H_
+#endif    // VECTOID_CORE_POINTHANDLERINTERFACE_H_

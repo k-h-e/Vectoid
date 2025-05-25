@@ -9,6 +9,7 @@
 #ifndef VECTOID_DATASET_REGULARSCALARGRID_H_
 #define VECTOID_DATASET_REGULARSCALARGRID_H_
 
+#include <functional>
 #include <vector>
 
 #include <K/Core/Interface.h>
@@ -43,6 +44,8 @@ class RegularScalarGrid : public virtual K::Core::Interface {
     float &Value(int gridX, int gridY, int gridZ);
     //! Gives read access to the scalar value associated with the specified grid point.
     const float &Value(int gridX, int gridY, int gridZ) const;
+    //! Samples scalar data values for all grid points using the specified function.
+    void Sample(std::function<float(const Core::Vector<float> &point)> sampleFunction);
 
   private:
     int                numPointsX_;

@@ -76,8 +76,8 @@ void ComboBarrel::Render() {
         for (int row = 0; row <= 2*numVisibleOtherPerSide_ + 1; ++row) {
             Vector<float> current{0.0f, yCoords_[row], zCoords_[row]};
             Vector<float> next{0.0f, yCoords_[row + 1], zCoords_[row + 1]};
-            transform.ApplyTo(&current);
-            transform.ApplyTo(&next);
+            transform.ApplyTo(current);
+            transform.ApplyTo(next);
             
             float y     = current.y;
             float nextY = next.y;

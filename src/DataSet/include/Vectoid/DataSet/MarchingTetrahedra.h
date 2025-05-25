@@ -16,6 +16,9 @@
 #include <Vectoid/DataSet/TwoIds.h>
 
 namespace Vectoid {
+    namespace Core {
+        class TriangleHandlerInterface;
+    }
     namespace DataSet {
         class RegularScalarGrid;
     }
@@ -40,8 +43,11 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
      *  The dimensions of the grid must be odd, so that the number of cubes in each dimension is even. Otherwise,
      *  the extractor will not output any triangles. This is because we always combine eight neighboring cubes into a
      *  "meta cube" in order to perform the tetrahedron subdivision.
+     * 
+     *  Will not call <c>OnStreamError()</c> on the triangle handler.
      */
-    void ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue);
+    void ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue,
+                           Core::TriangleHandlerInterface &triangleHandler);
 
   private:
     static constexpr unsigned int bitValues[8] { 1u, 2u, 4u, 8u, 16u, 32u, 64u, 128u }; 
@@ -59,18 +65,19 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
     void AddTetrahedra(const std::vector<int> &tetrahedra);
     void RotateTetrahedra(Core::Axis axis, std::vector<int> &tetrahedra);
 
-    Case                    cases_[16];
-    TwoIds                  edgeVertices_[6];
-    std::vector<int>        tetrahedronSubDivision_;
-    const RegularScalarGrid *grid_;
-    float                   isoValue_;
-    int                     xCursor_;
-    int                     yCursor_;
-    int                     zCursor_;
-    Core::Vector<float>     vertices_[27];
-    float                   vertexValues_[27];
-    int                     vertexMap_[4];
-    Core::Vector<float>     edgeIntersections_[6];
+    Case                           cases_[16];
+    TwoIds                         edgeVertices_[6];
+    std::vector<int>               tetrahedronSubDivision_;
+    const RegularScalarGrid        *grid_;
+    float                          isoValue_;
+    Core::TriangleHandlerInterface *triangleHandler_;
+    int                            xCursor_;
+    int                            yCursor_;
+    int                            zCursor_;
+    Core::Vector<float>            vertices_[27];
+    float                          vertexValues_[27];
+    int                            vertexMap_[4];
+    Core::Vector<float>            edgeIntersections_[6];
 };
 
 }    // Namespace DataSet.

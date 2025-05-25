@@ -9,6 +9,7 @@
 #include <Vectoid/DataSet/Points.h>
 
 #include <cassert>
+
 #include <K/Core/Log.h>
 
 using std::make_unique;
@@ -18,6 +19,7 @@ using std::to_string;
 using std::unique_ptr;
 using std::unordered_map;
 using K::Core::Log;
+using K::Core::StreamInterface;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
@@ -80,6 +82,16 @@ unique_ptr<Points> Points::Clone() const {
     }
     clone->OptimizeForSpace();
     return clone;
+}
+
+void Points::OnPoint(const Vector<float> &point) {
+    (void) Add(point);
+}
+
+void Points::OnStreamError(StreamInterface::Error error) {
+    (void) error;
+    
+    // Nop.
 }
 
 unordered_map<Vector<float>, int, Vector<float>::HashFunction> *Points::PointMap() {

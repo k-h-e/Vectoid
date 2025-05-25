@@ -37,11 +37,11 @@ class SimpleLineSegmentList : public virtual Core::LineSegmentProviderInterface,
 
     // LineSegmentProviderInterface...
     virtual void PrepareToProvideLineSegments();
-    virtual bool ProvideNextLineSegment(Core::TwoPoints *outLineSegment);
+    virtual bool ProvideNextLineSegment(Core::TwoPoints &outLineSegment);
     virtual bool LineSegmentError();
 
     // HasBoundingBoxInterface...
-    virtual void GetBoundingBox(Core::BoundingBox<float> *outBoundingBox);
+    virtual void GetBoundingBox(Core::BoundingBox<float> &outBoundingBox);
 
   private:
     std::vector<Core::TwoPoints> lineSegments_;

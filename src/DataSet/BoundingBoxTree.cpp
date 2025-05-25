@@ -60,8 +60,8 @@ BoundingBoxTree::BoundingBoxTree(const BoundingBoxTree &other,
 }
 
 bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, const Vector<float> &lineDirection,
-                                              vector<ItemIntersection> *outIntersections) {
-    outIntersections->clear();
+                                              vector<ItemIntersection> &outIntersections) {
+    outIntersections.clear();
     if (root_ == -1) {
         return true;    // We're empty.
     } else {
@@ -73,11 +73,11 @@ bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, co
         for (int item : itemsToTest) {
             bool             intersects;
             ItemIntersection intersection;
-            if (!items_->ComputeLineItemIntersection(linePoint, lineDirection, item, &intersects, &intersection)) {
+            if (!items_->ComputeLineItemIntersection(linePoint, lineDirection, item, intersects, intersection)) {
                 return false;
             }
             if (intersects) {
-                outIntersections->push_back(intersection);
+                outIntersections.push_back(intersection);
             }
         }
 
@@ -99,7 +99,7 @@ int BoundingBoxTree::AddSubTree(std::vector<int> *itemIds, int offset, int numIt
     BoundingBox<float> boundingBox;
     for (int i = 0; i < numItems; ++i) {
         BoundingBox<float> itemBoundingBox;
-        items_->GetItemBoundingBox((*itemIds)[offset + i], &itemBoundingBox);
+        items_->GetItemBoundingBox((*itemIds)[offset + i], itemBoundingBox);
         boundingBox.Grow(itemBoundingBox);
     }
 
@@ -155,9 +155,9 @@ void BoundingBoxTree::Comparer::SetComparisonAxis(Axis axis) {
 
 bool BoundingBoxTree::Comparer::operator()(int left, int right) {
     BoundingBox<float> boundingBox;
-    items->GetItemBoundingBox(left, &boundingBox);
+    items->GetItemBoundingBox(left, boundingBox);
     auto leftCenter = boundingBox.Center();
-    items->GetItemBoundingBox(right, &boundingBox);
+    items->GetItemBoundingBox(right, boundingBox);
     auto rightCenter = boundingBox.Center();
 
     switch (comparisonAxis) {

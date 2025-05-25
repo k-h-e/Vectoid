@@ -11,6 +11,7 @@
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Core/BoundingBox.h>
 
+using std::function;
 using std::vector;
 using K::Core::NumberTools;
 using Vectoid::Core::BoundingBox;
@@ -57,6 +58,16 @@ float &RegularScalarGrid::Value(int gridX, int gridY, int gridZ) {
 
 const float &RegularScalarGrid::Value(int gridX, int gridY, int gridZ) const {
     return const_cast<RegularScalarGrid *>(this)->Value(gridX, gridY, gridZ);
+}
+
+void RegularScalarGrid::Sample(function<float(const Vector<float> &point)> sampleFunction) {
+    for (int z = 0; z < numPointsZ_; ++z) {
+        for (int y = 0; y < numPointsY_; ++y) {
+            for (int x = 0; x < numPointsX_; ++x) {
+                Value(x, y, z) = sampleFunction(Point(x, y, z));
+            } 
+        }    
+    }
 }
 
 }    // Namespace Vectoid.

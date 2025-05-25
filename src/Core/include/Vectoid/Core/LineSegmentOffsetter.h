@@ -23,7 +23,7 @@ class LineSegmentOffsetter : public virtual LineSegmentProviderInterface {
                          const Vector<float> &offset);
 
     void PrepareToProvideLineSegments();
-    bool ProvideNextLineSegment(TwoPoints *outLineSegment);
+    bool ProvideNextLineSegment(TwoPoints &outLineSegment);
     bool LineSegmentError();
 
   private:

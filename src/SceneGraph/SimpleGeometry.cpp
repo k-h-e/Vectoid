@@ -24,7 +24,7 @@ SimpleGeometry::SimpleGeometry()
     // Nop.
 }
 
-void SimpleGeometry::GetBoundingBox(BoundingBox<float> *outBoundingBox) {
+void SimpleGeometry::GetBoundingBox(BoundingBox<float> &outBoundingBox) {
     if (!boundingBoxValid_) {
         BoundingBox<float> boundingBox;
         float *coordPtr = &vertexArray_[0];
@@ -38,7 +38,7 @@ void SimpleGeometry::GetBoundingBox(BoundingBox<float> *outBoundingBox) {
         boundingBox_ = boundingBox;
         boundingBoxValid_ = true;
     }
-    *outBoundingBox = boundingBox_;
+    outBoundingBox = boundingBox_;
 }
 
 void SimpleGeometry::AddTriangle(const Vector<float> &vertex0, const Vector<float> &vertex1,

@@ -82,11 +82,10 @@ optional<GLuint> LitTriangles::GenerateVbo() {
         vector<GLfloat> data;
         int             numTriangles = 0;
 
-        ThreePoints   triangle;
-        Vector<float> normal;
+        ThreePoints triangle;
         triangleProvider_->PrepareToProvideTriangles();
         while (triangleProvider_->ProvideNextTriangle(triangle)) {
-            triangle.ComputeNormal(&normal);
+            Vector<float> normal { triangle.Normal() };
             if (!normal.Valid()) {
                 normal = Vector<float>(1.0f, 0.0f, 0.0f);
                 Log::Print(Log::Level::Warning, this, [&]{

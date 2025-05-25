@@ -50,7 +50,7 @@ void GeometryTools::AddFilledCircleXY(SimpleTriangleList *triangleList, const Ve
         float angle{(static_cast<float>(i)/static_cast<float>(numSectors)) * 360.0f};
         Transform<float> rotation{Axis::Z, angle};
         Vector<float> hand{radius, 0.0f, 0.0f};
-        rotation.ApplyTo(&hand);
+        rotation.ApplyTo(hand);
         if (i) {
             triangleList->Add(ThreePoints{centerXY, centerXY + oldHand, centerXY + hand});
         }
@@ -84,7 +84,7 @@ void GeometryTools::AddFilledCircleSectorXY(SimpleTriangleList *triangleList, fl
          
          Transform<float> rotation{Axis::Z, angle};
          Vector<float> hand{radius, 0.0f, 0.0f};
-         rotation.ApplyTo(&hand);
+         rotation.ApplyTo(hand);
          if (i) {
             triangleList->Add(ThreePoints{Vector<float>{}, oldHand, hand});
          }
@@ -107,8 +107,8 @@ void GeometryTools::AddCircleXY(SimpleTriangleList *triangleList, float radius, 
         Transform<float> rotation{Axis::Z, angle};
         Vector<float> hand{radius, 0.0f, 0.0f};
         Vector<float> innerHand{radius - width, 0.0f, 0.0f};
-        rotation.ApplyTo(&hand);
-        rotation.ApplyTo(&innerHand);
+        rotation.ApplyTo(hand);
+        rotation.ApplyTo(innerHand);
         if (i) {
             triangleList->Add(ThreePoints{oldInnerHand, oldHand, hand});
             triangleList->Add(ThreePoints{oldInnerHand, hand, innerHand});

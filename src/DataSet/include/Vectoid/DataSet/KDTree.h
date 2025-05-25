@@ -43,10 +43,10 @@ class KDTree : public virtual K::Core::Interface {
      *  \returns
      *  <c>false</c> in case the set is empty. The output parameter is then undefined.
      */
-    bool QueryNearestNeighbor(const Core::Vector<float> &queryPoint, int *outNearestNeighbor);
+    bool QueryNearestNeighbor(const Core::Vector<float> &queryPoint, int &outNearestNeighbor);
     //! Retrieves all set points inside the specified query sphere.
     void QuerySphereIntersection(const Core::Vector<float> &sphereCenter, float sphereRadius,
-                                 std::vector<ItemIntersection> *outIntersections);
+                                 std::vector<ItemIntersection> &outIntersections);
     //! Runs an integrity check on the tree and reports whether it has been constructed properly.
     /*!
      *  Method will eventually get removed.
@@ -79,15 +79,15 @@ class KDTree : public virtual K::Core::Interface {
      *  <c>CheckForBetterNearestNeighborCandidate()</c>) for appropriate subtrees at each recursion level.
      */
     int FindNearestNeighbor(const Core::Vector<float> &queryPoint, int node);
-    void RefineNearestNeighbor(const Core::Vector<float> &queryPoint, int node, int *inOutCandidate,
-                               float *inOutCandidateDistance);
+    void RefineNearestNeighbor(const Core::Vector<float> &queryPoint, int node, int &inOutCandidate,
+                               float &inOutCandidateDistance);
     void PerformSphereQuery(const Core::Vector<float> &sphereCenter, float sphereRadius, int node,
-                            std::vector<ItemIntersection> *outIntersections);
+                            std::vector<ItemIntersection> &outIntersections);
     bool IsLeftSubTreeInReach(const Node &nodeInfo, const Core::Vector<float> &queryPoint, float distance);
     bool IsRightSubTreeInReach(const Node &nodeInfo, const Core::Vector<float> &queryPoint, float distance);
 
     // Integrity checking...
-    void CollectPoints(int node, std::unordered_set<int> *points);
+    void CollectPoints(int node, std::unordered_set<int> &points);
     bool CheckNode(int node);
 
     std::shared_ptr<Points> points_;

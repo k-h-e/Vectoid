@@ -9,7 +9,10 @@
 #ifndef VECTOID_CORE_THREEPOINTS_H_
 #define VECTOID_CORE_THREEPOINTS_H_
 
+#include <string>
+
 #include <Vectoid/Core/Tools.h>
+#include <Vectoid/Core/TwoPoints.h>
 #include <Vectoid/Core/Vector.h>
 
 namespace Vectoid {
@@ -65,18 +68,45 @@ class ThreePoints {
         }
     }
 
+    //! For indices <c>0, 1, 2</c> the method returns the triangle edges <c>(point0, point1), (point1, point2)</c> and
+    //! <c>(point2, point0)</c> respectively. Does mod 3 on index.
+    TwoPoints TriangleEdge(int index) const {
+        switch (Tools::IndexMod3(index)) {
+            case 0:
+                return TwoPoints{point0, point1};
+                break;
+            case 1:
+                return TwoPoints{point1, point2};
+                break;
+            default:
+                return TwoPoints{point2, point0};
+                break;
+        }
+    } 
+
     //! Computes the normal for the triangle given by the three points.
     /*!
      *  The returned normal might not be a <c>Valid()</c> vector.
      */
-    void ComputeNormal(Vector<float> *outNormal) const {
-        *outNormal = CrossProduct(point1 - point0, point2 - point0);
-        outNormal->Normalize();
+    Vector<float> Normal() const {
+        Vector<float> normal { CrossProduct(point1 - point0, point2 - point0) };
+        normal.Normalize();
+        return normal;
     }
 
     //! Tells whether the specified point is one of the three points.
     bool Contains(const Vector<float> &point) {
         return (point0 == point) || (point1 == point) || (point2 == point);
+    }
+
+    //! Tells the center of gravity of the three points.
+    Vector<float> CenterOfGravity() const {
+        return (1.0f/3.0f)*point0 + (1.0f/3.0f)*point1 + (1.0f/3.0f)*point2;
+    }
+
+    //! Produces a verbose representation of the current object state.
+    std::string ToString() const {
+        return std::string("(") + point0.ToString() + ", " + point1.ToString() + ", " + point2.ToString() + ")"; 
     }
 
     Vector<float> point0;

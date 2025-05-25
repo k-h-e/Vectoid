@@ -64,7 +64,7 @@ class Transform : public TransformCore<T> {
     //! transform.
     inline void ReorthonormalizeRotationPart();
     /// Transforms the specified vector - or point in 3-space, if we interpret the vector as point.
-    inline void ApplyTo(Vector<T> *v) const;
+    inline void ApplyTo(Vector<T> &v) const;
     //! Replaces the transform by a concatenation of its original value and another transform such as the other
     //! transform is prepended.
     /*!
@@ -373,14 +373,14 @@ void Transform<T>::ReorthonormalizeRotationPart() {
 }
 
 template<typename T>
-void Transform<T>::ApplyTo(Vector<T> *v) const {
-    T x = this->matrix_[0][0]*v->x + this->matrix_[1][0]*v->y + this->matrix_[2][0]*v->z + this->matrix_[3][0];
-    T y = this->matrix_[0][1]*v->x + this->matrix_[1][1]*v->y + this->matrix_[2][1]*v->z + this->matrix_[3][1];
-    T z = this->matrix_[0][2]*v->x +this-> matrix_[1][2]*v->y + this->matrix_[2][2]*v->z + this->matrix_[3][2];
+void Transform<T>::ApplyTo(Vector<T> &v) const {
+    T x = this->matrix_[0][0]*v.x + this->matrix_[1][0]*v.y + this->matrix_[2][0]*v.z + this->matrix_[3][0];
+    T y = this->matrix_[0][1]*v.x + this->matrix_[1][1]*v.y + this->matrix_[2][1]*v.z + this->matrix_[3][1];
+    T z = this->matrix_[0][2]*v.x +this-> matrix_[1][2]*v.y + this->matrix_[2][2]*v.z + this->matrix_[3][2];
 
-    v->x = x;
-    v->y = y;
-    v->z = z;
+    v.x = x;
+    v.y = y;
+    v.z = z;
 }
 
 template<typename T>

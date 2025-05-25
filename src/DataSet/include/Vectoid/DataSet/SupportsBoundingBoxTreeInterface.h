@@ -28,7 +28,7 @@ class SupportsBoundingBoxTreeInterface : public virtual K::Core::Interface {
     //! Tells the number of items in the collection.
     virtual int Size() const = 0;
     //! Retrieves the axis-aligned bounding box for the specified item.
-    virtual void GetItemBoundingBox(int item, Core::BoundingBox<float> *outBoundingBox) const = 0;
+    virtual void GetItemBoundingBox(int item, Core::BoundingBox<float> &outBoundingBox) const = 0;
     //! Computes the intersection between the specified line and the specified collection item.
     /*!
      *  \param outIntersection
@@ -38,7 +38,7 @@ class SupportsBoundingBoxTreeInterface : public virtual K::Core::Interface {
      */
     virtual bool ComputeLineItemIntersection(
         const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-        int item, bool *outIntersects, ItemIntersection *outIntersection) = 0;
+        int item, bool &outIntersects, ItemIntersection &outIntersection) = 0;
 };
 
 }    // Namespace Core.

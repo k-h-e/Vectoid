@@ -13,9 +13,9 @@
 #include <optional>
 #include <vector>
 #include <unordered_map>
-#include <Vectoid/Core/Vector.h>
 
-#include <K/Core/Interface.h>
+#include <Vectoid/Core/PointHandlerInterface.h>
+#include <Vectoid/Core/Vector.h>
 
 namespace Vectoid {
 //! Data structures and algorithms for 3D data processing.
@@ -24,8 +24,10 @@ namespace DataSet {
 //! Set of points in 3-space.
 /*!
  *  Can grow dynamically.
+ *
+ *  As a point handler, it just accepts and adds points, but ignores any stream error.
  */
-class Points : public virtual K::Core::Interface {
+class Points : public virtual Core::PointHandlerInterface {
   public:
     Points();
     Points(const Points &other);
@@ -43,7 +45,7 @@ class Points : public virtual K::Core::Interface {
     int Add(const Core::Vector<float> &point);
     //! Gives access to the specified point.
     /*!
-     *  The specified point id must lie in <c>[ 0, Count() )</c>.
+     *  The specified point id must lie in <c>[ 0, Size() )</c>.
      */
     const Core::Vector<float> &operator[](int index) const;
     //! Returns the id of the specified point, or <c>nullopt</c> in case the point is not in the set.
@@ -53,6 +55,10 @@ class Points : public virtual K::Core::Interface {
     void OptimizeForSpace();
     //! Creates an independent clone of the point set.
     std::unique_ptr<Points> Clone() const;
+
+    // PointHandlerInterface...
+    void OnPoint(const Core::Vector<float> &point) override;
+    void OnStreamError(K::Core::StreamInterface::Error error) override; 
 
   private:
     std::unordered_map<Core::Vector<float>, int, Core::Vector<float>::HashFunction> *PointMap();

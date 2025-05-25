@@ -39,9 +39,9 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
     //! Returns the ID for the specified line segment, or <c>-1</c> in case the segment is not in the set.
     int Id(const TwoIds &segment);
     //! Retrieves vertex data for the specified segment.
-    void GetSegmentVertices(int segment, Core::TwoPoints *outVertices);
+    void GetSegmentVertices(int segment, Core::TwoPoints &outVertices);
     //! Retrieves the vertices for the specified segment.
-    void GetSegmentVertices(int segment, TwoIds *outVertices);
+    void GetSegmentVertices(int segment, TwoIds &outVertices);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
@@ -51,11 +51,11 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
     std::shared_ptr<Points> Vertices();
 
     void PrepareToProvideLineSegments() override;
-    bool ProvideNextLineSegment(Core::TwoPoints *outSegment) override;
+    bool ProvideNextLineSegment(Core::TwoPoints &outSegment) override;
     bool LineSegmentError() override;
 
   private:
-    std::unordered_map<TwoIds, int, TwoIds::HashFunction> *SegmentMap();
+    std::unordered_map<TwoIds, int, TwoIds::HashFunction> &SegmentMap();
 
     std::shared_ptr<Vectoid::DataSet::Points>                              vertices_;
     std::vector<TwoIds>                                                    segments_;

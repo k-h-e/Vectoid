@@ -39,7 +39,7 @@ class BoundingBoxTree : public virtual K::Core::Interface {
      *  \return <c>false</c> in case of failure. The output parameter will then be undefined.
      */
     bool ComputeLineIntersection(const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-                                 std::vector<ItemIntersection> *outIntersections);
+                                 std::vector<ItemIntersection> &outIntersections);
     //! Creates an independent copy of the boundig box tree.
     /*!
      *  \param clonedItems

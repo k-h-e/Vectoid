@@ -24,10 +24,10 @@ void LineSegmentOffsetter::PrepareToProvideLineSegments() {
     lineSegmentProvider_->PrepareToProvideLineSegments();
 }
 
-bool LineSegmentOffsetter::ProvideNextLineSegment(TwoPoints *outLineSegment) {
+bool LineSegmentOffsetter::ProvideNextLineSegment(TwoPoints &outLineSegment) {
     if (lineSegmentProvider_->ProvideNextLineSegment(outLineSegment)) {
-        outLineSegment->point0 += offset_;
-        outLineSegment->point1 += offset_;
+        outLineSegment.point0 += offset_;
+        outLineSegment.point1 += offset_;
         return true;
     }
 

@@ -34,12 +34,12 @@ int LineSegments::Add(const TwoPoints &segment) {
     auto segmentCanonical = TwoIds(vertices_->Add(segment.point0), vertices_->Add(segment.point1)).MakeCanonical();
 
     int  segmentId = -1;
-    auto *segmentMap = SegmentMap();
-    auto iter = segmentMap->find(segmentCanonical);
-    if (iter == segmentMap->end()) {
+    auto &segmentMap = SegmentMap();
+    auto iter = segmentMap.find(segmentCanonical);
+    if (iter == segmentMap.end()) {
         segmentId = static_cast<int>(segments_.size());
         segments_.push_back(segmentCanonical);
-        (*segmentMap)[segmentCanonical] = segmentId;
+        segmentMap[segmentCanonical] = segmentId;
     } else {
         segmentId = iter->second;
     }
@@ -52,23 +52,23 @@ int LineSegments::Size() const {
 }
 
 int LineSegments::Id(const TwoIds &segment) {
-    auto *segmentMap = SegmentMap();
-    auto iter = segmentMap->find(segment.MakeCanonical());
-    if (iter != segmentMap->end()) {
+    auto &segmentMap = SegmentMap();
+    auto iter = segmentMap.find(segment.MakeCanonical());
+    if (iter != segmentMap.end()) {
         return iter->second;
     } else {
         return -1;
     }
 }
 
-void LineSegments::GetSegmentVertices(int segment, TwoPoints *outVertices) {
+void LineSegments::GetSegmentVertices(int segment, TwoPoints &outVertices) {
     TwoIds &vertices = segments_[segment];
-    outVertices->point0 = (*vertices_)[vertices.id0];
-    outVertices->point1 = (*vertices_)[vertices.id1];
+    outVertices.point0 = (*vertices_)[vertices.id0];
+    outVertices.point1 = (*vertices_)[vertices.id1];
 }
 
-void LineSegments::GetSegmentVertices(int segment, TwoIds *outVertices) {
-    *outVertices = segments_[segment];
+void LineSegments::GetSegmentVertices(int segment, TwoIds &outVertices) {
+    outVertices = segments_[segment];
 }
 
 void LineSegments::OptimizeForSpace() {
@@ -95,7 +95,7 @@ void LineSegments::PrepareToProvideLineSegments() {
     cursor_ = -1;
 }
 
-bool LineSegments::ProvideNextLineSegment(TwoPoints *outSegment) {
+bool LineSegments::ProvideNextLineSegment(TwoPoints &outSegment) {
     if (cursor_ + 1 < Size()) {
         ++cursor_;
         GetSegmentVertices(cursor_, outSegment);
@@ -109,7 +109,7 @@ bool LineSegments::LineSegmentError() {
     return false;
 }
 
-unordered_map<TwoIds, int, TwoIds::HashFunction> *LineSegments::SegmentMap() {
+unordered_map<TwoIds, int, TwoIds::HashFunction> &LineSegments::SegmentMap() {
     if (!segmentMap_) {
         Log::Print(Log::Level::Debug, this, []{ return "(re-)generating segment map"; });
         segmentMap_ = make_unique<unordered_map<TwoIds, int, TwoIds::HashFunction>>();
@@ -118,7 +118,7 @@ unordered_map<TwoIds, int, TwoIds::HashFunction> *LineSegments::SegmentMap() {
         }
     }
 
-    return segmentMap_.get();
+    return *segmentMap_;
 }
 
 }    // Namespace DataSet.

@@ -9,12 +9,14 @@
 #include <Vectoid/DataSet/MarchingTetrahedra.h>
 
 #include <Vectoid/Core/ThreePoints.h>
+#include <Vectoid/Core/TriangleHandlerInterface.h>
 #include <Vectoid/DataSet/RegularScalarGrid.h>
 
 using std::isfinite;
 using std::vector;
 using Vectoid::Core::Axis;
 using Vectoid::Core::ThreePoints;
+using Vectoid::Core::TriangleHandlerInterface;
 using Vectoid::Core::Vector;
 
 namespace Vectoid {
@@ -23,6 +25,7 @@ namespace DataSet {
 MarchingTetrahedra::MarchingTetrahedra() 
         : grid_{nullptr},
           isoValue_{0.0f},
+          triangleHandler_{nullptr},
           xCursor_{0},
           yCursor_{0},
           zCursor_{0} {
@@ -64,19 +67,21 @@ MarchingTetrahedra::MarchingTetrahedra()
     AddTetrahedra(tetrahedra);
 }
 
-void MarchingTetrahedra::ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue) {
+void MarchingTetrahedra::ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue,
+                                           TriangleHandlerInterface &triangleHandler) {
     if (isfinite(isoValue)) {
-        grid_     = &grid;
-        isoValue_ = isoValue;
+        grid_            = &grid;
+        isoValue_        = isoValue;
+        triangleHandler_ = &triangleHandler;
         
         int numPointsX; 
         int numPointsY; 
         int numPointsZ;
         grid_->GetDimensions(numPointsX, numPointsY, numPointsZ);
         if ((numPointsX % 2 == 1) && (numPointsY % 2 == 1) && (numPointsZ % 2 == 1)) {
-            for (zCursor_ = 0; zCursor_ < numPointsZ - 2; ++zCursor_) {
-                for (yCursor_ = 0; yCursor_ < numPointsY - 2; ++yCursor_) {
-                    for (xCursor_ = 0; xCursor_ < numPointsX - 2; ++xCursor_) {
+            for (zCursor_ = 0; zCursor_ < numPointsZ - 2; zCursor_ += 2) {
+                for (yCursor_ = 0; yCursor_ < numPointsY - 2; yCursor_ += 2) {
+                    for (xCursor_ = 0; xCursor_ < numPointsX - 2; xCursor_ += 2) {
                         SetUpMetaCube();
                         GenerateTrianglesForMetaCube();
                     }
@@ -85,7 +90,8 @@ void MarchingTetrahedra::ExtractIsoSurface(const RegularScalarGrid &grid, float 
         }
     }
 
-    grid_ = nullptr;
+    grid_            = nullptr;
+    triangleHandler_ = nullptr;
 }
 
 // ---
@@ -113,7 +119,6 @@ void MarchingTetrahedra::GenerateTrianglesForMetaCube() {
                                         tetrahedronSubDivision_[i + 2], tetrahedronSubDivision_[i + 3]);
         i += 4;
     }
-
 }
 
 void MarchingTetrahedra::GenerateTrianglesForTetrahedron(int vertexIndex0, int vertexIndex1, int vertexIndex2,
@@ -155,9 +160,9 @@ void MarchingTetrahedra::GenerateTrianglesForTetrahedron(int vertexIndex0, int v
     // Generate triangles...
     int firstEdge { 0 };
     while (firstEdge + 2 < static_cast<int>(edges.size())) {
-        ThreePoints{edgeIntersections_[edges[firstEdge]],
-                    edgeIntersections_[edges[firstEdge + 1]],
-                    edgeIntersections_[edges[firstEdge + 2]]};
+        triangleHandler_->OnTriangle(ThreePoints{edgeIntersections_[edges[firstEdge]],
+                                                 edgeIntersections_[edges[firstEdge + 1]],
+                                                 edgeIntersections_[edges[firstEdge + 2]]});
         firstEdge += 3;
     }
 }
@@ -170,14 +175,14 @@ void MarchingTetrahedra::AddCase(unsigned int caseId, const vector<int> &edges) 
 
     unsigned int inverseCaseId { 0u }; 
     for (unsigned int i = 0u; i < 4u; ++i) {
-        if ((caseId & bitValues[i]) == 0u)
+        if ((caseId & bitValues[i]) == 0u) {
             inverseCaseId |= bitValues[i];
+        }
     }
 
     cases_[inverseCaseId].edges.clear();
     for (unsigned int i = 0u; i < edges.size(); ++i) {
         cases_[inverseCaseId].edges.push_back(edges[edges.size() - i - 1u]);
-        
     }
 }
 

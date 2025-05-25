@@ -12,10 +12,15 @@
 #include <optional>
 
 namespace Vectoid {
-namespace Core {
+    namespace Core {
+        class PointHandlerInterface;
+        class ThreePoints;
+        template<typename T> class Vector;
+    }
+}
 
-template<typename T> class Vector;
-class ThreePoints;
+namespace Vectoid {
+namespace Core {
 
 //! Various tool functions.
 class Tools {
@@ -26,7 +31,7 @@ class Tools {
      * \param direction
      * Unit-length direction vector.
      */
-    static void CreateCoordinateSystem(const Vector<float> &direction, Vector<float> *outU, Vector<float> *outV);
+    static void CreateCoordinateSystem(const Vector<float> &direction, Vector<float> &outU, Vector<float> &outV);
     //! Returns the angle in degrees, in <c>[0, 360)</c>, between vectors <c>(1, 0)</c> and <c>(x, y)</c>, or
     //! <c>nullopt</c> in case that angle can not be determined.
     /*!
@@ -41,6 +46,13 @@ class Tools {
      */
     static bool ComputeBarycentricCoordinates(const Vector<float> &pointXY, const ThreePoints &triangleXY,
                                               Vector<float> *outBarycentricCoordinates);
+    //! Samples a set of points from the specified triangle, including its vertices, so that for any given point inside
+    //! the triangle the closest set point is no farther away than the specified distance.
+    /*!
+     *  Does not call <c>OnStreamError()</c> on the point handler.
+     */
+    static void SampleTrianglePoints(const ThreePoints &triangle, float maxDistance,
+                                     PointHandlerInterface &pointHandler);
     //! Returns the index in <c>[0, 2]</c> according to modulo 3. Use only with input close to <c>[0, 2]</c>.
     static int IndexMod3(int index);
     //! Returns the index in <c>[0, 1]</c> according to modulo 2. Use only with input close to <c>[0, 1]</c>.

@@ -29,7 +29,7 @@ void GrowRegion(Triangles *triangles, unordered_set<int> *inOutRegion,
         int current = *toAdd.begin();
         toAdd.erase(current);
         inOutRegion->insert(current);
-        triangles->GetTriangleEdges(current, &edges);
+        triangles->GetTriangleEdges(current, edges);
         for (int i = 0; i < 3; ++i) {
             int edge = edges[i];
             int candidate = triangles->GetNeighbor(current, edge);

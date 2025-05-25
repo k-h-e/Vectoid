@@ -41,9 +41,9 @@ KDTree::KDTree(const shared_ptr<Points> &points)
     }
 }
 
-bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int *outNearestNeighbor) {
+bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int &outNearestNeighbor) {
     if (root_ != -1) {
-        *outNearestNeighbor = FindNearestNeighbor(queryPoint, root_);
+        outNearestNeighbor = FindNearestNeighbor(queryPoint, root_);
         return true;
     } else {
         return false;
@@ -51,8 +51,8 @@ bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int *outNeare
 }
 
 void KDTree::QuerySphereIntersection(const Vector<float> &sphereCenter, float sphereRadius,
-                                     vector<ItemIntersection> *outIntersections) {
-    outIntersections->clear();
+                                     vector<ItemIntersection> &outIntersections) {
+    outIntersections.clear();
     if (root_ != -1) {
         PerformSphereQuery(sphereCenter, sphereRadius, root_, outIntersections);
     }
@@ -64,7 +64,7 @@ bool KDTree::CheckIntegrity() {
     }
 
     unordered_set<int> points;
-    CollectPoints(root_, &points);
+    CollectPoints(root_, points);
     if (static_cast<int>(points.size()) != points_->Size()) {
         Log::Print(Log::Level::Warning, this, [&]{ return "bad number of points"; });
         return false;
@@ -117,7 +117,7 @@ int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
             candidate = FindNearestNeighbor(queryPoint, nodeInfo.leftChild);
             float candidateDistance = ((*points_)[candidate] - queryPoint).Length();
             if (IsRightSubTreeInReach(nodeInfo, queryPoint, candidateDistance)) {
-                RefineNearestNeighbor(queryPoint, nodeInfo.rightChild, &candidate, &candidateDistance);
+                RefineNearestNeighbor(queryPoint, nodeInfo.rightChild, candidate, candidateDistance);
             }
             // Note: It is okay to do either left or right here, even though points with exactly matching splitting
             //       coordinate can be in the left as well in the right subtrees, because we do a refinement search for
@@ -126,7 +126,7 @@ int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
             candidate = FindNearestNeighbor(queryPoint, nodeInfo.rightChild);
             float candidateDistance = ((*points_)[candidate] - queryPoint).Length();
             if (IsLeftSubTreeInReach(nodeInfo, queryPoint, candidateDistance)) {
-                RefineNearestNeighbor(queryPoint, nodeInfo.leftChild, &candidate, &candidateDistance);
+                RefineNearestNeighbor(queryPoint, nodeInfo.leftChild, candidate, candidateDistance);
             }
         }
 
@@ -134,31 +134,31 @@ int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
     }
 }
 
-void KDTree::RefineNearestNeighbor(const Vector<float> &queryPoint, int node, int *inOutCandidate,
-                                   float *inOutCandidateDistance) {
+void KDTree::RefineNearestNeighbor(const Vector<float> &queryPoint, int node, int &inOutCandidate,
+                                   float &inOutCandidateDistance) {
     Node &nodeInfo = nodes_[node];
     if (nodeInfo.rightChild == -1) {    // Leaf.
         float distance = ((*points_)[nodeInfo.leftChild] - queryPoint).Length();
-        if (distance < *inOutCandidateDistance) {
-            *inOutCandidate         = nodeInfo.leftChild;
-            *inOutCandidateDistance = distance;
+        if (distance < inOutCandidateDistance) {
+            inOutCandidate         = nodeInfo.leftChild;
+            inOutCandidateDistance = distance;
         }
     } else {
-        if (IsLeftSubTreeInReach(nodeInfo, queryPoint, *inOutCandidateDistance)) {
+        if (IsLeftSubTreeInReach(nodeInfo, queryPoint, inOutCandidateDistance)) {
             RefineNearestNeighbor(queryPoint, nodeInfo.leftChild, inOutCandidate, inOutCandidateDistance);
         }
-        if (IsRightSubTreeInReach(nodeInfo, queryPoint, *inOutCandidateDistance)) {
+        if (IsRightSubTreeInReach(nodeInfo, queryPoint, inOutCandidateDistance)) {
             RefineNearestNeighbor(queryPoint, nodeInfo.rightChild, inOutCandidate, inOutCandidateDistance);
         }
     }
 }
 
 void KDTree::PerformSphereQuery(const Vector<float> &sphereCenter, float sphereRadius, int node,
-                                vector<ItemIntersection> *outIntersections) {
+                                vector<ItemIntersection> &outIntersections) {
     Node &nodeInfo = nodes_[node];
     if (nodeInfo.rightChild == -1) {    // We're a leaf.
         if (((*points_)[nodeInfo.leftChild] - sphereCenter).Length() <= sphereRadius) {
-            outIntersections->push_back(ItemIntersection(nodeInfo.leftChild, (*points_)[nodeInfo.leftChild]));
+            outIntersections.push_back(ItemIntersection(nodeInfo.leftChild, (*points_)[nodeInfo.leftChild]));
         }
     } else {
         if (IsLeftSubTreeInReach(nodeInfo, sphereCenter, sphereRadius)) {
@@ -178,10 +178,10 @@ bool KDTree::IsRightSubTreeInReach(const Node &nodeInfo, const Vector<float> &qu
     return queryPoint[nodeInfo.splittingAxisIndex] + distance >= nodeInfo.splittingCoordinate;
 }
 
-void KDTree::CollectPoints(int node, unordered_set<int> *points) {
+void KDTree::CollectPoints(int node, unordered_set<int> &points) {
     Node &nodeInfo = nodes_[node];
     if (nodeInfo.rightChild == -1) {
-        points->insert(nodeInfo.leftChild);
+        points.insert(nodeInfo.leftChild);
     } else {
         CollectPoints(nodeInfo.leftChild, points);
         CollectPoints(nodeInfo.rightChild, points);
@@ -194,7 +194,7 @@ bool KDTree::CheckNode(int node) {
         return true;
     } else {
         unordered_set<int> points;
-        CollectPoints(nodeInfo.leftChild, &points);
+        CollectPoints(nodeInfo.leftChild, points);
         for (int pointIndex : points) {
             if ((*points_)[pointIndex][nodeInfo.splittingAxisIndex] > nodeInfo.splittingCoordinate) {
                 Log::Print(Log::Level::Error, this, [&]{
@@ -207,7 +207,7 @@ bool KDTree::CheckNode(int node) {
         }
 
         points.clear();
-        CollectPoints(nodeInfo.rightChild, &points);
+        CollectPoints(nodeInfo.rightChild, points);
         for (int pointIndex : points) {
             if ((*points_)[pointIndex][nodeInfo.splittingAxisIndex] < nodeInfo.splittingCoordinate) {
                 Log::Print(Log::Level::Error, this, [&]{

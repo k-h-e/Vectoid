@@ -14,6 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include <Vectoid/Core/TriangleHandlerInterface.h>
 #include <Vectoid/Core/TriangleProviderInterface.h>
 #include <Vectoid/Core/Vector.h>
 #include <Vectoid/DataSet/LineSegments.h>
@@ -22,22 +24,29 @@
 #include <Vectoid/DataSet/TwoIds.h>
 
 namespace Vectoid {
-
-namespace Core {
-    class ThreePoints;
-    class TriangleProviderInterface;
+    namespace Core {
+        class ThreePoints;
+        class TriangleProviderInterface;
+    }
+    namespace DataSet {
+        class Points;
+        class SimpleLineSegmentList;
+        class ThreeIds;
+    }
 }
 
+namespace Vectoid {
 namespace DataSet {
-
-class Points;
-class ThreeIds;
 
 //! Set of triangles in 3-space.
 /*!
  *  Also maintains connectivity information.
+ *
+ *  As a triangle handler, it just accepts and adds triangles, but ignores any stream error.
  */
-class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtual Core::TriangleProviderInterface {
+class Triangles : public virtual SupportsBoundingBoxTreeInterface,
+                  public virtual Core::TriangleProviderInterface,
+                  public virtual Core::TriangleHandlerInterface {
   public:
     Triangles();
     //! Initializes the set with the triangles from the specified provider.
@@ -45,7 +54,7 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
      *  Use <c>Core::TriangleProviderInterface::TriangleError()</c> to learn whether all triangles were copied
      *  successfully. If not, the <c>Triangles</c> object will be in sane state, yet triangles will be missing.
      */
-    Triangles(Core::TriangleProviderInterface *triangleProvider);
+    Triangles(Core::TriangleProviderInterface &triangleProvider);
     Triangles(const std::shared_ptr<Vectoid::DataSet::LineSegments> &edges);
     Triangles(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
     Triangles(const Triangles &other)            = delete;
@@ -64,26 +73,26 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
      *  <c>false</c> in case of failure. The <c>Triangles</c> object will then be in sane state, yet the triangles will
      *  only have been partially added.
      */
-    bool Add(Core::TriangleProviderInterface *triangleProvider);
+    bool Add(Core::TriangleProviderInterface &triangleProvider);
     //! Tells whether bad triangle connectivity has been detected.
     bool BadConnectivity();
     //! Retrieves the vertex data for the specified triangle.
-    void GetTriangleVertices(int triangle, Core::ThreePoints *outVertices) const;
+    void GetTriangleVertices(int triangle, Core::ThreePoints &outVertices) const;
     //! Retrieves the vertex ids for the specified triangle.
-    void GetTriangleVertexIds(int triangle, DataSet::ThreeIds *outVertexIds) const;
+    void GetTriangleVertexIds(int triangle, DataSet::ThreeIds &outVertexIds) const;
     //! Retrieves the specified triangle's edges.
-    void GetTriangleEdges(int triangle, ThreeIds *outEdges);
+    void GetTriangleEdges(int triangle, ThreeIds &outEdges);
     //! Retrieves the specified edge's vertices.
-    void GetEdgeVertices(int edge, TwoIds *outVertices);
+    void GetEdgeVertices(int edge, TwoIds &outVertices);
     //! Retrieves the specified triangle's neighbor triangle that shares the specified edge.
     /*!
      *  \return <c>-1</c> in case there is no such triangle.
      */
     int GetNeighbor(int triangle, int edge);
     //! Gets all triangles sharing the specified vertex.
-    void GetTrianglesSharingVertex(int vertex, std::unordered_set<int> *outTriangles);
+    void GetTrianglesSharingVertex(int vertex, std::unordered_set<int> &outTriangles);
     //! Gets all triangles sharing the specified vertex.
-    void GetTrianglesSharingVertex(const Core::Vector<float> &vertex, std::unordered_set<int> *outTriangles);
+    void GetTrianglesSharingVertex(const Core::Vector<float> &vertex, std::unordered_set<int> &outTriangles);
     //! Drops internal helper data structures in order to free up memory. These will automatically get re-generated when
     //! needed.
     void OptimizeForSpace();
@@ -93,16 +102,24 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
     std::shared_ptr<LineSegments> Edges();
     //! Returns the underlying <c>Points</c> object in which the triangle set stores its vertices.
     std::shared_ptr<Points> Vertices();
+    //! Attaches/de-attaches object to receive debug geometry.
+    void SetDebugGeometry(const std::shared_ptr<SimpleLineSegmentList> &debugGeometry);
 
+    // SupportsBoundingBoxTreeInterface...
     int Size() const override;
-    void GetItemBoundingBox(int item, Core::BoundingBox<float> *outBoundingBox) const override;
+    void GetItemBoundingBox(int item, Core::BoundingBox<float> &outBoundingBox) const override;
     bool ComputeLineItemIntersection(const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-                                     int item, bool *outIntersects, ItemIntersection *outIntersection) override;
+                                     int item, bool &outIntersects, ItemIntersection &outIntersection) override;
 
+    // TriangleProviderInterface...
     void PrepareToProvideTriangles() override;
     bool ProvideNextTriangle(Core::ThreePoints &outTriangle) override;
     void ProvideNormal(Core::Vector<float> &outNormal) override;
     bool TriangleError() override;
+
+    // TriangleHandlerInterface...
+    void OnTriangle(const Core::ThreePoints &triangle) override;
+    void OnStreamError(K::Core::StreamInterface::Error error) override; 
 
   private:
     struct VertexInfo {
@@ -163,7 +180,7 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
         }
     };
 
-    std::unordered_map<ThreeIds, int, ThreeIds::HashFunction> *TriangleMap();
+    std::unordered_map<ThreeIds, int, ThreeIds::HashFunction> &TriangleMap();
 
     std::shared_ptr<Vectoid::DataSet::Points>                                  vertices_;
     std::shared_ptr<LineSegments>                                              edges_;
@@ -175,6 +192,7 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface, public virtua
     bool                                                                       badConnectivity_;
     int                                                                        cursor_;
     Core::Vector<float>                                                        currentNormal_;
+    std::shared_ptr<SimpleLineSegmentList>                                     debugGeometry_;
 };
 
 }    // Namespace DataSet.

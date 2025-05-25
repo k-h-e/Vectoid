@@ -35,7 +35,7 @@ class LineTriangleIntersection {
      */
     static bool Compute(
         const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-        const Core::ThreePoints &triangle, bool *outIntersects, Core::Vector<float> *outIntersectionPoint);
+        const Core::ThreePoints &triangle, bool &outIntersects, Core::Vector<float> &outIntersectionPoint);
 };
 
 }    // Namespace Intersection.

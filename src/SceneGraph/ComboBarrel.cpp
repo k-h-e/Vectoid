@@ -48,7 +48,7 @@ ComboBarrel::ComboBarrel(const shared_ptr<Context> &context, int width, int numV
     for (int i = 0; i < 2*numVisibleOtherPerSide_ + 3; ++i) {
         float angle { static_cast<float>(i) * 180.0f / (2.0f * static_cast<float>(numVisibleOtherPerSide) + 1.0f) };
         Vector<float> hand { 0.0f, barrelRadius_, 0.0f };
-        Transform<float> { Vectoid::Core::Axis::X, angle }.ApplyTo(&hand);
+        Transform<float> { Vectoid::Core::Axis::X, angle }.ApplyTo(hand);
         yCoords_.push_back(hand.y);
         zCoords_.push_back(hand.z);
         boundingBox_.Grow(Vector<float>(-.5f * width_ * glyphWidth_, hand.y, hand.z));

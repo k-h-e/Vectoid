@@ -70,7 +70,7 @@ int TriangleTreeXY::LocateTriangle(const Vector<float> &point, int rootTriangleI
     ThreePoints vertices((*vertices_)[info.vertices.id0], (*vertices_)[info.vertices.id1],
                          (*vertices_)[info.vertices.id2]);
     bool intersects;
-    if (PointTriangleIntersectionXY::Compute(point, vertices, &intersects) && intersects) {
+    if (PointTriangleIntersectionXY::Compute(point, vertices, intersects) && intersects) {
         if (!info.HasChildren()) {
             return rootTriangleId;
         }

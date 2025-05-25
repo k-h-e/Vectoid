@@ -112,7 +112,7 @@ bool ConstrainedDelauneyTriangulationXY::WriteTriangleInputFile() {
         int segmentIndex = 0;
         for (int i = 0; i < segments_->Size(); ++i) {
             TwoIds segment;
-            segments_->GetSegmentVertices(i, &segment);
+            segments_->GetSegmentVertices(i, segment);
             std::snprintf(line, lineBufferSize, "%d %d %d\n", (segmentIndex + 1), segment.id0 + 1, segment.id1 + 1);
             writer << line;
             ++segmentIndex;
