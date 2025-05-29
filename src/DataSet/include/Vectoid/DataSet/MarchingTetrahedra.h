@@ -40,10 +40,6 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
 
     //! Extracts from the specified grid the iso-surface for the specified iso-value.
     /*!
-     *  The dimensions of the grid must be odd, so that the number of cubes in each dimension is even. Otherwise,
-     *  the extractor will not output any triangles. This is because we always combine eight neighboring cubes into a
-     *  "meta cube" in order to perform the tetrahedron subdivision.
-     * 
      *  Will not call <c>OnStreamError()</c> on the triangle handler.
      */
     void ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue,
@@ -58,24 +54,27 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
         // Default copy/move, ok.
     };
 
-    void SetUpMetaCube();
-    void GenerateTrianglesForMetaCube();
+    void SetUpCube();
+    void GenerateTrianglesForCube();
     void GenerateTrianglesForTetrahedron(int vertexIndex0, int vertexIndex1, int vertexIndex2, int vertexIndex3);
     void AddCase(unsigned int caseId, const std::vector<int> &edges);
-    void AddTetrahedra(const std::vector<int> &tetrahedra);
-    void RotateTetrahedra(Core::Axis axis, std::vector<int> &tetrahedra);
+    void AddMetaCubeTetrahedra(const std::vector<int> &tetrahedra);
+    void RotateMetaCubeTetrahedra(Core::Axis axis, std::vector<int> &tetrahedra);
+    void CollectCubeTetrahedra(int x, int y, int z, const std::vector<int> &tetrahedra);
 
     Case                           cases_[16];
     TwoIds                         edgeVertices_[6];
-    std::vector<int>               tetrahedronSubDivision_;
+    std::vector<int>               metaCubeTetrahedra_;
+    std::vector<int>               cubeTetrahedra_[2][2][2];
     const RegularScalarGrid        *grid_;
     float                          isoValue_;
     Core::TriangleHandlerInterface *triangleHandler_;
     int                            xCursor_;
     int                            yCursor_;
     int                            zCursor_;
-    Core::Vector<float>            vertices_[27];
-    float                          vertexValues_[27];
+    std::vector<int>               *cubePattern_;
+    Core::Vector<float>            vertices_[8];
+    float                          vertexValues_[8];
     int                            vertexMap_[4];
     Core::Vector<float>            edgeIntersections_[6];
 };

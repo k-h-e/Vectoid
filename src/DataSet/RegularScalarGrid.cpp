@@ -20,14 +20,16 @@ using Vectoid::Core::Vector;
 namespace Vectoid {
 namespace DataSet {
 
-RegularScalarGrid::RegularScalarGrid(int numPointsX, int numPointsY, int numPointsZ,
-                                     const BoundingBox<float> &spatialDomain)
+RegularScalarGrid::RegularScalarGrid(
+    int numPointsX, int numPointsY, int numPointsZ, const BoundingBox<float> &spatialDomain,
+    function<float(const Vector<float> &point)> sampleFunction)
         : numPointsX_{numPointsX},
           numPointsY_{numPointsY},
           numPointsZ_{numPointsZ},
           xRange_{spatialDomain.MinCorner().x, spatialDomain.MaxCorner().x},
           yRange_{spatialDomain.MinCorner().y, spatialDomain.MaxCorner().y},
-          zRange_{spatialDomain.MinCorner().z, spatialDomain.MaxCorner().z} {
+          zRange_{spatialDomain.MinCorner().z, spatialDomain.MaxCorner().z},
+          sampleFunction_{sampleFunction} {
     NumberTools::ClampMin(numPointsX_, 2);
     NumberTools::ClampMin(numPointsY_, 2);
     NumberTools::ClampMin(numPointsZ_, 2);
@@ -35,6 +37,8 @@ RegularScalarGrid::RegularScalarGrid(int numPointsX, int numPointsY, int numPoin
                        * static_cast<vector<float>::size_type>(numPointsY_)
                        * static_cast<vector<float>::size_type>(numPointsZ_),
                    0.0f);
+
+    Sample();
 }
 
 void RegularScalarGrid::GetDimensions(int &numPointsX, int &numPointsY, int &numPointsZ) const {
@@ -60,11 +64,13 @@ const float &RegularScalarGrid::Value(int gridX, int gridY, int gridZ) const {
     return const_cast<RegularScalarGrid *>(this)->Value(gridX, gridY, gridZ);
 }
 
-void RegularScalarGrid::Sample(function<float(const Vector<float> &point)> sampleFunction) {
+// ---
+
+void RegularScalarGrid::Sample() {
     for (int z = 0; z < numPointsZ_; ++z) {
         for (int y = 0; y < numPointsY_; ++y) {
             for (int x = 0; x < numPointsX_; ++x) {
-                Value(x, y, z) = sampleFunction(Point(x, y, z));
+                Value(x, y, z) = sampleFunction_(Point(x, y, z));
             } 
         }    
     }

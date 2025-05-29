@@ -25,11 +25,12 @@ namespace Core {
 namespace Vectoid {
 namespace DataSet {
 
-//! Three-dimensional regular grid holding scalars (of data type <c>float</c>). 
+//! Three-dimensional regular grid holding scalars (of data type <c>float</c>) for its data points. 
 class RegularScalarGrid : public virtual K::Core::Interface {
   public:
     RegularScalarGrid()                                          = delete;
-    RegularScalarGrid(int numPointsX, int numPointsY, int numPointsZ, const Core::BoundingBox<float> &spatialDomain);
+    RegularScalarGrid(int numPointsX, int numPointsY, int numPointsZ, const Core::BoundingBox<float> &spatialDomain,
+                      std::function<float(const Core::Vector<float> &point)> sampleFunction);
     RegularScalarGrid(const RegularScalarGrid &other)            = delete;
     RegularScalarGrid &operator=(const RegularScalarGrid &other) = delete;
     RegularScalarGrid(RegularScalarGrid &&other)                 = delete;
@@ -44,17 +45,18 @@ class RegularScalarGrid : public virtual K::Core::Interface {
     float &Value(int gridX, int gridY, int gridZ);
     //! Gives read access to the scalar value associated with the specified grid point.
     const float &Value(int gridX, int gridY, int gridZ) const;
-    //! Samples scalar data values for all grid points using the specified function.
-    void Sample(std::function<float(const Core::Vector<float> &point)> sampleFunction);
 
   private:
-    int                numPointsX_;
-    int                numPointsY_;
-    int                numPointsZ_;
-    Core::Range<float> xRange_;
-    Core::Range<float> yRange_;
-    Core::Range<float> zRange_;
-    std::vector<float> values_;
+    void Sample();
+
+    int                                                    numPointsX_;
+    int                                                    numPointsY_;
+    int                                                    numPointsZ_;
+    Core::Range<float>                                     xRange_;
+    Core::Range<float>                                     yRange_;
+    Core::Range<float>                                     zRange_;
+    std::vector<float>                                     values_;
+    std::function<float(const Core::Vector<float> &point)> sampleFunction_;
 };
 
 }    // Namespace DataSet.
