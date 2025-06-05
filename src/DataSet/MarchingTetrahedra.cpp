@@ -9,19 +9,26 @@
 #include <Vectoid/DataSet/MarchingTetrahedra.h>
 
 #include <K/Core/Log.h>
+#include <K/Core/NumberTools.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleHandlerInterface.h>
+#include <Vectoid/DataSet/LineSegments.h>
 #include <Vectoid/DataSet/RegularScalarGrid.h>
+#include <Vectoid/DataSet/ThreeIds.h>
 
 using std::isfinite;
+using std::shared_ptr;
 using std::to_string;
 using std::unordered_map;
 using std::vector;
 using K::Core::Log;
+using K::Core::NumberTools;
 using Vectoid::Core::Axis;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TriangleHandlerInterface;
+using Vectoid::Core::TwoPoints;
 using Vectoid::Core::Vector;
+using Vectoid::DataSet::ThreeIds;
 
 namespace Vectoid {
 namespace DataSet {
@@ -81,7 +88,7 @@ MarchingTetrahedra::MarchingTetrahedra()
     CollectCubeTetrahedra(1, 1, 1, { 10, 11, 13, 14, 19, 20, 22, 23 });
 }
 
-void MarchingTetrahedra::ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue,
+void MarchingTetrahedra::ExtractIsoSurface(RegularScalarGrid &grid, float isoValue,
                                            TriangleHandlerInterface &triangleHandler) {
     if (isfinite(isoValue)) {
         grid_            = &grid;
@@ -106,6 +113,37 @@ void MarchingTetrahedra::ExtractIsoSurface(const RegularScalarGrid &grid, float 
     triangleHandler_ = nullptr;
 }
 
+void MarchingTetrahedra::ExtractIsoSurface(const ThreeIds &cube, RegularScalarGrid &grid, float isoValue,
+                                           TriangleHandlerInterface &triangleHandler) {
+    if (isfinite(isoValue)) {
+        grid_            = &grid;
+        isoValue_        = isoValue;
+        triangleHandler_ = &triangleHandler;
+        
+        int numPointsX; 
+        int numPointsY; 
+        int numPointsZ;
+        grid_->GetDimensions(numPointsX, numPointsY, numPointsZ);
+
+        xCursor_ = cube.id0;
+        yCursor_ = cube.id1;
+        zCursor_ = cube.id2;
+        NumberTools::Clamp(xCursor_, 0, numPointsX - 2);
+        NumberTools::Clamp(yCursor_, 0, numPointsY - 2);
+        NumberTools::Clamp(zCursor_, 0, numPointsZ - 2);
+
+        SetUpCube();
+        GenerateTrianglesForCube();
+    }
+
+    grid_            = nullptr;
+    triangleHandler_ = nullptr;
+}
+
+void MarchingTetrahedra::SetDebugGeometry(const shared_ptr<LineSegments> &debugGeometry) {
+    debugGeometry_ = debugGeometry;
+}
+
 // ---
 
 void MarchingTetrahedra::SetUpCube() {
@@ -127,6 +165,23 @@ void MarchingTetrahedra::SetUpCube() {
     int patternSelectY { ((yCursor_ >> 1) << 1 != yCursor_) ? 1 : 0 };
     int patternSelectZ { ((zCursor_ >> 1) << 1 != zCursor_) ? 1 : 0 };
     cubePattern_ = &cubeTetrahedra_[patternSelectX][patternSelectY][patternSelectZ];
+
+    if (debugGeometry_) {
+        debugGeometry_->Add(TwoPoints{vertices_[0], vertices_[1]});
+        debugGeometry_->Add(TwoPoints{vertices_[1], vertices_[5]});
+        debugGeometry_->Add(TwoPoints{vertices_[5], vertices_[4]});
+        debugGeometry_->Add(TwoPoints{vertices_[4], vertices_[0]});
+
+        debugGeometry_->Add(TwoPoints{vertices_[2], vertices_[3]});
+        debugGeometry_->Add(TwoPoints{vertices_[3], vertices_[7]});
+        debugGeometry_->Add(TwoPoints{vertices_[7], vertices_[6]});
+        debugGeometry_->Add(TwoPoints{vertices_[6], vertices_[2]});
+
+        debugGeometry_->Add(TwoPoints{vertices_[0], vertices_[2]});
+        debugGeometry_->Add(TwoPoints{vertices_[1], vertices_[3]});
+        debugGeometry_->Add(TwoPoints{vertices_[5], vertices_[7]});
+        debugGeometry_->Add(TwoPoints{vertices_[4], vertices_[6]});
+    }
 }
 
 void MarchingTetrahedra::GenerateTrianglesForCube() {

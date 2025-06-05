@@ -20,7 +20,9 @@ namespace Vectoid {
         class TriangleHandlerInterface;
     }
     namespace DataSet {
+        class LineSegments;
         class RegularScalarGrid;
+        class ThreeIds;
     }
 }
 
@@ -38,12 +40,19 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
     MarchingTetrahedra &operator=(MarchingTetrahedra &&other)      = delete;
     ~MarchingTetrahedra()                                          = default;
 
-    //! Extracts from the specified grid the iso-surface for the specified iso-value.
+    //! Extracts from the specified cube grid the iso-surface for the specified iso-value.
     /*!
      *  Will not call <c>OnStreamError()</c> on the triangle handler.
      */
-    void ExtractIsoSurface(const RegularScalarGrid &grid, float isoValue,
+    void ExtractIsoSurface(RegularScalarGrid &grid, float isoValue, Core::TriangleHandlerInterface &triangleHandler);
+    //! Extracts from the specified cube the iso-surface for the specified iso-value.
+    /*!
+     *  Will not call <c>OnStreamError()</c> on the triangle handler.
+     */
+    void ExtractIsoSurface(const DataSet::ThreeIds &cube, RegularScalarGrid &grid, float isoValue,
                            Core::TriangleHandlerInterface &triangleHandler);
+    //! Attaches/de-attaches object to receive debug geometry.
+    void SetDebugGeometry(const std::shared_ptr<LineSegments> &debugGeometry);
 
   private:
     static constexpr unsigned int bitValues[8] { 1u, 2u, 4u, 8u, 16u, 32u, 64u, 128u }; 
@@ -66,7 +75,7 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
     TwoIds                         edgeVertices_[6];
     std::vector<int>               metaCubeTetrahedra_;
     std::vector<int>               cubeTetrahedra_[2][2][2];
-    const RegularScalarGrid        *grid_;
+    RegularScalarGrid              *grid_;
     float                          isoValue_;
     Core::TriangleHandlerInterface *triangleHandler_;
     int                            xCursor_;
@@ -77,6 +86,7 @@ class MarchingTetrahedra : public virtual K::Core::Interface {
     float                          vertexValues_[8];
     int                            vertexMap_[4];
     Core::Vector<float>            edgeIntersections_[6];
+    std::shared_ptr<LineSegments>  debugGeometry_;
 };
 
 }    // Namespace DataSet.

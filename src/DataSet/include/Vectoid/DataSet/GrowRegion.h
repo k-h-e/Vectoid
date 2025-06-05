@@ -17,7 +17,7 @@ namespace DataSet {
 class Triangles;
 
 //! Generic region growth algorithm.
-void GrowRegion(Triangles *triangles, std::unordered_set<int> *inOutRegion,
+void GrowRegion(Triangles &triangles, std::unordered_set<int> &inOutRegion,
                 std::function<bool(int currentTriangle, int candidateTriangle, int sharedEdge)> criterion);
 
 }    // Namespace DataSet.

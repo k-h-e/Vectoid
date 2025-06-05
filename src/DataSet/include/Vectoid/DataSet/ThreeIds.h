@@ -11,6 +11,7 @@
 
 #include <limits>
 #include <string>
+
 #include <Vectoid/Core/Tools.h>
 #include <Vectoid/DataSet/TwoIds.h>
 

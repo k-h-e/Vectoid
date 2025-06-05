@@ -13,50 +13,45 @@
 #include <vector>
 
 #include <K/Core/Interface.h>
-#include <Vectoid/Core/Range.h>
 #include <Vectoid/Core/Vector.h>
-
-namespace Vectoid {
-namespace Core {
-    template<typename T> class BoundingBox;
-}
-}
 
 namespace Vectoid {
 namespace DataSet {
 
-//! Three-dimensional regular grid holding scalars (of data type <c>float</c>) for its data points. 
+//! Three-dimensional regular grid holding scalars (of data type <c>float</c>) for its data points.
+/*!
+ *  Scalar values get lazily evaluated via the provided sampling function. The scalar value for any given grid point
+ *  gets evaluated only once and is then buffered for future reference. 
+ */
 class RegularScalarGrid : public virtual K::Core::Interface {
   public:
     RegularScalarGrid()                                          = delete;
-    RegularScalarGrid(int numPointsX, int numPointsY, int numPointsZ, const Core::BoundingBox<float> &spatialDomain,
+    RegularScalarGrid(const Core::Vector<float> &minCorner, const Core::Vector<float> &cellSize, int numPointsX,
+                      int numPointsY, int numPointsZ,
                       std::function<float(const Core::Vector<float> &point)> sampleFunction);
     RegularScalarGrid(const RegularScalarGrid &other)            = delete;
     RegularScalarGrid &operator=(const RegularScalarGrid &other) = delete;
     RegularScalarGrid(RegularScalarGrid &&other)                 = delete;
     RegularScalarGrid &operator=(RegularScalarGrid &&other)      = delete;
-    ~RegularScalarGrid()                                         = default;
+    ~RegularScalarGrid();
 
     //! Tells the grid's dimensions (in numbers of points >= 2).
     void GetDimensions(int &numPointsX, int &numPointsY, int &numPointsZ) const;
     //! Returns the specified grid point.
     Core::Vector<float> Point(int gridX, int gridY, int gridZ) const;
-    //! Gives access to the scalar value associated with the specified grid point.
-    float &Value(int gridX, int gridY, int gridZ);
-    //! Gives read access to the scalar value associated with the specified grid point.
-    const float &Value(int gridX, int gridY, int gridZ) const;
+    //! Returns the scalar value associated with the specified grid point.
+    float Value(int gridX, int gridY, int gridZ);
 
   private:
-    void Sample();
-
+    Core::Vector<float>                                    minCorner_;
+    Core::Vector<float>                                    cellSize_;
     int                                                    numPointsX_;
     int                                                    numPointsY_;
     int                                                    numPointsZ_;
-    Core::Range<float>                                     xRange_;
-    Core::Range<float>                                     yRange_;
-    Core::Range<float>                                     zRange_;
     std::vector<float>                                     values_;
+    std::vector<bool>                                      valuePresentFlags_;
     std::function<float(const Core::Vector<float> &point)> sampleFunction_;
+    int                                                    numPointsEvaluated_;
 };
 
 }    // Namespace DataSet.

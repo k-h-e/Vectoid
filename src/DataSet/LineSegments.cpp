@@ -31,9 +31,9 @@ LineSegments::LineSegments(const shared_ptr<Points> &vertices)
 }
 
 int LineSegments::Add(const TwoPoints &segment) {
-    auto segmentCanonical = TwoIds(vertices_->Add(segment.point0), vertices_->Add(segment.point1)).MakeCanonical();
+    auto segmentCanonical = TwoIds{vertices_->Add(segment.point0), vertices_->Add(segment.point1)}.MakeCanonical();
 
-    int  segmentId = -1;
+    int  segmentId { -1 };
     auto &segmentMap = SegmentMap();
     auto iter = segmentMap.find(segmentCanonical);
     if (iter == segmentMap.end()) {
