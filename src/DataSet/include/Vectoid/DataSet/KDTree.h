@@ -11,6 +11,7 @@
 
 #include <unordered_set>
 #include <vector>
+
 #include <Vectoid/Core/Transform.h>
 #include <Vectoid/DataSet/ItemIntersection.h>
 
@@ -33,10 +34,13 @@ class Points;
 class KDTree : public virtual K::Core::Interface {
   public:
     KDTree(const std::shared_ptr<Points> &points);
+    KDTree(const std::shared_ptr<Points> &points, const std::unordered_set<int> &pointSubSet);
+    KDTree()                               = delete;
     KDTree(const KDTree &other)            = delete;
     KDTree &operator=(const KDTree &other) = delete;
     KDTree(KDTree &&other)                 = delete;
     KDTree &operator=(KDTree &&other)      = delete;
+    ~KDTree();
 
     //! Retrieves the set point closest to the query point.
     /*!
@@ -71,6 +75,7 @@ class KDTree : public virtual K::Core::Interface {
         Node &operator=(Node &&other)      = default;
     };
 
+    void Build(std::vector<int> &indices);
     int AddSubTree(std::vector<int> &indices, int offset, int size, int depth);
     //! Part of nearest neighbor search.
     /*!

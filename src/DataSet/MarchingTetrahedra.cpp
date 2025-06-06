@@ -8,7 +8,6 @@
 
 #include <Vectoid/DataSet/MarchingTetrahedra.h>
 
-#include <K/Core/Log.h>
 #include <K/Core/NumberTools.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TriangleHandlerInterface.h>
@@ -21,7 +20,6 @@ using std::shared_ptr;
 using std::to_string;
 using std::unordered_map;
 using std::vector;
-using K::Core::Log;
 using K::Core::NumberTools;
 using Vectoid::Core::Axis;
 using Vectoid::Core::ThreePoints;
@@ -290,7 +288,6 @@ void MarchingTetrahedra::CollectCubeTetrahedra(int x, int y, int z, const vector
     }
     
     vector<int>::size_type cursor { 0u };
-    int                    num    { 0  };
     while (cursor + 3u < metaCubeTetrahedra_.size()) {
         bool collect { true };
         for (vector<int>::size_type i = 0u; i < 4u; ++i) {
@@ -300,23 +297,13 @@ void MarchingTetrahedra::CollectCubeTetrahedra(int x, int y, int z, const vector
         }
 
         if (collect) {
-            Log::Print(Log::Level::Debug, this, [&]{ return "collecting tetrahedron:"; });
             for (vector<int>::size_type i = 0u; i < 4u; ++i) {
                 cubeTetrahedra.push_back(vertexMap[metaCubeTetrahedra_[cursor + i]]);
-                Log::Print(Log::Level::Debug, this, [&]{
-                    return "" + to_string(metaCubeTetrahedra_[cursor + i]) + " -> "
-                        + to_string(vertexMap[metaCubeTetrahedra_[cursor + i]]);
-                }); 
             }
-
-             ++num;
         }
 
         cursor += 4u;
     }
-
-    Log::Print(Log::Level::Debug, this, [&]{ return "cube group (" + to_string(x) + ", " + to_string(y) + ", "
-                                                        + to_string(z) + "): num_tetrahedra=" + to_string(num); });
 }
 
 }    // Namespace Vectoid.

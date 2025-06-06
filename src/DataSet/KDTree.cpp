@@ -11,10 +11,12 @@
 #include <algorithm>
 #include <cassert>
 #include <limits>
+
 #include <K/Core/Log.h>
 #include <Vectoid/DataSet/Points.h>
 
 using std::shared_ptr;
+using std::sort;
 using std::to_string;
 using std::unordered_set;
 using std::vector;
@@ -26,19 +28,31 @@ namespace Vectoid {
 namespace DataSet {
 
 KDTree::KDTree(const shared_ptr<Points> &points)
-        : points_(points),
-          depth_(0) {
-    root_ = -1;
-    if (points_->Size()) {
-        vector<int> indices;
-        for (int i = 0; i < points_->Size(); ++i) {
-            indices.push_back(i);
-        }
-        root_ = AddSubTree(indices, 0, points_->Size(), 1);
-        Log::Print(Log::Level::Debug, this, [&]{ return "kD-tree generated, depth=" + to_string(depth_); });
-    } else {
-        Log::Print(Log::Level::Warning, this, [&]{ return "empty kD-tree!"; });
+        : points_{points},
+          root_{-1},
+          depth_{0} {
+    vector<int> indices;
+    for (int i = 0; i < points_->Size(); ++i) {
+        indices.push_back(i);
     }
+
+    Build(indices);
+}
+
+KDTree::KDTree(const shared_ptr<Points> &points, const unordered_set<int> &pointSubSet)
+        : points_{points},
+          root_{-1},
+          depth_{0} {
+    vector<int> indices;
+    for (int i : pointSubSet) {
+        indices.push_back(i);
+    }
+    
+    Build(indices);
+}
+
+KDTree::~KDTree() {
+    Log::Print(Log::Level::Warning, this, [&]{ return "dying, depth=" + to_string(depth_); });
 }
 
 bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int &outNearestNeighbor) {
@@ -80,42 +94,50 @@ bool KDTree::CheckIntegrity() {
     return true;
 }
 
+// ---
+
+void KDTree::Build(vector<int> &indices) {
+    if (!indices.empty()) {
+        root_ = AddSubTree(indices, 0, static_cast<int>(indices.size()), 1);
+    } else {
+        Log::Print(Log::Level::Warning, this, [&]{ return "empty kD-tree!"; });
+    }
+}
+
 int KDTree::AddSubTree(vector<int> &indices, int offset, int size, int depth) {
     assert(size > 0);
     if (depth > depth_) {
         depth_ = depth;
     }
 
-    int splittingAxisIndex = depth % 3;
+    int splittingAxisIndex { depth % 3 };
 
     if (size == 1) {
-        nodes_.push_back(Node(splittingAxisIndex, 0.0f, indices[offset], -1));
-    } else {
-        // size >= 2...
-        std::sort(indices.begin() + offset, indices.begin() + offset + size,
-                  [&](const int &lhs, const int &rhs) -> bool {
+        nodes_.push_back(Node{splittingAxisIndex, 0.0f, indices[offset], -1});
+    } else {    // size >= 2...
+        sort(indices.begin() + offset, indices.begin() + offset + size, [&](const int &lhs, const int &rhs) -> bool {
             return ((*points_)[lhs][splittingAxisIndex] < (*points_)[rhs][splittingAxisIndex]);
         });
 
-        int   median         = size / 2;    // Will be >= 1.
-        float splittingCoord = (*points_)[indices[offset + median]][splittingAxisIndex];
-        int   leftChild      = AddSubTree(indices, offset, median, depth + 1);
-        int   rightChild     = AddSubTree(indices, offset + median, size - median, depth + 1);
-        nodes_.push_back(Node(splittingAxisIndex, splittingCoord, leftChild, rightChild));
+        int   median         { size / 2 };    // Will be >= 1.
+        float splittingCoord { (*points_)[indices[offset + median]][splittingAxisIndex] };
+        int   leftChild      { AddSubTree(indices, offset, median, depth + 1) };
+        int   rightChild     { AddSubTree(indices, offset + median, size - median, depth + 1) };
+        nodes_.push_back(Node{splittingAxisIndex, splittingCoord, leftChild, rightChild});
     }
 
     return static_cast<int>(nodes_.size()) - 1;
 }
 
 int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
-    Node &nodeInfo = nodes_[node];
+    Node &nodeInfo { nodes_[node] };
     if (nodeInfo.rightChild == -1) {
         return nodeInfo.leftChild;    // We're a leaf.
     } else {
         int candidate;
         if (queryPoint[nodeInfo.splittingAxisIndex] < nodeInfo.splittingCoordinate) {
             candidate = FindNearestNeighbor(queryPoint, nodeInfo.leftChild);
-            float candidateDistance = ((*points_)[candidate] - queryPoint).Length();
+            float candidateDistance { ((*points_)[candidate] - queryPoint).Length() };
             if (IsRightSubTreeInReach(nodeInfo, queryPoint, candidateDistance)) {
                 RefineNearestNeighbor(queryPoint, nodeInfo.rightChild, candidate, candidateDistance);
             }
@@ -124,7 +146,7 @@ int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
             //       the other side anyways.
         } else {
             candidate = FindNearestNeighbor(queryPoint, nodeInfo.rightChild);
-            float candidateDistance = ((*points_)[candidate] - queryPoint).Length();
+            float candidateDistance { ((*points_)[candidate] - queryPoint).Length() };
             if (IsLeftSubTreeInReach(nodeInfo, queryPoint, candidateDistance)) {
                 RefineNearestNeighbor(queryPoint, nodeInfo.leftChild, candidate, candidateDistance);
             }
@@ -136,9 +158,9 @@ int KDTree::FindNearestNeighbor(const Vector<float> &queryPoint, int node) {
 
 void KDTree::RefineNearestNeighbor(const Vector<float> &queryPoint, int node, int &inOutCandidate,
                                    float &inOutCandidateDistance) {
-    Node &nodeInfo = nodes_[node];
+    Node &nodeInfo { nodes_[node] };
     if (nodeInfo.rightChild == -1) {    // Leaf.
-        float distance = ((*points_)[nodeInfo.leftChild] - queryPoint).Length();
+        float distance { ((*points_)[nodeInfo.leftChild] - queryPoint).Length() };
         if (distance < inOutCandidateDistance) {
             inOutCandidate         = nodeInfo.leftChild;
             inOutCandidateDistance = distance;
@@ -155,10 +177,10 @@ void KDTree::RefineNearestNeighbor(const Vector<float> &queryPoint, int node, in
 
 void KDTree::PerformSphereQuery(const Vector<float> &sphereCenter, float sphereRadius, int node,
                                 vector<ItemIntersection> &outIntersections) {
-    Node &nodeInfo = nodes_[node];
+    Node &nodeInfo { nodes_[node] };
     if (nodeInfo.rightChild == -1) {    // We're a leaf.
         if (((*points_)[nodeInfo.leftChild] - sphereCenter).Length() <= sphereRadius) {
-            outIntersections.push_back(ItemIntersection(nodeInfo.leftChild, (*points_)[nodeInfo.leftChild]));
+            outIntersections.push_back(ItemIntersection{nodeInfo.leftChild, (*points_)[nodeInfo.leftChild]});
         }
     } else {
         if (IsLeftSubTreeInReach(nodeInfo, sphereCenter, sphereRadius)) {
@@ -171,15 +193,15 @@ void KDTree::PerformSphereQuery(const Vector<float> &sphereCenter, float sphereR
 }
 
 bool KDTree::IsLeftSubTreeInReach(const Node &nodeInfo, const Vector<float> &queryPoint, float distance) {
-    return queryPoint[nodeInfo.splittingAxisIndex] - distance <= nodeInfo.splittingCoordinate;
+    return (queryPoint[nodeInfo.splittingAxisIndex] - distance <= nodeInfo.splittingCoordinate);
 }
 
 bool KDTree::IsRightSubTreeInReach(const Node &nodeInfo, const Vector<float> &queryPoint, float distance) {
-    return queryPoint[nodeInfo.splittingAxisIndex] + distance >= nodeInfo.splittingCoordinate;
+    return (queryPoint[nodeInfo.splittingAxisIndex] + distance >= nodeInfo.splittingCoordinate);
 }
 
 void KDTree::CollectPoints(int node, unordered_set<int> &points) {
-    Node &nodeInfo = nodes_[node];
+    Node &nodeInfo { nodes_[node] };
     if (nodeInfo.rightChild == -1) {
         points.insert(nodeInfo.leftChild);
     } else {
@@ -189,7 +211,7 @@ void KDTree::CollectPoints(int node, unordered_set<int> &points) {
 }
 
 bool KDTree::CheckNode(int node) {
-    Node &nodeInfo = nodes_[node];
+    Node &nodeInfo { nodes_[node] };
     if (nodeInfo.rightChild == -1) {
         return true;
     } else {
