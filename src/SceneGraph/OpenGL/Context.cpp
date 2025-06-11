@@ -17,14 +17,16 @@ using std::optional;
 using std::to_string;
 using K::Core::Log;
 using K::Core::StringTools;
+using Vectoid::Core::Vector;
 
 namespace Vectoid {
 namespace SceneGraph {
 namespace OpenGL {
 
-Context::Context()
-        : resources_{1} {
-    // Nop.
+Context::Context(const Vector<float> &backgroundColor)
+        : resources_{1},
+          backgroundColor_{backgroundColor} {
+    backgroundColor_.ClampComponents(0.0f, 1.0f);
 }
 
 Context::~Context() {
@@ -45,7 +47,7 @@ Context::~Context() {
 }
 
 void Context::InitializeGL() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(backgroundColor_.x, backgroundColor_.y, backgroundColor_.z, 0.0f);
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glCullFace(GL_BACK);

@@ -44,7 +44,7 @@ namespace Vectoid {
 namespace Gui {
 namespace Qt {
 
-Viewer::Viewer(QWidget *parent)
+Viewer::Viewer(QWidget *parent, const Vector<float> &backgroundColor)
         : QOpenGLWidget{parent},
           qtGLContext_{nullptr},
           width_{1},
@@ -79,7 +79,7 @@ Viewer::Viewer(QWidget *parent)
     timer_->setInterval(0);
     QObject::connect(timer_, &QTimer::timeout, this, &Viewer::OnTimer);
     
-    context_      = make_shared<SceneGraph::OpenGL::Context>();
+    context_ = make_shared<SceneGraph::OpenGL::Context>(backgroundColor);
     renderTarget_ = make_shared<class RenderTarget>(context_);
 
     touches_.push_back(&touchInfo_);

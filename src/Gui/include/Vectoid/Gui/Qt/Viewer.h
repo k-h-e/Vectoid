@@ -17,6 +17,9 @@
 #include <Vectoid/Gui/TouchInfo.h>
 
 namespace Vectoid {
+    namespace Core {
+        template<typename T> class Vector;
+    }
     namespace SceneGraph {
         class Camera;
         class PerspectiveProjection;
@@ -42,7 +45,7 @@ class Viewer : public QOpenGLWidget, public virtual K::Core::Interface {
     Q_OBJECT
 
   public:
-    Viewer(QWidget *parent);
+    Viewer(QWidget *parent, const Core::Vector<float> &backgroundColor);
     Viewer(const Viewer &other)            = delete;
     Viewer &operator=(const Viewer &other) = delete;
     Viewer(Viewer &&other)                 = delete;

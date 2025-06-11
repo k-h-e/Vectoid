@@ -12,6 +12,7 @@
 #include <optional>
 
 #include <K/Core/ReusableItems.h>
+#include <Vectoid/Core/Vector.h>
 #include <Vectoid/SceneGraph/Context.h>
 #include <Vectoid/SceneGraph/OpenGL/OpenGL.h>
 
@@ -25,7 +26,7 @@ class Context : public SceneGraph::Context {
     enum class ResourceType { Vbo,
                               Texture };
 
-    Context();
+    Context(const Core::Vector<float> &backgroundColor);
     Context(const Context &other)            = delete;
     Context &operator=(const Context &other) = delete;
     Context(Context &&other)                 = delete;
@@ -99,6 +100,7 @@ class Context : public SceneGraph::Context {
 
     K::Core::ReusableItems<ResourceInfo> resources_;
     std::vector<int>                     resourceSlotsToRemove_;
+    Core::Vector<float>                  backgroundColor_;
 };
 
 }    // Namespace OpenGL.
