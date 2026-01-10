@@ -59,7 +59,7 @@ void StlReader::PrepareToProvideTriangles() {
     
     const int headerSize = 80;
     uint8_t header[headerSize];
-    ReadItem(fileStream_.get(), &header, headerSize);
+    ReadItem(*fileStream_, &header, headerSize);
     (*fileStream_) >> numTriangles_;
     if (!fileStream_->ErrorState()) {
         numTrianglesProvided_ = 0u;
@@ -81,21 +81,21 @@ void StlReader::PrepareToProvideTriangles() {
     }
 }
 
-bool StlReader::ProvideNextTriangle(ThreePoints *outTriangle) {
+bool StlReader::ProvideNextTriangle(ThreePoints &outTriangle) {
     if (fileStream_) {
         (*fileStream_) >> normal_.x;
         (*fileStream_) >> normal_.y;
         (*fileStream_) >> normal_.z;
         for (int i = 0; i < 3; ++i) {
-            Vector<float> &point = (*outTriangle)[i];
+            Vector<float> &point = (outTriangle)[i];
             (*fileStream_) >> point.x;
             (*fileStream_) >> point.y;
             (*fileStream_) >> point.z;
         }
         uint16_t dummy;
-        ReadItem(fileStream_.get(), &dummy, 2);
+        ReadItem(*fileStream_, &dummy, 2);
         
-        if (!fileStream_->ErrorState() && normal_.Valid() && outTriangle->Valid()) {
+        if (!fileStream_->ErrorState() && normal_.Valid() && outTriangle.Valid()) {
             ++numTrianglesProvided_;
             CheckFinished();
             return true;
@@ -111,8 +111,8 @@ bool StlReader::ProvideNextTriangle(ThreePoints *outTriangle) {
     return false;
 }
 
-void StlReader::ProvideNormal(Vector<float> *outNormal) {
-    *outNormal = normal_;
+void StlReader::ProvideNormal(Vector<float> &outNormal) {
+    outNormal = normal_;
 }
 
 bool StlReader::TriangleError() {

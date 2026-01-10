@@ -90,7 +90,7 @@ void Context::UpdateCyclicUpdateCallsRequest() {
             if (*cyclicUpdateCallsRequested_) {
                 Log::Print(Log::Level::Debug, this, [&]{ return "enabling cyclic GUI updates"; });
             } else {
-                Log::Print(Log::Level::Debug, this, [&]{ return "disbling cyclic GUI updates"; });
+                Log::Print(Log::Level::Debug, this, [&]{ return "disabling cyclic GUI updates"; });
             }
             handler_->OnGuiRequestsCyclicUpdateCalls(*cyclicUpdateCallsRequested_);
         }

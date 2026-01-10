@@ -37,9 +37,10 @@ class StlReader : public virtual Core::TriangleProviderInterface {
     StlReader &operator=(StlReader &&other)      = delete;
     ~StlReader()                                 = default;
     
+    // TriangleProviderInterface...
     void PrepareToProvideTriangles() override;
-    bool ProvideNextTriangle(Core::ThreePoints *outTriangle) override;
-    void ProvideNormal(Core::Vector<float> *outNormal) override;
+    bool ProvideNextTriangle(Core::ThreePoints &outTriangle) override;
+    void ProvideNormal(Core::Vector<float> &outNormal) override;
     bool TriangleError() override;
     
   private:
