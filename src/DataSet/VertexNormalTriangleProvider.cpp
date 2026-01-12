@@ -10,12 +10,15 @@
 
 #include <chrono>
 #include <K/Core/Log.h>
+#include <Vectoid/DataSet/BoundingBoxTree.h>
 #include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/ThreeIds.h>
 
+using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::to_string;
+using std::unique_ptr;
 using std::unordered_set;
 using std::vector;
 using std::chrono::duration_cast;
@@ -42,7 +45,7 @@ bool VertexNormalTriangleProvider::Precompute() {
         Log::Print(Log::Level::Debug, this, [&]{ return "computing vertex normals..."; });
         auto startTime{steady_clock::now()};
         
-        triangles_ = make_unique<Triangles>(*triangleProvider_);
+        triangles_ = make_shared<Triangles>(*triangleProvider_);
         if (triangleProvider_->TriangleError()) {
             triangles_.reset();
             return false;
@@ -87,6 +90,14 @@ bool VertexNormalTriangleProvider::Precompute() {
     }
     
     return true;
+}
+
+unique_ptr<BoundingBoxTree> VertexNormalTriangleProvider::MakeBoundingBoxTree() {
+    unique_ptr<BoundingBoxTree> tree;
+    if (Precompute()) {
+        tree = make_unique<BoundingBoxTree>(triangles_);
+    }
+    return tree;
 }
 
 void VertexNormalTriangleProvider::PrepareToProvideTriangles() {

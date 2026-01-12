@@ -55,13 +55,14 @@ int Gui::AddScene(const shared_ptr<GuiElement> &root) {
 }
 
 void Gui::EnterScene(int scene) {
-    if ((scene >= 0) && (scene < static_cast<int>(scenes_.size()))) {
+    if ((scene >= 0) && (scene < static_cast<int>(scenes_.size())) && (scene != currentScene_)) {
         coordSys_->RemoveAllChildren();
         auto &sceneRoot = scenes_[scene];
         sceneRoot->AddSceneGraphNodes(coordSys_.get());
         currentScene_ = scene;
         Layout();
         Log::Print(Log::Level::Debug, this, [&]{ return "entered scene " + to_string(*currentScene_); });
+        context_->SignalSceneChanged(scene);
     }
 }
 

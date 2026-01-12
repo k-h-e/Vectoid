@@ -37,12 +37,17 @@ BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterfa
           comparer_(items),
           depth_(0) {
     if (items_->Size() > 0) {
+        Log::Print(Log::Level::Debug, this, [&]{
+            return "generating bounding box tree, num_items=" + to_string(items_->Size()) + " ...";
+        });
         vector<int> itemIds;
         for (int i = 0; i < items_->Size(); ++i) {
             itemIds.push_back(i);
         }
         root_ = AddSubTree(&itemIds, 0, items_->Size(), 1);
-        Log::Print(Log::Level::Debug, this, [&]{ return "bounding box tree generated, depth=" + to_string(depth_); });
+        Log::Print(Log::Level::Debug, this, [&]{
+            return "    bounding box tree generated, depth=" + to_string(depth_);
+        });
     } else {
         Log::Print(Log::Level::Warning, this, []{ return "bounding box tree undefined"; });
     }

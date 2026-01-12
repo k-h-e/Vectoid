@@ -39,6 +39,7 @@ class Context : public virtual K::Core::Interface {
     void SetLayoutRequired(bool required);
     bool LayoutRequired() const;
     void RequestRedraw();
+    void SignalSceneChanged(int scene);
     void RequestCyclicUpdateCalls(GuiElement *element, bool requested);
     void OnCyclicUpdate(float deltaTimeS);
     

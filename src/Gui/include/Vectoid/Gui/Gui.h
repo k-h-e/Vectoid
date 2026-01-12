@@ -49,6 +49,8 @@ class Gui : public virtual K::Core::Interface {
         virtual void OnGuiRequestsRedraw() = 0;
         //! Informs the handler whether or not the GUI requests cyclic update calls.
         virtual void OnGuiRequestsCyclicUpdateCalls(bool requested) = 0;
+        //! Informs the handler that the GUI has transitioned into a new scene.
+        virtual void OnSceneChanged(int scene) = 0;
     };
   
     Gui(const std::shared_ptr<SceneGraph::RenderTargetInterface> &renderTarget,

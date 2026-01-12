@@ -64,6 +64,12 @@ void Context::RequestRedraw() {
     }
 }
 
+void Context::SignalSceneChanged(int scene) {
+    if (handler_) {
+        handler_->OnSceneChanged(scene);
+    }
+}
+
 void Context::RequestCyclicUpdateCalls(GuiElement *element, bool requested) {
     if (requested) {
         elementsNeedingCyclicUpdateCalls_.insert(element);
