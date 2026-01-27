@@ -40,11 +40,15 @@ LineSegments::~LineSegments() {
 }
 
 void LineSegments::Render() {
+    glLineWidth(lineWidth_);
+    
     if (dynamicGeometryEnabled_) {
         RenderDynamic();
     } else {
         RenderVbo();
     }
+
+    glLineWidth(1.0f);
 }
 
 void LineSegments::RenderDynamic() {

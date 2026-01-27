@@ -32,8 +32,10 @@ namespace Gui {
 Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Context> &context)
         : GuiElement{context},
           handler_{nullptr},
-          touchInside_{false} {
-    int width = static_cast<int>(text.size());
+          enabled_{true},
+          touchGestureOngoing_{false},
+          active_{false} {
+    int width { static_cast<int>(text.size()) };
     NumberTools::ClampMin(width, 1);
     textConsole_ = context_->renderTarget->NewTextConsole(width, 1, glyphSize.width, glyphSize.height,
                                                           context_->glyphs);
@@ -43,11 +45,23 @@ Button::Button(const string &text, const Size &glyphSize, const shared_ptr<Conte
     coordSys_    = context_->renderTarget->NewCoordSys();
     coordSys_->AddChild(context_->renderTarget->NewGeode(textConsole_));
               
-    SetColors(false);
+    UpdateColors();
 }
 
 void Button::Register(HandlerInterface *handler) {
     handler_ = handler;
+}
+
+void Button::Enable(bool enabled) {
+    if (enabled != enabled_) {
+        touchGestureOngoing_ = false;
+        active_              = false;
+        enabled_             = enabled;
+        
+        coordSys_->SetEnabled(enabled_);
+        UpdateColors();
+        context_->RequestRedraw();
+    }
 }
 
 void Button::AddSceneGraphNodes(CoordSys *guiCoordSys) {
@@ -71,42 +85,50 @@ void Button::Layout(const Frame &frame) {
 }
 
 GuiElement *Button::TouchedElement(const TouchInfo &touch) {
-    return frame_.Contains(touch.x, touch.y) ? this : nullptr;
+    return (enabled_ && frame_.Contains(touch.x, touch.y)) ? this : nullptr;
 }
 
 void Button::OnTouchGestureBegan(const vector<const TouchInfo *> &touches) {
     (void) touches;
-    touchInside_ = true;
-    SetColors(true);
-    context_->RequestRedraw();
+    if (enabled_) {
+        touchGestureOngoing_ = true;
+        active_              = true;
+        UpdateColors();
+        context_->RequestRedraw();
+    }
 }
 
 void Button::OnTouchGestureMoved(const vector<const TouchInfo *> &touches) {
-    if (touches.size() == 1u) {
-        touchInside_ = frame_.Contains(touches[0]->x, touches[0]->y);
-        SetColors(touchInside_);
-        context_->RequestRedraw();
+    if (touchGestureOngoing_) {
+        if (touches.size() == 1u) {
+            active_ = frame_.Contains(touches[0]->x, touches[0]->y);
+            UpdateColors();
+            context_->RequestRedraw();
+        }
     }
 }
 
 void Button::OnTouchGestureEnded(const vector<const TouchInfo *> &touches) {
     (void) touches;
 
-    bool inside = touchInside_;
-    
-    touchInside_ = false;
-    SetColors(false);
-    context_->RequestRedraw();
-    
-    if (inside) {
-        if (handler_) {
-            handler_->OnButtonPressed(this);
+    if (touchGestureOngoing_) {
+        bool active { active_ };
+        
+        touchGestureOngoing_ = false;
+        active_              = false;
+        UpdateColors();
+        context_->RequestRedraw();
+        
+        if (active) {
+            if (handler_) {
+                handler_->OnButtonPressed(this);
+            }
         }
     }
 }
 
-void Button::SetColors(bool active) {
-    if (active) {
+void Button::UpdateColors() {
+    if (active_) {
         textConsole_->SetBackgroundColor(context_->selectionBackgroundColor, 1.0f);
         textConsole_->SetCustomColor(context_->selectionTextColor);
         textConsole_->SetFrameColor(.6f * context_->selectionTextColor);

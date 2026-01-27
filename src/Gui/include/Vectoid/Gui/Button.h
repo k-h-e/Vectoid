@@ -44,7 +44,13 @@ class Button : public GuiElement {
     
     //! Pass <c>nullptr</c> to unregister a potentially registered handler.
     void Register(HandlerInterface *handler);
+    //! Enabled/disables the button.
+    /*!
+     *  When disabled, the button will participate in layout, yet it will be invisible and unresponsive to touches.
+     */
+    void Enable(bool enabled);
     
+    // GuiElement...
     void AddSceneGraphNodes(SceneGraph::CoordSys *guiCoordSys) override;
     RequiredSize UpdateRequiredSizes() override;
     void Layout(const Frame &frame) override;
@@ -55,12 +61,14 @@ class Button : public GuiElement {
     
   private:
     Button(const std::string &text, const Size &glyphSize, const std::shared_ptr<Context> &context);
-    void SetColors(bool active);
+    void UpdateColors();
     
     HandlerInterface                         *handler_;
     std::shared_ptr<SceneGraph::TextConsole> textConsole_;
     std::shared_ptr<SceneGraph::CoordSys>    coordSys_;
-    bool                                     touchInside_;
+    bool                                     enabled_;
+    bool                                     touchGestureOngoing_;
+    bool                                     active_;
 };
 
 }    // Namespace Gui.

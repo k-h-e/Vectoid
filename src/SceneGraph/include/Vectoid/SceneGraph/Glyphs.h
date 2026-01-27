@@ -32,7 +32,7 @@ class Glyphs : public Node {
     virtual void BindGlyphTexture(uint8_t glyph) = 0;
     
   protected:
-    static constexpr int numGlyphs   { 78 };
+    static constexpr int numGlyphs   { 79 };
     static constexpr int glyphWidth  { 19 };
     static constexpr int glyphHeight { 34 };
 

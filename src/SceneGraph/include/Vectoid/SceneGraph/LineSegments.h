@@ -32,6 +32,7 @@ class LineSegments : public Geometry {
     LineSegments &operator=(LineSegments &&other)      = delete;
 
     void SetColor(const Core::Vector<float> &color);
+    void SetLineWidth(float width);
     void EnableDynamicGeometry(bool enabled);
 
   protected:
@@ -40,6 +41,7 @@ class LineSegments : public Geometry {
 
     std::shared_ptr<Core::LineSegmentProviderInterface> lineSegmentProvider_;
     Core::Vector<float>                                 color_;
+    float                                               lineWidth_;
     bool                                                dynamicGeometryEnabled_;
 };
 
