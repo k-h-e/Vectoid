@@ -37,10 +37,10 @@ namespace Vectoid {
 namespace DataSet {
 
 BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterface> &items)
-        : items_(items),
-          root_(-1),
-          comparer_(items),
-          depth_(0) {
+        : items_{items},
+          root_{-1},
+          comparer_{items},
+          depth_{0} {
     if (items_->Size() > 0) {
         Log::Print(Log::Level::Debug, this, [&]{
             return "generating bounding box tree, num_items=" + to_string(items_->Size()) + " ...";
@@ -49,7 +49,7 @@ BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterfa
         for (int i = 0; i < items_->Size(); ++i) {
             itemIds.push_back(i);
         }
-        root_ = AddSubTree(&itemIds, 0, items_->Size(), 1);
+        root_ = AddSubTree(itemIds, 0, items_->Size(), 1);
         Log::Print(Log::Level::Debug, this, [&]{
             return "    bounding box tree generated, num_nodes=" + to_string(nodes_.size()) + ", depth="
                 + to_string(depth_);
@@ -61,21 +61,21 @@ BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterfa
 
 BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterface> &items,
                                  BlockingInStreamInterface &stream)
-        : items_(items),
-          root_(-1),
-          comparer_(items),
-          depth_(0) {
+        : items_{items},
+          root_{-1},
+          comparer_{items},
+          depth_{0} {
     Load(stream);
 }
 
 // Private helper constructor to Clone().
 BoundingBoxTree::BoundingBoxTree(const BoundingBoxTree &other,
                                  const shared_ptr<SupportsBoundingBoxTreeInterface> &items)
-        : items_(items),
-          nodes_(other.nodes_),
-          root_(other.root_),
-          comparer_(items),
-          depth_(other.depth_) {
+        : items_{items},
+          nodes_{other.nodes_},
+          root_{other.root_},
+          comparer_{items},
+          depth_{other.depth_} {
     // Nop.
 }
 
@@ -90,7 +90,7 @@ bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, co
         return true;    // We're empty.
     } else {
         vector<int> itemsToTest;
-        if (!ComputeSubTreeLineIntersection(root_, linePoint, lineDirection, &itemsToTest)) {
+        if (!ComputeSubTreeLineIntersection(root_, linePoint, lineDirection, itemsToTest)) {
             return false;
         }
 
@@ -124,7 +124,7 @@ bool BoundingBoxTree::GetBoundingBox(BoundingBox<float> &outBox) const {
 }
 
 void BoundingBoxTree::Save(BlockingOutStreamInterface &stream) const {
-    int numNodes = static_cast<int>(nodes_.size());
+    int numNodes { static_cast<int>(nodes_.size()) };
     stream << numNodes;
     for (const Node &node : nodes_) {
         node.Serialize(stream);
@@ -136,7 +136,7 @@ void BoundingBoxTree::Save(BlockingOutStreamInterface &stream) const {
 
 // ---
 
-int BoundingBoxTree::AddSubTree(std::vector<int> *itemIds, int offset, int numItems, int depth) {
+int BoundingBoxTree::AddSubTree(vector<int> &itemIds, int offset, int numItems, int depth) {
     assert (numItems > 0);
 
     if (depth > depth_) {
@@ -146,34 +146,34 @@ int BoundingBoxTree::AddSubTree(std::vector<int> *itemIds, int offset, int numIt
     BoundingBox<float> boundingBox;
     for (int i = 0; i < numItems; ++i) {
         BoundingBox<float> itemBoundingBox;
-        items_->GetItemBoundingBox((*itemIds)[offset + i], itemBoundingBox);
+        items_->GetItemBoundingBox(itemIds[offset + i], itemBoundingBox);
         boundingBox.Grow(itemBoundingBox);
     }
 
     if (numItems == 1) {    // Leaf case.
         int node = static_cast<int>(nodes_.size());
-        nodes_.push_back(Node(boundingBox, (*itemIds)[offset], -1));
+        nodes_.push_back(Node{boundingBox, itemIds[offset], -1});
         return node;
     } else {    // numItems > 1.
         comparer_.SetComparisonAxis(boundingBox.LargestExtentAxis());
-        sort(itemIds->begin() + offset, itemIds->begin() + offset + numItems, comparer_);
-        int numLeft = numItems / 2;    // >= 1.
-        int leftChild  = AddSubTree(itemIds, offset, numLeft, depth + 1);
-        int rightChild = AddSubTree(itemIds, offset + numLeft, numItems - numLeft, depth + 1);
-        int node = static_cast<int>(nodes_.size());
-        nodes_.push_back(Node(boundingBox, leftChild, rightChild));
+        sort(itemIds.begin() + offset, itemIds.begin() + offset + numItems, comparer_);
+        int numLeft    { numItems / 2 };    // >= 1.
+        int leftChild  { AddSubTree(itemIds, offset, numLeft, depth + 1) };
+        int rightChild { AddSubTree(itemIds, offset + numLeft, numItems - numLeft, depth + 1) };
+        int node { static_cast<int>(nodes_.size()) };
+        nodes_.push_back(Node{boundingBox, leftChild, rightChild});
         return node;
     }
 }
 
 bool BoundingBoxTree::ComputeSubTreeLineIntersection(
-        int node, const Vector<float> &linePoint, const Vector<float> &lineDirection, vector<int> *outItemsToTest) {
-    Node &nodeInfo = nodes_[node];
+        int node, const Vector<float> &linePoint, const Vector<float> &lineDirection, vector<int> &outItemsToTest) {
+    Node &nodeInfo { nodes_[node] };
     bool intersects;
-    if (LineBoundingBoxIntersection::Compute(linePoint, lineDirection, nodeInfo.boundingBox, &intersects)) {
+    if (LineBoundingBoxIntersection::Compute(linePoint, lineDirection, nodeInfo.boundingBox, intersects)) {
         if (intersects) {
             if (nodeInfo.rightChild == -1) {    // Leaf case.
-                outItemsToTest->push_back(nodeInfo.leftChild);
+                outItemsToTest.push_back(nodeInfo.leftChild);
                 return true;
             } else {
                 if (ComputeSubTreeLineIntersection(nodeInfo.leftChild, linePoint, lineDirection, outItemsToTest)
@@ -191,32 +191,60 @@ bool BoundingBoxTree::ComputeSubTreeLineIntersection(
 }
 
 void BoundingBoxTree::Load(BlockingInStreamInterface &stream) {
-    bool success { true };
+    bool valid { true };
     
     int numNodes;
     stream >> numNodes;
     if (stream.StreamError()) {
-        success = false;
+        valid = false;
     } else {
-        for (int i = 0; (i < numNodes) && success; ++i) {
+        nodes_.clear();
+        for (int i = 0; (i < numNodes) && valid; ++i) {
             Node node;
-            node.Deserialize(stream);
-            if (stream.StreamError()) {
-                success = false;
+            if (!node.DeserializeAndValidate(stream)) {
+                valid = false;
             } else {
                 nodes_.push_back(node);
             }
         }
-        if (success) {
+        if (valid) {
             stream >> root_;
             stream >> depth_;
             if (stream.StreamError()) {
-                success = false;
+                valid = false;
+            } else {
+                if (root_ == -1) {
+                    if ((numNodes != 0) || (depth_ != 0)) {
+                        valid = false;
+                    }
+                } else {
+                    if (numNodes < 1) {
+                        valid = false;
+                    }
+                    for (int i = 0; (i < numNodes) && valid; ++i) {
+                        Node &node { nodes_[i] };
+                        if (node.rightChild == -1) {    // Leaf...
+                            if (node.leftChild >= items_->Size()) {
+                                valid = false;
+                            }
+                        } else {                        // Inner node...
+                            if ((node.leftChild >= numNodes) || (node.rightChild >= numNodes)) {
+                                valid = false;
+                            }
+                        }
+                    }
+                    if ((root_ < 0) || (root_ >= numNodes)) {
+                        valid = false;
+                    }
+                    if (depth_ < 1) {
+                        valid = false;
+                    }
+                }
             }
         }
     }
     
-    if (success) {
+    if (valid) {
         Log::Print(Log::Level::Debug, this, [&]{
             return "bounding box tree loaded, num_nodes=" + to_string(nodes_.size()) + ", depth="
                 + to_string(depth_); });
@@ -283,6 +311,35 @@ void BoundingBoxTree::Node::Deserialize(BlockingInStreamInterface &stream) {
     boundingBox.Deserialize(stream);
     stream >> leftChild;
     stream >> rightChild;
+}
+
+bool BoundingBoxTree::Node::DeserializeAndValidate(BlockingInStreamInterface &stream) {
+    bool valid { true };
+    
+    if (!boundingBox.DeserializeAndValidate(stream)) {
+        valid = false;
+    } else {
+        stream >> leftChild;
+        stream >> rightChild;
+        if (stream.ErrorState()) {
+            valid = false;
+        } else {
+            if (rightChild == -1) {
+                if (leftChild < 0) {
+                    valid = false;
+                }
+            } else {
+                if ((leftChild < 0) || (rightChild < 0)) {
+                    valid = false;
+                }
+            }
+        }
+    }
+    
+    if (!valid) {
+        *this = Node{};
+    }
+    return valid;
 }
 
 }    // Namespace DataSet.

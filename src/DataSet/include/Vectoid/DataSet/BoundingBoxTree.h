@@ -12,7 +12,7 @@
 #include <memory>
 #include <vector>
 
-#include <K/Core/SerializableInterface.h>
+#include <K/Core/SafelySerializableInterface.h>
 #include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Core/Transform.h>
 #include <Vectoid/DataSet/ItemIntersection.h>
@@ -28,14 +28,19 @@ class SupportsBoundingBoxTreeInterface;
  */
 class BoundingBoxTree : public virtual K::Core::Interface {
   public:
+    //! Creates a bounding box tree for the specified item collection.
     BoundingBoxTree(const std::shared_ptr<SupportsBoundingBoxTreeInterface> &items);
+    //! Restores a bounding box tree for the specified item collection by loading state data previously generated via
+    //! Save().
     BoundingBoxTree(const std::shared_ptr<SupportsBoundingBoxTreeInterface> &items,
                     K::Core::BlockingInStreamInterface &stream);
+    BoundingBoxTree()                                       = delete;
     BoundingBoxTree(const BoundingBoxTree &other)            = delete;
     BoundingBoxTree &operator=(const BoundingBoxTree &other) = delete;
     BoundingBoxTree(BoundingBoxTree &&other)                 = delete;
     BoundingBoxTree &operator=(BoundingBoxTree &&other)      = delete;
-
+    ~BoundingBoxTree()                                       = default;
+    
     //! Tells whether the tree is empty.
     bool Empty() const;
     //! Computes the intersection with the specified line.
@@ -59,7 +64,7 @@ class BoundingBoxTree : public virtual K::Core::Interface {
     void Save(K::Core::BlockingOutStreamInterface &stream) const;
 
   private:
-    struct Node : public virtual K::Core::SerializableInterface {
+    struct Node : public virtual K::Core::SafelySerializableInterface {
         Core::BoundingBox<float> boundingBox;
         int                      leftChild;     // Item ID in case of leaf.
         int                      rightChild;    // -1 in case of leaf.
@@ -67,9 +72,10 @@ class BoundingBoxTree : public virtual K::Core::Interface {
         Node(const Core::BoundingBox<float> &aBoundingBox, int aLeftChild, int aRightChild);
         Node();
         
-        // SerializableInterface...
+        // SafelySerializableInterface...
         void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
         void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
+        bool DeserializeAndValidate(K::Core::BlockingInStreamInterface &stream) override;
     };
     struct Comparer {
         std::shared_ptr<SupportsBoundingBoxTreeInterface> items;
@@ -80,10 +86,11 @@ class BoundingBoxTree : public virtual K::Core::Interface {
     };
 
     BoundingBoxTree(const BoundingBoxTree &other, const std::shared_ptr<SupportsBoundingBoxTreeInterface> &items);
-    int AddSubTree(std::vector<int> *itemIds, int offset, int numItems, int depth);
+    
+    int AddSubTree(std::vector<int> &itemIds, int offset, int numItems, int depth);
     bool ComputeSubTreeLineIntersection(
         int node, const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-        std::vector<int> *outItemsToTest);
+        std::vector<int> &outItemsToTest);
     void Load(K::Core::BlockingInStreamInterface &stream);
 
     std::shared_ptr<SupportsBoundingBoxTreeInterface> items_;

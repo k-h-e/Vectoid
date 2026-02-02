@@ -10,10 +10,10 @@
 #define VECTOID_MATH_INTERSECTION_LINEBOUNDINGBOXINTERSECTION_H_
 
 namespace Vectoid {
-namespace Core {
-    template<typename T> class BoundingBox;
-    template<typename T> class Vector;
-}
+    namespace Core {
+        template<typename T> class BoundingBox;
+        template<typename T> class Vector;
+    }
 }
 
 namespace Vectoid {
@@ -31,7 +31,7 @@ class LineBoundingBoxIntersection {
      *  \return <c>false</c> in case the computation failed. The output parameter will then be undefined.
      */
     static bool Compute(const Core::Vector<float> &linePoint, const Core::Vector<float> &lineDirection,
-                        const Core::BoundingBox<float> &boundingBox, bool *outIntersects);
+                        const Core::BoundingBox<float> &boundingBox, bool &outIntersects);
 };
 
 }    // Namespace Intersection.

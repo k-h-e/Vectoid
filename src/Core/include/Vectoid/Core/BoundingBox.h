@@ -20,7 +20,7 @@ template<typename T> class Vector;
 
 //! Bounding box in 3-space.
 template<typename T>
-class BoundingBox : public virtual K::Core::SerializableInterface  {
+class BoundingBox : public virtual K::Core::SafelySerializableInterface  {
   public:
     //! Creates an undefined bounding box.
     /*!
@@ -119,6 +119,22 @@ class BoundingBox : public virtual K::Core::SerializableInterface  {
         xRange_.Deserialize(stream);
         yRange_.Deserialize(stream);
         zRange_.Deserialize(stream);
+    }
+    
+    bool DeserializeAndValidate(K::Core::BlockingInStreamInterface &stream) override {
+        bool valid { true };
+        
+        if (!xRange_.DeserializeAndValidate(stream)) {
+            valid = false;
+        }
+        if (!yRange_.DeserializeAndValidate(stream)) {
+            valid = false;
+        }
+        if (!zRange_.DeserializeAndValidate(stream)) {
+            valid = false;
+        }
+        
+        return valid;
     }
     
   private:

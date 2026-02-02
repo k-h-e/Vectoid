@@ -11,15 +11,16 @@
 
 #include <string>
 
+#include <K/Core/BlockingInStreamInterface.h>
 #include <K/Core/NumberTools.h>
-#include <K/Core/SerializableInterface.h>
+#include <K/Core/SafelySerializableInterface.h>
 
 namespace Vectoid {
 namespace Core {
 
 //! Range (closed interval) of real numbers.
 template<typename T>
-class Range : public virtual K::Core::SerializableInterface {
+class Range : public virtual K::Core::SafelySerializableInterface {
   public:
     //! Creates an undefined range.
     /*!
@@ -78,9 +79,10 @@ class Range : public virtual K::Core::SerializableInterface {
     //! Returns a human-readable description of the current range state.
     std::string ToString() const;
     
-    // SerializableInterface...
+    // SafelySerializableInterface...
     void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
     void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
+    bool DeserializeAndValidate(K::Core::BlockingInStreamInterface &stream) override;
     
   private:
     T    min_;
@@ -117,10 +119,16 @@ Range<T>::Range(T number, T anotherNumber)
 }
 
 template<typename T>
-Range<T>::Range(const Range<T> &other, T offset)
-        : undefined_(false) {
-    min_ = other.min_ + offset;
-    max_ = other.max_ + offset;
+Range<T>::Range(const Range<T> &other, T offset) {
+    if (other.undefined_) {
+        min_       = 0.0f;
+        max_       = 0.0f;
+        undefined_ = true;
+    } else {
+        min_ = other.min_ + offset;
+        max_ = other.max_ + offset;
+        undefined_ = false;
+    }
 }
 
 template<typename T>
@@ -268,6 +276,37 @@ void Range<T>::Deserialize(K::Core::BlockingInStreamInterface &stream) {
     stream >> min_;
     stream >> max_;
     stream >> undefined_;
+}
+
+template<typename T>
+bool Range<T>::DeserializeAndValidate(K::Core::BlockingInStreamInterface &stream) {
+    bool valid { true };
+    
+    Range<T>::Deserialize(stream);
+    if (stream.ErrorState()) {
+        valid = false;
+    } else {
+        if (!std::isfinite(min_) || !std::isfinite(max_)) {
+            valid = false;
+        } else {
+            if (undefined_) {
+                if ((min_ != static_cast<T>(0.0f)) || (max_ != static_cast<T>(0.0f))) {
+                    valid = false;
+                }
+            } else {
+                if (min_ > max_) {
+                    valid = false;
+                }
+            }
+        }
+    }
+    
+    if (!valid) {
+        min_       = 0.0f;
+        max_       = 0.0f;
+        undefined_ = true;
+    }
+    return valid;
 }
 
 }    // Namespace Core.
