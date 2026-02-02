@@ -29,7 +29,7 @@ class StlReader : public virtual Core::TriangleProviderInterface {
     //! Constructs a reader for the specified STL file.
     StlReader(const K::IO::Path &fileName);
     //! Constructs a reader for the STL file content embedded as the specified subregion in the specified file.
-    StlReader(const K::IO::Path &fileName, uint64_t offset, uint64_t size);
+    StlReader(const K::IO::Path &fileName, int64_t offset, int64_t size);
     StlReader()                                  = delete;
     StlReader(const StlReader &other)            = delete;
     StlReader &operator=(const StlReader &other) = delete;
@@ -48,8 +48,8 @@ class StlReader : public virtual Core::TriangleProviderInterface {
     
     K::IO::Path                                                 fileName_;
     bool                                                        useSubFile_;
-    uint64_t                                                    subFileOffset_;    // Unchecked, validated by SubStream.
-    uint64_t                                                    subFileSize_;      // Unchecked, validated by SubStream.
+    int64_t                                                     subFileOffset_;    // Unchecked, validated by SubStream.
+    int64_t                                                     subFileSize_;      // Unchecked, validated by SubStream.
     std::shared_ptr<K::Core::SeekableBlockingInStreamInterface> fileStream_;              // Present <=> readout active.
     bool                                                        error_;
     uint32_t                                                    numTriangles_;            // Valid <=> reader present.

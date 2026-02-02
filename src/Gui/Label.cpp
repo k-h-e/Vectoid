@@ -19,6 +19,8 @@
 using std::shared_ptr;
 using std::string;
 using std::vector;
+
+using K::Core::NumberTools;
 using K::Core::StringTools;
 using Vectoid::Core::Vector;
 using Vectoid::SceneGraph::CoordSys;

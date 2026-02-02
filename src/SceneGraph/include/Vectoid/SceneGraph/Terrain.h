@@ -67,12 +67,12 @@ class Terrain : public virtual K::Core::Interface {
 };
 
 float Terrain::Height(float x, float z) {
-    mapParameters_->xRange.ClampModulo(&x);
-    mapParameters_->zRange.ClampModulo(&z);
+    mapParameters_->xRange.ClampModulo(x);
+    mapParameters_->zRange.ClampModulo(z);
     int   cellX, cellZ;
     float remainderX, remainderZ;    
-    mapParameters_->xRange.ComputeSlotUnchecked(x, mapParameters_->cellSize, &cellX, &remainderX);
-    mapParameters_->zRange.ComputeSlotUnchecked(z, mapParameters_->cellSize, &cellZ, &remainderZ);
+    mapParameters_->xRange.ComputeSlotUnchecked(x, mapParameters_->cellSize, cellX, remainderX);
+    mapParameters_->zRange.ComputeSlotUnchecked(z, mapParameters_->cellSize, cellZ, remainderZ);
     K::Core::IntModN cellXModN(mapParameters_->numCellsX, 0);
     cellXModN.SetValue(cellX);
     K::Core::IntModN cellZModN(mapParameters_->numCellsZ, 0);

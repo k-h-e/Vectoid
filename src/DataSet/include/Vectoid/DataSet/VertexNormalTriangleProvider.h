@@ -15,12 +15,6 @@
 #include <Vectoid/DataSet/Triangles.h>
 
 namespace Vectoid {
-    namespace DataSet {
-        class BoundingBoxTree;
-    }
-}
-
-namespace Vectoid {
 namespace DataSet {
 
 //! Extended triangle provider adding vertex normals to a regular triangle provider.
@@ -35,18 +29,12 @@ class VertexNormalTriangleProvider : public virtual Core::ExtendedTriangleProvid
     ~VertexNormalTriangleProvider()                                                    = default;
 
     bool Precompute();
-    //! Creates and returns a bounding box tree for the encapsuled buffered triangles set.
-    /*!
-     *  Implicitly performs precomputation.
-     *
-     *  \return <c>nullptr</c> in case of failure.
-     */
-    std::unique_ptr<BoundingBoxTree> MakeBoundingBoxTree();
 
+    // ExtendedTriangleProviderInterface...
     void PrepareToProvideTriangles() override;
     bool ProvideNextTriangle(Core::ThreePoints &outTriangle) override;
     void ProvideNormal(Core::Vector<float> &outNormal) override;
-    void ProvideVertexNormals(Core::ThreePoints *outVertexNormals) override;
+    void ProvideVertexNormals(Core::ThreePoints &outVertexNormals) override;
     bool TriangleError() override;
 
   private:

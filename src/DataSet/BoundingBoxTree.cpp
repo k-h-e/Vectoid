@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <cassert>
 #include <vector>
+
+#include <K/Core/BlockingOutStreamInterface.h>
 #include <K/Core/Log.h>
 #include <Vectoid/Core/BoundingBox.h>
 #include <Vectoid/Math/Intersection/LineBoundingBoxIntersection.h>
@@ -21,6 +23,9 @@ using std::sort;
 using std::to_string;
 using std::unique_ptr;
 using std::vector;
+
+using K::Core::BlockingInStreamInterface;
+using K::Core::BlockingOutStreamInterface;
 using K::Core::Log;
 using Vectoid::Core::Axis;
 using Vectoid::Core::BoundingBox;
@@ -46,11 +51,21 @@ BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterfa
         }
         root_ = AddSubTree(&itemIds, 0, items_->Size(), 1);
         Log::Print(Log::Level::Debug, this, [&]{
-            return "    bounding box tree generated, depth=" + to_string(depth_);
+            return "    bounding box tree generated, num_nodes=" + to_string(nodes_.size()) + ", depth="
+                + to_string(depth_);
         });
     } else {
-        Log::Print(Log::Level::Warning, this, []{ return "bounding box tree undefined"; });
+        Log::Print(Log::Level::Warning, this, []{ return "bounding box tree empty"; });
     }
+}
+
+BoundingBoxTree::BoundingBoxTree(const shared_ptr<SupportsBoundingBoxTreeInterface> &items,
+                                 BlockingInStreamInterface &stream)
+        : items_(items),
+          root_(-1),
+          comparer_(items),
+          depth_(0) {
+    Load(stream);
 }
 
 // Private helper constructor to Clone().
@@ -62,6 +77,10 @@ BoundingBoxTree::BoundingBoxTree(const BoundingBoxTree &other,
           comparer_(items),
           depth_(other.depth_) {
     // Nop.
+}
+
+bool BoundingBoxTree::Empty() const {
+    return (root_ == -1);
 }
 
 bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, const Vector<float> &lineDirection,
@@ -93,6 +112,29 @@ bool BoundingBoxTree::ComputeLineIntersection(const Vector<float> &linePoint, co
 unique_ptr<BoundingBoxTree> BoundingBoxTree::Clone(const shared_ptr<SupportsBoundingBoxTreeInterface> &clonedItems) {
     return unique_ptr<BoundingBoxTree>(new BoundingBoxTree(*this, clonedItems));
 }
+
+bool BoundingBoxTree::GetBoundingBox(BoundingBox<float> &outBox) const {
+    if (root_ != -1) {
+        outBox = nodes_[root_].boundingBox;
+        return true;
+    } else {
+        outBox = BoundingBox<float>();
+        return false;
+    }
+}
+
+void BoundingBoxTree::Save(BlockingOutStreamInterface &stream) const {
+    int numNodes = static_cast<int>(nodes_.size());
+    stream << numNodes;
+    for (const Node &node : nodes_) {
+        node.Serialize(stream);
+    }
+    
+    stream << root_;
+    stream << depth_;
+}
+
+// ---
 
 int BoundingBoxTree::AddSubTree(std::vector<int> *itemIds, int offset, int numItems, int depth) {
     assert (numItems > 0);
@@ -148,6 +190,46 @@ bool BoundingBoxTree::ComputeSubTreeLineIntersection(
     return false;
 }
 
+void BoundingBoxTree::Load(BlockingInStreamInterface &stream) {
+    bool success { true };
+    
+    int numNodes;
+    stream >> numNodes;
+    if (stream.StreamError()) {
+        success = false;
+    } else {
+        for (int i = 0; (i < numNodes) && success; ++i) {
+            Node node;
+            node.Deserialize(stream);
+            if (stream.StreamError()) {
+                success = false;
+            } else {
+                nodes_.push_back(node);
+            }
+        }
+        if (success) {
+            stream >> root_;
+            stream >> depth_;
+            if (stream.StreamError()) {
+                success = false;
+            }
+        }
+    }
+    
+    if (success) {
+        Log::Print(Log::Level::Debug, this, [&]{
+            return "bounding box tree loaded, num_nodes=" + to_string(nodes_.size()) + ", depth="
+                + to_string(depth_); });
+    } else {
+        nodes_.clear();
+        root_  = -1;
+        depth_ = 0;
+        Log::Print(Log::Level::Warning, this, [&]{ return "failed to load bounding box tree!"; });
+    }
+}
+
+// ---
+
 BoundingBoxTree::Comparer::Comparer(const shared_ptr<SupportsBoundingBoxTreeInterface> &someItems)
         : items(someItems),
           comparisonAxis(Axis::X) {
@@ -174,6 +256,33 @@ bool BoundingBoxTree::Comparer::operator()(int left, int right) {
         default:
             return (leftCenter.x < rightCenter.x);
     }
+}
+
+// ---
+
+BoundingBoxTree::Node::Node(const BoundingBox<float> &aBoundingBox, int aLeftChild, int aRightChild)
+        : boundingBox(aBoundingBox),
+          leftChild(aLeftChild),
+          rightChild(aRightChild) {
+    // Nop.
+}
+
+BoundingBoxTree::Node::Node()
+        : leftChild(0),
+          rightChild(-1) {
+    // Nop.
+}
+
+void BoundingBoxTree::Node::Serialize(BlockingOutStreamInterface &stream) const {
+    boundingBox.Serialize(stream);
+    stream << leftChild;
+    stream << rightChild;
+}
+
+void BoundingBoxTree::Node::Deserialize(BlockingInStreamInterface &stream) {
+    boundingBox.Deserialize(stream);
+    stream >> leftChild;
+    stream >> rightChild;
 }
 
 }    // Namespace DataSet.

@@ -65,8 +65,8 @@ struct MapParameters {
 
 void MapParameters::CorrectForObserver(Vectoid::Core::Vector<float> *inOutPosition,
                                        const Vectoid::Core::Vector<float> &observerPosition) const {
-    xRange.CorrectForObserver(&inOutPosition->x, observerPosition.x);
-    zRange.CorrectForObserver(&inOutPosition->z, observerPosition.z);
+    xRange.CorrectForObserver(inOutPosition->x, observerPosition.x);
+    zRange.CorrectForObserver(inOutPosition->z, observerPosition.z);
 }
 
 }    // Namespace SceneGraph.

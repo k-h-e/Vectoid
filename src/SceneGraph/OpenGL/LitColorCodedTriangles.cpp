@@ -152,7 +152,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateGouraudVbo() {
     gouraudTriangleProvider_->PrepareToProvideTriangles();
     while (gouraudTriangleProvider_->ProvideNextTriangle(triangle)) {
         ++numTriangles;
-        gouraudTriangleProvider_->ProvideVertexNormals(&vertexNormals);
+        gouraudTriangleProvider_->ProvideVertexNormals(vertexNormals);
         for (int i = 0; i < 3; ++i) {
             const Vector<float> &vertex = triangle[i];
             data.push_back(vertex.x);

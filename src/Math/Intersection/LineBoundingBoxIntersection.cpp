@@ -11,6 +11,8 @@
 #include <Vectoid/Core/BoundingBox.h>
 
 using std::numeric_limits;
+
+using K::Core::NumberTools;
 using Vectoid::Core::Vector;
 using Vectoid::Core::BoundingBox;
 

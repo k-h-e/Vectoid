@@ -10,18 +10,16 @@
 #define VECTOID_CORE_RANGE_H_
 
 #include <string>
-#include <K/Core/NumberTools.h>
 
-using std::string;
-using std::to_string;
-using K::Core::NumberTools;
+#include <K/Core/NumberTools.h>
+#include <K/Core/SerializableInterface.h>
 
 namespace Vectoid {
 namespace Core {
 
 //! Range (closed interval) of real numbers.
 template<typename T>
-class Range {
+class Range : public virtual K::Core::SerializableInterface {
   public:
     //! Creates an undefined range.
     /*!
@@ -41,9 +39,9 @@ class Range {
     //! Tells whether the range is (still) undefined.
     bool Undefined() const { return undefined_; }
     //! Returns the range's minimum.
-    T Min() const { return undefined_ ? (T)0.0 : min_; }
+    T Min() const { return undefined_ ? static_cast<T>(0.0) : min_; }
     //! Returns the range's maximum.
-    T Max() const { return undefined_ ? (T)0.0 : max_; }
+    T Max() const { return undefined_ ? static_cast<T>(0.0) : max_; }
     //! Grows the range (if necessary) so that it includes the specified number.
     void Grow(T number);
     //! Expands the range at each side by the specified value.
@@ -53,7 +51,7 @@ class Range {
     //! Tells wether the range contains the specified number.
     bool Contains(T number) const;
     //! Clamps the specified number to the range.
-    void Clamp(T *number) const;
+    void Clamp(T &number) const;
     //! Considers <c>[min, max)</c> as a range where modulo-like arithmetic is done upon, and sets the specified number
     //! <c>n</c> - potentially lying outside that range - to the representative <c>n'</c> of its equivalence class, with
     //! <c>n'</c> in <c>[min, max)</c>. Note that the range instance represents <c>[min, max]</c> (as opposed to
@@ -62,14 +60,14 @@ class Range {
      *  Due to its optimization, the method only works efficiently if the specified number does not lie farther ouside
      *  the range than <c>max - min</c>.
      */
-    void ClampModulo(T *number) const;
+    void ClampModulo(T &number) const;
     //! Interprets both numbers as "modulo-clamped" (see ClampModulo() ), and puts the specified number "on the right"
     //! side of the specified observer with respect to the shorter distance, potentially making the number leave the
     //! range <c>[min, max]</c>.
-    void CorrectForObserver(T *inOutNumber, T observer) const;
+    void CorrectForObserver(T &inOutNumber, T observer) const;
     //! If the range were subdivided into slots of the specified size, the method returns the slot the specified number
     //! would be in, including the resulting remainder. This method does no bounds checking whatsoever.
-    void ComputeSlotUnchecked(T number, T slotSize, int *outSlot, T *outRemainder) const;
+    void ComputeSlotUnchecked(T number, T slotSize, int &outSlot, T &outRemainder) const;
     //! Computes the affine combination of the two range delimiters using the given coefficient <c>t</c> (and
     //! <c>(1 - t)</c>).
     T AffineCombination(T t) const;
@@ -79,6 +77,10 @@ class Range {
     T Extent() const;
     //! Returns a human-readable description of the current range state.
     std::string ToString() const;
+    
+    // SerializableInterface...
+    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
+    void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
     
   private:
     T    min_;
@@ -108,8 +110,7 @@ Range<T>::Range(T number, T anotherNumber)
     if (number < anotherNumber) {
         min_ = number;
         max_ = anotherNumber;
-    }
-    else {
+    } else {
         min_ = anotherNumber;
         max_ = number;
     }
@@ -128,12 +129,10 @@ void Range<T>::Grow(T number) {
         min_       = number;
         max_       = number;
         undefined_ = false;
-    }
-    else {
+    } else {
         if (number < min_) {
             min_ = number;
-        }
-        else if (number > max_) {
+        } else if (number > max_) {
             max_ = number;
         }
     }
@@ -142,9 +141,9 @@ void Range<T>::Grow(T number) {
 template<typename T>
 void Range<T>::Expand(T value) {
     if (!undefined_) {
-        T center        = Center();
-        T newHalfExtent = (T)0.5*Extent() + value;
-        NumberTools::ClampMin(newHalfExtent, (T)0.0f);
+        T center        { Center() };
+        T newHalfExtent { static_cast<T>(0.5)*Extent() + value };
+        K::Core::NumberTools::ClampMin(newHalfExtent, static_cast<T>(0.0f));
         min_ = center - newHalfExtent;
         max_ = center + newHalfExtent;
     }
@@ -152,10 +151,10 @@ void Range<T>::Expand(T value) {
 
 template<typename T>
 void Range<T>::Scale(T scalingFactor) {
-    assert(scalingFactor > (T)0.0);
+    assert(scalingFactor > static_cast<T>(0.0));
     if (!undefined_) {
-        T center        = Center();
-        T newHalfExtent = scalingFactor * (T)0.5 * Extent();
+        T center        { Center() };
+        T newHalfExtent { scalingFactor * static_cast<T>(0.5) * Extent() };
         min_ = center - newHalfExtent;
         max_ = center + newHalfExtent;
     }
@@ -167,97 +166,108 @@ bool Range<T>::Contains(T number) const {
 }
 
 template<typename T>
-void Range<T>::Clamp(T *number) const {
+void Range<T>::Clamp(T &number) const {
     if (!undefined_) {
-        if (*number < min_) {
-            *number = min_;
-        }
-        else if (*number > max_) {
-            *number = max_;
+        if (number < min_) {
+            number = min_;
+        } else if (number > max_) {
+            number = max_;
         }
     }
 }
 
 template<typename T>
-void Range<T>::ClampModulo(T *number) const {
+void Range<T>::ClampModulo(T &number) const {
     if (!undefined_) {
-        if (*number < min_) {
+        if (number < min_) {
             if (min_ == max_) {
-                *number = min_;
+                number = min_;
                 return;
             }
-            T delta = max_ - min_;
+            T delta { max_ - min_ };
             do {
-                *number += delta;
-            } while (*number < min_);
-            if (*number >= max_) {
-                *number = min_;
+                number += delta;
+            } while (number < min_);
+            if (number >= max_) {
+                number = min_;
             }
-        }
-        else if (*number >= max_) {
+        } else if (number >= max_) {
             if (min_ == max_) {
-                *number = min_;
+                number = min_;
                 return;
             }
-            T delta = max_ - min_;
+            T delta { max_ - min_ };
             do {
-                *number -= delta;
-            } while (*number >= max_);
-            if (*number < min_) {
-                *number = min_;
+                number -= delta;
+            } while (number >= max_);
+            if (number < min_) {
+                number = min_;
             }
         }
     }
 }
 
 template<typename T>
-void Range<T>::CorrectForObserver(T *inOutNumber, T observer) const {
+void Range<T>::CorrectForObserver(T &inOutNumber, T observer) const {
     if (!undefined_) {
-        T range = max_ - min_;
-        T delta = *inOutNumber - observer;
+        T range { max_ - min_ };
+        T delta { inOutNumber - observer };
         if (delta >= 0.0f) {
             if (delta > range/2.0f) {
                 delta -= range;
             }
-        }
-        else {
+        } else {
             if (delta < -range/2.0f) {
                 delta += range;
             }
         }
-        *inOutNumber = observer + delta;
+        inOutNumber = observer + delta;
     }
 }
 
 template<typename T>
-void Range<T>::ComputeSlotUnchecked(T number, T slotSize, int *outSlot, T *outRemainder) const {
+void Range<T>::ComputeSlotUnchecked(T number, T slotSize, int &outSlot, T &outRemainder) const {
     if (!undefined_) {
-        *outSlot      = (number - min_) / slotSize;
-        *outRemainder = number - (min_ + (T)*outSlot * slotSize);
+        outSlot      = (number - min_) / slotSize;
+        outRemainder = number - (min_ + static_cast<T>(outSlot) * slotSize);
     } else {
-        *outSlot      = (T)0.0;
-        *outRemainder = (T)0.0;
+        outSlot      = static_cast<T>(0.0);
+        outRemainder = static_cast<T>(0.0);
     }
 }
 
 template<typename T>
 T Range<T>::AffineCombination(T t) const {
-    return undefined_ ? (T)0.0 : (1.0f - t)*min_ + t*max_;
+    return undefined_ ? static_cast<T>(0.0) : (1.0f - t)*min_ + t*max_;
 }
 
 template<typename T>
 T Range<T>::Center() const {
-    return undefined_ ? (T)0.0 : (T).5*min_ + (T).5*max_;
+    return undefined_ ? static_cast<T>(0.0) : static_cast<T>(.5)*min_ + static_cast<T>(.5)*max_;
 }
 
 template<typename T>
 T Range<T>::Extent() const {
-    return undefined_ ? (T)0.0 : max_ - min_;
+    return undefined_ ? static_cast<T>(0.0) : max_ - min_;
 }
 
 template<typename T>
-string Range<T>::ToString() const {
-    return undefined_ ? "(?, ?)" : string("(") + to_string(min_) + ", " + to_string(max_) + ")";
+std::string Range<T>::ToString() const {
+    return undefined_ ? "(?, ?)" : std::string("(") + std::to_string(min_) + ", " + std::to_string(max_) + ")";
+}
+
+template<typename T>
+void Range<T>::Serialize(K::Core::BlockingOutStreamInterface &stream) const {
+    stream << min_;
+    stream << max_;
+    stream << undefined_;
+}
+
+template<typename T>
+void Range<T>::Deserialize(K::Core::BlockingInStreamInterface &stream) {
+    stream >> min_;
+    stream >> max_;
+    stream >> undefined_;
 }
 
 }    // Namespace Core.

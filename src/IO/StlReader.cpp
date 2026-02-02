@@ -39,7 +39,7 @@ StlReader::StlReader(const Path &fileName)
     // Nop.
 }
 
-StlReader::StlReader(const Path &fileName, uint64_t offset, uint64_t size)
+StlReader::StlReader(const Path &fileName, int64_t offset, int64_t size)
         : fileName_{fileName},
           useSubFile_{true},
           subFileOffset_{offset},

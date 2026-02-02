@@ -18,7 +18,7 @@ namespace Core {
 class ExtendedTriangleProviderInterface : public virtual TriangleProviderInterface {
   public:
     //! Provides the vertex normals for the current triangle.
-    virtual void ProvideVertexNormals(ThreePoints *outVertexNormals) = 0;
+    virtual void ProvideVertexNormals(ThreePoints &outVertexNormals) = 0;
 };
 
 }    // Namespace Core.

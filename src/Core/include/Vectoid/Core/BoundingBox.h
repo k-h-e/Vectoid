@@ -20,7 +20,7 @@ template<typename T> class Vector;
 
 //! Bounding box in 3-space.
 template<typename T>
-class BoundingBox {
+class BoundingBox : public virtual K::Core::SerializableInterface  {
   public:
     //! Creates an undefined bounding box.
     /*!
@@ -76,6 +76,14 @@ class BoundingBox {
     bool Contains(const Vector<T> &point) const {
         return xRange_.Contains(point.x) && yRange_.Contains(point.y) && zRange_.Contains(point.z);
     }
+    
+    //! Clamps the specified point to the bounding box.
+    void Clamp(Vector<T> &point) const {
+        xRange_.Clamp(point.x);
+        yRange_.Clamp(point.y);
+        zRange_.Clamp(point.z);
+    }
+    
     //! Returns the bounding box's center.
     Vector<T> Center() const {
         return Vector<T>(xRange_.Center(), yRange_.Center(), zRange_.Center());
@@ -99,6 +107,18 @@ class BoundingBox {
         }
 
         return axis;
+    }
+    
+    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override {
+        xRange_.Serialize(stream);
+        yRange_.Serialize(stream);
+        zRange_.Serialize(stream);
+    }
+    
+    void Deserialize(K::Core::BlockingInStreamInterface &stream) override {
+        xRange_.Deserialize(stream);
+        yRange_.Deserialize(stream);
+        zRange_.Deserialize(stream);
     }
     
   private:

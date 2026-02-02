@@ -10,7 +10,6 @@
 
 #include <chrono>
 #include <K/Core/Log.h>
-#include <Vectoid/DataSet/BoundingBoxTree.h>
 #include <Vectoid/DataSet/Points.h>
 #include <Vectoid/DataSet/ThreeIds.h>
 
@@ -92,14 +91,6 @@ bool VertexNormalTriangleProvider::Precompute() {
     return true;
 }
 
-unique_ptr<BoundingBoxTree> VertexNormalTriangleProvider::MakeBoundingBoxTree() {
-    unique_ptr<BoundingBoxTree> tree;
-    if (Precompute()) {
-        tree = make_unique<BoundingBoxTree>(triangles_);
-    }
-    return tree;
-}
-
 void VertexNormalTriangleProvider::PrepareToProvideTriangles() {
     currentTriangle_ = 0;
     error_           = !Precompute();
@@ -134,9 +125,9 @@ void VertexNormalTriangleProvider::ProvideNormal(Vector<float> &outNormal) {
     }
 }
 
-void VertexNormalTriangleProvider::ProvideVertexNormals(ThreePoints *outVertexNormals) {
+void VertexNormalTriangleProvider::ProvideVertexNormals(ThreePoints &outVertexNormals) {
     if (!error_) {
-        *outVertexNormals = currentTriangleVertexNormals_;
+        outVertexNormals = currentTriangleVertexNormals_;
     }
 }
 
