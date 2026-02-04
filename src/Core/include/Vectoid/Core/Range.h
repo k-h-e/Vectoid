@@ -12,6 +12,7 @@
 #include <string>
 
 #include <K/Core/BlockingInStreamInterface.h>
+#include <K/Core/BlockingOutStreamInterface.h>
 #include <K/Core/NumberTools.h>
 #include <K/Core/SafelySerializableInterface.h>
 
