@@ -38,7 +38,7 @@ TransparentTriangles::TransparentTriangles(const shared_ptr<class Context> &cont
 }
 
 TransparentTriangles::~TransparentTriangles() {
-    Context()->RemoveResourceSlot(vboSlot_);
+    GetContext()->RemoveResourceSlot(vboSlot_);
 }
 
 void TransparentTriangles::Render() {
@@ -64,7 +64,7 @@ void TransparentTriangles::Render() {
 }
 
 optional<GLuint> TransparentTriangles::GenerateVbo() {
-    optional<GLuint> vbo = Context()->GetResource(vboSlot_);
+    optional<GLuint> vbo = GetContext()->GetResource(vboSlot_);
     if (!vbo) {
         vector<GLfloat> data;
         int             numTriangles = 0;
@@ -90,7 +90,7 @@ optional<GLuint> TransparentTriangles::GenerateVbo() {
             glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
             vbo           = name;
-            Context()->SetResource(vboSlot_, name);
+            GetContext()->SetResource(vboSlot_, name);
             numTriangles_ = numTriangles;
             Log::Print(Log::Level::Debug, this, [&]{
                 return "generated VBO " + to_string(name) + ", size=" + to_string(data.size() * sizeof(GLfloat));

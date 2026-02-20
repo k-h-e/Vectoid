@@ -32,7 +32,7 @@ namespace Gui {
 class CustomContentInterface : public virtual K::Core::Interface {
   public:
     //! Tells the content size.
-    virtual Size Size() const = 0;
+    virtual Size GetSize() const = 0;
     //! Sets the content color.
     virtual void SetColor(const Vectoid::Core::Vector<float> &color) = 0;
     //! Animates the content according to the specified time since the last frame.

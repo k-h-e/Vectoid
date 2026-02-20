@@ -14,7 +14,8 @@
 #elif defined(K_PLATFORM_IOS)
 #include <OpenGLES/ES1/gl.h>
 #elif defined(K_PLATFORM_LINUX)
-#include <gl/gl.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #else
 #error Unknown platform.
 #endif

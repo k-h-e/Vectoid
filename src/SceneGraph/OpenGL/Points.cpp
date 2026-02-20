@@ -33,7 +33,7 @@ Points::Points(const shared_ptr<class Context> &context, const shared_ptr<DataSe
 }
 
 Points::~Points() {
-    Context()->RemoveResourceSlot(vboSlot_);
+    GetContext()->RemoveResourceSlot(vboSlot_);
 }
 
 void Points::Render() {
@@ -55,7 +55,7 @@ void Points::Render() {
 }
 
 optional<GLuint> Points::GenerateVbo() {
-    optional<GLuint> vbo = Context()->GetResource(vboSlot_);
+    optional<GLuint> vbo = GetContext()->GetResource(vboSlot_);
     if (!vbo) {
         if (points_->Size()) {
             vector<GLfloat> data;
@@ -74,7 +74,7 @@ optional<GLuint> Points::GenerateVbo() {
             glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
             vbo        = name;
-            Context()->SetResource(vboSlot_, name);
+            GetContext()->SetResource(vboSlot_, name);
             numPoints_ = points_->Size();
             Log::Print(Log::Level::Debug, this, [&]{
                 return "generated VBO " + to_string(name) + ", size=" + to_string(data.size() * sizeof(GLfloat));

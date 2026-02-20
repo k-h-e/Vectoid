@@ -34,7 +34,7 @@ class TransparentTriangles : public Vectoid::SceneGraph::TransparentTriangles {
     void Render() override;
 
   private:
-    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    Context *GetContext() { return static_cast<class Context *>(context_.get()); }
     std::optional<GLuint> GenerateVbo();
 
     int vboSlot_;

@@ -12,6 +12,7 @@
 #include <memory>
 #include <optional>
 #include <vector>
+
 #include <Vectoid/DataSet/Triangles.h>
 #include <Vectoid/SceneGraph/LitColorCodedTriangles.h>
 #include <Vectoid/SceneGraph/OpenGL/Context.h>
@@ -43,7 +44,7 @@ class LitColorCodedTriangles : public Vectoid::SceneGraph::LitColorCodedTriangle
     void Render() override;
 
   private:
-    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    Context *GetContext() { return static_cast<class Context *>(context_.get()); }
     std::optional<GLuint> GenerateVbo();
     std::optional<GLuint> GenerateRegularVbo();
     std::optional<GLuint> GenerateGouraudVbo();

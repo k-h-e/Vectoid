@@ -38,8 +38,8 @@ CustomButton::CustomButton(const shared_ptr<CustomContentInterface> &content, co
           content_{content},
           touchInside_{false},
           animationEnabled_{false} {
-    panel_    = context_->renderTarget->NewCustomPanel(content_->Size().width + context_->glyphSize.width,
-                                                       content_->Size().height + context_->glyphSize.width);
+    panel_    = context_->renderTarget->NewCustomPanel(content_->GetSize().width + context_->glyphSize.width,
+                                                       content_->GetSize().height + context_->glyphSize.width);
     panel_->SetFrameWidth(context_->frameWidth);
     panel_->EnableFrame(true);
     coordSys_ = context_->renderTarget->NewCoordSys();
