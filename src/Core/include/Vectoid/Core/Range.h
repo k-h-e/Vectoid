@@ -9,6 +9,7 @@
 #ifndef VECTOID_CORE_RANGE_H_
 #define VECTOID_CORE_RANGE_H_
 
+#include <cmath>
 #include <string>
 
 #include <K/Core/BlockingInStreamInterface.h>

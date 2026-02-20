@@ -8,6 +8,8 @@
 
 #include <Vectoid/SceneGraph/ScalarGrid2D.h>
 
+#include <cstring>
+
 #include <K/Core/NumberTools.h>
 
 using std::memcpy;

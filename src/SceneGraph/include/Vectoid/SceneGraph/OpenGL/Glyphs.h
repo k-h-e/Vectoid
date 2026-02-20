@@ -31,7 +31,7 @@ class Glyphs : public SceneGraph::Glyphs {
     void BindGlyphTexture(uint8_t glyph) override;
     
   private:
-    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    Context *GetContext() { return static_cast<class Context *>(context_.get()); }
     void GenerateTextures();
 
     int                    textureSlots_[256];

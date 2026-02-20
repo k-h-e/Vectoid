@@ -34,7 +34,7 @@ class LineSegments : public Vectoid::SceneGraph::LineSegments {
     void Render() override;
 
   private:
-    Context *Context() { return static_cast<class Context *>(context_.get()); }
+    Context *GetContext() { return static_cast<class Context *>(context_.get()); }
     void RenderDynamic();
     void RenderVbo();
     std::optional<GLuint> GenerateVbo();

@@ -9,6 +9,7 @@
 #ifndef VECTOID_DATASET_GROWREGION_H_
 #define VECTOID_DATASET_GROWREGION_H_
 
+#include <functional>
 #include <unordered_set>
 
 namespace Vectoid {

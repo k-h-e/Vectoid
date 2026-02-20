@@ -46,7 +46,7 @@ LitColorCodedTriangles::LitColorCodedTriangles(const shared_ptr<class Context> &
 }
 
 LitColorCodedTriangles::~LitColorCodedTriangles() {
-    Context()->RemoveResourceSlot(vboSlot_);
+    GetContext()->RemoveResourceSlot(vboSlot_);
 }
 
 void LitColorCodedTriangles::Render() {
@@ -78,7 +78,7 @@ void LitColorCodedTriangles::Render() {
 }
 
 optional<GLuint> LitColorCodedTriangles::GenerateVbo() {
-    optional<GLuint> vbo{Context()->GetResource(vboSlot_)};
+    optional<GLuint> vbo{GetContext()->GetResource(vboSlot_)};
     if (!vbo) {
         if (gouraudTriangleProvider_) {
             vbo = GenerateGouraudVbo();
@@ -130,7 +130,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateRegularVbo() {
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
-        Context()->SetResource(vboSlot_, name);
+        GetContext()->SetResource(vboSlot_, name);
         numTriangles_ = numTriangles;
         Log::Print(Log::Level::Debug, this, [&]{
             return "generated VBO " + to_string(name) + " for regular shading, num_triangles="
@@ -181,7 +181,7 @@ optional<GLuint> LitColorCodedTriangles::GenerateGouraudVbo() {
         glBindBuffer(GL_ARRAY_BUFFER, name);
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0u);
-        Context()->SetResource(vboSlot_, name);
+        GetContext()->SetResource(vboSlot_, name);
         numTriangles_ = numTriangles;
         
         Log::Print(Log::Level::Debug, this, [&]{
@@ -201,3 +201,4 @@ Vector<float> LitColorCodedTriangles::GetColor(const Vector<float> &vertex) {
 }    // Namespace OpenGL.
 }    // Namespace SceneGraph.
 }    // Namespace Vectoid.
+

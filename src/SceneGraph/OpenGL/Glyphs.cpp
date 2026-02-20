@@ -23,24 +23,24 @@ namespace OpenGL {
 Glyphs::Glyphs(const shared_ptr<class Context> &context)
         : SceneGraph::Glyphs(context) {
     for (int i = 0; i < 256; ++i) {
-        textureSlots_[i] = Context()->AddResourceSlot(Context::ResourceType::Texture);
+        textureSlots_[i] = GetContext()->AddResourceSlot(Context::ResourceType::Texture);
     }
 }
 
 Glyphs::~Glyphs() {
     for (int i = 0; i < 256; ++i) {
-        Context()->RemoveResourceSlot(textureSlots_[i]);
+        GetContext()->RemoveResourceSlot(textureSlots_[i]);
     }
 }
 
 void Glyphs::BindGlyphTexture(uint8_t glyph) {
-    optional<GLuint> texture = Context()->GetResource(textureSlots_[glyph]);
+    optional<GLuint> texture = GetContext()->GetResource(textureSlots_[glyph]);
     if (!texture) {
         GenerateTextures();
-        texture = Context()->GetResource(textureSlots_[glyph]);
+        texture = GetContext()->GetResource(textureSlots_[glyph]);
         if (!texture) {
             if (defaultGlyph_) {
-                texture = Context()->GetResource(textureSlots_[*defaultGlyph_]);
+                texture = GetContext()->GetResource(textureSlots_[*defaultGlyph_]);
             }
 
             if (!texture) {
@@ -78,7 +78,7 @@ void Glyphs::GenerateTextures() {
             *destPtr++ = 0;
         }
 
-        if (!Context()->GetResource(textureSlots_[glyph])) {
+        if (!GetContext()->GetResource(textureSlots_[glyph])) {
             GLuint texture;
             glGenTextures(1, &texture);
             if (texture) {
@@ -90,7 +90,7 @@ void Glyphs::GenerateTextures() {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, glyphWidth + 2, glyphHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                              buffer);
 
-                Context()->SetResource(textureSlots_[glyph], texture);
+                GetContext()->SetResource(textureSlots_[glyph], texture);
                 defaultGlyph_ = glyph;
             }
         }

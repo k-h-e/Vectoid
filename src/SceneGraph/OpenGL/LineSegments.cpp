@@ -36,7 +36,7 @@ LineSegments::LineSegments(const shared_ptr<class Context> &context,
 }
 
 LineSegments::~LineSegments() {
-    Context()->RemoveResourceSlot(vboSlot_);
+    GetContext()->RemoveResourceSlot(vboSlot_);
 }
 
 void LineSegments::Render() {
@@ -93,7 +93,7 @@ void LineSegments::RenderVbo() {
 }
 
 optional<GLuint> LineSegments::GenerateVbo() {
-    optional<GLuint> vbo { Context()->GetResource(vboSlot_) };
+    optional<GLuint> vbo { GetContext()->GetResource(vboSlot_) };
     if (!vbo) {
         vector<GLfloat> data;
         int             numSegments{0};
@@ -119,7 +119,7 @@ optional<GLuint> LineSegments::GenerateVbo() {
             glBindBuffer(GL_ARRAY_BUFFER, 0u);
 
             vbo          = name;
-            Context()->SetResource(vboSlot_, name);
+            GetContext()->SetResource(vboSlot_, name);
             numSegments_ = numSegments;
             Log::Print(Log::Level::Debug, this, [&]{
                 return "generated VBO " + to_string(name) + ", size=" + to_string(data.size() * sizeof(GLfloat));
