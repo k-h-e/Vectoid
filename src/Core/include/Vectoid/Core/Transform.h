@@ -10,6 +10,7 @@
 #define VECTOID_CORE_TRANSFORM_H_
 
 #include <K/Core/NumberTools.h>
+#include <K/Core/SerializableInterface.h>
 #include <Vectoid/Core/TransformCore.h>
 #include <Vectoid/Core/Vector.h>
 
@@ -25,7 +26,8 @@ enum class Axis { X, Y, Z };
 
 //! 3D transformation limited to rotations and translations - and any combination thereof.
 template<typename T>
-class Transform : public TransformCore<T> {
+class Transform : public TransformCore<T>,
+                  public virtual K::Core::SerializableInterface {
   public:
     //! To be used with the constructor variant <c>Transform(InitFromOtherMode initMode, const Transform &other)</c>.
     enum InitFromOtherMode { InitAsInverseRotation,
@@ -81,6 +83,10 @@ class Transform : public TransformCore<T> {
      *  other transform second.
      */
     inline void Append(const Transform<T> &other);
+
+    // SerializableInterface...
+    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
+    void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
     
   private:
     //! After that many multiplications as specified here a transform will get its rotation part re-orthonormalized in
@@ -393,6 +399,18 @@ template<typename T>
 void Transform<T>::Append(const Transform<T> &other) {
     Transform<T> result(other, *this);
     *this = result;
+}
+
+template<typename T>
+void Transform<T>::Serialize(K::Core::BlockingOutStreamInterface &stream) const {
+    stream << this->matrix_;
+    stream << multCount_;
+}
+
+template<typename T>
+void Transform<T>::Deserialize(K::Core::BlockingInStreamInterface &stream) {
+    stream >> this->matrix_;
+    stream >> multCount_;
 }
     
 }    // Namespace Core.
