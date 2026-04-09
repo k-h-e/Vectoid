@@ -16,6 +16,8 @@
 #elif defined(K_PLATFORM_LINUX)
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
+#elif defined(K_PLATFORM_ANDROID)
+#include <GLES/gl.h>
 #else
 #error Unknown platform.
 #endif

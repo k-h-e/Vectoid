@@ -132,7 +132,7 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     if (id == -1) {
         return false;
     } else if (id == 0) {
-        exit(execl("/opt/local/bin/triangle", "triangle", "-p", fileNameDumb, nullptr));
+        exit(execl("/usr/bin/triangle", "triangle", "-p", fileNameDumb, nullptr));
     } else {
         int status;
         while (true) {
