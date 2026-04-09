@@ -28,7 +28,7 @@ void PerspectiveProjection::RenderPre() {
         GetWindowDimensions(&windowWidth, &windowHeight);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-#ifdef K_PLATFORM_IOS
+#if defined(K_PLATFORM_IOS) || defined(K_PLATFORM_ANDROID)
         glFrustumf(-windowWidth  / 2.0f, windowWidth  / 2.0f,
                    -windowHeight / 2.0f, windowHeight / 2.0f,
                     eyepointDistance_, eyepointDistance_ + viewingDepth_);
