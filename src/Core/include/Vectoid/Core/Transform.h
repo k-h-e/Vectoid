@@ -83,6 +83,10 @@ class Transform : public TransformCore<T>,
      *  other transform second.
      */
     inline void Append(const Transform<T> &other);
+
+    // SerializableInterface...
+    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
+    void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
     
     // SerializableInterface...
     void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
@@ -404,13 +408,15 @@ void Transform<T>::Append(const Transform<T> &other) {
 template<typename T>
 void Transform<T>::Serialize(K::Core::BlockingOutStreamInterface &stream) const {
     stream << this->matrix_;
+    stream << multCount_;
 }
 
 template<typename T>
 void Transform<T>::Deserialize(K::Core::BlockingInStreamInterface &stream) {
     stream >> this->matrix_;
+    stream >> multCount_;
 }
-
+    
 }    // Namespace Core.
 }    // Namespace Vectoid.
 
