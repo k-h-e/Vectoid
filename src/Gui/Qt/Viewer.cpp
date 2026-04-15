@@ -164,7 +164,7 @@ void Viewer::mousePressEvent(QMouseEvent *event) {
 
         if (cameraNavigationEnabled_) {
             if (camera_) {
-                camera_->GetTransform(&startCameraTransform_);
+                camera_->GetTransform(startCameraTransform_);
                 rotating_ = true;
             }
         } else {
@@ -370,7 +370,7 @@ void Viewer::OnTimer() {
             float rotateSlowFactor { slowKeyDown_ ? rotateSlowFactor_ : 1.0f };
 
             Transform<float> transform;
-            camera_->GetTransform(&transform);
+            camera_->GetTransform(transform);
 
             if (currentMoveSpeedMPerS_) {
                 transform.Prepend(Transform<float>{(deltaS * *currentMoveSpeedMPerS_ * moveSlowFactor)

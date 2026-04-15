@@ -32,10 +32,12 @@ void PerspectiveProjection::RenderPre() {
         glFrustumf(-windowWidth  / 2.0f, windowWidth  / 2.0f,
                    -windowHeight / 2.0f, windowHeight / 2.0f,
                     eyepointDistance_, eyepointDistance_ + viewingDepth_);
-#else
+#elif defined(K_PLATFORM_MAC) || defined(K_PLATFORM_LINUX)
         glFrustum(-windowWidth  / 2.0f, windowWidth  / 2.0f,
                   -windowHeight / 2.0f, windowHeight / 2.0f,
                    eyepointDistance_, eyepointDistance_ + viewingDepth_);
+#else
+#error Unknown platform!
 #endif
         glTranslatef(0.0, 0.0, -eyepointDistance_);
         glMatrixMode(GL_MODELVIEW);

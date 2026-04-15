@@ -39,7 +39,7 @@ bool BoundingBoxCollisionChecker::CheckCollision(
     (void)other;
 
     Vector<float> point;
-    otherTransform.GetTranslationPart(&point);
+    otherTransform.GetTranslationPart(point);
     Transform<float> inverseOurTransform(Transform<float>::InitAsInverse, ourTransform);
     inverseOurTransform.ApplyTo(point);
     return boundingBox_.Contains(point);

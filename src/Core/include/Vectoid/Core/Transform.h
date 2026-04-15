@@ -53,7 +53,7 @@ class Transform : public TransformCore<T>,
     //! Only updates the transform's translation part as specified.
     inline void SetTranslationPart(const Vector<T> &translation);
     //! Retrieves the transform's translation part.
-    inline void GetTranslationPart(Vector<T> *outTranslation) const;
+    inline void GetTranslationPart(Vector<T> &outTranslation) const;
     //! Returns the transform's translation part.
     inline Vector<T> TranslationPart() const;
     //! Only updates the transform's rotation part as given by the (normalized) images of the coordinate axes under that
@@ -84,10 +84,6 @@ class Transform : public TransformCore<T>,
      */
     inline void Append(const Transform<T> &other);
 
-    // SerializableInterface...
-    void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
-    void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
-    
     // SerializableInterface...
     void Serialize(K::Core::BlockingOutStreamInterface &stream) const override;
     void Deserialize(K::Core::BlockingInStreamInterface &stream) override;
@@ -133,7 +129,7 @@ Transform<T>::Transform(const Vector<T> &t) {
 
 template<typename T>
 Transform<T>::Transform(Axis axis, T angleDeg) {
-    T angleRad = angleDeg / (T)180.0 * (T)K::Core::NumberTools::pi;
+    T angleRad { angleDeg / static_cast<T>(180.0) * static_cast<T>(K::Core::NumberTools::pi) };
 
     // Set rotation part depending on rotation axis...
     switch (axis) {
@@ -149,9 +145,8 @@ Transform<T>::Transform(Axis axis, T angleDeg) {
             this->matrix_[2][0] =  std::sin(angleRad);
             this->matrix_[2][1] =                0.0f;
             this->matrix_[2][2] =  std::cos(angleRad);
-            break;
-            
-    case Axis::Z:
+            break;         
+        case Axis::Z:
             this->matrix_[0][0] =  std::cos(angleRad);
             this->matrix_[0][1] =  std::sin(angleRad);
             this->matrix_[0][2] =                0.0f;
@@ -163,9 +158,8 @@ Transform<T>::Transform(Axis axis, T angleDeg) {
             this->matrix_[2][0] =                0.0f;
             this->matrix_[2][1] =                0.0f;
             this->matrix_[2][2] =                1.0f;
-            break;
-            
-    case Axis::X:
+            break;     
+        case Axis::X:
         default:
             this->matrix_[0][0] =                1.0f;
             this->matrix_[0][1] =                0.0f;
@@ -341,10 +335,10 @@ void Transform<T>::SetTranslationPart(const Vector<T> &translation) {
 }
 
 template<typename T>
-void Transform<T>::GetTranslationPart(Vector<T> *outTranslation) const {
-    outTranslation->x = this->matrix_[3][0];
-    outTranslation->y = this->matrix_[3][1];
-    outTranslation->z = this->matrix_[3][2];
+void Transform<T>::GetTranslationPart(Vector<T> &outTranslation) const {
+    outTranslation.x = this->matrix_[3][0];
+    outTranslation.y = this->matrix_[3][1];
+    outTranslation.z = this->matrix_[3][2];
 }
 
 template<typename T>
@@ -372,9 +366,9 @@ void Transform<T>::SetRotationPart(const Vector<T> &axisImage0, const Vector<T> 
 
 template<typename T>
 void Transform<T>::ReorthonormalizeRotationPart() {
-    Vector<T> column0(this->matrix_[0][0], this->matrix_[0][1], this->matrix_[0][2]);
-    Vector<T> column1(this->matrix_[1][0], this->matrix_[1][1], this->matrix_[1][2]);
-    Vector<T> column2 = CrossProduct(column0, column1);
+    Vector<T> column0{this->matrix_[0][0], this->matrix_[0][1], this->matrix_[0][2]};
+    Vector<T> column1{this->matrix_[1][0], this->matrix_[1][1], this->matrix_[1][2]};
+    Vector<T> column2 { CrossProduct(column0, column1) };
     column2.Normalize();
     column0 = CrossProduct(column1, column2);
     column0.Normalize();
@@ -384,9 +378,9 @@ void Transform<T>::ReorthonormalizeRotationPart() {
 
 template<typename T>
 void Transform<T>::ApplyTo(Vector<T> &v) const {
-    T x = this->matrix_[0][0]*v.x + this->matrix_[1][0]*v.y + this->matrix_[2][0]*v.z + this->matrix_[3][0];
-    T y = this->matrix_[0][1]*v.x + this->matrix_[1][1]*v.y + this->matrix_[2][1]*v.z + this->matrix_[3][1];
-    T z = this->matrix_[0][2]*v.x +this-> matrix_[1][2]*v.y + this->matrix_[2][2]*v.z + this->matrix_[3][2];
+    T x { this->matrix_[0][0]*v.x + this->matrix_[1][0]*v.y + this->matrix_[2][0]*v.z + this->matrix_[3][0] };
+    T y { this->matrix_[0][1]*v.x + this->matrix_[1][1]*v.y + this->matrix_[2][1]*v.z + this->matrix_[3][1] };
+    T z { this->matrix_[0][2]*v.x +this-> matrix_[1][2]*v.y + this->matrix_[2][2]*v.z + this->matrix_[3][2] };
 
     v.x = x;
     v.y = y;
@@ -395,13 +389,13 @@ void Transform<T>::ApplyTo(Vector<T> &v) const {
 
 template<typename T>
 void Transform<T>::Prepend(const Transform<T> &other) {
-    Transform<T> result(*this, other);
+    Transform<T> result{*this, other};
     *this = result;
 }
 
 template<typename T>
 void Transform<T>::Append(const Transform<T> &other) {
-    Transform<T> result(other, *this);
+    Transform<T> result{other, *this};
     *this = result;
 }
 

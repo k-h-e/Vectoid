@@ -58,6 +58,9 @@ void ScalarGrid2D::Render() {
     glEnd();
 
     glColor3f(1.0f, 1.0f, 1.0f);
+#elif defined(K_PLATFORM_IOS) || defined(K_PLATFORM_LINUX) || defined(K_PLATFORM_ANDROID)
+#else
+#error Unknown platform!
 #endif
 }
 

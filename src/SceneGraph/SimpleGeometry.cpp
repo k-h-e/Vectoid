@@ -124,19 +124,20 @@ shared_ptr<SimpleGeometry> SimpleGeometry::NewLanderGeometry() {
 shared_ptr<SimpleGeometry> SimpleGeometry::NewSaucerGeometry() {
     shared_ptr<SimpleGeometry> geometry = make_shared<SimpleGeometry>();
     
-    const float radius = 1.0f;
-    float lastX, lastZ;
+    const float radius { 1.0f };
+    float lastX { 0.0f };
+    float lastZ { 0.0f };
     for (int i = 0; i <= 8; ++i) {
-        float angle = -22.5f + (float)(i*45);
-        float x = radius * (float)cos(angle * 3.141592654f / 180.0f),
-              z = radius * (float)sin(angle * 3.141592654f / 180.0f);
+        float angle { -22.5f + (float)(i*45) };
+        float x { radius * (float)cos(angle * 3.141592654f / 180.0f) };
+        float z { radius * (float)sin(angle * 3.141592654f / 180.0f) };
         if (i) {
-            geometry->AddTriangle(Vector<float>(0.0f,  .3f, 0.0f), Vector<float>(x, 0.0f, z),
-                                  Vector<float>(lastX, 0.0f, lastZ),
-                                  i % 2 ? Vector<float>( .2f,  .2f,  .8f) : Vector<float>( .2f,  .8f,  .8f));
-            geometry->AddTriangle(Vector<float>(0.0f, -.3f, 0.0f), Vector<float>(lastX, 0.0f, lastZ),
-                                  Vector<float>(x, 0.0f, z),
-                                  i % 2 ? Vector<float>( .2f,  .8f,  .8f) : Vector<float>( .2f,  .2f,  .8f));
+            geometry->AddTriangle(Vector<float>{0.0f,  .3f, 0.0f}, Vector<float>{x, 0.0f, z},
+                                  Vector<float>{lastX, 0.0f, lastZ},
+                                  i % 2 ? Vector<float>{.2f,  .2f,  .8f} : Vector<float>{.2f,  .8f,  .8f});
+            geometry->AddTriangle(Vector<float>{0.0f, -.3f, 0.0f}, Vector<float>{lastX, 0.0f, lastZ},
+                                  Vector<float>{x, 0.0f, z},
+                                  i % 2 ? Vector<float>{.2f,  .8f,  .8f} : Vector<float>{.2f,  .2f,  .8f});
         }
         lastX = x;
         lastZ = z;

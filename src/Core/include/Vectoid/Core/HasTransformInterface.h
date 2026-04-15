@@ -20,7 +20,7 @@ template<typename T> class Transform;
 class HasTransformInterface : public virtual K::Core::Interface {
   public:
     //! Retrieves the associated transform.
-    virtual void GetTransform(Transform<float> *outTransform) const = 0;
+    virtual void GetTransform(Transform<float> &outTransform) const = 0;
 };
 
 }    // Namespace Core.

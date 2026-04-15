@@ -36,7 +36,7 @@ class CoordSysInterface : public virtual Core::HasTransformInterface {
     //! Updates the translation part of the local transform as specified.
     virtual void SetPosition(const Core::Vector<float> &pos) = 0;
     //! Retrieves the translation part of the local transform.
-    virtual void GetPosition(Core::Vector<float> *outPos) = 0;
+    virtual void GetPosition(Core::Vector<float> &outPos) = 0;
     //! Returns the translation part of the local transform.
     virtual Core::Vector<float> Position() = 0;
 };

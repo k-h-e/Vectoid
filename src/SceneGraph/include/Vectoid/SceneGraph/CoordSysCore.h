@@ -29,9 +29,9 @@ class CoordSysCore : public GroupNode,
     void PrependTransform(const Core::Transform<float> &other);
     void AppendTransform(const Core::Transform<float> &other);
     void SetTransform(const Core::Transform<float> &other);
-    void GetTransform(Core::Transform<float> *outTransform) const;
+    void GetTransform(Core::Transform<float> &outTransform) const;
     void SetPosition(const Core::Vector<float> &pos);
-    void GetPosition(Core::Vector<float> *outPos);
+    void GetPosition(Core::Vector<float> &outPos);
     Core::Vector<float> Position();
     
   protected:

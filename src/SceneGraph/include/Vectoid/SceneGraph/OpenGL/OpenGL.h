@@ -19,7 +19,7 @@
 #elif defined(K_PLATFORM_ANDROID)
 #include <GLES/gl.h>
 #else
-#error Unknown platform.
+#error Unknown platform!
 #endif
 
 #endif    // VECTOID_SCENEGRAPH_OPENGL_OPENGL_H_
