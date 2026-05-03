@@ -132,7 +132,16 @@ bool ConstrainedDelauneyTriangulationXY::RunTriangle() {
     if (id == -1) {
         return false;
     } else if (id == 0) {
+
+#if defined(K_PLATFORM_MAC)
+        exit(execl("/opt/local/bin/triangle", "triangle", "-p", fileNameDumb, nullptr));
+#elif defined(K_PLATFORM_LINUX)
         exit(execl("/usr/bin/triangle", "triangle", "-p", fileNameDumb, nullptr));
+#elif defined(K_PLATFORM_ANDROID) || defined(K_PLATFORM_IOS)
+#error Unsupported platform!
+#else
+#error Unknown platform!
+#endif
     } else {
         int status;
         while (true) {
