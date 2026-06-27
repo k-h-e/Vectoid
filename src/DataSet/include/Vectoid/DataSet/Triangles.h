@@ -49,12 +49,6 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface,
                   public virtual Core::TriangleHandlerInterface {
   public:
     Triangles();
-    //! Initializes the set with the triangles from the specified provider.
-    /*!
-     *  Use <c>Core::TriangleProviderInterface::TriangleError()</c> to learn whether all triangles were copied
-     *  successfully. If not, the <c>Triangles</c> object will be in sane state, yet triangles will be missing.
-     */
-    Triangles(Core::TriangleProviderInterface &triangleProvider);
     Triangles(const std::shared_ptr<Vectoid::DataSet::LineSegments> &edges);
     Triangles(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
     Triangles(const Triangles &other)            = delete;

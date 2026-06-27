@@ -30,6 +30,7 @@ using K::Core::Log;
 using K::Core::StreamInterface;
 using Vectoid::Core::BoundingBox;
 using Vectoid::Core::ThreePoints;
+using Vectoid::Core::TriangleProviderInterface;
 using Vectoid::Core::TwoPoints;
 using Vectoid::Core::Vector;
 using Vectoid::Math::Intersection::LineTriangleIntersection;
@@ -40,11 +41,6 @@ namespace Vectoid {
 namespace DataSet {
 
 Triangles::Triangles() : Triangles(make_shared<LineSegments>(make_shared<Points>())) {}
-
-Triangles::Triangles(Core::TriangleProviderInterface &triangleProvider)
-        : Triangles(make_shared<LineSegments>(make_shared<Points>())) {
-    (void) Add(triangleProvider);
-}
 
 Triangles::Triangles(const shared_ptr<DataSet::Points> &vertices) : Triangles(make_shared<LineSegments>(vertices)) {}
 
@@ -119,7 +115,7 @@ int Triangles::Add(const ThreePoints &triangle) {
     return triangleId;
 }
 
-bool Triangles::Add(Core::TriangleProviderInterface &triangleProvider) {
+bool Triangles::Add(TriangleProviderInterface &triangleProvider) {
     triangleProvider.PrepareToProvideTriangles();
     ThreePoints triangle;
     while (triangleProvider.ProvideNextTriangle(triangle)) {

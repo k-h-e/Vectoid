@@ -44,8 +44,8 @@ bool VertexNormalTriangleProvider::Precompute() {
         Log::Print(Log::Level::Debug, this, [&]{ return "computing vertex normals..."; });
         auto startTime{steady_clock::now()};
         
-        triangles_ = make_shared<Triangles>(*triangleProvider_);
-        if (triangleProvider_->TriangleError()) {
+        triangles_ = make_shared<Triangles>();
+        if (!triangles_->Add(*triangleProvider_)) {
             triangles_.reset();
             return false;
         }

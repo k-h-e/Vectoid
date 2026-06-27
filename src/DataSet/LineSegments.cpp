@@ -12,17 +12,23 @@
 #include <Vectoid/Core/TwoPoints.h>
 #include <Vectoid/DataSet/Points.h>
 
-using std::shared_ptr;
-using std::unique_ptr;
+using std::make_shared;
 using std::make_unique;
-using std::unordered_map;
+using std::shared_ptr;
 using std::to_string;
+using std::unique_ptr;
+using std::unordered_map;
+
 using K::Core::Log;
+using Vectoid::Core::LineSegmentProviderInterface;
 using Vectoid::Core::TwoPoints;
+using Vectoid::DataSet::Points;
 using Vectoid::DataSet::TwoIds;
 
 namespace Vectoid {
 namespace DataSet {
+
+LineSegments::LineSegments() : LineSegments(make_shared<Points>()) {}
 
 LineSegments::LineSegments(const shared_ptr<Points> &vertices)
         : vertices_(vertices),
@@ -45,6 +51,15 @@ int LineSegments::Add(const TwoPoints &segment) {
     }
 
     return segmentId;
+}
+
+bool LineSegments::Add(LineSegmentProviderInterface &lineSegmentProvider) {
+    lineSegmentProvider.PrepareToProvideLineSegments();
+    TwoPoints segment;
+    while (lineSegmentProvider.ProvideNextLineSegment(segment)) {
+        (void) Add(segment);
+    }
+    return !lineSegmentProvider.LineSegmentError();
 }
 
 int LineSegments::Size() const {

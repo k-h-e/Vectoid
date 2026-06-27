@@ -23,6 +23,7 @@ class Points;
 //! Set of line segments in 3-space.
 class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface {
   public:
+    LineSegments();
     LineSegments(const std::shared_ptr<Vectoid::DataSet::Points> &vertices);
     LineSegments(const LineSegments &other)            = delete;
     LineSegments &operator=(const LineSegments &other) = delete;
@@ -34,6 +35,15 @@ class LineSegments : public virtual Vectoid::Core::LineSegmentProviderInterface 
      *  \return The line segment's index.
      */
     int Add(const Core::TwoPoints &segment);
+
+    //! Adds the line segments from the specified provider (those not already present).
+    /*!
+     *  \return
+     *  <c>false</c> in case of failure. The <c>LineSegments</c> object will then be in sane state, yet the line
+     *  segments will only have been partially added.
+     */
+    bool Add(Core::LineSegmentProviderInterface &lineSegmentProvider);
+
     //! Tells the number of line segments.
     int Size() const;
     //! Returns the ID for the specified line segment, or <c>-1</c> in case the segment is not in the set.
