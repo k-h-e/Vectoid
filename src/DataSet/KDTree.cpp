@@ -52,7 +52,7 @@ KDTree::KDTree(const shared_ptr<Points> &points, const unordered_set<int> &point
 }
 
 KDTree::~KDTree() {
-    Log::Print(Log::Level::Warning, this, [&]{ return "dying, depth=" + to_string(depth_); });
+    // Nop.
 }
 
 bool KDTree::QueryNearestNeighbor(const Vector<float> &queryPoint, int &outNearestNeighbor) {

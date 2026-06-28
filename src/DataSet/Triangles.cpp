@@ -10,12 +10,12 @@
 
 #include <K/Core/Log.h>
 #include <Vectoid/Core/BoundingBox.h>
+#include <Vectoid/Core/DebugGeometryHandlerInterface.h>
 #include <Vectoid/Core/ThreePoints.h>
 #include <Vectoid/Core/TwoPoints.h>
 #include <Vectoid/Math/Intersection/LineTriangleIntersection.h>
 #include <Vectoid/DataSet/ItemIntersection.h>
 #include <Vectoid/DataSet/Points.h>
-#include <Vectoid/DataSet/SimpleLineSegmentList.h>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -26,9 +26,11 @@ using std::unordered_set;
 using std::optional;
 using std::to_string;
 using std::vector;
+
 using K::Core::Log;
 using K::Core::StreamInterface;
 using Vectoid::Core::BoundingBox;
+using Vectoid::Core::DebugGeometryHandlerInterface;
 using Vectoid::Core::ThreePoints;
 using Vectoid::Core::TriangleProviderInterface;
 using Vectoid::Core::TwoPoints;
@@ -80,20 +82,20 @@ int Triangles::Add(const ThreePoints &triangle) {
                     return "bad connectivity detected, triangle=" + to_string(triangleId) + ":" + edges.ToString()
                                + "=" + vertices.ToString();
                 });
-                if (debugGeometry_) {
-                    debugGeometry_->Add(vertices.TriangleEdge(0));
-                    debugGeometry_->Add(vertices.TriangleEdge(1));
-                    debugGeometry_->Add(vertices.TriangleEdge(2));
+                if (debugGeometryHandler_) {
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(0));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(1));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(2));
 
                     GetTriangleVertices(edgeInfos_[edge].triangle0, vertices);
-                    debugGeometry_->Add(vertices.TriangleEdge(0));
-                    debugGeometry_->Add(vertices.TriangleEdge(1));
-                    debugGeometry_->Add(vertices.TriangleEdge(2));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(0));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(1));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(2));
 
                     GetTriangleVertices(edgeInfos_[edge].triangle1, vertices);
-                    debugGeometry_->Add(vertices.TriangleEdge(0));
-                    debugGeometry_->Add(vertices.TriangleEdge(1));
-                    debugGeometry_->Add(vertices.TriangleEdge(2));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(0));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(1));
+                    debugGeometryHandler_->OnDebugLineSegment(vertices.TriangleEdge(2));
                 }
             }
         }
@@ -233,8 +235,8 @@ shared_ptr<Points> Triangles::Vertices() {
     return vertices_;
 }
 
-void Triangles::SetDebugGeometry(const shared_ptr<SimpleLineSegmentList> &debugGeometry) {
-    debugGeometry_ = debugGeometry;
+void Triangles::SetDebugGeometryHandler(const shared_ptr<DebugGeometryHandlerInterface> &debugGeometryHandler) {
+    debugGeometryHandler_ = debugGeometryHandler;
 }
 
 int Triangles::Size() const {

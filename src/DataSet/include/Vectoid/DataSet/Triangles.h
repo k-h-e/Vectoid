@@ -25,12 +25,12 @@
 
 namespace Vectoid {
     namespace Core {
+        class DebugGeometryHandlerInterface;
         class ThreePoints;
         class TriangleProviderInterface;
     }
     namespace DataSet {
         class Points;
-        class SimpleLineSegmentList;
         class ThreeIds;
     }
 }
@@ -97,7 +97,7 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface,
     //! Returns the underlying <c>Points</c> object in which the triangle set stores its vertices.
     std::shared_ptr<Points> Vertices();
     //! Attaches/de-attaches object to receive debug geometry.
-    void SetDebugGeometry(const std::shared_ptr<SimpleLineSegmentList> &debugGeometry);
+    void SetDebugGeometryHandler(const std::shared_ptr<Core::DebugGeometryHandlerInterface> &debugGeometryHandler);
 
     // SupportsBoundingBoxTreeInterface...
     int Size() const override;
@@ -186,7 +186,7 @@ class Triangles : public virtual SupportsBoundingBoxTreeInterface,
     bool                                                                       badConnectivity_;
     int                                                                        cursor_;
     Core::Vector<float>                                                        currentNormal_;
-    std::shared_ptr<SimpleLineSegmentList>                                     debugGeometry_;
+    std::shared_ptr<Core::DebugGeometryHandlerInterface>                       debugGeometryHandler_;
 };
 
 }    // Namespace DataSet.
