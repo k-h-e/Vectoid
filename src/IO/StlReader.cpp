@@ -55,6 +55,9 @@ void StlReader::PrepareToProvideTriangles() {
     fileStream_ = make_shared<StreamBuffer>(file, File::AccessMode::ReadOnly, 2048);
     if (useSubFile_) {
         fileStream_ = make_shared<SubStream>(fileStream_, subFileOffset_, subFileSize_);
+        Log::Print(Log::Level::Info, this, [&]{
+            return "using subfile, offset=" + to_string(subFileOffset_) + ", size=" + to_string(subFileSize_);
+        });
     }
     
     const int headerSize = 80;

@@ -23,7 +23,10 @@ namespace Vectoid {
 //! I/O for 3D data.
 namespace IO {
 
-//! Reads triangles from (binary) STL files.
+//! Reads triangles from a (binary) STL file.
+/*!
+ *  The file is open only for as long as a triangle readout is in progress.
+ */
 class StlReader : public virtual Core::TriangleProviderInterface {
   public:
     //! Constructs a reader for the specified STL file.
