@@ -32,7 +32,8 @@ using Vectoid::Core::Vector;
 namespace Vectoid {
 namespace IO {
 
-bool StlWriter::Write(TriangleProviderInterface &triangleProvider, SeekableBlockingOutStreamInterface &outStream) {
+bool StlWriter::Write(TriangleProviderInterface &triangleProvider, bool allowBadNormals,
+                      SeekableBlockingOutStreamInterface &outStream) {
     static const int headerSize { 80 };
 
     int64_t headerPosition { outStream.StreamPosition() };
@@ -45,20 +46,24 @@ bool StlWriter::Write(TriangleProviderInterface &triangleProvider, SeekableBlock
     while (triangleProvider.ProvideNextTriangle(triangle)) {
         Vector<float> normal { triangle.Normal() };
         if (!normal.Valid()) {
-            return false;
-        } else {
-            outStream << normal.x;
-            outStream << normal.y;
-            outStream << normal.z;
-            for (int i = 0; i < 3; ++i) {
-                Vector<float> &vertex = triangle[i];
-                outStream << vertex.x;
-                outStream << vertex.y;
-                outStream << vertex.z;
+            if (allowBadNormals) {
+                normal = Vector<float>{0.0f, 1.0f, 0.0f};
+            } else {
+                return false;
             }
-            outStream << attributes;
-            ++numTriangles;
         }
+
+        outStream << normal.x;
+        outStream << normal.y;
+        outStream << normal.z;
+        for (int i = 0; i < 3; ++i) {
+            Vector<float> &vertex = triangle[i];
+            outStream << vertex.x;
+            outStream << vertex.y;
+            outStream << vertex.z;
+        }
+        outStream << attributes;
+        ++numTriangles;
     }
 
     int64_t currentPosition = outStream.StreamPosition();
@@ -80,7 +85,7 @@ bool StlWriter::Write(TriangleProviderInterface &triangleProvider, const Path &f
         auto file = make_shared<File>(fileName, File::AccessMode::WriteOnly, true);
         StreamBuffer fileStream(file, File::AccessMode::WriteOnly, 4 * 1024);
         fileStream.SetCloseResultAcceptor(result);
-        if (!Write(triangleProvider, fileStream)) {
+        if (!Write(triangleProvider, false, fileStream)) {
             result->OnFailure();
         }
     }

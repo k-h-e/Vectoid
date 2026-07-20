@@ -33,7 +33,7 @@ class StlWriter {
     /*!
      *  \return <c>true</c> in case of success. Otherwise, the state of the output stream is undefined.
      */
-    static bool Write(Core::TriangleProviderInterface &triangleProvider,
+    static bool Write(Core::TriangleProviderInterface &triangleProvider, bool allowBadNormals,
                       K::Core::SeekableBlockingOutStreamInterface &outStream);
     //! Writes triangles to a binary STL file.
     /*!
